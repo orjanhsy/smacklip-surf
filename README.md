@@ -1,5 +1,7 @@
 # team-8
 ### Skriv inn navn og uio-brukernavn:
 Ørjan Hammer Sylta (orjanhsy)\
-Julie Alme :)) (julikal)
-Agnes Birkemo (agneshb)
+Julie Alme :)) (julikal)\
+Tobias Windingstad (tobiawi)\
+Agnes (agneshb)
+
