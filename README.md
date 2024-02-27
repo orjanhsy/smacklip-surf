@@ -2,4 +2,4 @@
 ### Skriv inn navn og uio-brukernavn:
 Ørjan Hammer Sylta (orjanhsy)\
 Julie Alme :)) (julikal)\
-Tobias Windingstad\
+Tobias Windingstad (tobiawi)\
