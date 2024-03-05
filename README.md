@@ -4,7 +4,8 @@
 Julie Alme :)) (julikal)\
 Muna Isman (Munaai)\
 Agnes (agneshb)\
-Evelyn (evelynsb)
+Evelyn (evelynsb)\
+Tobias (tobiawi)
 
 ## Git
 [Cheat sheet](https://education.github.com/git-cheat-sheet-education.pdf)
@@ -36,7 +37,21 @@ Dette ser vi på vi sammen.
 
 
 ### Håndtering av merge conlicts
-kommer
+
+Merge conflict setter filer til en state hvor de viser staten de har i branchen du er i (HEAD) og state i branchen du merger med slik:\
+`<<<<<<<<<<<<< HEAD`\
+Utgangspunktet paa branchen (du er i)\
+`==================`\
+Koden i branchen du prøver å merge med som avviker fra head\
+`>>>>>>>>>>>>> branch_du_merger_med`\
+\
+Her må vi håndtere konfliktene ved å velge hvordan vi vil filen skal se ut etter mergen.\
+Hvis man f.eks. ønsker at filen skal beholde staten den hadde før mergen, fjerner man bare det som ligger mellom '=' og '>'.\
+Man må også fjerne konfliktsymbolene ('=', '>' og '<') manuelt når man er fornøyd.\
+\
+*Merge conflicts ved pull:*
+* Hvis det oppstår en konflik - for eksempel når du puller - hvor du ikke ønsker å beholde endringen du har lokalt som gjør at konflikten oppstår, kan du slette de lokale filene. Da vil du sitte igjen med filer identisk til de du puller.
+* Hvis du derimot ønsker å beholde endringene til senere, men ikke ønsker å håndtere merge conflikt eller implementere dem enda, kan du bruke git stash. Mer om det under, i 'generelt nyttig'.
 
 ### Generelt nyttig
 `git diff` -> viser forskjellen mellom states. Default er forskjellen på current working directory til siste commit.
