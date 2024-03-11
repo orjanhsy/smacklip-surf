@@ -1,15 +1,13 @@
 package com.example.myapplication.data.locationForecast
 
-import com.example.myapplication.model.locationforecast.LocationForecast
-import com.example.myapplication.data.locationForecast.LocationForecastDataSource
-interface LocationForecastRepository{
-    suspend fun getLocationForecast(): LocationForecast
-}
+import com.example.myapplication.model.locationforecast.Data
+import com.example.myapplication.model.locationforecast.Timeserie
 
-class LocationForecastRepositoryImpl(
-    private val locationForecastDataSource: LocationForecastDataSource = LocationForecastDataSource()
-): LocationForecastRepository{
-    override suspend fun getLocationForecast(): LocationForecast {
-        return locationForecastDataSource.fetchLocationForecastData()
+class LocationForecastRepository(private val locationForecastDataSource: LocationForecastDataSource){
+
+    suspend fun getTimeSeries(): List<Pair<String, Data>>{
+        val timeSeries: List<Timeserie> = locationForecastDataSource.fetchLocationForecastData().properties.timeseries
+        return timeSeries.map{it.time to it.data}
     }
+
 }
