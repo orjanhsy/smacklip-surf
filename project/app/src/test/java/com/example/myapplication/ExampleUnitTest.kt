@@ -4,7 +4,6 @@ import com.example.myapplication.data.locationForecast.LocationForecastDataSourc
 import com.example.myapplication.data.locationForecast.LocationForecastRepository
 import com.example.myapplication.model.locationforecast.Data
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
 import org.junit.Assert.*
