@@ -59,6 +59,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+    implementation("androidx.navigation:navigation-compose:2.7.6")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -66,4 +67,48 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    val ktor_version = "2.3.6"
+
+    val compose_version = "1.0.5"
+    implementation("io.ktor:ktor-client-json:$ktor_version")
+
+
+    implementation("io.ktor:ktor-client-android:$ktor_version")
+
+
+    implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
+
+
+    implementation("io.ktor:ktor-serialization-gson:$ktor_version")
+
+
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+
+
+    implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
+
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
+
+
+    implementation("io.ktor:ktor-client-json:$ktor_version")
+
+
+    implementation("io.ktor:ktor-client-serialization:$ktor_version")
+
+    implementation("androidx.compose.runtime:runtime-livedata:$compose_version")
+
+    val gson_version = "2.10.1"
+    implementation("com.google.code.gson:gson: $gson_version")
+
+    val gson2_version = "2.3.6"
+    implementation ("com.google.code.gson:gson: $gson2_version")
+
+
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
+
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$1.6")
+
 }
