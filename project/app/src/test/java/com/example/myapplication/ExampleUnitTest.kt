@@ -1,5 +1,8 @@
 package com.example.myapplication
 
+import com.example.myapplication.data.locationForecast.LocationForecastDataSource
+import com.example.myapplication.data.locationForecast.LocationForecastRepository
+import com.example.myapplication.model.locationforecast.Data
 import com.example.myapplication.data.oceanforecast.HoddevikDataSourceDataSource
 import com.example.myapplication.data.oceanforecast.HoddevikRepository
 import com.example.myapplication.model.oceanforecast.Data
@@ -15,11 +18,20 @@ import org.junit.Assert.*
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class ExampleUnitTest {
-
+    private val locationForecastDataSource = LocationForecastDataSource()
+    private val locationForecastRepository = LocationForecastRepository(locationForecastDataSource)
     private val hoddevikDataSourceDataSource = HoddevikDataSourceDataSource()
     private val hoddevikRepository = HoddevikRepository(hoddevikDataSourceDataSource)
+    
     @Test
-    fun addition_isCorrect() = runBlocking{
+    fun locationForecastTimeSeriesExists() = runBlocking {
+        val timeSeries: List<Pair<String, Data>> = locationForecastRepository.getTimeSeries()
+        val time1 = timeSeries.get(0).first
+
+        print("$time1 ----------Testen fungerer!----------")
+    
+    @Test
+    fun oceanForecastTimeSeriesExists() = runBlocking{
 
         val timeSeries: List<Pair<String, Data>> = hoddevikRepository.getTimeSeries()
         val time1 = timeSeries.get(0).first
