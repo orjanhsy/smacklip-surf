@@ -50,10 +50,10 @@ android {
 }
 
 dependencies {
-<<<<<<< HEAD
-=======
     //ktor
     val ktor_version = "2.3.8"
+
+
     implementation("io.ktor:ktor-client-core:$ktor_version")
     implementation("io.ktor:ktor-client-cio:$ktor_version")
     implementation("io.ktor:ktor-client-android:$ktor_version")
@@ -63,7 +63,6 @@ dependencies {
 
 
     //default
->>>>>>> main
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.activity:activity-compose:1.8.2")
@@ -72,14 +71,10 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
-<<<<<<< HEAD
-    //testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
-=======
 
+    //Test
     testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
-    implementation("androidx.navigation:navigation-compose:2.7.6")
-    
->>>>>>> main
+    implementation("androidx.navigation:navigation-compose:2.7.7")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -88,17 +83,6 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-
-<<<<<<< HEAD
-    val ktor_version = "2.3.8"
-    implementation("io.ktor:ktor-client-core:$ktor_version")
-    implementation("io.ktor:ktor-client-cio:$ktor_version")
-    implementation("io.ktor:ktor-client-android:$ktor_version")
-    implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
-    implementation("io.ktor:ktor-serialization-gson:$ktor_version")
-=======
     val compose_version = "1.0.5"
 
-
->>>>>>> main
 }
