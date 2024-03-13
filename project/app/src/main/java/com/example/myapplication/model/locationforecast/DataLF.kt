@@ -1,6 +1,6 @@
 package com.example.myapplication.model.locationforecast
 
-data class Data(
+data class DataLF(
     val instant: Instant,
     val next_12_hours: Next12Hours,
     val next_1_hours: Next1Hours,
