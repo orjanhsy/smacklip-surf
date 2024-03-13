@@ -28,24 +28,6 @@ import org.junit.Test
  */
 class ExampleUnitTest {
 
-
-    private val repo = MetAlertsRepositoryImpl()
-    
-    private val locationForecastDataSource = LocationForecastDataSource()
-    private val locationForecastRepository = LocationForecastRepository(locationForecastDataSource)
-
-
-    private val hoddevikDataSourceDataSource = HoddevikDataSourceDataSource()
-    private val hoddevikRepository = HoddevikRepository(hoddevikDataSourceDataSource)
-
-
-    @Test
-    fun locationForecastTimeSeriesExists() = runBlocking {
-        val timeSeries: List<Pair<String, DataLF>> = locationForecastRepository.getTimeSeries()
-        val time1 = timeSeries.get(0).first
-
-        print("$time1 ----------Testen fungerer!----------")
-
     //global
     private val gson = Gson()
 
@@ -73,10 +55,7 @@ class ExampleUnitTest {
         val features = metAlerts.features
         val relevantAlerts = metAlertsRepository.getRelevantAlertsFor(SurfArea.NORDKAPP, features)
         relevantAlerts.forEach { assert(it.properties?.area?.lowercase()?.contains("nordkapp") == true) }
-
     }
-    //Met alerts
-    private val repo = MetAlertsRepositoryImpl()
 
     //Ocean forecast
     private val hoddevikDataSourceDataSource = HoddevikDataSourceDataSource()
@@ -121,8 +100,8 @@ class ExampleUnitTest {
         println("Test for getWindDirection kjører:")
         println("Resultat av getWindDirection: $windDirectionList")
         println("Testen kjører!")
-
     }
+
     @Test
     fun testGetWindSpeed() = runBlocking {
         val windSpeedList: List<Pair<String, Double>> = locationForecastRepository.getWindSpeed()
@@ -139,8 +118,4 @@ class ExampleUnitTest {
         print("Testen kjører!")
 
     }
-
-
-
-
 }
