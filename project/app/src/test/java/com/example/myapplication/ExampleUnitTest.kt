@@ -1,16 +1,19 @@
 package com.example.myapplication
 
+
+
+import com.example.myapplication.data.metalerts.MetAlertsRepository
 import com.example.myapplication.model.metalerts.MetAlerts
 import com.google.gson.Gson
 import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
-
-import com.example.myapplication.data.locationForecast.LocationForecastDataSource
-import com.example.myapplication.data.locationForecast.LocationForecastRepository
-
+import kotlinx.coroutines.runBlocking
 import com.example.myapplication.data.oceanforecast.HoddevikDataSourceDataSource
 import com.example.myapplication.data.oceanforecast.HoddevikRepository
-import com.example.myapplication.model.locationforecast.DataLF
+import com.example.myapplication.model.SurfArea
+import com.example.myapplication.model.metalerts.Features
+
 import com.example.myapplication.model.oceanforecast.Data
+import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 
 import kotlinx.coroutines.test.runTest
@@ -25,11 +28,44 @@ import java.io.File
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class ExampleUnitTest {
+    //global
+    private val gson = Gson()
 
-    private val repo = MetAlertsRepositoryImpl()
+    //MetAlerts
+    private val metAlertsRepository: MetAlertsRepositoryImpl = MetAlertsRepositoryImpl()
+    private val metAlertJson = File("src/test/java/com/example/myapplication/metAlerts.json").readText()
+    @Test
+    fun testMetAlertsAreaNameWithProxy() = runBlocking {
+        val feature = metAlertsRepository.getFeatures()[0]
+        println(feature.properties?.area)
+    }
+
+    @Test
+    fun getRelevantAlertsForFedjeByApiCall() = runBlocking {
+        val features = async {metAlertsRepository.getFeatures()}
+        val relevantAlerts = metAlertsRepository.getRelevantAlertsFor(SurfArea.FEDJE, features.await())
+        println(relevantAlerts)
+        relevantAlerts.forEach { println("Alert: $it") }
+    }
+
+    @Test
+    fun getRelevantAlertsForNordkappOnlyGetsAlertsFromAreaNordkapp() {
+        println("Script is ran from: ${System.getProperty("user.dir")}")
+        val metAlerts: MetAlerts = gson.fromJson(metAlertJson, MetAlerts::class.java)
+        val features = metAlerts.features
+        val relevantAlerts = metAlertsRepository.getRelevantAlertsFor(SurfArea.NORDKAPP, features)
+        relevantAlerts.forEach { assert(it.properties?.area?.lowercase()?.contains("nordkapp") == true) }
+    }
+
+
+    //Ocean forecast
     private val hoddevikDataSourceDataSource = HoddevikDataSourceDataSource()
     private val hoddevikRepository = HoddevikRepository(hoddevikDataSourceDataSource)
+
+    //Met alerts
+    private val repo = MetAlertsRepositoryImpl()
     
+    //LF
     private val locationForecastDataSource = LocationForecastDataSource()
     private val locationForecastRepository = LocationForecastRepository(locationForecastDataSource)
     private val hoddevikDataSourceDataSource = HoddevikDataSourceDataSource()
@@ -54,13 +90,6 @@ class ExampleUnitTest {
         //assertEquals("2024-03-07T13:00:00Z", time1)
         println("$time1 --------------hei----------------")
 
-    }
-    
-    @Test
-    fun testMetAlertsAreaNameWithProxy() = runBlocking {
-        val feature = repo.getFeatures()[0]
-        println(feature.properties?.area)
-        assert(true)
     }
 
 }
