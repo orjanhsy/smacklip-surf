@@ -57,7 +57,7 @@ dependencies {
     implementation("io.ktor:ktor-client-android:$ktor_version")
     implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
     implementation("io.ktor:ktor-serialization-gson:$ktor_version")
-
+    implementation("io.ktor:ktor-client-json:$ktor_version")
 
 
     //default
@@ -83,5 +83,6 @@ dependencies {
 
 
     val compose_version = "1.0.5"
-    implementation("io.ktor:ktor-client-json:$ktor_version")
+
+
 }
