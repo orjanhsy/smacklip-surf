@@ -9,31 +9,23 @@ class LocationForecastRepository(private val locationForecastDataSource: Locatio
         val timeSeries: List<Timeserie> = locationForecastDataSource.fetchLocationForecastData().properties.timeseries
         return timeSeries.map{it.time to it.data}
     }
-    suspend fun getWindDirection(): List<Pair<String, Double>> {
+
+    private suspend fun getWindData(getData: (DataLF) -> Double): List<Pair<String, Double>> {
         val timeSeries = getTimeSeries()
-        return timeSeries.map { it.first to findWindFromDirection(it.second) }
+        return timeSeries.map { it.first to getData(it.second) }
+    }
+
+    suspend fun getWindDirection(): List<Pair<String, Double>> {
+        return getWindData { dataLF -> dataLF.instant.details.wind_from_direction }
     }
 
     suspend fun getWindSpeed(): List<Pair<String, Double>> {
-        val timeSeries = getTimeSeries()
-        return timeSeries.map{ it.first to findWindSpeed(it.second)}
+        return getWindData { dataLF -> dataLF.instant.details.wind_speed }
     }
 
     suspend fun getWindSpeedOfGust(): List<Pair<String, Double>>{
-        val timeSeries = getTimeSeries()
-        return timeSeries.map { it.first to findWindSpeedOfGust(it.second) }
+        return getWindData { dataLF -> dataLF.instant.details.wind_speed_of_gust }
     }
 
-    private fun findWindFromDirection(dataLF: DataLF): Double {
-        return dataLF.instant.details.wind_from_direction
-    }
-    private fun findWindSpeed(dataLF: DataLF): Double{
-        return dataLF.instant.details.wind_speed
-    }
-
-    private fun findWindSpeedOfGust(dataLF: DataLF): Double{
-        return dataLF.instant.details.wind_speed_of_gust
-
-    }
 
 }
