@@ -24,4 +24,29 @@ class ExampleUnitTest {
         //assertEquals(4, 2 + 2)
         print("$time1 ----------Testen fungerer!----------")
     }
+    @Test
+    fun testGetWindDirection() = runBlocking {
+        val windDirectionList: List<Pair<String, Double>> = locationForecastRepository.getWindDirection()
+        println("Test for getWindDirection kjører:")
+        println("Resultat av getWindDirection: $windDirectionList")
+        println("Testen kjører!")
+
+    }
+    @Test
+    fun testGetWindSpeed() = runBlocking {
+        val windSpeedList: List<Pair<String, Double>> = locationForecastRepository.getWindDirection()
+        println("Test for getWindSpeed kjører:")
+        println("Resultat av getWindSpeed: $windSpeedList")
+        println("Testen kjører!")
+
+    }
+    @Test
+    fun testGetWindSpeedOfGust() = runBlocking {
+        val windSpeedOfGust: List<Pair<String, Double>> = locationForecastRepository.getWindDirection()
+        println("Test for getWindDirection kjører:")
+        println("Resultat av getWindSpeed: $windSpeedOfGust")
+        print("Testen kjører!")
+
+    }
+
 }
