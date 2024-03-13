@@ -17,11 +17,9 @@ class ExampleUnitTest {
     private val locationForecastDataSource = LocationForecastDataSource()
     private val locationForecastRepository = LocationForecastRepository(locationForecastDataSource)
     @Test
-    fun addition_isCorrect() = runBlocking {
+    fun locationForecastTimeSeriesExists() = runBlocking {
         val timeSeries: List<Pair<String, DataLF>> = locationForecastRepository.getTimeSeries()
         val time1 = timeSeries.get(0).first
-
-        //assertEquals(4, 2 + 2)
         print("$time1 ----------Testen fungerer!----------")
     }
     @Test
@@ -34,7 +32,7 @@ class ExampleUnitTest {
     }
     @Test
     fun testGetWindSpeed() = runBlocking {
-        val windSpeedList: List<Pair<String, Double>> = locationForecastRepository.getWindDirection()
+        val windSpeedList: List<Pair<String, Double>> = locationForecastRepository.getWindSpeed()
         println("Test for getWindSpeed kjører:")
         println("Resultat av getWindSpeed: $windSpeedList")
         println("Testen kjører!")
@@ -42,7 +40,7 @@ class ExampleUnitTest {
     }
     @Test
     fun testGetWindSpeedOfGust() = runBlocking {
-        val windSpeedOfGust: List<Pair<String, Double>> = locationForecastRepository.getWindDirection()
+        val windSpeedOfGust: List<Pair<String, Double>> = locationForecastRepository.getWindSpeedOfGust()
         println("Test for getWindDirection kjører:")
         println("Resultat av getWindSpeed: $windSpeedOfGust")
         print("Testen kjører!")
