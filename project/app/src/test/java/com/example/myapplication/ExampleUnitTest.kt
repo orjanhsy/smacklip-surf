@@ -8,7 +8,9 @@ import com.example.myapplication.data.metalerts.MetAlertsRepository
 import com.example.myapplication.model.metalerts.MetAlerts
 import com.google.gson.Gson
 import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
+
 import com.example.myapplication.data.oceanforecast.HoddevikDataSourceDataSource
+
 import com.example.myapplication.data.oceanforecast.HoddevikRepository
 import com.example.myapplication.model.SurfArea
 import com.example.myapplication.model.metalerts.Features
@@ -25,6 +27,24 @@ import org.junit.Test
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class ExampleUnitTest {
+
+
+    private val repo = MetAlertsRepositoryImpl()
+    
+    private val locationForecastDataSource = LocationForecastDataSource()
+    private val locationForecastRepository = LocationForecastRepository(locationForecastDataSource)
+
+
+    private val hoddevikDataSourceDataSource = HoddevikDataSourceDataSource()
+    private val hoddevikRepository = HoddevikRepository(hoddevikDataSourceDataSource)
+
+
+    @Test
+    fun locationForecastTimeSeriesExists() = runBlocking {
+        val timeSeries: List<Pair<String, DataLF>> = locationForecastRepository.getTimeSeries()
+        val time1 = timeSeries.get(0).first
+
+        print("$time1 ----------Testen fungerer!----------")
 
     //global
     private val gson = Gson()
@@ -53,6 +73,7 @@ class ExampleUnitTest {
         val features = metAlerts.features
         val relevantAlerts = metAlertsRepository.getRelevantAlertsFor(SurfArea.NORDKAPP, features)
         relevantAlerts.forEach { assert(it.properties?.area?.lowercase()?.contains("nordkapp") == true) }
+
     }
     //Met alerts
     private val repo = MetAlertsRepositoryImpl()
@@ -60,6 +81,7 @@ class ExampleUnitTest {
     //Ocean forecast
     private val hoddevikDataSourceDataSource = HoddevikDataSourceDataSource()
     private val hoddevikRepository = HoddevikRepository(hoddevikDataSourceDataSource)
+
 
     @Test
     fun oceanForecastTimeSeriesExists() = runBlocking {
@@ -69,6 +91,13 @@ class ExampleUnitTest {
         //val data1 = timeSeries.get(0).second
         //assertEquals("2024-03-07T13:00:00Z", time1)
         println("$time1 --------------hei----------------")
+
+    }
+
+    @Test
+    fun testGetWaveHeight() = runBlocking{
+        println(hoddevikRepository.getWaveHeights().get(0).first)
+        println(hoddevikRepository.getWaveHeights().get(0).second)
 
     }
     
