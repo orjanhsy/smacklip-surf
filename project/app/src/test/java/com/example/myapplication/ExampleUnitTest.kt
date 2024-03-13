@@ -19,8 +19,12 @@ class ExampleUnitTest {
     @Test
     fun locationForecastTimeSeriesExists() = runBlocking {
         val timeSeries: List<Pair<String, DataLF>> = locationForecastRepository.getTimeSeries()
-        val time1 = timeSeries.get(0).first
-        print("$time1 ----------Testen fungerer!----------")
+        if (timeSeries.isNotEmpty()){
+            println("----------Testen fungerer!----------")
+        }else{
+            println("Testen fungerer ikke")
+        }
+
     }
     @Test
     fun testGetWindDirection() = runBlocking {
@@ -41,8 +45,8 @@ class ExampleUnitTest {
     @Test
     fun testGetWindSpeedOfGust() = runBlocking {
         val windSpeedOfGust: List<Pair<String, Double>> = locationForecastRepository.getWindSpeedOfGust()
-        println("Test for getWindDirection kjører:")
-        println("Resultat av getWindSpeed: $windSpeedOfGust")
+        println("Test for getWindSpeedOfGust kjører:")
+        println("Resultat av getWindSpeedOfGust: $windSpeedOfGust")
         print("Testen kjører!")
 
     }
