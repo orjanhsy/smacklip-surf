@@ -3,11 +3,12 @@ package com.example.myapplication.data.locationForecast
 import com.example.myapplication.model.locationforecast.DataLF
 import com.example.myapplication.model.locationforecast.Timeserie
 
-class LocationForecastRepository(private val locationForecastDataSource: LocationForecastDataSource){
+class LocationForecastRepository(private val locationForecastDataSource: LocationForecastDataSource) {
 
-    suspend fun getTimeSeries(): List<Pair<String, DataLF>>{
-        val timeSeries: List<Timeserie> = locationForecastDataSource.fetchLocationForecastData().properties.timeseries
-        return timeSeries.map{it.time to it.data}
+    suspend fun getTimeSeries(): List<Pair<String, DataLF>> {
+        val timeSeries: List<Timeserie> =
+            locationForecastDataSource.fetchLocationForecastData().properties.timeseries
+        return timeSeries.map { it.time to it.data }
     }
 
     private suspend fun getWindData(getData: (DataLF) -> Double): List<Pair<String, Double>> {
@@ -23,9 +24,8 @@ class LocationForecastRepository(private val locationForecastDataSource: Locatio
         return getWindData { dataLF -> dataLF.instant.details.wind_speed }
     }
 
-    suspend fun getWindSpeedOfGust(): List<Pair<String, Double>>{
+    suspend fun getWindSpeedOfGust(): List<Pair<String, Double>> {
         return getWindData { dataLF -> dataLF.instant.details.wind_speed_of_gust }
     }
-
 
 }

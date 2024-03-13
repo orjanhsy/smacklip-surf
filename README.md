@@ -11,7 +11,24 @@ Tobias (tobiawi)
 [Cheat sheet](https://education.github.com/git-cheat-sheet-education.pdf)
 
 ### Regler for pull-request
-Dette ser vi på vi sammen.
+
+* en som ikke har skrevet koden ser over før merging
+* pull-request ofte
+
+### Navnekonvensjoner for Branch
+
+type/&lt;branchnavn-bruk-bindestrek&gt;
+
+eksempel: 
+* feature/fetch-API-oceanforecast
+* fix/some-bug
+
+### Navnekonvensjoner for Commit
+
+* beskrivende
+* engelsk
+* nåtid
+* commit ofte
 
 ### Vi vil som oftest bruke git som dette
 
