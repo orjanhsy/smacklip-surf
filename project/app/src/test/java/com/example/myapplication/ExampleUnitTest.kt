@@ -9,7 +9,7 @@ import com.google.gson.Gson
 import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
 
 
-import com.example.myapplication.data.oceanforecast.OceanforecastRepository
+import com.example.myapplication.data.oceanforecast.OceanforecastRepositoryImpl
 import com.example.myapplication.data.oceanforecast.OceanforecastDataSource
 import com.example.myapplication.model.SurfArea
 
@@ -62,8 +62,7 @@ class ExampleUnitTest {
     }
 
     //Ocean forecast
-    private val oceanforecastDataSource = OceanforecastDataSource()
-    private val oceanforecastRepository = OceanforecastRepository(oceanforecastDataSource)
+    private val oceanforecastRepository = OceanforecastRepositoryImpl()
     private val oceanforecastJson = File("src/test/java/com/example/myapplication/OceanforecastHoddevik.json").readText()
 
     //TODO: usikker på hvordan teste getTimeSeries() på en statisk måte
