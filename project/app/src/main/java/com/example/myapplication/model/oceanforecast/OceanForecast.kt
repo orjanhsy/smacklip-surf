@@ -1,7 +1,7 @@
 package com.example.myapplication.model.oceanforecast
 
 data class OceanForecast(
-    val geometry: Geometry,
-    val properties: Properties,
+    val geometry: GeometryOF,
+    val properties: PropertiesOF,
     val type: String
 )

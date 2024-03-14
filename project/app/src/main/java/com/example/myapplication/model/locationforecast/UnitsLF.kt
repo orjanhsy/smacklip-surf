@@ -1,6 +1,6 @@
 package com.example.myapplication.model.locationforecast
 
-data class Units(
+data class UnitsLF(
     val air_pressure_at_sea_level: String,
     val air_temperature: String,
     val air_temperature_max: String,
