@@ -1,6 +1,6 @@
 package com.example.myapplication.model.oceanforecast
 
-data class Geometry(
+data class GeometryOF(
     val coordinates: List<Double>,
     val type: String
 )
