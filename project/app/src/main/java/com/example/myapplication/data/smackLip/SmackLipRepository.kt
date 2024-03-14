@@ -1,8 +1,7 @@
-package com.example.myapplication.data.mvp
+package com.example.myapplication.data.smackLip
 
 import com.example.myapplication.data.locationForecast.LocationForecastDataSource
 import com.example.myapplication.data.locationForecast.LocationForecastRepository
-import com.example.myapplication.data.metalerts.MetAlertsRepository
 import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
 import com.example.myapplication.data.oceanforecast.OceanforecastDataSource
 import com.example.myapplication.data.oceanforecast.OceanforecastRepository
@@ -12,7 +11,7 @@ import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.model.oceanforecast.DataOF
 
 
-interface MvpRepository {
+interface SmackLipRepository {
     fun getRelevantAlertsFor(surfArea: SurfArea, allFeatures: List<Features>): List<Features>
     fun getWaveHeights(timeSeries: List<Pair<String, DataOF>>): List<Pair<String, Double>>
     suspend fun getTimeSeriesOF(): List<Pair<String, DataOF>>
@@ -22,7 +21,7 @@ interface MvpRepository {
     suspend fun getWindSpeedOfGust(): List<Pair<String, Double>>
 }
 
-class MvpRepositoryImpl (
+class SmackLipRepositoryImpl (
     private val metAlertsRepository: MetAlertsRepositoryImpl = MetAlertsRepositoryImpl(),
     private val locationForecastDataSource: LocationForecastDataSource = LocationForecastDataSource(),
     private val oceanforecastDataSource: OceanforecastDataSource = OceanforecastDataSource(),
@@ -30,7 +29,7 @@ class MvpRepositoryImpl (
     private  val oceanforecastRepository: OceanforecastRepository = OceanforecastRepository(oceanforecastDataSource)
 
 
-    ): MvpRepository {
+    ): SmackLipRepository {
 
         //MET
     override fun getRelevantAlertsFor(surfArea: SurfArea, allFeatures: List<Features>): List<Features> {
