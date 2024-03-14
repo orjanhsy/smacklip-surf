@@ -22,10 +22,10 @@ class LocationForecastRepository(private val locationForecastDataSource: Locatio
 
     suspend fun getWindSpeed(): List<Pair<String, Double>> {
         return getWindData { dataLF -> dataLF.instant.details.wind_speed }
+
     }
 
     suspend fun getWindSpeedOfGust(): List<Pair<String, Double>> {
         return getWindData { dataLF -> dataLF.instant.details.wind_speed_of_gust }
     }
-
 }
