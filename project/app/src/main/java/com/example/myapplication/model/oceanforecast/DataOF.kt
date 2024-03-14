@@ -1,5 +1,5 @@
 package com.example.myapplication.model.oceanforecast
 
-data class Data(
-    val instant: Instant
+data class DataOF(
+    val instant: InstantOF
 )
