@@ -3,9 +3,17 @@ package com.example.myapplication.data.locationForecast
 import com.example.myapplication.model.locationforecast.DataLF
 import com.example.myapplication.model.locationforecast.TimeserieLF
 
-class LocationForecastRepository(private val locationForecastDataSource: LocationForecastDataSource) {
+interface LocationForecastRepository {
+    suspend fun getTimeSeries(): List<Pair<String, DataLF>>
+    suspend fun getWindDirection(): List<Pair<String, Double>>
+    suspend fun getWindSpeed(): List<Pair<String, Double>>
+    suspend fun getWindSpeedOfGust(): List<Pair<String, Double>>
+}
 
-    suspend fun getTimeSeries(): List<Pair<String, DataLF>> {
+class LocationForecastRepositoryImpl(
+    private val locationForecastDataSource: LocationForecastDataSource = LocationForecastDataSource()) : LocationForecastRepository {
+
+    override suspend fun getTimeSeries(): List<Pair<String, DataLF>> {
         val timeSeries: List<TimeserieLF> =
             locationForecastDataSource.fetchLocationForecastData().properties.timeseries
         return timeSeries.map { it.time to it.data }
@@ -16,16 +24,16 @@ class LocationForecastRepository(private val locationForecastDataSource: Locatio
         return timeSeries.map { it.first to getData(it.second) }
     }
 
-    suspend fun getWindDirection(): List<Pair<String, Double>> {
+    override suspend fun getWindDirection(): List<Pair<String, Double>> {
         return getWindData { dataLF -> dataLF.instant.details.wind_from_direction }
     }
 
-    suspend fun getWindSpeed(): List<Pair<String, Double>> {
+    override suspend fun getWindSpeed(): List<Pair<String, Double>> {
         return getWindData { dataLF -> dataLF.instant.details.wind_speed }
+
     }
 
-    suspend fun getWindSpeedOfGust(): List<Pair<String, Double>> {
+    override suspend fun getWindSpeedOfGust(): List<Pair<String, Double>> {
         return getWindData { dataLF -> dataLF.instant.details.wind_speed_of_gust }
     }
-
 }
