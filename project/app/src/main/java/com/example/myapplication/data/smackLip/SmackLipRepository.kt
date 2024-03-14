@@ -2,11 +2,13 @@ package com.example.myapplication.data.smackLip
 
 import com.example.myapplication.data.locationForecast.LocationForecastDataSource
 import com.example.myapplication.data.locationForecast.LocationForecastRepository
+
 import com.example.myapplication.data.locationForecast.LocationForecastRepositoryImpl
 import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
 import com.example.myapplication.data.oceanforecast.OceanforecastDataSource
 import com.example.myapplication.data.oceanforecast.OceanforecastRepository
 import com.example.myapplication.data.oceanforecast.OceanforecastRepositoryImpl
+
 import com.example.myapplication.model.SurfArea
 import com.example.myapplication.model.locationforecast.DataLF
 import com.example.myapplication.model.metalerts.Features
@@ -27,7 +29,6 @@ class SmackLipRepositoryImpl (
     private val metAlertsRepository: MetAlertsRepositoryImpl = MetAlertsRepositoryImpl(),
     private val locationForecastRepository: LocationForecastRepository = LocationForecastRepositoryImpl(),
     private  val oceanforecastRepository: OceanforecastRepository = OceanforecastRepositoryImpl()
-
 
     ): SmackLipRepository {
 

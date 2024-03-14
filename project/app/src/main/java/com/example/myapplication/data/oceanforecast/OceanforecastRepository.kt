@@ -26,6 +26,7 @@ class OceanforecastRepositoryImpl(
         return dataOF.instant.details.sea_surface_wave_height
     }
 
+
     override fun getWaveHeights(timeSeries: List<Pair<String, DataOF>>): List<Pair<String, Double>> {
         //val timeSeries = getTimeSeries();
         return timeSeries.map { it.first to findWaveHeightFromData(it.second) }
