@@ -1,6 +1,6 @@
 package com.example.myapplication.model.oceanforecast
 
-data class Meta(
-    val units: Units,
+data class MetaOF(
+    val units: UnitsOF,
     val updated_at: String
 )

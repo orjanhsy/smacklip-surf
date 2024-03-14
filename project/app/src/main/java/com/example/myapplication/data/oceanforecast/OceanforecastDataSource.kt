@@ -9,7 +9,7 @@ import io.ktor.client.request.get
 import io.ktor.serialization.gson.gson
 import io.ktor.util.appendIfNameAbsent
 
-public class HoddevikDataSourceDataSource(
+public class OceanforecastDataSource(
     private val path: String = "https://api.met.no/weatherapi/oceanforecast/2.0/complete?lat=62.1255693551118&lon=5.152407834229069"
 ) {
 
@@ -23,7 +23,7 @@ public class HoddevikDataSourceDataSource(
         }
     }
 
-    suspend fun fetchHoddevik(): OceanForecast {
+    suspend fun fetchOceanforecast(): OceanForecast {
         val oceanForecast: OceanForecast = client.get(path).body()
         return oceanForecast
     }

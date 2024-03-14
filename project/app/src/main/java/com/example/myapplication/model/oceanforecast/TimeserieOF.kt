@@ -1,6 +1,6 @@
 package com.example.myapplication.model.oceanforecast
 
-data class Timeserie(
-    val `data`: Data,
+data class TimeserieOF(
+    val `data`: DataOF,
     val time: String
 )
