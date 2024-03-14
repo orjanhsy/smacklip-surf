@@ -16,7 +16,7 @@ import com.example.myapplication.model.SurfArea
 import com.example.myapplication.model.locationforecast.LocationForecast
 import com.example.myapplication.model.locationforecast.TimeserieLF
 import com.example.myapplication.model.metalerts.Features
-import com.example.myapplication.model.oceanforecast.Data
+import com.example.myapplication.model.oceanforecast.DataOF
 
 import com.example.myapplication.model.oceanforecast.OceanForecast
 import com.example.myapplication.model.oceanforecast.TimeserieOF
