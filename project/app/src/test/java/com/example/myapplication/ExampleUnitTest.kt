@@ -15,6 +15,8 @@ import com.example.myapplication.data.oceanforecast.HoddevikRepository
 import com.example.myapplication.model.SurfArea
 import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.model.oceanforecast.Data
+import com.example.myapplication.model.oceanforecast.OceanForecast
+import com.example.myapplication.model.oceanforecast.Timeserie
 import kotlinx.coroutines.async
 import kotlinx.coroutines.test.runTest
 import java.io.File
@@ -60,23 +62,21 @@ class ExampleUnitTest {
     //Ocean forecast
     private val hoddevikDataSourceDataSource = HoddevikDataSourceDataSource()
     private val hoddevikRepository = HoddevikRepository(hoddevikDataSourceDataSource)
+    private val OceanforecastJson = File("src/test/java/com/example/myapplication/OceanforecastHoddevik.json").readText()
 
 
-    @Test
-    fun oceanForecastTimeSeriesExists() = runBlocking {
-
-        val timeSeries: List<Pair<String, Data>> = hoddevikRepository.getTimeSeries()
-        val time1 = timeSeries.get(0).first
-        //val data1 = timeSeries.get(0).second
-        //assertEquals("2024-03-07T13:00:00Z", time1)
-        println("$time1 --------------hei----------------")
-
-    }
-
+    //TODO: usikker på hvordan teste getTimeSeries() på en statisk måte
     @Test
     fun testGetWaveHeight() = runBlocking{
-        println(hoddevikRepository.getWaveHeights().get(0).first)
-        println(hoddevikRepository.getWaveHeights().get(0).second)
+        val oceanForecast: OceanForecast = gson.fromJson(OceanforecastJson, OceanForecast::class.java)
+        val timeSeriesList: List<Timeserie> = oceanForecast.properties.timeseries
+        val timeSeries = timeSeriesList.map { it.time to it.data }
+
+        val time0 = timeSeries[0].first
+        assert(time0 == "2024-03-13T17:00:00Z")
+        //sjekker om bølgehøyden er lik ved å direkte aksessere den i filen og ved å bruke repositoryet sin get-metode for bølgehøyde
+        assert(timeSeries[0].second.instant.details.sea_surface_wave_height == hoddevikRepository.getWaveHeights(timeSeries)[0].second)
+        assert(timeSeries[10].second.instant.details.sea_surface_wave_height == hoddevikRepository.getWaveHeights(timeSeries)[10].second)
 
     }
     
