@@ -1,6 +1,6 @@
 package com.example.myapplication.model.locationforecast
 
-data class Details(
+data class DetailsLF(
     val air_pressure_at_sea_level: Double,
     val air_temperature: Double,
     val air_temperature_percentile_10: Double,

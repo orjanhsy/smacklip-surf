@@ -12,6 +12,12 @@ import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
 import com.example.myapplication.data.oceanforecast.OceanforecastRepository
 import com.example.myapplication.data.oceanforecast.OceanforecastDataSource
 import com.example.myapplication.model.SurfArea
+
+import com.example.myapplication.model.locationforecast.LocationForecast
+import com.example.myapplication.model.locationforecast.TimeserieLF
+import com.example.myapplication.model.metalerts.Features
+import com.example.myapplication.model.oceanforecast.Data
+
 import com.example.myapplication.model.oceanforecast.OceanForecast
 import com.example.myapplication.model.oceanforecast.TimeserieOF
 import kotlinx.coroutines.async
@@ -78,6 +84,16 @@ class ExampleUnitTest {
     //Location Forecast
     private val locationForecastDataSource = LocationForecastDataSource()
     private val locationForecastRepository = LocationForecastRepository(locationForecastDataSource)
+
+    fun testWindDirection() = runBlocking {
+        val locationJson = File("src/test/java/com/example/myapplication/locationForecast.json").readText()
+        val locationForecast: LocationForecast = gson.fromJson(locationJson, LocationForecast::class.java)
+        val timeseriesListLF: List<TimeserieLF> = locationForecast.properties.timeseries
+        val timeSeriesLF = timeseriesListLF.map { it.time to it.data }
+        val windDirectionForecast = locationForecastRepository.getWindDirection()
+        assert(timeSeriesLF[0].second.instant.details.wind_from_direction == windDirectionForecast[0].second)
+        assert(timeSeriesLF[10].second.instant.details.wind_from_direction == windDirectionForecast[10].second)
+    }
 
     @Test
     fun locationForecastTimeSeriesExists() = runBlocking {
