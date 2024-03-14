@@ -2,6 +2,7 @@ package com.example.myapplication
 
 import com.example.myapplication.data.locationForecast.LocationForecastDataSource
 import com.example.myapplication.data.locationForecast.LocationForecastRepository
+import com.example.myapplication.data.locationForecast.LocationForecastRepositoryImpl
 import com.example.myapplication.model.locationforecast.DataLF
 import kotlinx.coroutines.runBlocking
 import com.example.myapplication.model.metalerts.MetAlerts
@@ -9,7 +10,7 @@ import com.google.gson.Gson
 import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
 
 
-import com.example.myapplication.data.oceanforecast.OceanforecastRepository
+import com.example.myapplication.data.oceanforecast.OceanforecastRepositoryImpl
 import com.example.myapplication.data.oceanforecast.OceanforecastDataSource
 import com.example.myapplication.model.SurfArea
 
@@ -62,8 +63,7 @@ class ExampleUnitTest {
     }
 
     //Ocean forecast
-    private val oceanforecastDataSource = OceanforecastDataSource()
-    private val oceanforecastRepository = OceanforecastRepository(oceanforecastDataSource)
+    private val oceanforecastRepository = OceanforecastRepositoryImpl()
     private val oceanforecastJson = File("src/test/java/com/example/myapplication/OceanforecastHoddevik.json").readText()
 
     //TODO: usikker på hvordan teste getTimeSeries() på en statisk måte
@@ -82,8 +82,7 @@ class ExampleUnitTest {
     }
     
     //Location Forecast
-    private val locationForecastDataSource = LocationForecastDataSource()
-    private val locationForecastRepository = LocationForecastRepository(locationForecastDataSource)
+    private val locationForecastRepository = LocationForecastRepositoryImpl()
 
     fun testWindDirection() = runBlocking {
         val locationJson = File("src/test/java/com/example/myapplication/locationForecast.json").readText()
