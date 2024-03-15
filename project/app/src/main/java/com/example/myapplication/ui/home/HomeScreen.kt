@@ -38,9 +38,7 @@ import com.example.myapplication.model.SurfArea
 @Composable
 fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel()) {
 
-
     val homeScreenUiState : HomeScreenUiState by homeScreenViewModel.homeScreenUiState.collectAsState()
-
 
     Scaffold(
         topBar = {
