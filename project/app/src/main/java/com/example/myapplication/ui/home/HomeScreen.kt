@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.home
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,6 +24,8 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -57,8 +60,8 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel()) {
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            items(SurfArea.entries) { party ->
-                SurfAreaCard()
+            items(SurfArea.entries) { location ->
+                SurfAreaCard(location)
             }
 
         }
@@ -68,7 +71,7 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel()) {
 
 
 @Composable
-fun SurfAreaCard() {
+fun SurfAreaCard(surfArea : SurfArea) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -108,7 +111,12 @@ fun SurfAreaCard() {
             Column (
                 horizontalAlignment = Alignment.End
             ){
-                Text("hei")
+                if (surfArea.image != 0){
+                    Image(painter = painterResource(id = surfArea.image), 
+                        contentDescription = null
+
+                        )
+                }
             }
         }
     }
@@ -117,7 +125,7 @@ fun SurfAreaCard() {
 //@Preview(showBackground = true)
 @Composable
 private fun PreviewSurfAreaCard() {
-    SurfAreaCard()
+    SurfAreaCard(SurfArea.HODDEVIK)
 }
 
 @Preview(showBackground = true)
