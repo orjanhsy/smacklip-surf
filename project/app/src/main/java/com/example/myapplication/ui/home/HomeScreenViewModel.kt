@@ -38,8 +38,8 @@ class HomeScreenViewModel : ViewModel() {
     fun updateWindGust(){
         viewModelScope.launch (Dispatchers.IO){
             _homeScreenUiState.update{
-                val newWindSpeed = smackLipRepository.getWindSpeedOfGust()
-                it.copy(windSpeed = newWindSpeed)
+                val newWindGust = smackLipRepository.getWindSpeedOfGust()
+                it.copy(windGust = newWindGust)
             }
         }
     }
@@ -47,11 +47,12 @@ class HomeScreenViewModel : ViewModel() {
     fun updateWaveHeight(){
         viewModelScope.launch (Dispatchers.IO){
             _homeScreenUiState.update{
-                val newWindSpeed = smackLipRepository.getWaveHeights(smackLipRepository.getTimeSeriesOF())
-                it.copy(windSpeed = newWindSpeed)
+                val newWaveHeight = smackLipRepository.getWaveHeights(smackLipRepository.getTimeSeriesOF())
+                it.copy(waveHeight = newWaveHeight)
             }
         }
     }
+
 
 
 }
