@@ -37,6 +37,7 @@ import com.example.myapplication.model.SurfArea
 fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel()) {
 
     //SurfAreaCard()
+    //Test
 
     Scaffold(
         topBar = {
