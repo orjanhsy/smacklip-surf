@@ -23,7 +23,9 @@ class HomeScreenViewModel : ViewModel() {
     private val _homeScreenUiState = MutableStateFlow(HomeScreenUiState())
     val homeScreenUiState: StateFlow<HomeScreenUiState> = _homeScreenUiState.asStateFlow()
 
-
+    init {
+        updateWindSpeed()
+    }
     fun updateWindSpeed(){
         viewModelScope.launch (Dispatchers.IO){
             _homeScreenUiState.update{
