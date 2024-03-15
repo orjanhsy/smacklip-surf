@@ -22,6 +22,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -36,8 +38,9 @@ import com.example.myapplication.model.SurfArea
 @Composable
 fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel()) {
 
-    //SurfAreaCard()
-    //Test
+
+    val homeScreenUiState : HomeScreenUiState by homeScreenViewModel.homeScreenUiState.collectAsState()
+
 
     Scaffold(
         topBar = {
@@ -57,7 +60,7 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel()) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             items(SurfArea.entries) { location ->
-                SurfAreaCard(location)
+                SurfAreaCard(location, homeScreenUiState.windSpeed, homeScreenUiState.waveHeight)
             }
         }
     }
@@ -66,7 +69,12 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel()) {
 
 
 @Composable
-fun SurfAreaCard(surfArea : SurfArea) {
+fun SurfAreaCard(
+    surfArea : SurfArea,
+    windSpeed : List<Pair<String, Double>>,
+    waveHeight : List<Pair<String, Double>>
+)
+{
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -93,13 +101,13 @@ fun SurfAreaCard(surfArea : SurfArea) {
                 }
                 Row {
                     Text(
-                        text = "Wind"
+                        text = "Wind: ${windSpeed[0].second}"
                     )
                 }
 
                 Row {
                     Text(
-                        text = "Wave height"
+                        text = "Wave height: ${waveHeight[0].second}"
                     )
                 }
             }
@@ -117,10 +125,10 @@ fun SurfAreaCard(surfArea : SurfArea) {
     }
 }
 
-//@Preview(showBackground = true)
+@Preview(showBackground = true)
 @Composable
 private fun PreviewSurfAreaCard() {
-    SurfAreaCard(SurfArea.HODDEVIK)
+    SurfAreaCard(SurfArea.HODDEVIK, listOf(Pair("time", 1.0)), listOf(Pair("time", 5.0)))
 }
 
 @Preview(showBackground = true)
