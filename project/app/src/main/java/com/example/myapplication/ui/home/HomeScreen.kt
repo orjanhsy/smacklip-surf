@@ -87,7 +87,7 @@ fun SurfAreaCard(surfArea : SurfArea) {
             ) {
                 Row {
                     Text(
-                        text = "Hoddevik",
+                        text = surfArea.locationName,
                         fontWeight = FontWeight.Bold
                     )
                 }
