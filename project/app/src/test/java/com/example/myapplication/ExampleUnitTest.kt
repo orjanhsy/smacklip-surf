@@ -2,6 +2,7 @@ package com.example.myapplication
 
 import com.example.myapplication.data.locationForecast.LocationForecastDataSource
 import com.example.myapplication.data.locationForecast.LocationForecastRepository
+import com.example.myapplication.data.locationForecast.LocationForecastRepositoryImpl
 import com.example.myapplication.model.locationforecast.DataLF
 import kotlinx.coroutines.runBlocking
 import com.example.myapplication.model.metalerts.MetAlerts
@@ -81,8 +82,7 @@ class ExampleUnitTest {
     }
     
     //Location Forecast
-    private val locationForecastDataSource = LocationForecastDataSource()
-    private val locationForecastRepository = LocationForecastRepository(locationForecastDataSource)
+    private val locationForecastRepository = LocationForecastRepositoryImpl()
 
     fun testWindDirection() = runBlocking {
         val locationJson = File("src/test/java/com/example/myapplication/locationForecast.json").readText()
