@@ -48,12 +48,7 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel()) {
                 title = {
                     Text(text = "Locations")
                 })
-        })
-
-
-    { innerPadding ->
-
-
+        }) { innerPadding ->
         LazyColumn(
             modifier = Modifier
                 .padding(innerPadding)
@@ -63,7 +58,6 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel()) {
             items(SurfArea.entries) { location ->
                 SurfAreaCard(location)
             }
-
         }
     }
 }
