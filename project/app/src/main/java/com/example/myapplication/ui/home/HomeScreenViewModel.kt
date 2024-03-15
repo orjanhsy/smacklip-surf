@@ -25,6 +25,8 @@ class HomeScreenViewModel : ViewModel() {
 
     init {
         updateWindSpeed()
+        updateWindGust()
+        updateWaveHeight()
     }
     fun updateWindSpeed(){
         viewModelScope.launch (Dispatchers.IO){
