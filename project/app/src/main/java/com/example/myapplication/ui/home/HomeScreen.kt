@@ -99,13 +99,13 @@ fun SurfAreaCard(
                 }
                 Row {
                     Text(
-                        text = "Wind: ${windSpeed[0].second}"
+                        text = "Wind: ${if (windSpeed.isNotEmpty()) windSpeed[0].second else ""}"
                     )
                 }
 
                 Row {
                     Text(
-                        text = "Wave height: ${waveHeight[0].second}"
+                        text = "Wave height: ${if(waveHeight.isNotEmpty()) waveHeight[0].second else ""}"
                     )
                 }
             }
