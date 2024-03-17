@@ -4,7 +4,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
 import com.example.myapplication.model.SurfArea
 import com.example.myapplication.model.metalerts.Features
-import com.google.android.gms.common.Feature
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
