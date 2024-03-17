@@ -116,6 +116,7 @@ fun SurfAreaCard(
 
                 Row {
                     Text(
+                        // only shows description of first alert. There may be several.
                         text = "Alert: ${if (alerts?.isNotEmpty() == true) alerts[0][0].properties?.description else "No alerts"}"
                     )
                 }
