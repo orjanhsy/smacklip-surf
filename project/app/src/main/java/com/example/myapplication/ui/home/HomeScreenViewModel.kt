@@ -2,7 +2,9 @@ package com.example.myapplication.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
+import com.example.myapplication.model.SurfArea
 import com.example.myapplication.model.metalerts.Features
+import com.google.android.gms.common.Feature
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +18,7 @@ data class HomeScreenUiState(
     val windGust : List<Pair<String, Double>> = emptyList(),
     val windDirection : List<Pair<String, Double>> = emptyList(),
     val waveHeight : List<Pair<String, Double>> = emptyList(),
-    val relevantAlerts : List<Features> = emptyList()
+    val allRelevantAlerts : List<List<Features>> = emptyList()
 )
 class HomeScreenViewModel : ViewModel() {
     private val smackLipRepository = SmackLipRepositoryImpl()
@@ -55,6 +57,16 @@ class HomeScreenViewModel : ViewModel() {
         }
     }
 
-
+    fun updateAlerts() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val allAlerts: MutableList<List<Features>> = mutableListOf()
+            SurfArea.entries.forEach { surfArea ->
+                allAlerts.add(smackLipRepository.getRelevantAlertsFor(surfArea))
+            }
+            _homeScreenUiState.update {
+                it.copy(allRelevantAlerts = allAlerts.toList())
+            }
+        }
+    }
 
 }

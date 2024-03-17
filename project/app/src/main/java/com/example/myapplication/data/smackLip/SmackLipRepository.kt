@@ -35,7 +35,7 @@ class SmackLipRepositoryImpl (
     //MET
     override suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Features> {
         return metAlertsRepository.getRelevantAlertsFor(surfArea)
-     }
+    }
 
     //OF
     override fun getWaveHeights(timeSeries: List<Pair<String, DataOF>>): List<Pair<String, Double>> {
