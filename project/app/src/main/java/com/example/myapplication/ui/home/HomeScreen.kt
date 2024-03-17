@@ -115,11 +115,9 @@ fun SurfAreaCard(
                 }
 
                 Row {
-                    if (alerts != null) {
-                        Text(
-                            text = "Alert: ${if (alerts.isNotEmpty()) alerts[0][0].properties?.description else "No alerts"}"
-                        )
-                    }
+                    Text(
+                        text = "Alert: ${if (alerts?.isNotEmpty() == true) alerts[0][0].properties?.description else "No alerts"}"
+                    )
                 }
             }
             Column (
