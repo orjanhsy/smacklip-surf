@@ -39,7 +39,6 @@ class ExampleUnitTest {
 
     //global
     private val gson = Gson()
-    private val homeScreenViewModel = HomeScreenViewModel()
 
     //MetAlerts
     private val metAlertsRepository: MetAlertsRepositoryImpl = MetAlertsRepositoryImpl()
