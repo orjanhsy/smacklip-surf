@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.model.SurfArea
+import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,7 +66,8 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel()) {
 fun SurfAreaCard(
     surfArea : SurfArea,
     windSpeed : List<Pair<String, Double>>,
-    waveHeight : List<Pair<String, Double>>
+    waveHeight : List<Pair<String, Double>>,
+    alert: List<Features>
 )
 {
     Card(
@@ -101,6 +103,12 @@ fun SurfAreaCard(
                 Row {
                     Text(
                         text = "Wave height: ${if(waveHeight.isNotEmpty()) waveHeight[0].second else ""}"
+                    )
+                }
+
+                Row {
+                    Text(
+                        text = "Alert: ${alert[0].properties?.description}"
                     )
                 }
             }

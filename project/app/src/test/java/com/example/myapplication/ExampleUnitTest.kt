@@ -1,5 +1,7 @@
 package com.example.myapplication
 
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import com.example.myapplication.data.locationForecast.LocationForecastDataSource
 import com.example.myapplication.data.locationForecast.LocationForecastRepository
 import com.example.myapplication.data.locationForecast.LocationForecastRepositoryImpl
@@ -21,6 +23,8 @@ import com.example.myapplication.model.oceanforecast.DataOF
 
 import com.example.myapplication.model.oceanforecast.OceanForecast
 import com.example.myapplication.model.oceanforecast.TimeserieOF
+import com.example.myapplication.ui.home.HomeScreenUiState
+import com.example.myapplication.ui.home.HomeScreenViewModel
 import kotlinx.coroutines.async
 import java.io.File
 import org.junit.Test
@@ -35,6 +39,7 @@ class ExampleUnitTest {
 
     //global
     private val gson = Gson()
+    private val homeScreenViewModel = HomeScreenViewModel()
 
     //MetAlerts
     private val metAlertsRepository: MetAlertsRepositoryImpl = MetAlertsRepositoryImpl()
@@ -125,6 +130,5 @@ class ExampleUnitTest {
         println("Test for getWindSpeedOfGust kjører:")
         println("Resultat av getWindSpeedOfGust: $windSpeedOfGust")
         print("Testen kjører!")
-
     }
 }
