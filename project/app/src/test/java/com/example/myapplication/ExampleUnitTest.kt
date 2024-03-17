@@ -47,18 +47,17 @@ class ExampleUnitTest {
 
     @Test
     fun getRelevantAlertsForFedjeByApiCall() = runBlocking {
-        val features = async {metAlertsRepository.getFeatures()}
-        val relevantAlerts = metAlertsRepository.getRelevantAlertsFor(SurfArea.FEDJE, features.await())
+        val relevantAlerts = metAlertsRepository.getRelevantAlertsFor(SurfArea.FEDJE)
         println(relevantAlerts)
         relevantAlerts.forEach { println("Alert: $it") }
     }
 
     @Test
-    fun getRelevantAlertsForNordkappOnlyGetsAlertsFromAreaNordkapp() {
+    fun getRelevantAlertsForNordkappOnlyGetsAlertsFromAreaNordkapp() = runBlocking {
         println("Script is ran from: ${System.getProperty("user.dir")}")
         val metAlerts: MetAlerts = gson.fromJson(metAlertJson, MetAlerts::class.java)
         val features = metAlerts.features
-        val relevantAlerts = metAlertsRepository.getRelevantAlertsFor(SurfArea.NORDKAPP, features)
+        val relevantAlerts = metAlertsRepository.getRelevantAlertsFor(SurfArea.NORDKAPP)
         relevantAlerts.forEach { assert(it.properties?.area?.lowercase()?.contains("nordkapp") == true) }
     }
 
