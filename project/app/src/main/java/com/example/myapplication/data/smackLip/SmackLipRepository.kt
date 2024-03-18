@@ -13,12 +13,12 @@ import com.example.myapplication.model.oceanforecast.DataOF
 
 interface SmackLipRepository {
     suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Features>
-    suspend fun getWaveHeights(): List<Pair<String, Double>>
+    suspend fun getWaveHeights(): List<Pair<List<Int>, Double>>
     suspend fun getTimeSeriesOF(): List<Pair<String, DataOF>>
     suspend fun getTimeSeriesLF(): List<Pair<String, DataLF>>
-    suspend fun getWindDirection(): List<Pair<String, Double>>
-    suspend fun getWindSpeed(): List<Pair<String, Double>>
-    suspend fun getWindSpeedOfGust(): List<Pair<String, Double>>
+    suspend fun getWindDirection(): List<Pair<List<Int>, Double>>
+    suspend fun getWindSpeed(): List<Pair<List<Int>, Double>>
+    suspend fun getWindSpeedOfGust(): List<Pair<List<Int>, Double>>
     abstract fun getTimeListFromTimeString(timeString : String): List<Int>
 }
 
@@ -36,9 +36,11 @@ class SmackLipRepositoryImpl (
 
 
     //OF
-    override suspend fun getWaveHeights(): List<Pair<String, Double>> {
-
-        return oceanforecastRepository.getWaveHeights()
+    override suspend fun getWaveHeights(): List<Pair<List<Int>, Double>> {
+        val tmpWaveHeight = oceanforecastRepository.getWaveHeights()
+        return tmpWaveHeight.map { waveHeight ->
+            Pair(getTimeListFromTimeString(waveHeight.first), waveHeight.second)
+        }
     }
 
     override suspend fun getTimeSeriesOF(): List<Pair<String, DataOF>> {
@@ -63,15 +65,26 @@ class SmackLipRepositoryImpl (
         return locationForecastRepository.getTimeSeries()
     }
 
-    override suspend fun getWindDirection(): List<Pair<String, Double>> {
-        return locationForecastRepository.getWindDirection()
+    override suspend fun getWindDirection(): List<Pair<List<Int>, Double>> {
+        val tmpWindDirection = locationForecastRepository.getWindDirection()
+        return tmpWindDirection.map { windDirection ->
+            Pair(getTimeListFromTimeString(windDirection.first), windDirection.second)
+        }
     }
 
-    override suspend fun getWindSpeed(): List<Pair<String, Double>> {
-        return locationForecastRepository.getWindSpeed()
+    override suspend fun getWindSpeed(): List<Pair<List<Int>, Double>> {
+        val tmpWindSpeed = locationForecastRepository.getWindSpeed()
+        return tmpWindSpeed.map { windSpeed ->
+            Pair(getTimeListFromTimeString(windSpeed.first), windSpeed.second)
+        }
     }
 
-    override suspend fun getWindSpeedOfGust(): List<Pair<String, Double>> {
-        return locationForecastRepository.getWindSpeedOfGust()
+    override suspend fun getWindSpeedOfGust(): List<Pair<List<Int>, Double>> {
+        val tmpWindGust = locationForecastRepository.getWindSpeedOfGust()
+        return tmpWindGust.map { windGust ->
+            Pair(getTimeListFromTimeString(windGust.first), windGust.second)
+        }
+
     }
+
     }
