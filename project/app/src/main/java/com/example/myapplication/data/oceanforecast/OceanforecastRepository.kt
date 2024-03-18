@@ -5,7 +5,7 @@ import com.example.myapplication.model.oceanforecast.TimeserieOF
 
 interface OceanforecastRepository{
     suspend fun getTimeSeries(): List<Pair<String, DataOF>>
-    fun getWaveHeights(timeSeries: List<Pair<String, DataOF>>): List<Pair<String, Double>>
+    suspend fun getWaveHeights(): List<Pair<String, Double>>
 }
 
 class OceanforecastRepositoryImpl(
@@ -27,8 +27,8 @@ class OceanforecastRepositoryImpl(
     }
 
 
-    override fun getWaveHeights(timeSeries: List<Pair<String, DataOF>>): List<Pair<String, Double>> {
-        //val timeSeries = getTimeSeries();
+    override suspend fun getWaveHeights(): List<Pair<String, Double>> {
+        val timeSeries = getTimeSeries();
         return timeSeries.map { it.first to findWaveHeightFromData(it.second) }
 
     }
