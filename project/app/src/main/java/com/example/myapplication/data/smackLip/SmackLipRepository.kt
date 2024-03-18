@@ -22,7 +22,7 @@ interface SmackLipRepository {
 
     abstract fun getTimeListFromTimeString(timeString : String): List<Int>
 
-    suspend fun getForecastNext24Hours() : MutableList<MutableList<Pair<Int, List<Double>>>>
+    suspend fun getForecastNext24Hours() : MutableList<MutableList<Pair<List<Int>, Pair<Int, List<Double>>>>>
 }
 
 class SmackLipRepositoryImpl (
@@ -99,30 +99,40 @@ class SmackLipRepositoryImpl (
 
     //totalt: List<Pair<List<Int>, List<Pair<Int, List<Double>>>>
 
-    override suspend fun getForecastNext24Hours() : MutableList<MutableList<Pair<Int, List<Double>>>> {
-        val allDays24Hours : MutableList<MutableList<Pair<Int, List<Double>>>> = mutableListOf()
+    override suspend fun getForecastNext24Hours() : MutableList<MutableList<Pair<List<Int>, Pair<Int, List<Double>>>>> {
+        val allDays24Hours : MutableList<MutableList<Pair<List<Int>, Pair<Int, List<Double>>>>> = mutableListOf()
+
+        //Pair<List<Int>, Pair<Int, List<Double>>>
 
         val waveHeight = getWaveHeights()
         val windDirection = getWindDirection()
         val windSpeed = getWindSpeed()
         val windSpeedOfGust = getWindSpeedOfGust()
 
+        println(waveHeight.size)
+        println(windDirection.size)
+        println(windSpeed.size)
+        println(windSpeedOfGust.size)
+
+
         for (i in 0 until 7) { //24 timer de neste 7 dagene
 
             val date : List<Int> = listOf(waveHeight[i].first[1], waveHeight[i].first[2]) //dato = [mnd, dag]
-            val forecast24HoursList : MutableList<Pair<Int, List<Double>>> = mutableListOf() //data for hver time den dagen = [(time, [waveHeight, windDirection, windSpeed, windSpeedOfGust])]
+            val forecast24HoursList : MutableList<Pair<List<Int>, Pair<Int, List<Double>>>> = mutableListOf() //data for hver time den dagen = [(time, [waveHeight, windDirection, windSpeed, windSpeedOfGust])]
 
-            for (j in 0 until  24) {
+
+            for (j in waveHeight[0].first[3] until  24) {
                 val forecastOneHour = Pair(
-                    waveHeight[i].first[3], //timen
+                    waveHeight[j].first[3], //timen
                     listOf(                 //værmelding den timen
-                        waveHeight[i].second,
-                        windDirection[i].second,
-                        windSpeed[i].second,
-                        windSpeedOfGust[i].second
+                        waveHeight[j].second,
+                        //windDirection[j].second,
+                        //windSpeed[j].second,
+                        //windSpeedOfGust[j].second
                     )
                 )
-                forecast24HoursList.add(forecastOneHour) //legger inn ny entry for den enkelte timen, totalt 24 ganger per dag
+
+                forecast24HoursList.add(Pair(date, forecastOneHour)) //legger inn ny entry for den enkelte timen, totalt 24 ganger per dag
 
             }
             allDays24Hours.add(forecast24HoursList)
@@ -130,5 +140,6 @@ class SmackLipRepositoryImpl (
 
         return allDays24Hours
     }
+
 
     }
