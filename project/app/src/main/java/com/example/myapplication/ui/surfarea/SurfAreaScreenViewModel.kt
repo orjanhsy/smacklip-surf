@@ -43,5 +43,14 @@ class SurfAreaScreenViewModel: ViewModel() {
             }
         }
     }
+
+    fun updateWindDirection() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _surfAreaScreenUiState.update {
+                val newWindDirection = smackLipRepository.getWindDirection()
+                it.copy(waveHeights = newWindDirection)
+            }
+        }
+    }
 }
 
