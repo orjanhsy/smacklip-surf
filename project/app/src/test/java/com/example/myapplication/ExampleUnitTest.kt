@@ -14,6 +14,8 @@ import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
 
 import com.example.myapplication.data.oceanforecast.OceanforecastRepositoryImpl
 import com.example.myapplication.data.oceanforecast.OceanforecastDataSource
+import com.example.myapplication.data.smackLip.SmackLipRepository
+import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
 import com.example.myapplication.model.SurfArea
 
 import com.example.myapplication.model.locationforecast.LocationForecast
@@ -130,4 +132,17 @@ class ExampleUnitTest {
         println("Resultat av getWindSpeedOfGust: $windSpeedOfGust")
         print("Testen kjører!")
     }
+
+    //SmackLipRepository
+    private val smackLipRepository : SmackLipRepository = SmackLipRepositoryImpl()
+    @Test
+    fun testGetDateFromTimeString() {
+        val timeList = smackLipRepository.getTimeListFromTimeString("2024-03-13T19:00:00Z")
+        assert(timeList[0] == 2024)
+        assert(timeList[1] == 3)
+        assert(timeList[2] == 13)
+        assert(timeList[3] == 19)
+
+    }
+
 }

@@ -1,11 +1,9 @@
 package com.example.myapplication.data.smackLip
 
-import com.example.myapplication.data.locationForecast.LocationForecastDataSource
 import com.example.myapplication.data.locationForecast.LocationForecastRepository
 
 import com.example.myapplication.data.locationForecast.LocationForecastRepositoryImpl
 import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
-import com.example.myapplication.data.oceanforecast.OceanforecastDataSource
 import com.example.myapplication.data.oceanforecast.OceanforecastRepository
 import com.example.myapplication.data.oceanforecast.OceanforecastRepositoryImpl
 
@@ -23,6 +21,7 @@ interface SmackLipRepository {
     suspend fun getWindDirection(): List<Pair<String, Double>>
     suspend fun getWindSpeed(): List<Pair<String, Double>>
     suspend fun getWindSpeedOfGust(): List<Pair<String, Double>>
+    abstract fun getTimeListFromTimeString(timeString : String): List<Int>
 }
 
 class SmackLipRepositoryImpl (
@@ -47,7 +46,17 @@ class SmackLipRepositoryImpl (
 
     }
 
-    fun get
+
+    //tar inn hele time-strengen på følgende format "time": "2024-03-13T18:00:00Z"
+    //returnerer en liste slik: [år, måned, dag, time]
+     override fun getTimeListFromTimeString(timeString : String) : List<Int> {
+        return listOf(
+            timeString.substring(0, 4).toInt(),
+            timeString.substring(5, 7).toInt(),
+            timeString.substring(8, 10).toInt(),
+            timeString.substring(11, 13).toInt())
+    }
+
 
     //LF
     override suspend fun getTimeSeriesLF(): List<Pair<String, DataLF>> {
