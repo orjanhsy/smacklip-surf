@@ -46,6 +46,7 @@ class SmackLipRepositoryImpl (
 
     }
 
+
     //tar inn hele time-strengen på følgende format "time": "2024-03-13T18:00:00Z"
     //returnerer en liste slik: [år, måned, dag, time]
      override fun getTimeListFromTimeString(timeString : String) : List<Int> {
@@ -55,7 +56,6 @@ class SmackLipRepositoryImpl (
             timeString.substring(8, 10).toInt(),
             timeString.substring(11, 13).toInt())
     }
-
 
 
     //LF
