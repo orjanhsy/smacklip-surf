@@ -1,5 +1,7 @@
 package com.example.myapplication
 
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import com.example.myapplication.data.locationForecast.LocationForecastDataSource
 import com.example.myapplication.data.locationForecast.LocationForecastRepository
 import com.example.myapplication.data.locationForecast.LocationForecastRepositoryImpl
@@ -21,6 +23,8 @@ import com.example.myapplication.model.oceanforecast.DataOF
 
 import com.example.myapplication.model.oceanforecast.OceanForecast
 import com.example.myapplication.model.oceanforecast.TimeserieOF
+import com.example.myapplication.ui.home.HomeScreenUiState
+import com.example.myapplication.ui.home.HomeScreenViewModel
 import kotlinx.coroutines.async
 import java.io.File
 import org.junit.Test
@@ -47,18 +51,17 @@ class ExampleUnitTest {
 
     @Test
     fun getRelevantAlertsForFedjeByApiCall() = runBlocking {
-        val features = async {metAlertsRepository.getFeatures()}
-        val relevantAlerts = metAlertsRepository.getRelevantAlertsFor(SurfArea.FEDJE, features.await())
+        val relevantAlerts = metAlertsRepository.getRelevantAlertsFor(SurfArea.FEDJE)
         println(relevantAlerts)
         relevantAlerts.forEach { println("Alert: $it") }
     }
 
     @Test
-    fun getRelevantAlertsForNordkappOnlyGetsAlertsFromAreaNordkapp() {
+    fun getRelevantAlertsForNordkappOnlyGetsAlertsFromAreaNordkapp() = runBlocking {
         println("Script is ran from: ${System.getProperty("user.dir")}")
         val metAlerts: MetAlerts = gson.fromJson(metAlertJson, MetAlerts::class.java)
         val features = metAlerts.features
-        val relevantAlerts = metAlertsRepository.getRelevantAlertsFor(SurfArea.NORDKAPP, features)
+        val relevantAlerts = metAlertsRepository.getRelevantAlertsFor(SurfArea.NORDKAPP)
         relevantAlerts.forEach { assert(it.properties?.area?.lowercase()?.contains("nordkapp") == true) }
     }
 
@@ -126,6 +129,5 @@ class ExampleUnitTest {
         println("Test for getWindSpeedOfGust kjører:")
         println("Resultat av getWindSpeedOfGust: $windSpeedOfGust")
         print("Testen kjører!")
-
     }
 }
