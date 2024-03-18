@@ -47,6 +47,8 @@ class SmackLipRepositoryImpl (
 
     }
 
+    fun get
+
     //LF
     override suspend fun getTimeSeriesLF(): List<Pair<String, DataLF>> {
         return locationForecastRepository.getTimeSeries()
