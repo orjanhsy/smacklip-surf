@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 data class HomeScreenUiState(
     val locationName: String = "",
-    val windSpeed: List<Pair<String, Double>> = emptyList(),
+    val windSpeed: List<Pair<List<Int>, Double>> = emptyList(),
     val windGust: List<Pair<String, Double>> = emptyList(),
     val windDirection: List<Pair<String, Double>> = emptyList(),
     val waveHeight: List<Pair<List<Int>, Double>> = emptyList(),

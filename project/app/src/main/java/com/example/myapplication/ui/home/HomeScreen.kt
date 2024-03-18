@@ -76,7 +76,7 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel()) {
 @Composable
 fun SurfAreaCard(
     surfArea: SurfArea,
-    windSpeed: List<Pair<String, Double>>,
+    windSpeed: List<Pair<List<Int>, Double>>,
     windGust: List<Pair<String, Double>>,
     waveHeight: List<Pair<List<Int>, Double>>,
     alerts: List<List<Features>>?,
@@ -164,7 +164,7 @@ private fun PreviewSurfAreaCard() {
     MyApplicationTheme {
         SurfAreaCard(
             SurfArea.HODDEVIK,
-            listOf(Pair("time", 1.0)),
+            listOf(Pair(listOf(2, 4, 6, 8), 1.0)),
             listOf(Pair("time", 3.0)),
             listOf(Pair(listOf(1, 2, 3, 4), 5.0)),
             listOf(listOf((Features(properties = Properties(description = "Det ræinar")))))
