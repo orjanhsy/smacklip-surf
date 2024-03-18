@@ -149,7 +149,8 @@ class ExampleUnitTest {
     @Test
     fun testGetWaveHeightsSmackLip() = runBlocking {
         //henter data fra API, må sjekke i API om det stemmer
-        println(smackLipRepository.getWaveHeights().first().toString())
+        println(smackLipRepository.getWaveHeights()[0].first.toString())
+        println(smackLipRepository.getWaveHeights()[0].second)
     }
 
 }
