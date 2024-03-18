@@ -141,5 +141,28 @@ class SmackLipRepositoryImpl (
         return allDays24Hours
     }
 
+     suspend fun getWaveHeightNext24Hours() : MutableList<MutableList<Pair<List<Int>, Pair<Int, Double>>>> {
+        val allDays24Hours : MutableList<MutableList<Pair<List<Int>, Pair<Int, Double>>>> = mutableListOf()
 
+        val waveHeight = getWaveHeights()
+
+        for (i in 0 until 7) { //24 timer de neste 7 dagene
+
+            val date : List<Int> = listOf(waveHeight[i].first[1], waveHeight[i].first[2]) //dato = [mnd, dag]
+            val forecast24HoursList : MutableList<Pair<List<Int>, Pair<Int, Double>>> = mutableListOf() //data for hver time den dagen = [(time, [waveHeight, windDirection, windSpeed, windSpeedOfGust])]
+
+
+            for (j in waveHeight[0].first[3] until  24) {
+                val forecastOneHour = Pair(
+                    waveHeight[j].first[3], //timen
+                    waveHeight[j].second //værmelding den timen
+                )
+                forecast24HoursList.add(Pair(date, forecastOneHour)) //legger inn ny entry for den enkelte timen, totalt 24 ganger per dag
+            }
+            allDays24Hours.add(forecast24HoursList)
+        }
+        return allDays24Hours
     }
+
+
+}
