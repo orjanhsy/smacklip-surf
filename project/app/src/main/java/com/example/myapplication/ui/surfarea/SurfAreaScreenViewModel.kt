@@ -15,7 +15,8 @@ import kotlinx.coroutines.launch
 
 data class SurfAreaScreenUiState(
     val location: SurfArea? = null,
-    val alerts: List<Features> = emptyList()
+    val alerts: List<Features> = emptyList(),
+    val waveHeights : List<Pair<List<Int>, Double>> = emptyList()
     )
 
 
@@ -30,6 +31,15 @@ class SurfAreaScreenViewModel: ViewModel() {
             _surfAreaScreenUiState.update {
                 val newAlerts = if (it.location != null) smackLipRepository.getRelevantAlertsFor(it.location) else listOf()
                 it.copy(alerts = newAlerts)
+            }
+        }
+    }
+
+    fun updateWaveHeights() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _surfAreaScreenUiState.update {
+                val newWaveHeights = smackLipRepository.getWaveHeights()
+                it.copy(waveHeights = newWaveHeights)
             }
         }
     }
