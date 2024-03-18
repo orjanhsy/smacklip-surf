@@ -133,5 +133,16 @@ class ExampleUnitTest {
         print("Testen kjører!")
     }
 
+    //SmackLipRepository
+    private val smackLipRepository : SmackLipRepository = SmackLipRepositoryImpl()
+    @Test
+    fun testGetDateFromTimeString() {
+        val timeList = smackLipRepository.getTimeListFromTimeString("2024-03-13T19:00:00Z")
+        assert(timeList[0] == 2024)
+        assert(timeList[1] == 3)
+        assert(timeList[2] == 13)
+        assert(timeList[3] == 19)
+
+    }
 
 }
