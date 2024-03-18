@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
@@ -26,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.myapplication.R
 import com.example.myapplication.model.SurfArea
 import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.model.metalerts.Properties
@@ -77,9 +79,9 @@ fun SurfAreaCard(
     windSpeed : List<Pair<String, Double>>,
     windGust : List<Pair<String, Double>>,
     waveHeight : List<Pair<String, Double>>,
-    alerts: List<List<Features>>?
-)
-{
+    alerts: List<List<Features>>?,
+    homeScreenViewModel : HomeScreenViewModel = viewModel()
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -107,37 +109,55 @@ fun SurfAreaCard(
                 Row {
                     Text(
                         text = "Wind: ${if (windSpeed.isNotEmpty()) windSpeed[0].second else ""}" +
-                                "(${if(windGust.isNotEmpty()) windGust[0].second else ""})"
+                                if(windGust.isNotEmpty() && windGust[0].second != windSpeed[0].second) "(${windGust[0].second})" else ""
                     )
                 }
 
                 Row {
                     Text(
-                        text = "Wave height: ${if(waveHeight.isNotEmpty()) waveHeight[0].second else ""}"
+                        text = "Wave height: ${if (waveHeight.isNotEmpty()) waveHeight[0].second else ""}"
                     )
                 }
 
                 Row {
                     Text(
                         // only shows description of first alert. There may be several.
-                        text = "Alert: ${if (alerts?.isNotEmpty() == true) alerts[0][0].properties?.description else "No alerts"}"
+                        text = "Alert:  ${if (alerts?.isNotEmpty() == true) alerts[0][0].properties?.description else ""}"
                     )
                 }
-            }
-            Column (
-                horizontalAlignment = Alignment.End
-            ){
-                if (surfArea.image != 0){
-                    Image(painter = painterResource(id = surfArea.image), 
-                        contentDescription = null
+                Row {
+
+                    if (alerts?.isNotEmpty() == true) {
+                        val icon =
+                            homeScreenViewModel.getIconBasedOnAwarenessLevel(alerts[0][0].properties?.awarenessLevel.toString())
+                        Image(
+                            painter = painterResource(id = icon),
+                            contentDescription = "Awareness Level Icon",
+                            modifier = Modifier.size(24.dp)
+                        )
+                    } else {
+                        Image(
+                            painter = painterResource(id = R.drawable.icon_awareness_default),
+                            contentDescription = "Awareness Level Icon",
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                }
+                Column(
+                    horizontalAlignment = Alignment.End
+                ) {
+                    if (surfArea.image != 0) {
+                        Image(
+                            painter = painterResource(id = surfArea.image),
+                            contentDescription = null
 
                         )
+                    }
                 }
             }
         }
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun PreviewSurfAreaCard() {
