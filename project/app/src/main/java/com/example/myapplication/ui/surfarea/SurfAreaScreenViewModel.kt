@@ -17,9 +17,10 @@ data class SurfAreaScreenUiState(
     val location: SurfArea? = null,
     val alerts: List<Features> = emptyList(),
     val waveHeights : List<Pair<List<Int>, Double>> = emptyList(),
-    val windDirection : List<Pair<List<Int>, Double>> = emptyList(),
-    val windSpeed : List<Pair<List<Int>, Double>> = emptyList(),
-    val windSpeedOfGust : List<Pair<List<Int>, Double>> = emptyList(),
+    val windDirections : List<Pair<List<Int>, Double>> = emptyList(),
+    val windSpeeds : List<Pair<List<Int>, Double>> = emptyList(),
+    val windSpeedOfGusts : List<Pair<List<Int>, Double>> = emptyList(),
+    val next24Hours : List<List<Pair<List<Int>, Double>>> = emptyList()
     )
 
 
@@ -51,7 +52,7 @@ class SurfAreaScreenViewModel: ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update {
                 val newWindDirection = smackLipRepository.getWindDirection()
-                it.copy(windDirection = newWindDirection)
+                it.copy(windDirections = newWindDirection)
             }
         }
     }
@@ -60,7 +61,7 @@ class SurfAreaScreenViewModel: ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update {
                 val newWindSpeed = smackLipRepository.getWindSpeed()
-                it.copy(windSpeed = newWindSpeed)
+                it.copy(windSpeeds = newWindSpeed)
             }
         }
     }
@@ -69,11 +70,36 @@ class SurfAreaScreenViewModel: ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update {
                 val newWindSpeedOfGust = smackLipRepository.getWindSpeedOfGust()
-                it.copy(windSpeedOfGust = newWindSpeedOfGust)
+                it.copy(windSpeedOfGusts = newWindSpeedOfGust)
             }
         }
     }
 
+    //TODO: kan være vi ikke trenger alle de enkelte update-metodene?
 
+
+    fun getForecastNext24Hours(){
+        viewModelScope.launch(Dispatchers.IO) {
+            _surfAreaScreenUiState.update {
+
+                val newNext24Hours : MutableList<List<Pair<List<Int>, Double>>> = mutableListOf()
+
+                val waveHeight = smackLipRepository.getWaveHeights()
+                val windDirection = smackLipRepository.getWindDirection()
+                val windSpeed = smackLipRepository.getWindSpeed()
+                val windSpeedOfGust = smackLipRepository.getWindSpeedOfGust()
+
+                for (i in 0 until 24) {
+                    newNext24Hours.add(listOf(
+                        waveHeight[i],
+                        windDirection[i],
+                        windSpeed[i],
+                        windSpeedOfGust[i]))
+                }
+                it.copy(next24Hours = newNext24Hours)
+
+            }
+        }
+    }
 }
 
