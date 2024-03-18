@@ -77,7 +77,7 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel()) {
 fun SurfAreaCard(
     surfArea: SurfArea,
     windSpeed: List<Pair<List<Int>, Double>>,
-    windGust: List<Pair<String, Double>>,
+    windGust: List<Pair<List<Int>, Double>>,
     waveHeight: List<Pair<List<Int>, Double>>,
     alerts: List<List<Features>>?,
     homeScreenViewModel: HomeScreenViewModel = viewModel()
@@ -165,7 +165,7 @@ private fun PreviewSurfAreaCard() {
         SurfAreaCard(
             SurfArea.HODDEVIK,
             listOf(Pair(listOf(2, 4, 6, 8), 1.0)),
-            listOf(Pair("time", 3.0)),
+            listOf(Pair(listOf(3, 5, 8, 32), 3.0)),
             listOf(Pair(listOf(1, 2, 3, 4), 5.0)),
             listOf(listOf((Features(properties = Properties(description = "Det ræinar")))))
         )
