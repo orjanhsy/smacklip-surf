@@ -53,7 +53,7 @@ class HomeScreenViewModel : ViewModel() {
     fun updateWaveHeight(){
         viewModelScope.launch (Dispatchers.IO){
             _homeScreenUiState.update{
-                val newWaveHeight = smackLipRepository.getWaveHeights(smackLipRepository.getTimeSeriesOF())
+                val newWaveHeight = smackLipRepository.getWaveHeights()
                 it.copy(waveHeight = newWaveHeight)
             }
         }

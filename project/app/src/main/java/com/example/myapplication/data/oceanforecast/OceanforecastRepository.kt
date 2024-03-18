@@ -13,6 +13,8 @@ class OceanforecastRepositoryImpl(
 ): OceanforecastRepository {
     //vet ikke hva som er best practice: ha datasource som argument eller ha det inni klassen
 
+    private var timeSeries : List<Pair<String, DataOF>> = emptyList()
+
     override suspend fun getTimeSeries(): List<Pair<String, DataOF>> {
         //henter timeSeries som er en liste av TimeSerie-objekter som består av de to variablene time og data
         val timeSeries : List<TimeserieOF> = dataSource.fetchOceanforecast().properties.timeseries;
@@ -28,7 +30,11 @@ class OceanforecastRepositoryImpl(
 
 
     override suspend fun getWaveHeights(): List<Pair<String, Double>> {
-        val timeSeries = getTimeSeries();
+
+        if (timeSeries.isEmpty()) { //Hindrer unødvendige api-kall
+            timeSeries = getTimeSeries();
+        }
+
         return timeSeries.map { it.first to findWaveHeightFromData(it.second) }
 
     }
