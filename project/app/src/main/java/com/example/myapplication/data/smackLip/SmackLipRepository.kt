@@ -17,7 +17,7 @@ interface SmackLipRepository {
     suspend fun getTimeSeriesOF(): List<Pair<String, DataOF>>
     suspend fun getTimeSeriesLF(): List<Pair<String, DataLF>>
     suspend fun getWindDirection(): List<Pair<List<Int>, Double>>
-    suspend fun getWindSpeed(): List<Pair<String, Double>>
+    suspend fun getWindSpeed(): List<Pair<List<Int>, Double>>
     suspend fun getWindSpeedOfGust(): List<Pair<String, Double>>
     abstract fun getTimeListFromTimeString(timeString : String): List<Int>
 }
@@ -72,11 +72,15 @@ class SmackLipRepositoryImpl (
         }
     }
 
-    override suspend fun getWindSpeed(): List<Pair<String, Double>> {
-        return locationForecastRepository.getWindSpeed()
+    override suspend fun getWindSpeed(): List<Pair<List<Int>, Double>> {
+        val tmpWindSpeed = locationForecastRepository.getWindSpeed()
+        return tmpWindSpeed.map { windSpeed ->
+            Pair(getTimeListFromTimeString(windSpeed.first), windSpeed.second)
+        }
     }
 
     override suspend fun getWindSpeedOfGust(): List<Pair<String, Double>> {
         return locationForecastRepository.getWindSpeedOfGust()
+
     }
     }
