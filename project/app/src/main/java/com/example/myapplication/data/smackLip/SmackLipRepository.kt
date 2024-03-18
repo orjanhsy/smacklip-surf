@@ -13,6 +13,7 @@ import com.example.myapplication.model.SurfArea
 import com.example.myapplication.model.locationforecast.DataLF
 import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.model.oceanforecast.DataOF
+import java.util.Date
 
 
 interface SmackLipRepository {
@@ -46,6 +47,18 @@ class SmackLipRepositoryImpl (
         return oceanforecastRepository.getTimeSeries()
 
     }
+
+    //tar inn hele time-strengen på følgende format "time": "2024-03-13T18:00:00Z"
+    //returnerer en liste slik: [år, måned, dag, time]
+    fun getDateFromTimeString(timeString : String) : List<Int> {
+        return listOf(
+        timeString.substring(0, 4).toInt(),
+        timeString.substring(5, 7).toInt(),
+        timeString.substring(8, 10).toInt(),
+        timeString.substring(11, 13).toInt())
+    }
+
+
 
     //LF
     override suspend fun getTimeSeriesLF(): List<Pair<String, DataLF>> {
