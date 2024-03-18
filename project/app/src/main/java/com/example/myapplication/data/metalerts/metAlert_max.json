@@ -103,16 +103,16 @@
               ],
               [
                 30.0332,
-                70.3497
+                70.3497     ]
+            ],
+            "type": "MultiPolygon"
+            },
+            "properties": {
+            "area": "Nordkapp - Vardø",
+            "awarene
               ]
             ]
-          ]
-        ],
-        "type": "MultiPolygon"
-      },
-      "properties": {
-        "area": "Nordkapp - Vardø",
-        "awarenessResponse": "Følg med",
+     ssResponse": "Følg med",
         "awarenessSeriousness": "Utfordrende situasjon",
         "awareness_level": "2; yellow; Moderate",
         "awareness_type": "1; Wind",

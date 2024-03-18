@@ -1,6 +1,7 @@
 package com.example.myapplication.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myapplication.R
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
 import com.example.myapplication.model.SurfArea
 import com.example.myapplication.model.metalerts.Features
@@ -31,28 +32,29 @@ class HomeScreenViewModel : ViewModel() {
         updateAlerts()
     }
 
-    fun updateWindSpeed(){
-        viewModelScope.launch (Dispatchers.IO){
-            _homeScreenUiState.update{
+    fun updateWindSpeed() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _homeScreenUiState.update {
                 val newWindSpeed = smackLipRepository.getWindSpeed()
                 it.copy(windSpeed = newWindSpeed)
             }
         }
     }
 
-    fun updateWindGust(){
-        viewModelScope.launch (Dispatchers.IO){
-            _homeScreenUiState.update{
+    fun updateWindGust() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _homeScreenUiState.update {
                 val newWindGust = smackLipRepository.getWindSpeedOfGust()
                 it.copy(windGust = newWindGust)
             }
         }
     }
 
-    fun updateWaveHeight(){
-        viewModelScope.launch (Dispatchers.IO){
-            _homeScreenUiState.update{
-                val newWaveHeight = smackLipRepository.getWaveHeights(smackLipRepository.getTimeSeriesOF())
+    fun updateWaveHeight() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _homeScreenUiState.update {
+                val newWaveHeight =
+                    smackLipRepository.getWaveHeights(smackLipRepository.getTimeSeriesOF())
                 it.copy(waveHeight = newWaveHeight)
             }
         }
@@ -69,5 +71,25 @@ class HomeScreenViewModel : ViewModel() {
             }
         }
     }
+    fun getIconBasedOnAwarenessLevel(awarenessLevel: String): Int {
+        return try {
+            if (awarenessLevel.isNotEmpty()) {
+                val firstChar = awarenessLevel.firstOrNull()?.toString()
+
+                when (firstChar) {
+                    "2" -> R.drawable.icon_awareness_yellow
+                    "3" -> R.drawable.icon_awareness_orange
+                    "4" -> R.drawable.icon_awareness_red
+                    else -> R.drawable.icon_awareness_default // Hvis awarenessLevel ikke er 2, 3 eller 4
+                }
+            } else {
+                R.drawable.icon_awareness_default // Hvis awarenessLevel er en tom streng
+            }
+        } catch (e: Exception) {
+            R.drawable.icon_awareness_default
+        }
+    }
 
 }
+
+

@@ -1,14 +1,11 @@
 package com.example.myapplication.data.smackLip
 
-import com.example.myapplication.data.locationForecast.LocationForecastDataSource
+import com.example.myapplication.R
 import com.example.myapplication.data.locationForecast.LocationForecastRepository
-
 import com.example.myapplication.data.locationForecast.LocationForecastRepositoryImpl
 import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
-import com.example.myapplication.data.oceanforecast.OceanforecastDataSource
 import com.example.myapplication.data.oceanforecast.OceanforecastRepository
 import com.example.myapplication.data.oceanforecast.OceanforecastRepositoryImpl
-
 import com.example.myapplication.model.SurfArea
 import com.example.myapplication.model.locationforecast.DataLF
 import com.example.myapplication.model.metalerts.Features
@@ -23,6 +20,7 @@ interface SmackLipRepository {
     suspend fun getWindDirection(): List<Pair<String, Double>>
     suspend fun getWindSpeed(): List<Pair<String, Double>>
     suspend fun getWindSpeedOfGust(): List<Pair<String, Double>>
+    suspend fun getIconBasedOnAwarenessLevel(awarenessLevel: String): Int
 }
 
 class SmackLipRepositoryImpl (
@@ -35,6 +33,17 @@ class SmackLipRepositoryImpl (
     //MET
     override suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Features> {
         return metAlertsRepository.getRelevantAlertsFor(surfArea)
+    }
+
+    override suspend fun getIconBasedOnAwarenessLevel(awarenessLevel: String): Int {
+        val firstChar = awarenessLevel.firstOrNull()?.toString()
+
+        return when (firstChar) {
+            "2" -> R.drawable.icon_awareness_yellow
+            "3" -> R.drawable.icon_awareness_orange
+            "4" -> R.drawable.icon_awareness_red
+            else -> R.drawable.icon_awareness_default
+        }
     }
 
     //OF
