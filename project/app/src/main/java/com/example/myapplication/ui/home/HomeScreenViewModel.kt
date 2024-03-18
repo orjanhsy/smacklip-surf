@@ -19,6 +19,7 @@ data class HomeScreenUiState(
     val waveHeight : List<Pair<String, Double>> = emptyList(),
     val allRelevantAlerts : List<List<Features>> = emptyList()
 )
+
 class HomeScreenViewModel : ViewModel() {
     private val smackLipRepository = SmackLipRepositoryImpl()
     private val _homeScreenUiState = MutableStateFlow(HomeScreenUiState())
