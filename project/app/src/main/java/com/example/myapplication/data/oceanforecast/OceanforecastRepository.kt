@@ -5,13 +5,15 @@ import com.example.myapplication.model.oceanforecast.TimeserieOF
 
 interface OceanforecastRepository{
     suspend fun getTimeSeries(): List<Pair<String, DataOF>>
-    fun getWaveHeights(timeSeries: List<Pair<String, DataOF>>): List<Pair<String, Double>>
+    suspend fun getWaveHeights(): List<Pair<String, Double>>
 }
 
 class OceanforecastRepositoryImpl(
     private val dataSource: OceanforecastDataSource = OceanforecastDataSource()
 ): OceanforecastRepository {
     //vet ikke hva som er best practice: ha datasource som argument eller ha det inni klassen
+
+    private var timeSeries : List<Pair<String, DataOF>> = emptyList()
 
     override suspend fun getTimeSeries(): List<Pair<String, DataOF>> {
         //henter timeSeries som er en liste av TimeSerie-objekter som består av de to variablene time og data
@@ -27,8 +29,12 @@ class OceanforecastRepositoryImpl(
     }
 
 
-    override fun getWaveHeights(timeSeries: List<Pair<String, DataOF>>): List<Pair<String, Double>> {
-        //val timeSeries = getTimeSeries();
+    override suspend fun getWaveHeights(): List<Pair<String, Double>> {
+
+        if (timeSeries.isEmpty()) { //Hindrer unødvendige api-kall
+            timeSeries = getTimeSeries();
+        }
+
         return timeSeries.map { it.first to findWaveHeightFromData(it.second) }
 
     }
