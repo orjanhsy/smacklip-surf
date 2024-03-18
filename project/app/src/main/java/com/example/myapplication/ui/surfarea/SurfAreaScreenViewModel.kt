@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
 import com.example.myapplication.model.SurfArea
 import com.example.myapplication.model.metalerts.Features
-import com.example.myapplication.ui.home.HomeScreenUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,9 +15,10 @@ import kotlinx.coroutines.launch
 
 data class SurfAreaScreenUiState(
     val location: SurfArea? = null,
-    val alerts: List<Features> = emptyList()
+    val alerts: List<Features> = emptyList(),
+    val waveHeights: List<Pair<List<Int>, Double>>,
 
-)
+    )
 
 
 class SurfAreaScreenViewModel: ViewModel() {
@@ -32,6 +32,18 @@ class SurfAreaScreenViewModel: ViewModel() {
             _surfAreaScreenUiState.update {
                 val newAlerts = if (it.location != null) smackLipRepository.getRelevantAlertsFor(it.location) else listOf()
                 it.copy(alerts = newAlerts)
+            }
+        }
+    }
+
+    fun updateOF() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _surfAreaScreenUiState.update {
+                val tmpWaveHeight : List<Pair<String, Double>> = smackLipRepository.getWaveHeights()
+
+                val newWaveHeights = tmpWaveHeight.map {
+                    it.first = smackLipRepository.getTimeListFromTimeString(it.first) }
+                it.copy(waveHeights = newWaveHeights)
             }
         }
     }
