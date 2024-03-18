@@ -153,4 +153,10 @@ class ExampleUnitTest {
         println(smackLipRepository.getWaveHeights()[0].second)
     }
 
+    @Test
+    fun testGetWindDirectionSmackLip() = runBlocking {
+        println(smackLipRepository.getWindDirection()[0].first.toString())
+        println(smackLipRepository.getWindDirection()[0].second)
+    }
+
 }
