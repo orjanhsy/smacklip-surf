@@ -8,7 +8,7 @@ import com.example.myapplication.model.metalerts.Features
 
 interface MetAlertsRepository{
     suspend fun getFeatures(): List<Features>
-    fun getRelevantAlertsFor(surfArea: SurfArea, allFeatures: List<Features>): List<Features>
+    suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Features>
 
 }
 class MetAlertsRepositoryImpl (
@@ -31,8 +31,11 @@ class MetAlertsRepositoryImpl (
         )
     }
 
-    override fun getRelevantAlertsFor(surfArea: SurfArea, allFeatures: List<Features>): List<Features> {
+    override suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Features> {
         val relevantAlerts: MutableList<Features> = mutableListOf()
+        if (allFeatures.isEmpty()) {
+            getFeatures()
+        }
         allFeatures.forEach() {feature ->
             val coordinates = feature.geometry?.coordinates
             if (feature.geometry?.type == "Polygon") {
