@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.surfarea
 
+import androidx.lifecycle.ViewModel
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
 import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.ui.home.HomeScreenUiState
@@ -16,8 +17,9 @@ data class SurfAreaScreenUiState(
     // val alt mulig next 7 days om er relevant
 
 )
-class SurfAreaScreenViewModel {
+class SurfAreaScreenViewModel: ViewModel() {
     private val smackLipRepository = SmackLipRepositoryImpl()
     private val _surfAreaScreenUiState = MutableStateFlow(SurfAreaScreenUiState())
     val surfAreaScreenUiState: StateFlow<SurfAreaScreenUiState> = _surfAreaScreenUiState.asStateFlow()
+
 }
