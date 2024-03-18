@@ -107,7 +107,7 @@ fun SurfAreaCard(
                 Row {
                     Text(
                         text = "Wind: ${if (windSpeed.isNotEmpty()) windSpeed[0].second else ""}" +
-                                "(${if(windGust.isNotEmpty()) windGust[0].second else ""})"
+                                if(windGust.isNotEmpty() && windGust[0].second != windSpeed[0].second) "(${windGust[0].second})" else ""
                     )
                 }
 
