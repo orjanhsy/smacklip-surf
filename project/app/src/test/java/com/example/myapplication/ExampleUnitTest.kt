@@ -176,6 +176,8 @@ class ExampleUnitTest {
 
     @Test
     fun testGetForecastNext24Hours() = runBlocking {
+        val tmp : MutableList<MutableList<Pair<List<Int>, Pair<Int, List<Double>>>>> = smackLipRepository.getForecastNext24Hours()
+
         println(smackLipRepository.getForecastNext24Hours().toString())
     }
 
