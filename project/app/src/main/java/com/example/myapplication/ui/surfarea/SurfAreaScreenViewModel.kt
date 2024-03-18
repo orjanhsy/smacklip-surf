@@ -77,7 +77,8 @@ class SurfAreaScreenViewModel: ViewModel() {
 
     //TODO: kan være vi ikke trenger alle de enkelte update-metodene?
 
-
+    //ble litt usikker på om denne skulle ta inn en dag, hvis metoden i homescreen tar inn en dag
+    //bør denne også det. Må i såfall kanskje ha flere dager i UiStaten
     fun getForecastNext24Hours(){
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update {
