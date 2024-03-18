@@ -27,6 +27,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.model.SurfArea
+import com.example.myapplication.model.metalerts.Features
+import com.example.myapplication.model.metalerts.Properties
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -53,7 +55,14 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel()) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             items(SurfArea.entries) { location ->
-                SurfAreaCard(location, homeScreenUiState.windSpeed, homeScreenUiState.waveHeight)
+                SurfAreaCard(
+                    location,
+                    homeScreenUiState.windSpeed,
+                    homeScreenUiState.waveHeight,
+                    homeScreenUiState.allRelevantAlerts.filter {alert ->
+                        alert.any { it.properties?.area?.contains(location.locationName) ?: false }
+                    }
+                )
             }
         }
     }
@@ -65,7 +74,8 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel()) {
 fun SurfAreaCard(
     surfArea : SurfArea,
     windSpeed : List<Pair<String, Double>>,
-    waveHeight : List<Pair<String, Double>>
+    waveHeight : List<Pair<String, Double>>,
+    alerts: List<List<Features>>?
 )
 {
     Card(
@@ -103,6 +113,13 @@ fun SurfAreaCard(
                         text = "Wave height: ${if(waveHeight.isNotEmpty()) waveHeight[0].second else ""}"
                     )
                 }
+
+                Row {
+                    Text(
+                        // only shows description of first alert. There may be several.
+                        text = "Alert: ${if (alerts?.isNotEmpty() == true) alerts[0][0].properties?.description else "No alerts"}"
+                    )
+                }
             }
             Column (
                 horizontalAlignment = Alignment.End
@@ -122,7 +139,12 @@ fun SurfAreaCard(
 @Composable
 private fun PreviewSurfAreaCard() {
     MyApplicationTheme {
-        SurfAreaCard(SurfArea.HODDEVIK, listOf(Pair("time", 1.0)), listOf(Pair("time", 5.0)))
+        SurfAreaCard(
+            SurfArea.HODDEVIK,
+            listOf(Pair("time", 1.0)),
+            listOf(Pair("time", 5.0)),
+            listOf(listOf((Features(properties = Properties(description = "Det ræinar")))))
+        )
     }
 }
 
