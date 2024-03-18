@@ -1,12 +1,10 @@
 package com.example.myapplication.data.smackLip
 
 import com.example.myapplication.data.locationForecast.LocationForecastRepository
-
 import com.example.myapplication.data.locationForecast.LocationForecastRepositoryImpl
 import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
 import com.example.myapplication.data.oceanforecast.OceanforecastRepository
 import com.example.myapplication.data.oceanforecast.OceanforecastRepositoryImpl
-
 import com.example.myapplication.model.SurfArea
 import com.example.myapplication.model.locationforecast.DataLF
 import com.example.myapplication.model.metalerts.Features
@@ -35,6 +33,7 @@ class SmackLipRepositoryImpl (
     override suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Features> {
         return metAlertsRepository.getRelevantAlertsFor(surfArea)
     }
+
 
     //OF
     override fun getWaveHeights(timeSeries: List<Pair<String, DataOF>>): List<Pair<String, Double>> {
