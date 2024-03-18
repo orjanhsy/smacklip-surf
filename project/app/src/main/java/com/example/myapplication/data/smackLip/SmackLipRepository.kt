@@ -21,6 +21,8 @@ interface SmackLipRepository {
     suspend fun getWindSpeedOfGust(): List<Pair<List<Int>, Double>>
 
     abstract fun getTimeListFromTimeString(timeString : String): List<Int>
+
+    suspend fun getForecastNext24Hours() : MutableList<MutableList<Pair<Int, List<Double>>>>
 }
 
 class SmackLipRepositoryImpl (
@@ -86,6 +88,47 @@ class SmackLipRepositoryImpl (
             Pair(getTimeListFromTimeString(windGust.first), windGust.second)
         }
 
+    }
+
+    //en funksjon som returnerer en liste med par av
+    // 1. dato og
+    // 2. dataene for de 24 timene den dagen, som består av en liste med par av
+            // 1. timen og
+            // 2. en liste med de fire dataene for den timen
+                    // [waveHeight, windDirection, windSpeed, windSpeedOfGust]
+
+    //totalt: List<Pair<List<Int>, List<Pair<Int, List<Double>>>>
+
+    override suspend fun getForecastNext24Hours() : MutableList<MutableList<Pair<Int, List<Double>>>> {
+        val allDays24Hours : MutableList<MutableList<Pair<Int, List<Double>>>> = mutableListOf()
+
+        val waveHeight = getWaveHeights()
+        val windDirection = getWindDirection()
+        val windSpeed = getWindSpeed()
+        val windSpeedOfGust = getWindSpeedOfGust()
+
+        for (i in 0 until 7) { //24 timer de neste 7 dagene
+
+            val date : List<Int> = listOf(waveHeight[i].first[1], waveHeight[i].first[2]) //dato = [mnd, dag]
+            val forecast24HoursList : MutableList<Pair<Int, List<Double>>> = mutableListOf() //data for hver time den dagen = [(time, [waveHeight, windDirection, windSpeed, windSpeedOfGust])]
+
+            for (j in 0 until  24) {
+                val forecastOneHour = Pair(
+                    waveHeight[i].first[3], //timen
+                    listOf(                 //værmelding den timen
+                        waveHeight[i].second,
+                        windDirection[i].second,
+                        windSpeed[i].second,
+                        windSpeedOfGust[i].second
+                    )
+                )
+                forecast24HoursList.add(forecastOneHour) //legger inn ny entry for den enkelte timen, totalt 24 ganger per dag
+
+            }
+            allDays24Hours.add(forecast24HoursList)
+        }
+
+        return allDays24Hours
     }
 
     }
