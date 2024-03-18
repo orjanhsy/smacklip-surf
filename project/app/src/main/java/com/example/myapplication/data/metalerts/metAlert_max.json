@@ -5,105 +5,2014 @@
         "coordinates": [
           [
             [
+              -10.0,
+              75.0
+            ],
+            [
+              0.0,
+              75.0
+            ],
+            [
+              0.0,
+              77.5
+            ],
+            [
+              -10.0,
+              77.5
+            ],
+            [
+              -10.0,
+              75.0
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "altitude_above_sea_level": 0,
+        "area": "B2",
+        "awarenessResponse": "Vær forberedt",
+        "awarenessSeriousness": "Alvorlig situasjon",
+        "awareness_level": "3; orange; Severe",
+        "awareness_type": "7; coastalevent",
+        "ceiling_above_sea_level": 274,
+        "certainty": "Likely",
+        "consequences": "Rask nok isvekst kan føre til at en liten båt mister stabiliteten, velter og synker.\nFor større båter ventes glatte dekk, gelender, stiger og nedisete redningsbåter og annet redningsutstyr.\nIsingen kan ødelegge radiokommunikasjonen hvis antennene fryser.\nKraftig isvekst på fronten/styrhuset til skipet..",
+        "contact": "https://www.met.no/kontakt-oss",
+        "county": [],
+        "description": "Utrygt for sterk ising.",
+        "event": "icing",
+        "eventAwarenessName": "Sterk ising på skip.",
+        "eventEndingTime": "2024-03-19T08:00:00+00:00",
+        "geographicDomain": "marine",
+        "id": "2.49.0.1.578.0.240318100000.0839_7_0",
+        "instruction": "Fjern is raskt fra båten.",
+        "resources": [
+          {
+            "description": "CAP file",
+            "mimeType": "application/xml",
+            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.240318100000.0839_7_0"
+          }
+        ],
+        "riskMatrixColor": "Orange",
+        "severity": "Severe",
+        "status": "Actual",
+        "title": "Sterk ising på skip, oransje nivå, B2, 18 mars 10:00 UTC til 19 mars 08:00 UTC. ",
+        "triggerLevel": "1.34 cm/h.",
+        "type": "Update",
+        "web": "\n      https://www.met.no/vaer-og-klima/Ekstremvaervarsler-og-andre-farevarsler\n    "
+      },
+      "type": "Feature",
+      "when": {
+        "interval": [
+          "2024-03-18T10:00:00+00:00",
+          "2024-03-19T08:00:00+00:00"
+        ]
+      }
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              0.0,
+              75.0
+            ],
+            [
+              10.0,
+              75.0
+            ],
+            [
+              10.0,
+              77.5
+            ],
+            [
+              0.0,
+              77.5
+            ],
+            [
+              0.0,
+              75.0
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "altitude_above_sea_level": 0,
+        "area": "B3",
+        "awarenessResponse": "Vær forberedt",
+        "awarenessSeriousness": "Alvorlig situasjon",
+        "awareness_level": "3; orange; Severe",
+        "awareness_type": "7; coastalevent",
+        "ceiling_above_sea_level": 274,
+        "certainty": "Likely",
+        "consequences": "Rask nok isvekst kan føre til at en liten båt mister stabiliteten, velter og synker.\nFor større båter ventes glatte dekk, gelender, stiger og nedisete redningsbåter og annet redningsutstyr.\nIsingen kan ødelegge radiokommunikasjonen hvis antennene fryser.\nKraftig isvekst på fronten/styrhuset til skipet..",
+        "contact": "https://www.met.no/kontakt-oss",
+        "county": [],
+        "description": "Utrygt for sterk ising.",
+        "event": "icing",
+        "eventAwarenessName": "Sterk ising på skip.",
+        "eventEndingTime": "2024-03-18T16:00:00+00:00",
+        "geographicDomain": "marine",
+        "id": "2.49.0.1.578.0.240318100000.0840_7_0",
+        "instruction": "Fjern is raskt fra båten.",
+        "resources": [
+          {
+            "description": "CAP file",
+            "mimeType": "application/xml",
+            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.240318100000.0840_7_0"
+          }
+        ],
+        "riskMatrixColor": "Orange",
+        "severity": "Severe",
+        "status": "Actual",
+        "title": "Sterk ising på skip, oransje nivå, B3, 18 mars 10:00 UTC til 18 mars 16:00 UTC. ",
+        "triggerLevel": "1.34 cm/h.",
+        "type": "Update",
+        "web": "\n      https://www.met.no/vaer-og-klima/Ekstremvaervarsler-og-andre-farevarsler\n    "
+      },
+      "type": "Feature",
+      "when": {
+        "interval": [
+          "2024-03-18T10:00:00+00:00",
+          "2024-03-18T16:00:00+00:00"
+        ]
+      }
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              10.0,
+              75.0
+            ],
+            [
+              20.0,
+              75.0
+            ],
+            [
+              20.0,
+              77.5
+            ],
+            [
+              18.357,
+              77.5
+            ],
+            [
+              17.1473,
+              76.6082
+            ],
+            [
+              16.1167,
+              76.5472
+            ],
+            [
+              14.1997,
+              77.161
+            ],
+            [
+              13.6807,
+              77.5
+            ],
+            [
+              10.0,
+              77.5
+            ],
+            [
+              10.0,
+              75.0
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "altitude_above_sea_level": 0,
+        "area": "B4",
+        "awarenessResponse": "Vær forberedt",
+        "awarenessSeriousness": "Alvorlig situasjon",
+        "awareness_level": "3; orange; Severe",
+        "awareness_type": "7; coastalevent",
+        "ceiling_above_sea_level": 274,
+        "certainty": "Likely",
+        "consequences": "Rask nok isvekst kan føre til at en liten båt mister stabiliteten, velter og synker.\nFor større båter ventes glatte dekk, gelender, stiger og nedisete redningsbåter og annet redningsutstyr.\nIsingen kan ødelegge radiokommunikasjonen hvis antennene fryser.\nKraftig isvekst på fronten/styrhuset til skipet..",
+        "contact": "https://www.met.no/kontakt-oss",
+        "county": [],
+        "description": "Utrygt for sterk ising.",
+        "event": "icing",
+        "eventAwarenessName": "Sterk ising på skip.",
+        "geographicDomain": "marine",
+        "id": "2.49.0.1.578.0.240318100000.0841_7_0",
+        "instruction": "Fjern is raskt fra båten.",
+        "resources": [
+          {
+            "description": "CAP file",
+            "mimeType": "application/xml",
+            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.240318100000.0841_7_0"
+          }
+        ],
+        "riskMatrixColor": "Orange",
+        "severity": "Severe",
+        "status": "Actual",
+        "title": "Sterk ising på skip, oransje nivå, B4, 19 mars 03:00 UTC til 19 mars 22:00 UTC. ",
+        "triggerLevel": "1.34 cm/h.",
+        "type": "Update",
+        "web": "\n      https://www.met.no/vaer-og-klima/Ekstremvaervarsler-og-andre-farevarsler\n    "
+      },
+      "type": "Feature",
+      "when": {
+        "interval": [
+          "2024-03-19T03:00:00+00:00",
+          "2024-03-19T22:00:00+00:00"
+        ]
+      }
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              -10.0,
+              72.5
+            ],
+            [
+              0.0,
+              72.5
+            ],
+            [
+              0.0,
+              75.0
+            ],
+            [
+              -10.0,
+              75.0
+            ],
+            [
+              -10.0,
+              72.5
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "altitude_above_sea_level": 0,
+        "area": "C2",
+        "awarenessResponse": "Følg med",
+        "awarenessSeriousness": "Utfordrende situasjon",
+        "awareness_level": "2; yellow; Moderate",
+        "awareness_type": "1; Wind",
+        "ceiling_above_sea_level": 274,
+        "certainty": "Likely",
+        "consequences": "Middels høye bølger. Bølgekammene er ved å brytes opp til sjørokk.",
+        "contact": "https://www.met.no/kontakt-oss",
+        "county": [],
+        "description": "Nordøst sterk kuling 20 m/s.",
+        "event": "gale",
+        "eventAwarenessName": "Kuling",
+        "geographicDomain": "marine",
+        "id": "2.49.0.1.578.0.240318100000.0845_1_0",
+        "instruction": "Ikke dra ut i småbåt.",
+        "resources": [
+          {
+            "description": "CAP file",
+            "mimeType": "application/xml",
+            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.240318100000.0845_1_0"
+          }
+        ],
+        "riskMatrixColor": "Yellow",
+        "severity": "Moderate",
+        "status": "Actual",
+        "title": "Kuling, C2, 19 mars 01:00 UTC til 19 mars 22:00 UTC. ",
+        "triggerLevel": "17.2 m/s",
+        "type": "Update",
+        "web": "\n      https://www.met.no/vaer-og-klima/Ekstremvaervarsler-og-andre-farevarsler\n    "
+      },
+      "type": "Feature",
+      "when": {
+        "interval": [
+          "2024-03-19T01:00:00+00:00",
+          "2024-03-19T22:00:00+00:00"
+        ]
+      }
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              0.0,
+              72.5
+            ],
+            [
+              10.0,
+              72.5
+            ],
+            [
+              10.0,
+              75.0
+            ],
+            [
+              0.0,
+              75.0
+            ],
+            [
+              0.0,
+              72.5
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "altitude_above_sea_level": 0,
+        "area": "C3",
+        "awarenessResponse": "Følg med",
+        "awarenessSeriousness": "Utfordrende situasjon",
+        "awareness_level": "2; yellow; Moderate",
+        "awareness_type": "1; Wind",
+        "ceiling_above_sea_level": 274,
+        "certainty": "Likely",
+        "consequences": "Middels høye bølger. Bølgekammene er ved å brytes opp til sjørokk.",
+        "contact": "https://www.met.no/kontakt-oss",
+        "county": [],
+        "description": "Østlig sterk kuling 20 m/s.",
+        "event": "gale",
+        "eventAwarenessName": "Kuling",
+        "geographicDomain": "marine",
+        "id": "2.49.0.1.578.0.240318100000.0846_1_0",
+        "instruction": "Ikke dra ut i småbåt.",
+        "resources": [
+          {
+            "description": "CAP file",
+            "mimeType": "application/xml",
+            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.240318100000.0846_1_0"
+          }
+        ],
+        "riskMatrixColor": "Yellow",
+        "severity": "Moderate",
+        "status": "Actual",
+        "title": "Kuling, C3, 19 mars 05:00 UTC til 19 mars 22:00 UTC. ",
+        "triggerLevel": "17.2 m/s",
+        "type": "Update",
+        "web": "\n      https://www.met.no/vaer-og-klima/Ekstremvaervarsler-og-andre-farevarsler\n    "
+      },
+      "type": "Feature",
+      "when": {
+        "interval": [
+          "2024-03-19T05:00:00+00:00",
+          "2024-03-19T22:00:00+00:00"
+        ]
+      }
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              10.0,
+              72.5
+            ],
+            [
+              15.0,
+              72.5
+            ],
+            [
+              15.75,
+              72.5
+            ],
+            [
+              20.0,
+              72.5
+            ],
+            [
+              20.0,
+              75.0
+            ],
+            [
+              10.0,
+              75.0
+            ],
+            [
+              10.0,
+              72.5
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "altitude_above_sea_level": 0,
+        "area": "C4",
+        "awarenessResponse": "Følg med",
+        "awarenessSeriousness": "Utfordrende situasjon",
+        "awareness_level": "2; yellow; Moderate",
+        "awareness_type": "1; Wind",
+        "ceiling_above_sea_level": 274,
+        "certainty": "Likely",
+        "consequences": "Middels høye bølger. Bølgekammene er ved å brytes opp til sjørokk.",
+        "contact": "https://www.met.no/kontakt-oss",
+        "county": [],
+        "description": "Østlig sterk kuling 20 m/s.",
+        "event": "gale",
+        "eventAwarenessName": "Kuling",
+        "geographicDomain": "marine",
+        "id": "2.49.0.1.578.0.240318100000.0847_1_0",
+        "instruction": "Ikke dra ut i småbåt.",
+        "resources": [
+          {
+            "description": "CAP file",
+            "mimeType": "application/xml",
+            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.240318100000.0847_1_0"
+          }
+        ],
+        "riskMatrixColor": "Yellow",
+        "severity": "Moderate",
+        "status": "Actual",
+        "title": "Kuling, C4, 19 mars 18:00 UTC til 19 mars 22:00 UTC. ",
+        "triggerLevel": "17.2 m/s",
+        "type": "Alert",
+        "web": "\n      https://www.met.no/vaer-og-klima/Ekstremvaervarsler-og-andre-farevarsler\n    "
+      },
+      "type": "Feature",
+      "when": {
+        "interval": [
+          "2024-03-19T18:00:00+00:00",
+          "2024-03-19T22:00:00+00:00"
+        ]
+      }
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              10.0,
+              72.5
+            ],
+            [
+              15.0,
+              72.5
+            ],
+            [
+              15.75,
+              72.5
+            ],
+            [
+              20.0,
+              72.5
+            ],
+            [
+              20.0,
+              75.0
+            ],
+            [
+              10.0,
+              75.0
+            ],
+            [
+              10.0,
+              72.5
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "altitude_above_sea_level": 0,
+        "area": "C4",
+        "awarenessResponse": "Vær forberedt",
+        "awarenessSeriousness": "Alvorlig situasjon",
+        "awareness_level": "3; orange; Severe",
+        "awareness_type": "7; coastalevent",
+        "ceiling_above_sea_level": 274,
+        "certainty": "Likely",
+        "consequences": "Rask nok isvekst kan føre til at en liten båt mister stabiliteten, velter og synker.\nFor større båter ventes glatte dekk, gelender, stiger og nedisete redningsbåter og annet redningsutstyr.\nIsingen kan ødelegge radiokommunikasjonen hvis antennene fryser.\nKraftig isvekst på fronten/styrhuset til skipet..",
+        "contact": "https://www.met.no/kontakt-oss",
+        "county": [],
+        "description": "Utrygt for sterk ising.",
+        "event": "icing",
+        "eventAwarenessName": "Sterk ising på skip.",
+        "eventEndingTime": "2024-03-19T08:00:00+00:00",
+        "geographicDomain": "marine",
+        "id": "2.49.0.1.578.0.240318100000.0847_7_0",
+        "instruction": "Fjern is raskt fra båten.",
+        "resources": [
+          {
+            "description": "CAP file",
+            "mimeType": "application/xml",
+            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.240318100000.0847_7_0"
+          }
+        ],
+        "riskMatrixColor": "Orange",
+        "severity": "Severe",
+        "status": "Actual",
+        "title": "Sterk ising på skip, oransje nivå, C4, 19 mars 01:00 UTC til 19 mars 08:00 UTC. ",
+        "triggerLevel": "1.34 cm/h.",
+        "type": "Alert",
+        "web": "\n      https://www.met.no/vaer-og-klima/Ekstremvaervarsler-og-andre-farevarsler\n    "
+      },
+      "type": "Feature",
+      "when": {
+        "interval": [
+          "2024-03-19T01:00:00+00:00",
+          "2024-03-19T08:00:00+00:00"
+        ]
+      }
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              -10.0,
+              70.0
+            ],
+            [
+              -5.0,
+              70.0
+            ],
+            [
+              0.0,
+              70.0
+            ],
+            [
+              0.0,
+              72.5
+            ],
+            [
+              -10.0,
+              72.5
+            ],
+            [
+              -10.0,
+              70.0
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "altitude_above_sea_level": 0,
+        "area": "D2",
+        "awarenessResponse": "Følg med",
+        "awarenessSeriousness": "Utfordrende situasjon",
+        "awareness_level": "2; yellow; Moderate",
+        "awareness_type": "1; Wind",
+        "ceiling_above_sea_level": 274,
+        "certainty": "Likely",
+        "consequences": "Meget høye bølger. Rullingen blir tung og støtende. Synsvidden nedsettes.",
+        "contact": "https://www.met.no/kontakt-oss",
+        "county": [],
+        "description": "Nordøst full storm 25 m/s.",
+        "event": "gale",
+        "eventAwarenessName": "Storm",
+        "geographicDomain": "marine",
+        "id": "2.49.0.1.578.0.240318100000.0852_1_0",
+        "instruction": "Ikke dra ut i småbåt.",
+        "resources": [
+          {
+            "description": "CAP file",
+            "mimeType": "application/xml",
+            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.240318100000.0852_1_0"
+          }
+        ],
+        "riskMatrixColor": "Yellow",
+        "severity": "Moderate",
+        "status": "Actual",
+        "title": "Storm, D2, 18 mars 10:00 UTC til 19 mars 22:00 UTC. ",
+        "triggerLevel": "24.5 m/s",
+        "type": "Update",
+        "web": "\n      https://www.met.no/vaer-og-klima/Ekstremvaervarsler-og-andre-farevarsler\n    "
+      },
+      "type": "Feature",
+      "when": {
+        "interval": [
+          "2024-03-18T10:00:00+00:00",
+          "2024-03-19T22:00:00+00:00"
+        ]
+      }
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              0.0,
+              70.0
+            ],
+            [
+              10.0,
+              70.0
+            ],
+            [
+              10.0,
+              72.5
+            ],
+            [
+              0.0,
+              72.5
+            ],
+            [
+              0.0,
+              70.0
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "altitude_above_sea_level": 0,
+        "area": "D3",
+        "awarenessResponse": "Følg med",
+        "awarenessSeriousness": "Utfordrende situasjon",
+        "awareness_level": "2; yellow; Moderate",
+        "awareness_type": "1; Wind",
+        "ceiling_above_sea_level": 274,
+        "certainty": "Likely",
+        "consequences": "Høye bølger. Sjøen begynner å rulle. Sjørokket kan minske synsvidden.",
+        "contact": "https://www.met.no/kontakt-oss",
+        "county": [],
+        "description": "Østlig liten storm 22 m/s.",
+        "event": "gale",
+        "eventAwarenessName": "Storm",
+        "geographicDomain": "marine",
+        "id": "2.49.0.1.578.0.240318100000.0853_1_0",
+        "instruction": "Ikke dra ut i småbåt.",
+        "resources": [
+          {
+            "description": "CAP file",
+            "mimeType": "application/xml",
+            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.240318100000.0853_1_0"
+          }
+        ],
+        "riskMatrixColor": "Yellow",
+        "severity": "Moderate",
+        "status": "Actual",
+        "title": "Storm, D3, 18 mars 10:00 UTC til 19 mars 22:00 UTC. ",
+        "triggerLevel": "20.8 m/s",
+        "type": "Update",
+        "web": "\n      https://www.met.no/vaer-og-klima/Ekstremvaervarsler-og-andre-farevarsler\n    "
+      },
+      "type": "Feature",
+      "when": {
+        "interval": [
+          "2024-03-18T10:00:00+00:00",
+          "2024-03-19T22:00:00+00:00"
+        ]
+      }
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              10.0,
+              72.5
+            ],
+            [
+              10.0,
+              70.0
+            ],
+            [
+              16.6,
+              70.0
+            ],
+            [
+              16.9,
+              70.2
+            ],
+            [
+              16.78,
+              70.7167
+            ],
+            [
+              15.75,
+              72.0
+            ],
+            [
+              15.75,
+              72.5
+            ],
+            [
+              15.0,
+              72.5
+            ],
+            [
+              10.0,
+              72.5
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "altitude_above_sea_level": 0,
+        "area": "Dype D4",
+        "awarenessResponse": "Følg med",
+        "awarenessSeriousness": "Utfordrende situasjon",
+        "awareness_level": "2; yellow; Moderate",
+        "awareness_type": "1; Wind",
+        "ceiling_above_sea_level": 274,
+        "certainty": "Likely",
+        "consequences": "Middels høye bølger. Bølgekammene er ved å brytes opp til sjørokk.",
+        "contact": "https://www.met.no/kontakt-oss",
+        "county": [],
+        "description": "Østlig periodevis sterk kuling 20 m/s",
+        "event": "gale",
+        "eventAwarenessName": "Kuling",
+        "eventEndingTime": "2024-03-19T21:00:00+00:00",
+        "geographicDomain": "marine",
+        "id": "2.49.0.1.578.0.240318100000.4044_1_0",
+        "instruction": "Ikke dra ut i småbåt.",
+        "resources": [
+          {
+            "description": "CAP file",
+            "mimeType": "application/xml",
+            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.240318100000.4044_1_0"
+          }
+        ],
+        "riskMatrixColor": "Yellow",
+        "severity": "Moderate",
+        "status": "Actual",
+        "title": "Kuling, Dype D4, 18 mars 10:00 UTC til 19 mars 21:00 UTC. ",
+        "triggerLevel": "17.2 m/s",
+        "type": "Update",
+        "web": "\n      https://www.met.no/vaer-og-klima/Ekstremvaervarsler-og-andre-farevarsler\n    "
+      },
+      "type": "Feature",
+      "when": {
+        "interval": [
+          "2024-03-18T10:00:00+00:00",
+          "2024-03-19T21:00:00+00:00"
+        ]
+      }
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              8.2807,
+              65.0022
+            ],
+            [
+              6.998,
+              65.0007
+            ],
+            [
+              5.5027,
+              65.0015
+            ],
+            [
+              4.0037,
+              65.0008
+            ],
+            [
+              2.494,
+              64.9962
+            ],
+            [
+              1.005,
+              64.9975
+            ],
+            [
+              0.0,
+              65.0008
+            ],
+            [
+              0.0,
+              63.0042
+            ],
+            [
+              0.994,
+              63.0033
+            ],
+            [
+              2.0015,
+              63.0005
+            ],
+            [
+              3.7597,
+              63.5265
+            ],
+            [
+              5.1058,
+              63.9003
+            ],
+            [
+              5.9923,
+              64.2347
+            ],
+            [
+              7.001,
+              64.5993
+            ],
+            [
+              8.2807,
+              65.0022
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "altitude_above_sea_level": 0,
+        "area": "Storegga-Haltenbanken til 0-meridianen",
+        "awarenessResponse": "Følg med",
+        "awarenessSeriousness": "Utfordrende situasjon",
+        "awareness_level": "2; yellow; Moderate",
+        "awareness_type": "1; Wind",
+        "ceiling_above_sea_level": 274,
+        "certainty": "Likely",
+        "consequences": "Middels høye bølger. Bølgekammene er ved å brytes opp til sjørokk.",
+        "contact": "https://www.met.no/kontakt-oss",
+        "county": [],
+        "description": "Sørlig sterk kuling 20 m/s fra 18 mars 13:00 UTC til 19 mars 18:00 UTC, skiftende sterk kuling 20 m/s fra 19 mars 18:00 UTC til 22:00 UTC.",
+        "event": "gale",
+        "eventAwarenessName": "Kuling",
+        "geographicDomain": "marine",
+        "id": "2.49.0.1.578.0.240318100000.7003_1_0",
+        "instruction": "Ikke dra ut i småbåt.",
+        "resources": [
+          {
+            "description": "CAP file",
+            "mimeType": "application/xml",
+            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.240318100000.7003_1_0"
+          }
+        ],
+        "riskMatrixColor": "Yellow",
+        "severity": "Moderate",
+        "status": "Actual",
+        "title": "Kuling, Storegga-Haltenbanken til 0-meridianen, 18 mars 13:00 UTC til 19 mars 22:00 UTC. ",
+        "triggerLevel": "17.2 m/s",
+        "type": "Update",
+        "web": "\n      https://www.met.no/vaer-og-klima/Ekstremvaervarsler-og-andre-farevarsler\n    "
+      },
+      "type": "Feature",
+      "when": {
+        "interval": [
+          "2024-03-18T13:00:00+00:00",
+          "2024-03-19T22:00:00+00:00"
+        ]
+      }
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              8.9547,
+              64.133
+            ],
+            [
+              6.9937,
+              64.5977
+            ],
+            [
+              6.008,
+              64.2343
+            ],
+            [
+              5.1125,
+              63.9002
+            ],
+            [
+              7.2918,
+              63.2992
+            ],
+            [
+              7.435,
+              63.409
+            ],
+            [
+              7.6777,
+              63.5533
+            ],
+            [
+              8.28,
+              63.7458
+            ],
+            [
+              8.3852,
+              63.8597
+            ],
+            [
+              8.9547,
+              64.133
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "altitude_above_sea_level": 0,
+        "area": "Frøyabanken",
+        "awarenessResponse": "Følg med",
+        "awarenessSeriousness": "Utfordrende situasjon",
+        "awareness_level": "2; yellow; Moderate",
+        "awareness_type": "1; Wind",
+        "ceiling_above_sea_level": 274,
+        "certainty": "Likely",
+        "consequences": "Middels høye bølger. Bølgekammene er ved å brytes opp til sjørokk.",
+        "contact": "https://www.met.no/kontakt-oss",
+        "county": [],
+        "description": "Sørvest sterk kuling 20 m/s.",
+        "event": "gale",
+        "eventAwarenessName": "Kuling",
+        "geographicDomain": "marine",
+        "id": "2.49.0.1.578.0.240318100000.7005_1_0",
+        "instruction": "Ikke dra ut i småbåt.",
+        "resources": [
+          {
+            "description": "CAP file",
+            "mimeType": "application/xml",
+            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.240318100000.7005_1_0"
+          }
+        ],
+        "riskMatrixColor": "Yellow",
+        "severity": "Moderate",
+        "status": "Actual",
+        "title": "Kuling, Frøyabanken, 19 mars 21:00 UTC til 19 mars 22:00 UTC. ",
+        "triggerLevel": "17.2 m/s",
+        "type": "Alert",
+        "web": "\n      https://www.met.no/vaer-og-klima/Ekstremvaervarsler-og-andre-farevarsler\n    "
+      },
+      "type": "Feature",
+      "when": {
+        "interval": [
+          "2024-03-19T21:00:00+00:00",
+          "2024-03-19T22:00:00+00:00"
+        ]
+      }
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              7.2997,
+              63.297
+            ],
+            [
+              5.1085,
+              63.9012
+            ],
+            [
+              1.9922,
+              63.0073
+            ],
+            [
+              5.0,
+              62.25
+            ],
+            [
+              5.2222,
+              62.3603
+            ],
+            [
+              5.5043,
+              62.4793
+            ],
+            [
+              5.7743,
+              62.611
+            ],
+            [
+              5.9598,
+              62.7027
+            ],
+            [
+              6.2312,
+              62.8477
+            ],
+            [
+              6.4733,
+              62.9272
+            ],
+            [
+              7.0403,
+              63.1603
+            ],
+            [
+              7.2997,
+              63.297
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "altitude_above_sea_level": 0,
+        "area": "Storegga",
+        "awarenessResponse": "Følg med",
+        "awarenessSeriousness": "Utfordrende situasjon",
+        "awareness_level": "2; yellow; Moderate",
+        "awareness_type": "1; Wind",
+        "ceiling_above_sea_level": 274,
+        "certainty": "Likely",
+        "consequences": "Høye bølger. Sjøen begynner å rulle. Sjørokket kan minske synsvidden.",
+        "contact": "https://www.met.no/kontakt-oss",
+        "county": [],
+        "description": "Sørlig liten storm 22 m/s fra 18 mars 11:00 UTC til 19 mars 18:00 UTC, skiftende sterk kuling 20 m/s fra 19 mars 18:00 UTC til 22:00 UTC.",
+        "event": "gale",
+        "eventAwarenessName": "Storm",
+        "geographicDomain": "marine",
+        "id": "2.49.0.1.578.0.240318100000.7006_1_0",
+        "instruction": "Ikke dra ut i småbåt.",
+        "resources": [
+          {
+            "description": "CAP file",
+            "mimeType": "application/xml",
+            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.240318100000.7006_1_0"
+          }
+        ],
+        "riskMatrixColor": "Yellow",
+        "severity": "Moderate",
+        "status": "Actual",
+        "title": "Storm, Storegga, 18 mars 11:00 UTC til 19 mars 22:00 UTC. ",
+        "triggerLevel": "20.8 m/s",
+        "type": "Update",
+        "web": "\n      https://www.met.no/vaer-og-klima/Ekstremvaervarsler-og-andre-farevarsler\n    "
+      },
+      "type": "Feature",
+      "when": {
+        "interval": [
+          "2024-03-18T11:00:00+00:00",
+          "2024-03-19T22:00:00+00:00"
+        ]
+      }
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              5.0,
+              62.2502
+            ],
+            [
+              1.9923,
+              63.0073
+            ],
+            [
+              0.9997,
+              63.0032
+            ],
+            [
+              1.0,
+              61.0
+            ],
+            [
+              2.4917,
+              61.0008
+            ],
+            [
+              3.4897,
+              61.006
+            ],
+            [
+              4.0003,
+              60.9997
+            ],
+            [
+              4.4548,
+              61.0
+            ],
+            [
+              4.4523,
+              61.3038
+            ],
+            [
+              4.548,
+              61.631
+            ],
+            [
+              4.7672,
+              62.0393
+            ],
+            [
+              4.9335,
+              62.2173
+            ],
+            [
+              5.0,
+              62.2502
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "altitude_above_sea_level": 0,
+        "area": "Aust-Tampen",
+        "awarenessResponse": "Følg med",
+        "awarenessSeriousness": "Utfordrende situasjon",
+        "awareness_level": "2; yellow; Moderate",
+        "awareness_type": "1; Wind",
+        "ceiling_above_sea_level": 274,
+        "certainty": "Likely",
+        "consequences": "Høye bølger. Sjøen begynner å rulle. Sjørokket kan minske synsvidden.",
+        "contact": "https://www.met.no/kontakt-oss",
+        "county": [],
+        "description": "Sørlig liten storm 22 m/s fra 18 mars 10:00 UTC til 19 mars 16:00 UTC, skiftende sterk kuling 20 m/s fra 19 mars 16:00 UTC til 21:00 UTC.",
+        "event": "gale",
+        "eventAwarenessName": "Storm",
+        "eventEndingTime": "2024-03-19T21:00:00+00:00",
+        "geographicDomain": "marine",
+        "id": "2.49.0.1.578.0.240318100000.7007_1_0",
+        "instruction": "Ikke dra ut i småbåt.",
+        "resources": [
+          {
+            "description": "CAP file",
+            "mimeType": "application/xml",
+            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.240318100000.7007_1_0"
+          }
+        ],
+        "riskMatrixColor": "Yellow",
+        "severity": "Moderate",
+        "status": "Actual",
+        "title": "Storm, Aust-Tampen, 18 mars 10:00 UTC til 19 mars 21:00 UTC. ",
+        "triggerLevel": "20.8 m/s",
+        "type": "Update",
+        "web": "\n      https://www.met.no/vaer-og-klima/Ekstremvaervarsler-og-andre-farevarsler\n    "
+      },
+      "type": "Feature",
+      "when": {
+        "interval": [
+          "2024-03-18T10:00:00+00:00",
+          "2024-03-19T21:00:00+00:00"
+        ]
+      }
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              1.0065,
+              61.0068
+            ],
+            [
+              0.0008,
+              60.9992
+            ],
+            [
+              0.0,
+              58.5
+            ],
+            [
+              4.0,
+              58.5
+            ],
+            [
+              3.995,
+              58.9988
+            ],
+            [
+              4.0,
+              61.0
+            ],
+            [
+              3.4897,
+              61.006
+            ],
+            [
+              2.4917,
+              61.0008
+            ],
+            [
+              1.0065,
+              61.0068
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "altitude_above_sea_level": 0,
+        "area": "Viking",
+        "awarenessResponse": "Følg med",
+        "awarenessSeriousness": "Utfordrende situasjon",
+        "awareness_level": "2; yellow; Moderate",
+        "awareness_type": "1; Wind",
+        "ceiling_above_sea_level": 274,
+        "certainty": "Likely",
+        "consequences": "Høye bølger. Sjøen begynner å rulle. Sjørokket kan minske synsvidden.",
+        "contact": "https://www.met.no/kontakt-oss",
+        "county": [],
+        "description": "Sørøst liten storm 22 m/s.",
+        "event": "gale",
+        "eventAwarenessName": "Storm",
+        "eventEndingTime": "2024-03-19T15:00:00+00:00",
+        "geographicDomain": "marine",
+        "id": "2.49.0.1.578.0.240318100000.7008_1_0",
+        "instruction": "Ikke dra ut i småbåt.",
+        "resources": [
+          {
+            "description": "CAP file",
+            "mimeType": "application/xml",
+            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.240318100000.7008_1_0"
+          }
+        ],
+        "riskMatrixColor": "Yellow",
+        "severity": "Moderate",
+        "status": "Actual",
+        "title": "Storm, Viking, 18 mars 10:00 UTC til 19 mars 15:00 UTC. ",
+        "triggerLevel": "20.8 m/s",
+        "type": "Update",
+        "web": "\n      https://www.met.no/vaer-og-klima/Ekstremvaervarsler-og-andre-farevarsler\n    "
+      },
+      "type": "Feature",
+      "when": {
+        "interval": [
+          "2024-03-18T10:00:00+00:00",
+          "2024-03-19T15:00:00+00:00"
+        ]
+      }
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              4.4548,
+              61.0
+            ],
+            [
+              4.0,
+              61.0
+            ],
+            [
+              3.9943,
+              58.9995
+            ],
+            [
+              5.217,
+              59.0027
+            ],
+            [
+              5.1062,
+              59.0903
+            ],
+            [
+              4.9815,
+              59.1515
+            ],
+            [
+              4.8945,
+              59.2078
+            ],
+            [
+              4.8257,
+              59.2993
+            ],
+            [
+              4.823,
+              59.3715
+            ],
+            [
+              4.8698,
+              59.4647
+            ],
+            [
+              4.9415,
+              59.6488
+            ],
+            [
+              4.878,
+              59.9992
+            ],
+            [
+              4.7958,
+              60.2412
+            ],
+            [
+              4.5137,
+              60.7568
+            ],
+            [
+              4.4548,
+              61.0
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "altitude_above_sea_level": 0,
+        "area": "Utsira Nord",
+        "awarenessResponse": "Følg med",
+        "awarenessSeriousness": "Utfordrende situasjon",
+        "awareness_level": "2; yellow; Moderate",
+        "awareness_type": "1; Wind",
+        "ceiling_above_sea_level": 274,
+        "certainty": "Likely",
+        "consequences": "Middels høye bølger. Bølgekammene er ved å brytes opp til sjørokk.",
+        "contact": "https://www.met.no/kontakt-oss",
+        "county": [],
+        "description": "Sørøst sterk kuling 20 m/s.",
+        "event": "gale",
+        "eventAwarenessName": "Kuling",
+        "eventEndingTime": "2024-03-19T16:00:00+00:00",
+        "geographicDomain": "marine",
+        "id": "2.49.0.1.578.0.240318100000.7009_1_0",
+        "instruction": "Ikke dra ut i småbåt.",
+        "resources": [
+          {
+            "description": "CAP file",
+            "mimeType": "application/xml",
+            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.240318100000.7009_1_0"
+          }
+        ],
+        "riskMatrixColor": "Yellow",
+        "severity": "Moderate",
+        "status": "Actual",
+        "title": "Kuling, Utsira Nord, 18 mars 10:00 UTC til 19 mars 16:00 UTC. ",
+        "triggerLevel": "17.2 m/s",
+        "type": "Update",
+        "web": "\n      https://www.met.no/vaer-og-klima/Ekstremvaervarsler-og-andre-farevarsler\n    "
+      },
+      "type": "Feature",
+      "when": {
+        "interval": [
+          "2024-03-18T10:00:00+00:00",
+          "2024-03-19T16:00:00+00:00"
+        ]
+      }
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              5.2197,
+              59.0025
+            ],
+            [
+              3.9948,
+              59.0042
+            ],
+            [
+              4.0,
+              58.5
+            ],
+            [
+              4.0,
+              57.7537
+            ],
+            [
+              7.4457,
+              57.754
+            ],
+            [
+              6.9892,
+              57.9498
+            ],
+            [
+              7.0402,
+              57.9718
+            ],
+            [
+              6.5695,
+              58.0228
+            ],
+            [
+              6.3667,
+              58.261
+            ],
+            [
+              6.319,
+              58.2192
+            ],
+            [
+              6.1845,
+              58.2497
+            ],
+            [
+              5.8027,
+              58.3702
+            ],
+            [
+              5.563,
+              58.5072
+            ],
+            [
+              5.4302,
+              58.6293
+            ],
+            [
+              5.353,
+              58.7612
+            ],
+            [
+              5.2538,
+              58.9718
+            ],
+            [
+              5.2197,
+              59.0025
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "altitude_above_sea_level": 0,
+        "area": "Utsira Sør",
+        "awarenessResponse": "Følg med",
+        "awarenessSeriousness": "Utfordrende situasjon",
+        "awareness_level": "2; yellow; Moderate",
+        "awareness_type": "1; Wind",
+        "ceiling_above_sea_level": 274,
+        "certainty": "Likely",
+        "consequences": "Middels høye bølger. Bølgekammene er ved å brytes opp til sjørokk.",
+        "contact": "https://www.met.no/kontakt-oss",
+        "county": [],
+        "description": "Sørøst sterk kuling 20 m/s.",
+        "event": "gale",
+        "eventAwarenessName": "Kuling",
+        "eventEndingTime": "2024-03-19T14:00:00+00:00",
+        "geographicDomain": "marine",
+        "id": "2.49.0.1.578.0.240318100000.7011_1_0",
+        "instruction": "Ikke dra ut i småbåt.",
+        "resources": [
+          {
+            "description": "CAP file",
+            "mimeType": "application/xml",
+            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.240318100000.7011_1_0"
+          }
+        ],
+        "riskMatrixColor": "Yellow",
+        "severity": "Moderate",
+        "status": "Actual",
+        "title": "Kuling, Utsira Sør, 18 mars 10:00 UTC til 19 mars 14:00 UTC. ",
+        "triggerLevel": "17.2 m/s",
+        "type": "Update",
+        "web": "\n      https://www.met.no/vaer-og-klima/Ekstremvaervarsler-og-andre-farevarsler\n    "
+      },
+      "type": "Feature",
+      "when": {
+        "interval": [
+          "2024-03-18T10:00:00+00:00",
+          "2024-03-19T14:00:00+00:00"
+        ]
+      }
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              21.3347,
+              70.4627
+            ],
+            [
+              16.78,
+              70.7168
+            ],
+            [
+              16.9,
+              70.2
+            ],
+            [
+              16.6,
+              70.0
+            ],
+            [
+              16.3,
+              69.8
+            ],
+            [
+              15.2,
+              69.55
+            ],
+            [
+              16.4587,
+              69.4257
+            ],
+            [
+              17.76,
+              69.6872
+            ],
+            [
+              18.0077,
+              69.9057
+            ],
+            [
+              18.4057,
+              70.1092
+            ],
+            [
+              18.617,
+              70.2062
+            ],
+            [
+              19.2152,
+              70.3127
+            ],
+            [
+              20.1677,
+              70.342
+            ],
+            [
+              21.3347,
+              70.4627
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "altitude_above_sea_level": 0,
+        "area": "Bankene utenfor Troms",
+        "awarenessResponse": "Følg med",
+        "awarenessSeriousness": "Utfordrende situasjon",
+        "awareness_level": "2; yellow; Moderate",
+        "awareness_type": "1; Wind",
+        "ceiling_above_sea_level": 274,
+        "certainty": "Likely",
+        "consequences": "Middels høye bølger. Bølgekammene er ved å brytes opp til sjørokk.",
+        "contact": "https://www.met.no/kontakt-oss",
+        "county": [],
+        "description": "Sørvest sterk kuling 20 m/s.",
+        "event": "gale",
+        "eventAwarenessName": "Kuling",
+        "eventEndingTime": "2024-03-18T15:00:00+00:00",
+        "geographicDomain": "marine",
+        "id": "2.49.0.1.578.0.240318100000.7079_1_0",
+        "instruction": "Ikke dra ut i småbåt.",
+        "resources": [
+          {
+            "description": "CAP file",
+            "mimeType": "application/xml",
+            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.240318100000.7079_1_0"
+          }
+        ],
+        "riskMatrixColor": "Yellow",
+        "severity": "Moderate",
+        "status": "Actual",
+        "title": "Kuling, Bankene utenfor Troms, 18 mars 10:00 UTC til 18 mars 15:00 UTC. ",
+        "triggerLevel": "17.2 m/s",
+        "type": "Update",
+        "web": "\n      https://www.met.no/vaer-og-klima/Ekstremvaervarsler-og-andre-farevarsler\n    "
+      },
+      "type": "Feature",
+      "when": {
+        "interval": [
+          "2024-03-18T10:00:00+00:00",
+          "2024-03-18T15:00:00+00:00"
+        ]
+      }
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              16.78,
+              70.7168
+            ],
+            [
+              21.3347,
+              70.4627
+            ],
+            [
+              21.9412,
+              70.6808
+            ],
+            [
+              22.6857,
+              70.84
+            ],
+            [
+              19.85,
+              72.4
+            ],
+            [
+              19.65,
+              72.5
+            ],
+            [
+              15.75,
+              72.5
+            ],
+            [
+              15.75,
+              72.0
+            ],
+            [
+              16.78,
+              70.7168
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "altitude_above_sea_level": 0,
+        "area": "Tromsøflaket",
+        "awarenessResponse": "Følg med",
+        "awarenessSeriousness": "Utfordrende situasjon",
+        "awareness_level": "2; yellow; Moderate",
+        "awareness_type": "1; Wind",
+        "ceiling_above_sea_level": 274,
+        "certainty": "Likely",
+        "consequences": "Middels høye bølger. Bølgekammene er ved å brytes opp til sjørokk.",
+        "contact": "https://www.met.no/kontakt-oss",
+        "county": [],
+        "description": "Skiftende sterk kuling 20 m/s.",
+        "event": "gale",
+        "eventAwarenessName": "Kuling",
+        "eventEndingTime": "2024-03-18T14:00:00+00:00",
+        "geographicDomain": "marine",
+        "id": "2.49.0.1.578.0.240318100000.7080_1_0",
+        "instruction": "Ikke dra ut i småbåt.",
+        "resources": [
+          {
+            "description": "CAP file",
+            "mimeType": "application/xml",
+            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.240318100000.7080_1_0"
+          }
+        ],
+        "riskMatrixColor": "Yellow",
+        "severity": "Moderate",
+        "status": "Actual",
+        "title": "Kuling, Tromsøflaket, 18 mars 10:00 UTC til 18 mars 14:00 UTC. ",
+        "triggerLevel": "17.2 m/s",
+        "type": "Update",
+        "web": "\n      https://www.met.no/vaer-og-klima/Ekstremvaervarsler-og-andre-farevarsler\n    "
+      },
+      "type": "Feature",
+      "when": {
+        "interval": [
+          "2024-03-18T10:00:00+00:00",
+          "2024-03-18T14:00:00+00:00"
+        ]
+      }
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              4.8643,
+              62.034
+            ],
+            [
+              5.0192,
+              62.0217
+            ],
+            [
+              5.1408,
+              62.1837
+            ],
+            [
+              5.0323,
+              62.201
+            ],
+            [
+              5.025,
+              62.196
+            ],
+            [
+              5.0243,
+              62.1955
+            ],
+            [
+              5.0227,
+              62.194
+            ],
+            [
+              4.8663,
+              62.0362
+            ],
+            [
+              4.8658,
+              62.0357
+            ],
+            [
+              4.8643,
+              62.034
+            ],
+            [
+              4.8643,
+              62.034
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "altitude_above_sea_level": 0,
+        "area": "Måløy - Stad",
+        "awarenessResponse": "Følg med",
+        "awarenessSeriousness": "Utfordrende situasjon",
+        "awareness_level": "2; yellow; Moderate",
+        "awareness_type": "1; Wind",
+        "ceiling_above_sea_level": 274,
+        "certainty": "Likely",
+        "consequences": "Sjøen bygger seg opp og det kan være farlig å være ute i småbåt Høye bølger. Det er farlig å være ute i småbåt. Grov sjø og hvitt skum fra bølgetopper som brekker. ",
+        "contact": "https://www.met.no/kontakt-oss",
+        "county": [],
+        "description": "I ettermiddag, mandag, sørlig periodevis stiv kuling 15 m/s. ",
+        "event": "gale",
+        "eventAwarenessName": "Kuling",
+        "eventEndingTime": "2024-03-18T18:00:00+00:00",
+        "geographicDomain": "marine",
+        "id": "2.49.0.1.578.0.20240318084821.100",
+        "instruction": "Vurder å la båten ligge. ",
+        "resources": [
+          {
+            "description": "CAP file",
+            "mimeType": "application/xml",
+            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.20240318084821.100"
+          }
+        ],
+        "riskMatrixColor": "Yellow",
+        "severity": "Moderate",
+        "status": "Actual",
+        "title": "Kuling, gult nivå, Måløy - Stad, 2024-03-18T12:00:00+00:00, 2024-03-18T18:00:00+00:00",
+        "triggerLevel": "13.9m/s",
+        "type": "Alert",
+        "web": "https://www.met.no/vaer-og-klima/ekstremvaervarsler-og-andre-farevarsler/vaerfenomener-som-kan-gi-farevarsel-fra-met/kuling-stormvarsel-for-kyst-og-naere-fiskebanker"
+      },
+      "type": "Feature",
+      "when": {
+        "interval": [
+          "2024-03-18T12:00:00+00:00",
+          "2024-03-18T18:00:00+00:00"
+        ]
+      }
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              4.605,
+              60.7737
+            ],
+            [
+              4.6945,
+              60.7867
+            ],
+            [
+              4.7027,
+              60.8532
+            ],
+            [
+              4.6967,
+              60.949
+            ],
+            [
+              4.6747,
+              61.0522
+            ],
+            [
+              4.6952,
+              61.1565
+            ],
+            [
+              4.6917,
+              61.3027
+            ],
+            [
+              4.4903,
+              61.298
+            ],
+            [
+              4.4853,
+              61.2533
+            ],
+            [
+              4.4648,
+              61.0742
+            ],
+            [
+              4.4648,
+              61.0732
+            ],
+            [
+              4.4655,
+              61.034
+            ],
+            [
+              4.4655,
+              61.0333
+            ],
+            [
+              4.4662,
+              61.0277
+            ],
+            [
+              4.4665,
+              61.0258
+            ],
+            [
+              4.4673,
+              61.0242
+            ],
+            [
+              4.4787,
+              61.0035
+            ],
+            [
+              4.5743,
+              60.8302
+            ],
+            [
+              4.605,
+              60.7737
+            ],
+            [
+              4.605,
+              60.7737
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "altitude_above_sea_level": 0,
+        "area": "Fedje - Bulandet",
+        "awarenessResponse": "Følg med",
+        "awarenessSeriousness": "Utfordrende situasjon",
+        "awareness_level": "2; yellow; Moderate",
+        "awareness_type": "1; Wind",
+        "ceiling_above_sea_level": 274,
+        "certainty": "Observed",
+        "consequences": "Middels høye bølger. Bølgekammene er ved å brytes opp til sjørokk. ",
+        "contact": "https://www.met.no/kontakt-oss",
+        "county": [],
+        "description": "Mandag, fortsatt sør og søraust periodevis stiv kuling 15 m/s. Tirsdag ettermiddag økning til sterk kuling 20 m/s. Tirsdag kveld minkende. ",
+        "event": "gale",
+        "eventAwarenessName": "Kuling",
+        "eventEndingTime": "2024-03-19T19:00:00+00:00",
+        "geographicDomain": "marine",
+        "id": "2.49.0.1.578.0.20240318084045.082",
+        "instruction": "Ikke dra ut i småbåt. ",
+        "resources": [
+          {
+            "description": "CAP file",
+            "mimeType": "application/xml",
+            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.20240318084045.082"
+          }
+        ],
+        "riskMatrixColor": "Yellow",
+        "severity": "Moderate",
+        "status": "Actual",
+        "title": "Kuling, gult nivå, Fedje - Bulandet, 2024-03-17T11:00:00+00:00, 2024-03-19T19:00:00+00:00",
+        "triggerLevel": "17.2m/s",
+        "type": "Update",
+        "web": "https://www.met.no/vaer-og-klima/ekstremvaervarsler-og-andre-farevarsler/vaerfenomener-som-kan-gi-farevarsel-fra-met/kuling-stormvarsel-for-kyst-og-naere-fiskebanker"
+      },
+      "type": "Feature",
+      "when": {
+        "interval": [
+          "2024-03-17T11:00:00+00:00",
+          "2024-03-19T19:00:00+00:00"
+        ]
+      }
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
               [
-                26.7832,
-                71.1167
+                5.1937,
+                59.3467
               ],
               [
-                25.8142,
-                71.1942
+                5.1982,
+                59.581
               ],
               [
-                25.3332,
-                70.7332
+                5.1683,
+                59.6838
               ],
               [
-                25.6,
-                70.6997
+                5.1293,
+                59.7672
               ],
               [
-                25.8832,
-                70.7167
+                5.0788,
+                59.9242
               ],
               [
-                26.0332,
-                70.6667
+                4.9727,
+                59.921
               ],
               [
-                26.25,
-                70.6667
+                5.009,
+                59.7978
               ],
               [
-                26.75,
-                70.75
+                5.0393,
+                59.6448
               ],
               [
-                27.2167,
-                70.75
+                4.9338,
+                59.4828
               ],
               [
-                27.6212,
-                70.7442
+                4.8238,
+                59.3123
               ],
               [
-                28.2377,
-                71.1057
+                4.8232,
+                59.311
               ],
               [
-                27.6432,
-                71.1502
+                4.8173,
+                59.298
               ],
               [
-                26.7832,
-                71.1167
+                5.1937,
+                59.3467
               ],
               [
-                26.7832,
-                71.1167
+                5.1937,
+                59.3467
               ]
             ]
           ],
           [
             [
               [
-                30.0332,
-                70.3497
+                4.9727,
+                59.921
               ],
               [
-                31.1445,
-                70.4225
+                5.0788,
+                59.9242
               ],
               [
-                30.1582,
-                70.7112
+                5.0677,
+                60.0142
               ],
               [
-                28.2377,
-                71.1057
+                5.0572,
+                60.1237
               ],
               [
-                27.6212,
-                70.7442
+                5.0228,
+                60.2232
               ],
               [
-                28.1832,
-                70.7332
+                4.9843,
+                60.3472
               ],
               [
-                28.7167,
-                70.6832
+                4.9607,
+                60.4473
               ],
               [
-                29.4667,
-                70.55
+                4.8495,
+                60.5707
               ],
               [
-                30.0332,
-                70.3497
+                4.7957,
+                60.6612
               ],
               [
-                30.0332,
-                70.3497
+                4.6945,
+                60.7867
+              ],
+              [
+                4.605,
+                60.7738
+              ],
+              [
+                4.6688,
+                60.6568
+              ],
+              [
+                4.7623,
+                60.4833
+              ],
+              [
+                4.8548,
+                60.3097
+              ],
+              [
+                4.9027,
+                60.153
+              ],
+              [
+                4.9562,
+                59.9755
+              ],
+              [
+                4.9727,
+                59.921
+              ],
+              [
+                4.9727,
+                59.921
               ]
             ]
           ]
@@ -111,39 +2020,44 @@
         "type": "MultiPolygon"
       },
       "properties": {
-        "area": "Nordkapp - Vardø",
+        "altitude_above_sea_level": 0,
+        "area": "Karmøy - Fedje",
         "awarenessResponse": "Følg med",
         "awarenessSeriousness": "Utfordrende situasjon",
         "awareness_level": "2; yellow; Moderate",
         "awareness_type": "1; Wind",
+        "ceiling_above_sea_level": 274,
         "certainty": "Likely",
-        "consequences": "Høye bølger. Det er farlig å være ute i småbåt. Grov sjø og hvitt skum fra bølgetopper som brekker. Middels høye bølger. Bølgekammene er ved å brytes opp til sjørokk. ",
+        "consequences": "Middels høye bølger. Bølgekammene er ved å brytes opp til sjørokk. ",
+        "contact": "https://www.met.no/kontakt-oss",
         "county": [],
-        "description": "Alert: Natt til torsdag økning til nordvest stiv kuling 15 m/s, periodevis sterk kuling 20. Minkende torsdag formiddag.",
+        "description": "Mandag, fortsatt sør og søraust periodevis stiv kuling 15 m/s, fra tirsdag formiddag periodevis sterk kuling 20 m/s. Sent tirsdag ettermiddag minkende. ",
         "event": "gale",
         "eventAwarenessName": "Kuling",
-        "eventEndingTime": "2024-03-07T10:00:00+00:00",
+        "eventEndingTime": "2024-03-19T18:00:00+00:00",
         "geographicDomain": "marine",
-        "id": "2.49.0.1.578.0.20240306104934.036",
-        "instruction": "Vurder å la båten ligge. ",
+        "id": "2.49.0.1.578.0.20240318083515.037",
+        "instruction": "Ikke dra ut i småbåt. ",
         "resources": [
           {
             "description": "CAP file",
             "mimeType": "application/xml",
-            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.20240306104934.036"
+            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.20240318083515.037"
           }
         ],
         "riskMatrixColor": "Yellow",
         "severity": "Moderate",
-        "title": "Kuling, gult nivå, Nordkapp - Vardø, 2024-03-06T23:00:00+00:00, 2024-03-07T10:00:00+00:00",
+        "status": "Actual",
+        "title": "Kuling, gult nivå, Karmøy - Fedje, 2024-03-17T11:00:00+00:00, 2024-03-19T18:00:00+00:00",
         "triggerLevel": "17.2m/s",
-        "type": "Alert"
+        "type": "Update",
+        "web": "https://www.met.no/vaer-og-klima/ekstremvaervarsler-og-andre-farevarsler/vaerfenomener-som-kan-gi-farevarsel-fra-met/kuling-stormvarsel-for-kyst-og-naere-fiskebanker"
       },
       "type": "Feature",
       "when": {
         "interval": [
-          "2024-03-06T23:00:00+00:00",
-          "2024-03-07T10:00:00+00:00"
+          "2024-03-17T11:00:00+00:00",
+          "2024-03-19T18:00:00+00:00"
         ]
       }
     },
@@ -152,91 +2066,444 @@
         "coordinates": [
           [
             [
-              30.9167,
-              69.6832
+              [
+                6.3025,
+                58.2
+              ],
+              [
+                6.4088,
+                58.3058
+              ],
+              [
+                6.3185,
+                58.3302
+              ],
+              [
+                6.2137,
+                58.3592
+              ],
+              [
+                6.0827,
+                58.3988
+              ],
+              [
+                5.9707,
+                58.4442
+              ],
+              [
+                5.8422,
+                58.4987
+              ],
+              [
+                5.6927,
+                58.5687
+              ],
+              [
+                5.5955,
+                58.6587
+              ],
+              [
+                5.5248,
+                58.6458
+              ],
+              [
+                5.632,
+                58.5455
+              ],
+              [
+                5.633,
+                58.5447
+              ],
+              [
+                5.635,
+                58.5432
+              ],
+              [
+                5.6767,
+                58.5157
+              ],
+              [
+                5.6777,
+                58.5152
+              ],
+              [
+                5.8387,
+                58.4185
+              ],
+              [
+                5.8398,
+                58.4178
+              ],
+              [
+                5.8508,
+                58.4118
+              ],
+              [
+                5.8527,
+                58.411
+              ],
+              [
+                6.0673,
+                58.3112
+              ],
+              [
+                6.3025,
+                58.2
+              ],
+              [
+                6.3025,
+                58.2
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                5.5247,
+                58.6458
+              ],
+              [
+                5.5955,
+                58.6587
+              ],
+              [
+                5.5587,
+                58.712
+              ],
+              [
+                5.5608,
+                58.8212
+              ],
+              [
+                5.579,
+                58.9027
+              ],
+              [
+                5.5703,
+                58.9967
+              ],
+              [
+                5.5097,
+                59.0647
+              ],
+              [
+                5.3882,
+                59.1192
+              ],
+              [
+                5.2727,
+                59.1532
+              ],
+              [
+                5.227,
+                59.1922
+              ],
+              [
+                5.2057,
+                59.2662
+              ],
+              [
+                5.1937,
+                59.3467
+              ],
+              [
+                4.8173,
+                59.298
+              ],
+              [
+                4.8125,
+                59.2883
+              ],
+              [
+                4.8122,
+                59.2878
+              ],
+              [
+                4.8117,
+                59.286
+              ],
+              [
+                4.8115,
+                59.2843
+              ],
+              [
+                4.8118,
+                59.2825
+              ],
+              [
+                4.8148,
+                59.2697
+              ],
+              [
+                4.8148,
+                59.2693
+              ],
+              [
+                4.8155,
+                59.2677
+              ],
+              [
+                4.8167,
+                59.266
+              ],
+              [
+                4.818,
+                59.2643
+              ],
+              [
+                4.8197,
+                59.2627
+              ],
+              [
+                4.8213,
+                59.2615
+              ],
+              [
+                4.8217,
+                59.2612
+              ],
+              [
+                4.8238,
+                59.2597
+              ],
+              [
+                4.8262,
+                59.2583
+              ],
+              [
+                4.8288,
+                59.2572
+              ],
+              [
+                4.8745,
+                59.2393
+              ],
+              [
+                5.1515,
+                59.1297
+              ],
+              [
+                5.3343,
+                59.001
+              ],
+              [
+                5.3907,
+                58.8735
+              ],
+              [
+                5.391,
+                58.873
+              ],
+              [
+                5.4528,
+                58.7462
+              ],
+              [
+                5.4537,
+                58.7448
+              ],
+              [
+                5.5082,
+                58.6633
+              ],
+              [
+                5.5095,
+                58.6617
+              ],
+              [
+                5.5202,
+                58.65
+              ],
+              [
+                5.521,
+                58.649
+              ],
+              [
+                5.5247,
+                58.6458
+              ],
+              [
+                5.5247,
+                58.6458
+              ]
+            ]
+          ]
+        ],
+        "type": "MultiPolygon"
+      },
+      "properties": {
+        "altitude_above_sea_level": 0,
+        "area": "Åna-Sira - Karmøy",
+        "awarenessResponse": "Følg med",
+        "awarenessSeriousness": "Utfordrende situasjon",
+        "awareness_level": "2; yellow; Moderate",
+        "awareness_type": "1; Wind",
+        "ceiling_above_sea_level": 274,
+        "certainty": "Observed",
+        "consequences": "Middels høye bølger. Bølgekammene er ved å brytes opp til sjørokk. ",
+        "contact": "https://www.met.no/kontakt-oss",
+        "county": [],
+        "description": "Mandag, fortsatt sør og søraust stiv og periodevis sterk kuling 20 m/s. Sent tirsdag ettermiddag minkende. ",
+        "event": "gale",
+        "eventAwarenessName": "Kuling",
+        "eventEndingTime": "2024-03-19T18:00:00+00:00",
+        "geographicDomain": "marine",
+        "id": "2.49.0.1.578.0.20240318083026.064",
+        "instruction": "Ikke dra ut i småbåt. ",
+        "resources": [
+          {
+            "description": "CAP file",
+            "mimeType": "application/xml",
+            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.20240318083026.064"
+          }
+        ],
+        "riskMatrixColor": "Yellow",
+        "severity": "Moderate",
+        "status": "Actual",
+        "title": "Kuling, gult nivå, Åna-Sira - Karmøy, 2024-03-17T11:00:00+00:00, 2024-03-19T18:00:00+00:00",
+        "triggerLevel": "17.2m/s",
+        "type": "Update",
+        "web": "https://www.met.no/vaer-og-klima/ekstremvaervarsler-og-andre-farevarsler/vaerfenomener-som-kan-gi-farevarsel-fra-met/kuling-stormvarsel-for-kyst-og-naere-fiskebanker"
+      },
+      "type": "Feature",
+      "when": {
+        "interval": [
+          "2024-03-17T11:00:00+00:00",
+          "2024-03-19T18:00:00+00:00"
+        ]
+      }
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              6.3023,
+              58.2
             ],
             [
-              30.85,
-              69.7667
+              6.3215,
+              58.1917
             ],
             [
-              30.8832,
-              69.8167
+              6.5742,
+              58.0717
             ],
             [
-              31.5332,
-              70.1667
+              6.5747,
+              58.0715
             ],
             [
-              31.1445,
-              70.4225
+              6.6063,
+              58.057
             ],
             [
-              30.0332,
-              70.3497
+              6.6078,
+              58.0563
             ],
             [
-              30.1332,
-              70.1167
+              6.6107,
+              58.0553
             ],
             [
-              30.2,
-              69.9
+              6.6455,
+              58.0443
             ],
             [
-              30.2667,
-              69.7832
+              6.6465,
+              58.044
             ],
             [
-              30.6,
-              69.6997
+              6.6495,
+              58.0432
             ],
             [
-              30.9167,
-              69.6832
+              6.6585,
+              58.0412
             ],
             [
-              30.9167,
-              69.6832
+              6.6587,
+              58.0412
+            ],
+            [
+              6.6792,
+              58.0367
+            ],
+            [
+              6.9922,
+              57.9685
+            ],
+            [
+              6.9943,
+              57.968
+            ],
+            [
+              6.9977,
+              57.9675
+            ],
+            [
+              7.0307,
+              57.964
+            ],
+            [
+              7.1592,
+              58.0677
+            ],
+            [
+              6.4087,
+              58.3057
+            ],
+            [
+              6.3023,
+              58.2
+            ],
+            [
+              6.3023,
+              58.2
             ]
           ]
         ],
         "type": "Polygon"
       },
       "properties": {
-        "area": "Vardø - Grense Jakobselv",
+        "altitude_above_sea_level": 0,
+        "area": "Lindesnes - Åna-Sira",
         "awarenessResponse": "Følg med",
         "awarenessSeriousness": "Utfordrende situasjon",
         "awareness_level": "2; yellow; Moderate",
         "awareness_type": "1; Wind",
-        "certainty": "Likely",
-        "consequences": "Sjøen bygger seg opp og det kan være farlig å være ute i småbåt Høye bølger. Det er farlig å være ute i småbåt. Grov sjø og hvitt skum fra bølgetopper som brekker. ",
+        "ceiling_above_sea_level": 274,
+        "certainty": "Observed",
+        "consequences": "Sjøen bygger seg opp og det kan være farlig å være ute i småbåt Grov sjø og hvitt skum fra bølgetopper som brekker. ",
+        "contact": "https://www.met.no/kontakt-oss",
         "county": [],
-        "description": "Alert: Natt til torsdag økning til nordvest stiv kuling 15 m/s. Minkende torsdag formiddag.",
+        "description": "Fra mandag formiddag fortsatt østlig stiv kuling 15 m/s. Mandag kveld minkende.",
         "event": "gale",
         "eventAwarenessName": "Kuling",
-        "eventEndingTime": "2024-03-07T10:00:00+00:00",
+        "eventEndingTime": "2024-03-18T23:00:00+00:00",
         "geographicDomain": "marine",
-        "id": "2.49.0.1.578.0.20240306110055.051",
+        "id": "2.49.0.1.578.0.20240318073250.050",
         "instruction": "Vurder å la båten ligge. ",
         "resources": [
           {
             "description": "CAP file",
             "mimeType": "application/xml",
-            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.20240306110055.051"
+            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.20240318073250.050"
           }
         ],
         "riskMatrixColor": "Yellow",
         "severity": "Moderate",
-        "title": "Kuling, gult nivå, Vardø - Grense Jakobselv, 2024-03-07T05:00:00+00:00, 2024-03-07T10:00:00+00:00",
+        "status": "Actual",
+        "title": "Kuling, gult nivå, Lindesnes - Åna-Sira, 2024-03-17T10:00:00+00:00, 2024-03-18T23:00:00+00:00",
         "triggerLevel": "13.9m/s",
-        "type": "Alert"
+        "type": "Update",
+        "web": "https://www.met.no/vaer-og-klima/ekstremvaervarsler-og-andre-farevarsler/vaerfenomener-som-kan-gi-farevarsel-fra-met/kuling-stormvarsel-for-kyst-og-naere-fiskebanker"
       },
       "type": "Feature",
       "when": {
         "interval": [
-          "2024-03-07T05:00:00+00:00",
-          "2024-03-07T10:00:00+00:00"
+          "2024-03-17T10:00:00+00:00",
+          "2024-03-18T23:00:00+00:00"
         ]
       }
     },
@@ -245,94 +2512,109 @@
         "coordinates": [
           [
             [
-              5.71364,
-              60.4518
+              24.3188,
+              71.2424
             ],
             [
-              5.77752,
-              60.6673
+              22.4949,
+              71.0155
             ],
             [
-              5.57731,
-              60.9019
+              21.6385,
+              70.795
             ],
             [
-              5.67443,
-              61.1222
+              21.3029,
+              70.4985
             ],
             [
-              5.66474,
-              61.4106
+              22.5561,
+              70.0033
             ],
             [
-              4.69256,
-              61.4607
+              24.3854,
+              70.1819
             ],
             [
-              4.51089,
-              61.0786
+              26.8718,
+              70.6511
             ],
             [
-              4.73156,
-              60.5526
+              26.7531,
+              71.194
             ],
             [
-              5.02861,
-              60.4641
+              24.3188,
+              71.2424
             ],
             [
-              5.71364,
-              60.4518
+              24.3188,
+              71.2424
             ],
             [
-              5.71364,
-              60.4518
+              24.3188,
+              71.2424
             ]
           ]
         ],
         "type": "Polygon"
       },
       "properties": {
-        "MunicipalityId": "4601;4626;4627;4628;4630;4631;4632;4633;4634;4635;4636;4637;4638;4645;4646",
-        "administrativeId": "county:46",
-        "area": "Deler av Vestland",
+        "altitude_above_sea_level": 0,
+        "area": "Deler av Vest-Finnmark",
         "awarenessResponse": "Følg med",
         "awarenessSeriousness": "Utfordrende situasjon",
         "awareness_level": "2; yellow; Moderate",
-        "awareness_type": "8; forest-fire",
+        "awareness_type": "2; snow-ice",
+        "ceiling_above_sea_level": 2743,
         "certainty": "Likely",
-        "consequences": "Vegetasjon kan lett antennes og store områder kan bli berørt. ",
+        "consequences": "Sårbar infrastruktur kan bli rammet som følge av snøtyngden. Noen reiser vil kunne få lengre reisetid. Det kan være lokalt vanskelige kjøreforhold. Snøfokk gir redusert sikt og mulighet for kolonnekjøring og/eller stengte veier. ",
+        "contact": "https://www.met.no/kontakt-oss",
         "county": [
-          "46"
+          "56"
         ],
-        "description": "Alert: Lokal gress og lyngbrannfare i snøfrie områder inntil det kommer nedbør av betydning.",
-        "event": "forestFire",
-        "eventAwarenessName": "Skogbrannfare",
+        "description": "Det er ventet rundt 25-40 cm snø i løpet av 24 timer, nedbøren kan i perioder falle som sludd eller regn. Det er usikkerhet tilknytttet plasseringen av de største nedbørsmengdene. Vind opptil stiv kuling, kan hende stek kuling, i kombinasjon med snø vil i perioder gi lokalt kraftig snøfokk. ",
+        "event": "snow",
+        "eventAwarenessName": "Snø",
+        "eventEndingTime": "2024-03-19T07:00:00+00:00",
         "geographicDomain": "land",
-        "id": "2.49.0.1.578.0.20240306094843.010",
-        "instruction": "Vær forsiktig med åpen ild. Følg lokale myndigheters instruksjoner. Behov for forebyggende tiltak og beredskap skal vurderes fortløpende av beredskapsaktører. ",
+        "id": "2.49.0.1.578.0.20240317223923.054",
+        "instruction": "Beskytt sårbare installasjoner og gjenstander som ikke tåler den ventede snømengden. Beregn noe ekstra tid til transport og kjøring. Bruk riktige dekk og kjør etter forholdene. Behov for beredskap skal vurderes fortløpende av beredskapsaktører. ",
+        "municipality": [
+          "5601",
+          "5603",
+          "5614",
+          "5616",
+          "5618",
+          "5620",
+          "5622",
+          "5624"
+        ],
         "resources": [
           {
             "description": "CAP file",
             "mimeType": "application/xml",
-            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.20240306094843.010"
+            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.20240317223923.054"
           },
           {
-            "description": "",
+            "description": "Kart over Snø, gult nivå, Deler av Vest-Finnmark, 2024-03-17T23:00:00+00:00, 2024-03-19T07:00:00+00:00",
             "mimeType": "image/png",
-            "uri": "https://slaps.met.no/cap-images/3fb9c340-d626-4cb1-9f54-aeb3a5498188.png"
+            "uri": "https://slaps.met.no/cap-images/c876b855-3bc6-4d8e-a4bb-c034f1ea3c8e.png"
           }
         ],
         "riskMatrixColor": "Yellow",
         "severity": "Moderate",
-        "title": "Skogbrannfare, gult nivå, Deler av Vestland, 2024-03-06T12:00:00+00:00, 2024-03-09T13:00:00+00:00",
-        "type": "Alert"
+        "status": "Actual",
+        "title": "Snø, gult nivå, Deler av Vest-Finnmark, 2024-03-17T23:00:00+00:00, 2024-03-19T07:00:00+00:00",
+        "triggerLevel": "25cm/24h",
+        "type": "Update",
+        "web": "https://www.met.no/vaer-og-klima/ekstremvaervarsler-og-andre-farevarsler/vaerfenomener-som-kan-gi-farevarsel-fra-met/sno"
       },
       "type": "Feature",
       "when": {
         "interval": [
-          "2024-03-06T12:00:00+00:00",
-          "2024-03-09T13:00:00+00:00"
+          "2024-03-17T23:00:00+00:00",
+          "2024-03-19T07:00:00+00:00"
         ]
       }
     },
@@ -341,96 +2623,987 @@
         "coordinates": [
           [
             [
-              6.33682,
-              62.8472
+              [
+                24.3832,
+                70.7167
+              ],
+              [
+                23.9885,
+                71.1042
+              ],
+              [
+                21.9412,
+                70.6807
+              ],
+              [
+                21.3347,
+                70.4627
+              ],
+              [
+                21.6,
+                70.1832
+              ],
+              [
+                21.7832,
+                70.0997
+              ],
+              [
+                22.0832,
+                70.1667
+              ],
+              [
+                22.2167,
+                70.0667
+              ],
+              [
+                22.5167,
+                70.1167
+              ],
+              [
+                22.3832,
+                70.25
+              ],
+              [
+                22.6167,
+                70.3332
+              ],
+              [
+                22.7332,
+                70.4
+              ],
+              [
+                23.0332,
+                70.4167
+              ],
+              [
+                23.2832,
+                70.4332
+              ],
+              [
+                23.5832,
+                70.5
+              ],
+              [
+                23.6832,
+                70.5832
+              ],
+              [
+                23.9167,
+                70.5997
+              ],
+              [
+                24.0332,
+                70.65
+              ],
+              [
+                24.1667,
+                70.7167
+              ],
+              [
+                24.3832,
+                70.7167
+              ],
+              [
+                24.3832,
+                70.7167
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                25.3332,
+                70.7332
+              ],
+              [
+                25.8142,
+                71.1942
+              ],
+              [
+                23.9885,
+                71.1042
+              ],
+              [
+                24.3832,
+                70.7167
+              ],
+              [
+                24.95,
+                70.6332
+              ],
+              [
+                25.3332,
+                70.7332
+              ],
+              [
+                25.3332,
+                70.7332
+              ]
+            ]
+          ]
+        ],
+        "type": "MultiPolygon"
+      },
+      "properties": {
+        "altitude_above_sea_level": 0,
+        "area": "Loppa - Nordkapp",
+        "awarenessResponse": "Følg med",
+        "awarenessSeriousness": "Utfordrende situasjon",
+        "awareness_level": "2; yellow; Moderate",
+        "awareness_type": "1; Wind",
+        "ceiling_above_sea_level": 274,
+        "certainty": "Likely",
+        "consequences": "Sjøen bygger seg opp og det kan være farlig å være ute i småbåt Grov sjø og hvitt skum fra bølgetopper som brekker. ",
+        "contact": "https://www.met.no/kontakt-oss",
+        "county": [],
+        "description": "Fra mandag morgen østlig periodevis stiv kuling 15 m/s. Minkende om ettermiddagen.",
+        "event": "gale",
+        "eventAwarenessName": "Kuling",
+        "eventEndingTime": "2024-03-18T17:00:00+00:00",
+        "geographicDomain": "marine",
+        "id": "2.49.0.1.578.0.20240317190820.050",
+        "instruction": "Vurder å la båten ligge. ",
+        "resources": [
+          {
+            "description": "CAP file",
+            "mimeType": "application/xml",
+            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.20240317190820.050"
+          }
+        ],
+        "riskMatrixColor": "Yellow",
+        "severity": "Moderate",
+        "status": "Actual",
+        "title": "Kuling, gult nivå, Loppa - Nordkapp, 2024-03-18T08:00:00+00:00, 2024-03-18T17:00:00+00:00",
+        "triggerLevel": "13.9m/s",
+        "type": "Alert",
+        "web": "https://www.met.no/vaer-og-klima/ekstremvaervarsler-og-andre-farevarsler/vaerfenomener-som-kan-gi-farevarsel-fra-met/kuling-stormvarsel-for-kyst-og-naere-fiskebanker"
+      },
+      "type": "Feature",
+      "when": {
+        "interval": [
+          "2024-03-18T08:00:00+00:00",
+          "2024-03-18T17:00:00+00:00"
+        ]
+      }
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              [
+                19.2152,
+                70.3127
+              ],
+              [
+                18.617,
+                70.2062
+              ],
+              [
+                18.4057,
+                70.1092
+              ],
+              [
+                18.0077,
+                69.9057
+              ],
+              [
+                17.7597,
+                69.6872
+              ],
+              [
+                17.7997,
+                69.65
+              ],
+              [
+                18.1,
+                69.5167
+              ],
+              [
+                19.1797,
+                69.9157
+              ],
+              [
+                19.9602,
+                70.039
+              ],
+              [
+                19.2152,
+                70.3127
+              ],
+              [
+                19.2152,
+                70.3127
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                21.6,
+                70.1832
+              ],
+              [
+                21.3347,
+                70.4627
+              ],
+              [
+                20.8072,
+                70.4112
+              ],
+              [
+                20.1677,
+                70.342
+              ],
+              [
+                19.2152,
+                70.3127
+              ],
+              [
+                19.9602,
+                70.039
+              ],
+              [
+                21.6,
+                70.1832
+              ],
+              [
+                21.6,
+                70.1832
+              ]
+            ]
+          ]
+        ],
+        "type": "MultiPolygon"
+      },
+      "properties": {
+        "altitude_above_sea_level": 0,
+        "area": "Hekkingen - Loppa",
+        "awarenessResponse": "Følg med",
+        "awarenessSeriousness": "Utfordrende situasjon",
+        "awareness_level": "2; yellow; Moderate",
+        "awareness_type": "1; Wind",
+        "ceiling_above_sea_level": 274,
+        "certainty": "Likely",
+        "consequences": "Sjøen bygger seg opp og det kan være farlig å være ute i småbåt Grov sjø og hvitt skum fra bølgetopper som brekker. ",
+        "contact": "https://www.met.no/kontakt-oss",
+        "county": [],
+        "description": "Fra søndag kveld sørlig til sørvestlig stiv kuling 15 m/s, periodevis sterk kuling 20, søndag kveld kan hende opp i liten storm 22. Minkende utover mandag ettermiddag.",
+        "event": "gale",
+        "eventAwarenessName": "Kuling",
+        "eventEndingTime": "2024-03-18T19:00:00+00:00",
+        "geographicDomain": "marine",
+        "id": "2.49.0.1.578.0.20240317190448.069",
+        "instruction": "Vurder å la båten ligge. ",
+        "resources": [
+          {
+            "description": "CAP file",
+            "mimeType": "application/xml",
+            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.20240317190448.069"
+          }
+        ],
+        "riskMatrixColor": "Yellow",
+        "severity": "Moderate",
+        "status": "Actual",
+        "title": "Kuling, gult nivå, Hekkingen - Loppa, 2024-03-17T17:00:00+00:00, 2024-03-18T19:00:00+00:00",
+        "triggerLevel": "17.2m/s",
+        "type": "Update",
+        "web": "https://www.met.no/vaer-og-klima/ekstremvaervarsler-og-andre-farevarsler/vaerfenomener-som-kan-gi-farevarsel-fra-met/kuling-stormvarsel-for-kyst-og-naere-fiskebanker"
+      },
+      "type": "Feature",
+      "when": {
+        "interval": [
+          "2024-03-17T17:00:00+00:00",
+          "2024-03-18T19:00:00+00:00"
+        ]
+      }
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              [
+                15.2167,
+                68.1667
+              ],
+              [
+                15.1832,
+                68.2667
+              ],
+              [
+                15.1167,
+                68.3
+              ],
+              [
+                15.2667,
+                68.3497
+              ],
+              [
+                15.1332,
+                68.3667
+              ],
+              [
+                15.05,
+                68.3332
+              ],
+              [
+                14.9332,
+                68.3167
+              ],
+              [
+                14.8332,
+                68.3332
+              ],
+              [
+                14.8167,
+                68.3667
+              ],
+              [
+                14.6832,
+                68.3832
+              ],
+              [
+                14.6167,
+                68.3497
+              ],
+              [
+                14.55,
+                68.3667
+              ],
+              [
+                14.5332,
+                68.4167
+              ],
+              [
+                14.4332,
+                68.4167
+              ],
+              [
+                14.3667,
+                68.4497
+              ],
+              [
+                14.1832,
+                68.4497
+              ],
+              [
+                14.1332,
+                68.4832
+              ],
+              [
+                13.9117,
+                68.535
+              ],
+              [
+                12.9082,
+                68.0297
+              ],
+              [
+                12.5072,
+                67.6462
+              ],
+              [
+                11.7717,
+                67.484
+              ],
+              [
+                11.8843,
+                67.4048
+              ],
+              [
+                12.6037,
+                67.5572
+              ],
+              [
+                13.2532,
+                67.9767
+              ],
+              [
+                13.9092,
+                68.1135
+              ],
+              [
+                14.6232,
+                68.1512
+              ],
+              [
+                14.7422,
+                68.0987
+              ],
+              [
+                15.2167,
+                68.1667
+              ],
+              [
+                15.2167,
+                68.1667
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                15.1332,
+                68.3667
+              ],
+              [
+                15.2667,
+                68.4167
+              ],
+              [
+                15.4332,
+                68.4667
+              ],
+              [
+                15.4332,
+                68.5167
+              ],
+              [
+                15.6167,
+                68.5332
+              ],
+              [
+                15.7332,
+                68.6832
+              ],
+              [
+                15.7167,
+                68.7667
+              ],
+              [
+                15.7667,
+                68.8332
+              ],
+              [
+                15.8667,
+                68.9497
+              ],
+              [
+                16.0497,
+                69.0332
+              ],
+              [
+                16.3332,
+                69.2332
+              ],
+              [
+                16.0627,
+                69.3322
+              ],
+              [
+                15.1637,
+                69.0717
+              ],
+              [
+                14.5487,
+                68.8397
+              ],
+              [
+                13.9117,
+                68.535
+              ],
+              [
+                14.1332,
+                68.4832
+              ],
+              [
+                14.1832,
+                68.4497
+              ],
+              [
+                14.3667,
+                68.4497
+              ],
+              [
+                14.4332,
+                68.4167
+              ],
+              [
+                14.5332,
+                68.4167
+              ],
+              [
+                14.55,
+                68.3667
+              ],
+              [
+                14.6167,
+                68.3497
+              ],
+              [
+                14.6832,
+                68.3832
+              ],
+              [
+                14.8167,
+                68.3667
+              ],
+              [
+                14.8332,
+                68.3332
+              ],
+              [
+                14.9332,
+                68.3167
+              ],
+              [
+                15.05,
+                68.3332
+              ],
+              [
+                15.1332,
+                68.3667
+              ],
+              [
+                15.1332,
+                68.3667
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                16.0627,
+                69.3322
+              ],
+              [
+                16.333,
+                69.233
+              ],
+              [
+                16.8645,
+                69.3163
+              ],
+              [
+                18.0997,
+                69.5167
+              ],
+              [
+                17.7997,
+                69.6502
+              ],
+              [
+                17.7597,
+                69.6872
+              ],
+              [
+                16.4587,
+                69.4257
+              ],
+              [
+                16.0627,
+                69.3322
+              ],
+              [
+                16.0627,
+                69.3322
+              ]
+            ]
+          ]
+        ],
+        "type": "MultiPolygon"
+      },
+      "properties": {
+        "altitude_above_sea_level": 0,
+        "area": "Skomvær - Hekkingen",
+        "awarenessResponse": "Følg med",
+        "awarenessSeriousness": "Utfordrende situasjon",
+        "awareness_level": "2; yellow; Moderate",
+        "awareness_type": "1; Wind",
+        "ceiling_above_sea_level": 274,
+        "certainty": "Likely",
+        "consequences": "Sjøen bygger seg opp og det kan være farlig å være ute i småbåt Grov sjø og hvitt skum fra bølgetopper som brekker. ",
+        "contact": "https://www.met.no/kontakt-oss",
+        "county": [],
+        "description": "Fra søndag ettermiddag sørlig til sørvestlig stiv kuling 15 m/s, kan hende sterk kuling 20 i nord. Natt til mandag sørvestlig sterk kuling 20. Fra mandag formiddag minkende til periodevis  sørvestlig stiv kuling 15. ",
+        "event": "gale",
+        "eventAwarenessName": "Kuling",
+        "eventEndingTime": "2024-03-18T16:00:00+00:00",
+        "geographicDomain": "marine",
+        "id": "2.49.0.1.578.0.20240317190344.009",
+        "instruction": "Vurder å la båten ligge. ",
+        "resources": [
+          {
+            "description": "CAP file",
+            "mimeType": "application/xml",
+            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.20240317190344.009"
+          }
+        ],
+        "riskMatrixColor": "Yellow",
+        "severity": "Moderate",
+        "status": "Actual",
+        "title": "Kuling, gult nivå, Skomvær - Hekkingen, 2024-03-17T13:00:00+00:00, 2024-03-18T16:00:00+00:00",
+        "triggerLevel": "17.2m/s",
+        "type": "Update",
+        "web": "https://www.met.no/vaer-og-klima/ekstremvaervarsler-og-andre-farevarsler/vaerfenomener-som-kan-gi-farevarsel-fra-met/kuling-stormvarsel-for-kyst-og-naere-fiskebanker"
+      },
+      "type": "Feature",
+      "when": {
+        "interval": [
+          "2024-03-17T13:00:00+00:00",
+          "2024-03-18T16:00:00+00:00"
+        ]
+      }
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              [
+                13.7607,
+                66.9133
+              ],
+              [
+                14.6128,
+                67.2505
+              ],
+              [
+                13.9162,
+                67.3015
+              ],
+              [
+                13.7,
+                67.2
+              ],
+              [
+                13.3535,
+                67.0485
+              ],
+              [
+                13.5832,
+                66.9498
+              ],
+              [
+                13.7607,
+                66.9133
+              ],
+              [
+                13.7607,
+                66.9133
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                15.2167,
+                68.1667
+              ],
+              [
+                14.7422,
+                68.0987
+              ],
+              [
+                14.894,
+                68.0307
+              ],
+              [
+                14.3832,
+                67.7667
+              ],
+              [
+                14.4208,
+                67.6163
+              ],
+              [
+                14.2413,
+                67.4538
+              ],
+              [
+                13.9162,
+                67.3015
+              ],
+              [
+                14.6128,
+                67.2505
+              ],
+              [
+                15.017,
+                67.5158
+              ],
+              [
+                14.8832,
+                67.6167
+              ],
+              [
+                15.3273,
+                67.9635
+              ],
+              [
+                15.9667,
+                68.1832
+              ],
+              [
+                16.0,
+                68.2167
+              ],
+              [
+                16.225,
+                68.305
+              ],
+              [
+                16.0332,
+                68.5667
+              ],
+              [
+                15.9498,
+                68.5998
+              ],
+              [
+                15.8667,
+                68.5332
+              ],
+              [
+                15.7667,
+                68.5
+              ],
+              [
+                15.6498,
+                68.4498
+              ],
+              [
+                15.6167,
+                68.4667
+              ],
+              [
+                15.6832,
+                68.5
+              ],
+              [
+                15.6167,
+                68.5332
+              ],
+              [
+                15.4332,
+                68.5167
+              ],
+              [
+                15.4332,
+                68.4667
+              ],
+              [
+                15.2667,
+                68.4167
+              ],
+              [
+                15.1332,
+                68.3667
+              ],
+              [
+                15.2667,
+                68.3498
+              ],
+              [
+                15.1167,
+                68.3
+              ],
+              [
+                15.1832,
+                68.2667
+              ],
+              [
+                15.2167,
+                68.1667
+              ],
+              [
+                15.2167,
+                68.1667
+              ]
+            ]
+          ]
+        ],
+        "type": "MultiPolygon"
+      },
+      "properties": {
+        "altitude_above_sea_level": 0,
+        "area": "Støtt - Lødingen",
+        "awarenessResponse": "Følg med",
+        "awarenessSeriousness": "Utfordrende situasjon",
+        "awareness_level": "2; yellow; Moderate",
+        "awareness_type": "1; Wind",
+        "ceiling_above_sea_level": 274,
+        "certainty": "Likely",
+        "consequences": "Sjøen bygger seg opp og det kan være farlig å være ute i småbåt Grov sjø og hvitt skum fra bølgetopper som brekker. ",
+        "contact": "https://www.met.no/kontakt-oss",
+        "county": [],
+        "description": "Fra tidlig mandag morgen sørvest stiv kuling 15 m/s, kan hende sterk kuling 20 lengst nord.",
+        "event": "gale",
+        "eventAwarenessName": "Kuling",
+        "eventEndingTime": "2024-03-18T15:00:00+00:00",
+        "geographicDomain": "marine",
+        "id": "2.49.0.1.578.0.20240317185559.070",
+        "instruction": "Vurder å la båten ligge. ",
+        "resources": [
+          {
+            "description": "CAP file",
+            "mimeType": "application/xml",
+            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.20240317185559.070"
+          }
+        ],
+        "riskMatrixColor": "Yellow",
+        "severity": "Moderate",
+        "status": "Actual",
+        "title": "Kuling, gult nivå, Støtt - Lødingen, 2024-03-18T03:00:00+00:00, 2024-03-18T15:00:00+00:00",
+        "triggerLevel": "13.9m/s",
+        "type": "Alert",
+        "web": "https://www.met.no/vaer-og-klima/ekstremvaervarsler-og-andre-farevarsler/vaerfenomener-som-kan-gi-farevarsel-fra-met/kuling-stormvarsel-for-kyst-og-naere-fiskebanker"
+      },
+      "type": "Feature",
+      "when": {
+        "interval": [
+          "2024-03-18T03:00:00+00:00",
+          "2024-03-18T15:00:00+00:00"
+        ]
+      }
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              14.5708,
+              68.567
             ],
             [
-              6.57998,
-              62.573
+              15.5787,
+              68.449
             ],
             [
-              9.42748,
-              63.2144
+              17.6421,
+              68.4185
             ],
             [
-              11.0144,
-              63.1694
+              17.7118,
+              68.6803
             ],
             [
-              11.5345,
-              63.7756
+              18.4634,
+              69.0009
             ],
             [
-              9.54861,
-              63.6469
+              20.0395,
+              69.2781
             ],
             [
-              8.82098,
-              63.8798
+              21.9221,
+              69.7558
             ],
             [
-              8.22092,
-              63.6776
+              22.5116,
+              69.9964
             ],
             [
-              6.33682,
-              62.8472
+              21.249,
+              70.4896
             ],
             [
-              6.33682,
-              62.8472
+              19.0219,
+              70.3895
+            ],
+            [
+              17.1598,
+              70.0461
+            ],
+            [
+              14.4504,
+              68.9978
+            ],
+            [
+              14.5708,
+              68.567
+            ],
+            [
+              14.5708,
+              68.567
             ]
           ]
         ],
         "type": "Polygon"
       },
       "properties": {
-        "MunicipalityId": "1505;1506;1508;1535;1547;1554;1557;1560;1566;1573;1576;1579;5001;5014;5028;5029;5031;5032;5035;5036;5037;5054;5055;5056;5057;5059",
-        "administrativeId": "county:50",
-        "area": "Deler av Trøndelag og Møre og Romsdal",
+        "altitude_above_sea_level": 0,
+        "area": "Deler av Vesterålen, Ofoten og Troms",
         "awarenessResponse": "Følg med",
         "awarenessSeriousness": "Utfordrende situasjon",
         "awareness_level": "2; yellow; Moderate",
-        "awareness_type": "8; forest-fire",
+        "awareness_type": "2; snow-ice",
+        "ceiling_above_sea_level": 244,
         "certainty": "Likely",
-        "consequences": "Vegetasjon kan lett antennes og store områder kan bli berørt. ",
+        "consequences": "Det kan være lokalt vanskelige kjøreforhold. Transporttjenester kan bli påvirket. ",
+        "contact": "https://www.met.no/kontakt-oss",
         "county": [
-          "15",
-          "50"
+          "18",
+          "55"
         ],
-        "description": "Update: Lokal gress og lyngbrannfare i snøfrie områder inntil det kommer nedbør av betydning.",
-        "event": "forestFire",
-        "eventAwarenessName": "Skogbrannfare",
+        "description": "Det er lokal fare for is på grunn av overgang til mildvær med regn på snødekke. ",
+        "event": "ice",
+        "eventAwarenessName": "Is",
+        "eventEndingTime": "2024-03-18T22:59:00+00:00",
         "geographicDomain": "land",
-        "id": "2.49.0.1.578.0.20240306094101.067",
-        "instruction": "Vær forsiktig med åpen ild. Følg lokale myndigheters instruksjoner. Behov for forebyggende tiltak og beredskap skal vurderes fortløpende av beredskapsaktører. ",
+        "id": "2.49.0.1.578.0.20240317125241.012",
+        "instruction": "Beregn ekstra tid til transport og kjøring. Bruk riktige dekk og kjør etter forholdene. Sjekk veimeldinger (175.no). ",
+        "municipality": [
+          "1806",
+          "1851",
+          "1853",
+          "1866",
+          "1867",
+          "1868",
+          "1870",
+          "1871",
+          "5501",
+          "5503",
+          "5510",
+          "5512",
+          "5514",
+          "5516",
+          "5518",
+          "5522",
+          "5524",
+          "5526",
+          "5528",
+          "5530",
+          "5532",
+          "5534",
+          "5536",
+          "5538",
+          "5540",
+          "5542",
+          "5544",
+          "5546",
+          "5614"
+        ],
         "resources": [
           {
             "description": "CAP file",
             "mimeType": "application/xml",
-            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.20240306094101.067"
+            "uri": "https://api.met.no/weatherapi/metalerts/2.0/current?cap=2.49.0.1.578.0.20240317125241.012"
           },
           {
-            "description": "",
+            "description": "Kart over Is, gult nivå, Deler av Vesterålen, Ofoten og Troms, 2024-03-18T10:00:00+00:00, 2024-03-18T22:59:00+00:00",
             "mimeType": "image/png",
-            "uri": "https://slaps.met.no/cap-images/c25d3ef9-e896-40d5-9145-53ecb18046fe.png"
+            "uri": "https://slaps.met.no/cap-images/b55d3afb-4b33-4b6f-876b-407ebe5e50ed.png"
           }
         ],
         "riskMatrixColor": "Yellow",
         "severity": "Moderate",
-        "title": "Skogbrannfare, gult nivå, Deler av Trøndelag og Møre og Romsdal, 2024-03-06T12:00:00+00:00, 2024-03-09T00:00:00+00:00",
-        "type": "Update"
+        "status": "Actual",
+        "title": "Is, gult nivå, Deler av Vesterålen, Ofoten og Troms, 2024-03-18T10:00:00+00:00, 2024-03-18T22:59:00+00:00",
+        "type": "Update",
+        "web": "https://www.met.no/vaer-og-klima/ekstremvaervarsler-og-andre-farevarsler/vaerfenomener-som-kan-gi-farevarsel-fra-met/is"
       },
       "type": "Feature",
       "when": {
         "interval": [
-          "2024-03-06T12:00:00+00:00",
-          "2024-03-09T00:00:00+00:00"
+          "2024-03-18T10:00:00+00:00",
+          "2024-03-18T22:59:00+00:00"
         ]
       }
     }
   ],
   "lang": "no",
-  "lastChange": "2024-03-06T13:01:10+00:00",
+  "lastChange": "2024-03-18T12:46:06+00:00",
   "type": "FeatureCollection"
 }
