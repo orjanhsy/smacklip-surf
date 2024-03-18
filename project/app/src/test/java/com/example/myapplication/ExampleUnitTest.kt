@@ -14,6 +14,8 @@ import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
 
 import com.example.myapplication.data.oceanforecast.OceanforecastRepositoryImpl
 import com.example.myapplication.data.oceanforecast.OceanforecastDataSource
+import com.example.myapplication.data.smackLip.SmackLipRepository
+import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
 import com.example.myapplication.model.SurfArea
 
 import com.example.myapplication.model.locationforecast.LocationForecast
@@ -130,4 +132,6 @@ class ExampleUnitTest {
         println("Resultat av getWindSpeedOfGust: $windSpeedOfGust")
         print("Testen kjører!")
     }
+
+
 }

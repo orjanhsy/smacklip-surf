@@ -24,6 +24,7 @@ interface SmackLipRepository {
     suspend fun getWindDirection(): List<Pair<String, Double>>
     suspend fun getWindSpeed(): List<Pair<String, Double>>
     suspend fun getWindSpeedOfGust(): List<Pair<String, Double>>
+    abstract fun getDateFromTimeString(timeString : String): List<Int>
 }
 
 class SmackLipRepositoryImpl (
@@ -50,7 +51,7 @@ class SmackLipRepositoryImpl (
 
     //tar inn hele time-strengen på følgende format "time": "2024-03-13T18:00:00Z"
     //returnerer en liste slik: [år, måned, dag, time]
-    fun getDateFromTimeString(timeString : String) : List<Int> {
+     override fun getDateFromTimeString(timeString : String) : List<Int> {
         return listOf(
         timeString.substring(0, 4).toInt(),
         timeString.substring(5, 7).toInt(),
