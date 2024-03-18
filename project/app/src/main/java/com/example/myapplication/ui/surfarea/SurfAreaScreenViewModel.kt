@@ -1,6 +1,7 @@
 package com.example.myapplication.ui.surfarea
 
 import androidx.lifecycle.ViewModel
+
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
 import com.example.myapplication.model.SurfArea
@@ -19,10 +20,12 @@ data class SurfAreaScreenUiState(
 
 )
 
+
 class SurfAreaScreenViewModel: ViewModel() {
     private val smackLipRepository = SmackLipRepositoryImpl()
     private val _surfAreaScreenUiState = MutableStateFlow(SurfAreaScreenUiState())
     val surfAreaScreenUiState: StateFlow<SurfAreaScreenUiState> = _surfAreaScreenUiState.asStateFlow()
+
 
     fun updateAlerts() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -33,3 +36,4 @@ class SurfAreaScreenViewModel: ViewModel() {
         }
     }
 }
+
