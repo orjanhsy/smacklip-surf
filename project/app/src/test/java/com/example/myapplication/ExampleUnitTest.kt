@@ -146,8 +146,7 @@ class ExampleUnitTest {
 
     }
 
-<<<<<<< HEAD
-=======
+
     @Test
     fun testGetWaveHeightsSmackLip() = runBlocking {
         //henter data fra API, må sjekke i API om det stemmer
@@ -174,5 +173,10 @@ class ExampleUnitTest {
         println(smackLipRepository.getWindSpeedOfGust()[0].first.toString())
         println(smackLipRepository.getWindSpeedOfGust()[0].second)
     }
->>>>>>> main
+
+    @Test
+    fun testGetForecastNext24Hours() = runBlocking {
+        println(smackLipRepository.getForecastNext24Hours().toString())
+    }
+
 }
