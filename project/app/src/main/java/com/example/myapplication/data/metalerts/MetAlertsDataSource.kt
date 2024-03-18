@@ -1,5 +1,8 @@
 package com.example.myapplication.data.metalerts
 
+import com.example.myapplication.data.helpers.HTTPServiceHandler.API_HEADER
+import com.example.myapplication.data.helpers.HTTPServiceHandler.API_KEY
+import com.example.myapplication.data.helpers.HTTPServiceHandler.METALERTS_URL
 import com.example.myapplication.model.metalerts.MetAlerts
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -14,8 +17,8 @@ class MetAlertsDataSource {
 
     private val client = HttpClient {
         defaultRequest {
-            url("gw-uio.intark.uh-it.no/in2000/weatherapi/weatherapi/metalerts/2.0/current.json")
-            headers.appendIfNameAbsent("X-Gravitee-API-Key", "f25d12be-cbd6-4adf-9aed-c41d84494cdb")
+            url(METALERTS_URL)
+            headers.appendIfNameAbsent(API_KEY, API_HEADER)
         }
         install(ContentNegotiation) {
             gson()
