@@ -58,6 +58,7 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel()) {
                 SurfAreaCard(
                     location,
                     homeScreenUiState.windSpeed,
+                    homeScreenUiState.windGust,
                     homeScreenUiState.waveHeight,
                     homeScreenUiState.allRelevantAlerts.filter {alert ->
                         alert.any { it.properties?.area?.contains(location.locationName) ?: false }
@@ -74,6 +75,7 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel()) {
 fun SurfAreaCard(
     surfArea : SurfArea,
     windSpeed : List<Pair<String, Double>>,
+    windGust : List<Pair<String, Double>>,
     waveHeight : List<Pair<String, Double>>,
     alerts: List<List<Features>>?
 )
@@ -104,7 +106,8 @@ fun SurfAreaCard(
                 }
                 Row {
                     Text(
-                        text = "Wind: ${if (windSpeed.isNotEmpty()) windSpeed[0].second else ""}"
+                        text = "Wind: ${if (windSpeed.isNotEmpty()) windSpeed[0].second else ""}" +
+                                "(${if(windGust.isNotEmpty()) windGust[0].second else ""})"
                     )
                 }
 
@@ -142,6 +145,7 @@ private fun PreviewSurfAreaCard() {
         SurfAreaCard(
             SurfArea.HODDEVIK,
             listOf(Pair("time", 1.0)),
+            listOf(Pair("time", 3.0)),
             listOf(Pair("time", 5.0)),
             listOf(listOf((Features(properties = Properties(description = "Det ræinar")))))
         )
