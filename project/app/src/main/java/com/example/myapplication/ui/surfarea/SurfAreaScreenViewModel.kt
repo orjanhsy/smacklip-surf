@@ -16,7 +16,9 @@ import kotlinx.coroutines.launch
 data class SurfAreaScreenUiState(
     val location: SurfArea? = null,
     val alerts: List<Features> = emptyList(),
-    val waveHeights : List<Pair<List<Int>, Double>> = emptyList()
+    val waveHeights : List<Pair<List<Int>, Double>> = emptyList(),
+    val windDirection : List<Pair<List<Int>, Double>> = emptyList(),
+    val windSpeed : List<Pair<List<Int>, Double>> = emptyList(),
     )
 
 
@@ -48,7 +50,16 @@ class SurfAreaScreenViewModel: ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update {
                 val newWindDirection = smackLipRepository.getWindDirection()
-                it.copy(waveHeights = newWindDirection)
+                it.copy(windDirection = newWindDirection)
+            }
+        }
+    }
+
+    fun updateWindSpeed() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _surfAreaScreenUiState.update {
+                val newWindSpeed = smackLipRepository.getWindDirection()
+                it.copy(windSpeed = newWindSpeed)
             }
         }
     }
