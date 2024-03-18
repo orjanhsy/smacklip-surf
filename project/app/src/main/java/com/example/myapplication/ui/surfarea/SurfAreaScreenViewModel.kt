@@ -19,6 +19,7 @@ data class SurfAreaScreenUiState(
     val waveHeights : List<Pair<List<Int>, Double>> = emptyList(),
     val windDirection : List<Pair<List<Int>, Double>> = emptyList(),
     val windSpeed : List<Pair<List<Int>, Double>> = emptyList(),
+    val windSpeedOfGust : List<Pair<List<Int>, Double>> = emptyList(),
     )
 
 
@@ -58,10 +59,21 @@ class SurfAreaScreenViewModel: ViewModel() {
     fun updateWindSpeed() {
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update {
-                val newWindSpeed = smackLipRepository.getWindDirection()
+                val newWindSpeed = smackLipRepository.getWindSpeed()
                 it.copy(windSpeed = newWindSpeed)
             }
         }
     }
+
+    fun updateWindSpeedOfGust() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _surfAreaScreenUiState.update {
+                val newWindSpeedOfGust = smackLipRepository.getWindSpeedOfGust()
+                it.copy(windSpeedOfGust = newWindSpeedOfGust)
+            }
+        }
+    }
+
+
 }
 
