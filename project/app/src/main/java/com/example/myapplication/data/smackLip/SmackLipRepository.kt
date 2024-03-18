@@ -13,7 +13,7 @@ import com.example.myapplication.model.oceanforecast.DataOF
 
 interface SmackLipRepository {
     suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Features>
-    suspend fun getWaveHeights(): List<Pair<String, Double>>
+    suspend fun getWaveHeights(): List<Pair<List<Int>, Double>>
     suspend fun getTimeSeriesOF(): List<Pair<String, DataOF>>
     suspend fun getTimeSeriesLF(): List<Pair<String, DataLF>>
     suspend fun getWindDirection(): List<Pair<String, Double>>
@@ -36,9 +36,11 @@ class SmackLipRepositoryImpl (
 
 
     //OF
-    override suspend fun getWaveHeights(): List<Pair<String, Double>> {
-
-        return oceanforecastRepository.getWaveHeights()
+    override suspend fun getWaveHeights(): List<Pair<List<Int>, Double>> {
+        val tmpWaveHeight = oceanforecastRepository.getWaveHeights()
+        return tmpWaveHeight.map { waveHeight ->
+            Pair(getTimeListFromTimeString(waveHeight.first), waveHeight.second)
+        }
     }
 
     override suspend fun getTimeSeriesOF(): List<Pair<String, DataOF>> {
