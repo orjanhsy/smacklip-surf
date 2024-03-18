@@ -16,7 +16,7 @@ import com.example.myapplication.model.oceanforecast.DataOF
 
 
 interface SmackLipRepository {
-    fun getRelevantAlertsFor(surfArea: SurfArea, allFeatures: List<Features>): List<Features>
+    suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Features>
     fun getWaveHeights(timeSeries: List<Pair<String, DataOF>>): List<Pair<String, Double>>
     suspend fun getTimeSeriesOF(): List<Pair<String, DataOF>>
     suspend fun getTimeSeriesLF(): List<Pair<String, DataLF>>
@@ -32,10 +32,10 @@ class SmackLipRepositoryImpl (
 
     ): SmackLipRepository {
 
-        //MET
-    override fun getRelevantAlertsFor(surfArea: SurfArea, allFeatures: List<Features>): List<Features> {
-        return metAlertsRepository.getRelevantAlertsFor(surfArea, allFeatures)
-     }
+    //MET
+    override suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Features> {
+        return metAlertsRepository.getRelevantAlertsFor(surfArea)
+    }
 
     //OF
     override fun getWaveHeights(timeSeries: List<Pair<String, DataOF>>): List<Pair<String, Double>> {
