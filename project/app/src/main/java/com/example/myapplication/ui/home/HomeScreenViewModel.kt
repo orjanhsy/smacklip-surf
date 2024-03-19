@@ -79,13 +79,13 @@ class HomeScreenViewModel : ViewModel() {
                 val firstChar = awarenessLevel.firstOrNull()?.toString()
 
                 when (firstChar) {
-                    "2" -> R.drawable.icon_awareness_yellow
+                    "2" -> R.drawable.icon_awareness_yellow_outlined
                     "3" -> R.drawable.icon_awareness_orange
                     "4" -> R.drawable.icon_awareness_red
                     else -> R.drawable.icon_awareness_default // Hvis awarenessLevel ikke er 2, 3 eller 4
                 }
             } else {
-                R.drawable.icon_awareness_default // Hvis awarenessLevel er en tom streng
+                R.drawable.icon_awareness_default // Hvis awarenessLevel er en tom String
             }
         } catch (e: Exception) {
             R.drawable.icon_awareness_default
