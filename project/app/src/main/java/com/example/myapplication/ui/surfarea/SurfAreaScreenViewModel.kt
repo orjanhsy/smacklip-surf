@@ -20,7 +20,7 @@ data class SurfAreaScreenUiState(
     val windDirections: List<Pair<List<Int>, Double>> = emptyList(),
     val windSpeeds: List<Pair<List<Int>, Double>> = emptyList(),
     val windSpeedOfGusts: List<Pair<List<Int>, Double>> = emptyList(),
-    val forecast3Days24Hours: MutableList<MutableList<Pair<List<Int>, Pair<Int, List<Double>>>>> = mutableListOf()
+    val forecast7Days: MutableList<List<Pair<List<Int>, List<Double>>>> = mutableListOf()
     )
 
 
@@ -76,13 +76,12 @@ class SurfAreaScreenViewModel: ViewModel() {
         }
     }
 
-    //ble litt usikker på om denne skulle ta inn en dag, hvis metoden i homescreen tar inn en dag
-    //bør denne også det. Må i såfall kanskje ha flere dager i UiStaten
-    fun getForecast3Days24Hours(){
+
+    fun getForecastNext7Days(){
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update {
-                val newForecast3Days24Hours = smackLipRepository.getForecastNext24Hours()
-                it.copy(forecast3Days24Hours = newForecast3Days24Hours)
+                val newForecast7Days = smackLipRepository.getDataForTheNext7Days()
+                it.copy(forecast7Days = newForecast7Days)
 
             }
         }

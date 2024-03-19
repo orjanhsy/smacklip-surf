@@ -22,7 +22,7 @@ interface SmackLipRepository {
 
     abstract fun getTimeListFromTimeString(timeString : String): List<Int>
 
-    suspend fun getForecastNext24Hours() : MutableList<MutableList<Pair<List<Int>, Pair<Int, List<Double>>>>>
+    //suspend fun getForecastNext24Hours() : MutableList<MutableList<Pair<List<Int>, Pair<Int, List<Double>>>>>
 
     suspend fun getDataForOneDay(day : Int): List<Pair<List<Int>, List<Double>>>
 
@@ -103,6 +103,9 @@ class SmackLipRepositoryImpl (
 
     //totalt: List<Pair<List<Int>, List<Pair<Int, List<Double>>>>
 
+    /*
+    ------BRUKER IKKE DENNE METODEN LENGER, NYE METODER UNDER------
+
     override suspend fun getForecastNext24Hours() : MutableList<MutableList<Pair<List<Int>, Pair<Int, List<Double>>>>> {
         val allDays24Hours : MutableList<MutableList<Pair<List<Int>, Pair<Int, List<Double>>>>> = mutableListOf()
 
@@ -156,6 +159,8 @@ class SmackLipRepositoryImpl (
 
         return allDays24Hours
     }
+
+     */
 
 
     //sender med dato (dag)
