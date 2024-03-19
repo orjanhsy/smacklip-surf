@@ -146,6 +146,7 @@ class ExampleUnitTest {
 
     }
 
+
     @Test
     fun testGetWaveHeightsSmackLip() = runBlocking {
         //henter data fra API, må sjekke i API om det stemmer
@@ -172,4 +173,12 @@ class ExampleUnitTest {
         println(smackLipRepository.getWindSpeedOfGust()[0].first.toString())
         println(smackLipRepository.getWindSpeedOfGust()[0].second)
     }
+
+    @Test
+    fun testGetForecastNext24Hours() = runBlocking {
+        val tmp : MutableList<MutableList<Pair<List<Int>, Pair<Int, List<Double>>>>> = smackLipRepository.getForecastNext24Hours()
+
+        println(smackLipRepository.getForecastNext24Hours().toString())
+    }
+
 }
