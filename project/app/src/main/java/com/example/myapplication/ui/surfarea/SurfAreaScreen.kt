@@ -16,6 +16,12 @@ fun SurfAreaScreen(surfAreaScreenViewModel: SurfAreaScreenViewModel = viewModel(
 @Composable
 fun ShowForecastNext24hrs(day: String) {
     // vis 0-6, 6-12, 12-18, 18-24
+
+}
+
+@Composable
+fun Next24HoursCard() {
+
 }
 
 @Composable
