@@ -24,7 +24,9 @@ interface SmackLipRepository {
 
     suspend fun getForecastNext24Hours() : MutableList<MutableList<Pair<List<Int>, Pair<Int, List<Double>>>>>
 
-    suspend fun getDataForOneDay(day : Int): List<Any>
+    suspend fun getDataForOneDay(day : Int): List<Pair<List<Int>, List<Double>>>
+
+    suspend fun getDataForTheNext7Days(): MutableList<List<Pair<List<Int>, List<Double>>>>
 }
 
 class SmackLipRepositoryImpl (
@@ -156,14 +158,11 @@ class SmackLipRepositoryImpl (
     }
 
 
-    override suspend fun getDataForOneDay(day : Int): List<Any> {
-        val waveHeight :  List<Pair<List<Int>, Double>> = getWaveHeights().filter { waveheight -> waveheight.first[2] == day }
+    override suspend fun getDataForOneDay(day : Int): List<Pair<List<Int>, List<Double>>> {
+        val waveHeight :  List<Pair<List<Int>, Double>> = getWaveHeights().filter { waveHeight -> waveHeight.first[2] == day }
         val windDirection :  List<Pair<List<Int>, Double>> = getWindDirection().filter { windDirection -> windDirection.first[2] == day }
         val windSpeed :  List<Pair<List<Int>, Double>> = getWindSpeed().filter { windSpeed -> windSpeed.first[2] == day }
         val windSpeedOfGust :  List<Pair<List<Int>, Double>> = getWindSpeedOfGust().filter { gust -> gust.first[2] == day }
-
-        //kan bruke l1.contentEquals(l2) for å sjekke likhet mellom lister
-
 
         val dataList = waveHeight.map {
             val time : List<Int> = it.first
@@ -177,11 +176,18 @@ class SmackLipRepositoryImpl (
             }catch (_: NoSuchElementException){
                 //fortsetter - må fortsette i tilfelle det er flere tidspunkt som matcher
             }
-
         }
-
         return dataList.filterIsInstance<Pair<List<Int>, List<Double>>>() //fjerner elementer som blir Kotlin.Unit pga manglende time-match
     }
 
+
+    override suspend fun getDataForTheNext7Days(): MutableList<List<Pair<List<Int>, List<Double>>>> {
+        val today = getWaveHeights()[0].first[2]
+        val resList = mutableListOf<List<Pair<List<Int>, List<Double>>>>()
+        for (i in today until today+7){
+            resList.add(getDataForOneDay(i))
+        }
+        return resList
+    }
 
 }
