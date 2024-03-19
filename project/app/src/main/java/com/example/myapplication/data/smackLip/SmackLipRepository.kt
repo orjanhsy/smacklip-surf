@@ -114,23 +114,28 @@ class SmackLipRepositoryImpl (
         println(windSpeed.size)
         println(windSpeedOfGust.size)
 
+        var listIndex : Int = 0
 
         for (i in 0 until 3) { //24 timer de neste 3 dagene
 
-            val date : List<Int> = listOf(waveHeight[i].first[1], waveHeight[i].first[2]) //dato = [mnd, dag]
+            val date : List<Int> = listOf(waveHeight[listIndex].first[1], waveHeight[listIndex].first[2]) //dato = [mnd, dag]
             val forecast24HoursList : MutableList<Pair<List<Int>, Pair<Int, List<Double>>>> = mutableListOf() //data for hver time den dagen = [(time, [waveHeight, windDirection, windSpeed, windSpeedOfGust])]
 
+            var nextIndexCounter : Int = 0
 
-            for (j in waveHeight[0].first[3] until  24) {
+            for (j in 0  until  24-waveHeight[listIndex].first[3]) {
                 val forecastOneHour = Pair(
-                    waveHeight[j].first[3], //timen
+                    waveHeight[j+listIndex].first[3], //timen
                     listOf(                 //værmelding den timen
-                        waveHeight[j].second,
-                        windDirection[j].second,
-                        windSpeed[j].second,
-                        windSpeedOfGust[j].second
+                        waveHeight[j+listIndex].second,
+                        windDirection[j+listIndex].second,
+                        windSpeed[j+listIndex].second,
+                        windSpeedOfGust[j+listIndex].second
                     )
                 )
+
+                nextIndexCounter ++
+
                 println("sjekke tider:")
                 println(waveHeight[j].first.toString())
                 println(windDirection[j].first.toString())
@@ -140,34 +145,15 @@ class SmackLipRepositoryImpl (
                 forecast24HoursList.add(Pair(date, forecastOneHour)) //legger inn ny entry for den enkelte timen, totalt 24 ganger per dag
 
             }
+
+            listIndex += nextIndexCounter
             allDays24Hours.add(forecast24HoursList)
         }
 
         return allDays24Hours
     }
 
-     suspend fun getWaveHeightNext24Hours() : MutableList<MutableList<Pair<List<Int>, Pair<Int, Double>>>> {
-        val allDays24Hours : MutableList<MutableList<Pair<List<Int>, Pair<Int, Double>>>> = mutableListOf()
 
-        val waveHeight = getWaveHeights()
-
-        for (i in 0 until 7) { //24 timer de neste 7 dagene
-
-            val date : List<Int> = listOf(waveHeight[i].first[1], waveHeight[i].first[2]) //dato = [mnd, dag]
-            val forecast24HoursList : MutableList<Pair<List<Int>, Pair<Int, Double>>> = mutableListOf() //data for hver time den dagen = [(time, [waveHeight, windDirection, windSpeed, windSpeedOfGust])]
-
-
-            for (j in waveHeight[0].first[3] until  24) {
-                val forecastOneHour = Pair(
-                    waveHeight[j].first[3], //timen
-                    waveHeight[j].second //værmelding den timen
-                )
-                forecast24HoursList.add(Pair(date, forecastOneHour)) //legger inn ny entry for den enkelte timen, totalt 24 ganger per dag
-            }
-            allDays24Hours.add(forecast24HoursList)
-        }
-        return allDays24Hours
-    }
 
 
 }
