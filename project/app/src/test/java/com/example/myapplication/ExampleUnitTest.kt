@@ -190,4 +190,8 @@ class ExampleUnitTest {
         println(smackLipRepository.getDataForOneDay(23))
     }
 
+    @Test
+    fun testGetDataFor7Days() = runBlocking {
+        println(smackLipRepository.getDataForTheNext7Days())
+    }
 }

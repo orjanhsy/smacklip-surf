@@ -182,7 +182,7 @@ class SmackLipRepositoryImpl (
 
 
     override suspend fun getDataForTheNext7Days(): MutableList<List<Pair<List<Int>, List<Double>>>> {
-        val today = getWaveHeights()[0].first[2]
+        val today = getWaveHeights()[0].first[2] //regner med at det er dumt med et helt api-kall bare for å hente dagens dato
         val resList = mutableListOf<List<Pair<List<Int>, List<Double>>>>()
         for (i in today until today+7){
             resList.add(getDataForOneDay(i))
