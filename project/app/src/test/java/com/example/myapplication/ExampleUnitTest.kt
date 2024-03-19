@@ -181,4 +181,13 @@ class ExampleUnitTest {
         println(smackLipRepository.getForecastNext24Hours().toString())
     }
 
+    @Test
+    fun testGetDataForOneDay() = runBlocking {
+        println(smackLipRepository.getDataForOneDay(19))
+        println(smackLipRepository.getDataForOneDay(20))
+        println(smackLipRepository.getDataForOneDay(21))
+        println(smackLipRepository.getDataForOneDay(22))
+        println(smackLipRepository.getDataForOneDay(23))
+    }
+
 }
