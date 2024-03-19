@@ -16,11 +16,11 @@ import kotlinx.coroutines.launch
 data class SurfAreaScreenUiState(
     val location: SurfArea? = null,
     val alerts: List<Features> = emptyList(),
-    val waveHeights : List<Pair<List<Int>, Double>> = emptyList(),
-    val windDirections : List<Pair<List<Int>, Double>> = emptyList(),
-    val windSpeeds : List<Pair<List<Int>, Double>> = emptyList(),
-    val windSpeedOfGusts : List<Pair<List<Int>, Double>> = emptyList(),
-    val next24Hours : List<List<Pair<List<Int>, Double>>> = emptyList()
+    val waveHeights: List<Pair<List<Int>, Double>> = emptyList(),
+    val windDirections: List<Pair<List<Int>, Double>> = emptyList(),
+    val windSpeeds: List<Pair<List<Int>, Double>> = emptyList(),
+    val windSpeedOfGusts: List<Pair<List<Int>, Double>> = emptyList(),
+    val forecast3Days24Hours: MutableList<MutableList<Pair<List<Int>, Pair<Int, List<Double>>>>> = mutableListOf()
     )
 
 
@@ -76,29 +76,13 @@ class SurfAreaScreenViewModel: ViewModel() {
         }
     }
 
-    //TODO: kan være vi ikke trenger alle de enkelte update-metodene?
-
     //ble litt usikker på om denne skulle ta inn en dag, hvis metoden i homescreen tar inn en dag
     //bør denne også det. Må i såfall kanskje ha flere dager i UiStaten
-    fun getForecastNext24Hours(){
+    fun getForecast3Days24Hours(){
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update {
-
-                val newNext24Hours : MutableList<List<Pair<List<Int>, Double>>> = mutableListOf()
-
-                val waveHeight = smackLipRepository.getWaveHeights()
-                val windDirection = smackLipRepository.getWindDirection()
-                val windSpeed = smackLipRepository.getWindSpeed()
-                val windSpeedOfGust = smackLipRepository.getWindSpeedOfGust()
-
-                for (i in 0 until 24) {
-                    newNext24Hours.add(listOf(
-                        waveHeight[i],
-                        windDirection[i],
-                        windSpeed[i],
-                        windSpeedOfGust[i]))
-                }
-                it.copy(next24Hours = newNext24Hours)
+                val newForecast3Days24Hours = smackLipRepository.getForecastNext24Hours()
+                it.copy(forecast3Days24Hours = newForecast3Days24Hours)
 
             }
         }
