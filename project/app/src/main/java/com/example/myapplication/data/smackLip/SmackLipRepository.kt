@@ -158,6 +158,11 @@ class SmackLipRepositoryImpl (
     }
 
 
+    //sender med dato (dag)
+    //metoden finner felles tider for alle dataenelistene og lager et par av denne tiden og en liste md de 4 dataene
+    //setter sammen alle parene til en liste
+    //sitter til slutt igjen med en liste bestående av par med tid og tilhørende data for den tiden
+    //metoden fungerer uavhengig av hvor mange tidspunkt det er data for
     override suspend fun getDataForOneDay(day : Int): List<Pair<List<Int>, List<Double>>> {
         val waveHeight :  List<Pair<List<Int>, Double>> = getWaveHeights().filter { waveHeight -> waveHeight.first[2] == day }
         val windDirection :  List<Pair<List<Int>, Double>> = getWindDirection().filter { windDirection -> windDirection.first[2] == day }
@@ -181,6 +186,8 @@ class SmackLipRepositoryImpl (
     }
 
 
+    //metoden kaller getDataForOneDay 7 ganger fra og med i dag, og legger til listen med data for hver dag
+    //inn i resListe som til slutt består av data med tidspunkt og data for alle 7 dager
     override suspend fun getDataForTheNext7Days(): MutableList<List<Pair<List<Int>, List<Double>>>> {
         val today = getWaveHeights()[0].first[2] //regner med at det er dumt med et helt api-kall bare for å hente dagens dato
         val resList = mutableListOf<List<Pair<List<Int>, List<Double>>>>()
