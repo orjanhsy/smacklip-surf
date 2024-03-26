@@ -83,4 +83,8 @@ dependencies {
 
     val compose_version = "1.0.5"
 
+    //mapbox
+    implementation("com.mapbox.maps:android:11.2.1")
+    implementation("com.mapbox.extension:maps-compose:11.2.1")
+
 }
