@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.map
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -31,6 +32,7 @@ import com.example.myapplication.R
 import com.example.myapplication.model.SurfArea
 import com.example.myapplication.ui.home.HomeScreenUiState
 import com.example.myapplication.ui.home.HomeScreenViewModel
+import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.MapView
@@ -79,7 +81,7 @@ fun MapBoxMap(
     modifier: Modifier = Modifier,
     points: List<Point>
 ) {
-    val trondheim = Point.fromLngLat(10.4, 63.4)
+    val trondheim = Point.fromLngLat(10.4, 63.4) //trondheim kommer i senter av skjermen, kan endre koordinater så hele norge synes?
     val context = LocalContext.current
 
     val marker = remember(context) {
@@ -96,8 +98,6 @@ fun MapBoxMap(
                 mapView.mapboxMap.loadStyle(Style.STANDARD)
                 val annotationApi = mapView.annotations
                 pointAnnotationManager = annotationApi.createPointAnnotationManager()
-
-
             }
         },
         update = { mapView ->
@@ -109,6 +109,11 @@ fun MapBoxMap(
                             .withPoint(point)
                             .withIconImage(marker)
                         it.create(pointAnnotationOptions)
+                        it.addClickListener { annotation ->
+                            // handle marker click
+                            Toast.makeText(context, "Marker ${point.latitude()} clicked", Toast.LENGTH_LONG).show()
+                            true // return true to consume the click event
+                        }
                     }
 
                     //avgjør hvordan kartet skal vises når de først lastes inn:
@@ -124,8 +129,13 @@ fun MapBoxMap(
     )
 }
 
+
+
 @Preview
 @Composable
 fun MapScreenPreview(){
-    MapScreen()
+    MyApplicationTheme {
+        MapScreen()
+    }
+
 }
