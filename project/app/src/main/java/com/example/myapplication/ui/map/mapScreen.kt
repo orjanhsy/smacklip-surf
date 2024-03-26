@@ -79,7 +79,7 @@ fun MapScreen(mapScreenViewModel : MapScreenViewModel = viewModel()) {
 @Composable
 fun MapBoxMap(
     modifier: Modifier = Modifier,
-    points: List<Point>
+    points: List<Pair<SurfArea, Point>>
 ) {
     val trondheim = Point.fromLngLat(10.4, 63.4) //trondheim kommer i senter av skjermen, kan endre koordinater så hele norge synes?
     val context = LocalContext.current
@@ -106,12 +106,12 @@ fun MapBoxMap(
 
                     points.forEach { point ->
                         val pointAnnotationOptions = PointAnnotationOptions()
-                            .withPoint(point)
+                            .withPoint(point.second)
                             .withIconImage(marker)
                         it.create(pointAnnotationOptions)
                         it.addClickListener { annotation ->
                             // handle marker click
-                            Toast.makeText(context, "Marker ${point.latitude()} clicked", Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, "Marker ${point.first} clicked", Toast.LENGTH_LONG).show()
                             true // return true to consume the click event
                         }
                     }

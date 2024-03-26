@@ -4,14 +4,14 @@ import com.example.myapplication.model.SurfArea
 import com.mapbox.geojson.Point
 
 interface mapRepository {
-    fun locationToPoint(): List<Point>
+    fun locationToPoint(): List<Pair<SurfArea, Point>>
 }
 
 class mapRepositoryImpl {
 
-    fun locationToPoint(): List<Point> {
+    fun locationToPoint(): List<Pair<SurfArea, Point>> {
         return SurfArea.entries.map {
-            Point.fromLngLat(it.lon, it.lat)
+            Pair(it, Point.fromLngLat(it.lon, it.lat))
         }
     }
 
