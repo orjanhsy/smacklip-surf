@@ -18,11 +18,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.viewinterop.NoOpUpdate
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.graphics.set
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.R
 import com.example.myapplication.model.SurfArea
@@ -80,17 +83,21 @@ fun MapBoxMap(
     val context = LocalContext.current
 
     val marker = remember(context) {
-        context.getDrawable(R.drawable.red_marker )!!.toBitmap()
+        context.getDrawable(R.drawable.marker )!!.toBitmap()
     }
     var pointAnnotationManager: PointAnnotationManager? by remember {
         mutableStateOf(null)
     }
+
+
     AndroidView(
         factory = {
             MapView(it).also { mapView ->
                 mapView.mapboxMap.loadStyle(Style.STANDARD)
                 val annotationApi = mapView.annotations
                 pointAnnotationManager = annotationApi.createPointAnnotationManager()
+
+
             }
         },
         update = { mapView ->
@@ -104,9 +111,12 @@ fun MapBoxMap(
                         it.create(pointAnnotationOptions)
                     }
 
+                    //avgjør hvordan kartet skal vises når de først lastes inn:
                     mapView.mapboxMap
                         .flyTo(CameraOptions.Builder().zoom(4.0).center(trondheim).build())
                 }
+
+
 
             NoOpUpdate
         },
