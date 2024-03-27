@@ -16,4 +16,5 @@ object HTTPServiceHandler {
 
     //WaveForecast
     const val WAVE_FORECAST_URL = "https://www.barentswatch.no/bwapi/openapi/waveforecast/openapi.json"
+    const val WAVE_FORECAST_POINT_FORECAST = "https://www.barentswatch.no/bwapi/v1/geodata/waveforecast/pointforecast"
 }
