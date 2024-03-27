@@ -1,5 +1,9 @@
 package com.example.myapplication.ui.map
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,12 +40,15 @@ import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.MapView
+import com.mapbox.maps.MapboxExperimental
 import com.mapbox.maps.Style
+import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
 import com.mapbox.maps.plugin.animation.flyTo
 import com.mapbox.maps.plugin.annotation.annotations
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
+import com.mapbox.maps.plugin.gestures.addOnMapClickListener
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,7 +56,9 @@ import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 fun MapScreen(mapScreenViewModel : MapScreenViewModel = viewModel()) {
 
     val mapScreenUiState : MapScreenUiState by mapScreenViewModel.mapScreenUiState.collectAsState()
-
+    var location: SurfArea? by remember {
+        mutableStateOf(null)
+    }
 
     Scaffold(
         topBar = {
@@ -70,26 +79,31 @@ fun MapScreen(mapScreenViewModel : MapScreenViewModel = viewModel()) {
             MapBoxMap(
                 modifier = Modifier
                     .fillMaxSize(),
-                mapScreenUiState.points
+                points = mapScreenUiState.points,
+                onPointChange = { location = it }
             )
         }
     }
 
 }
+
+
 @Composable
 fun MapBoxMap(
     modifier: Modifier = Modifier,
+    onPointChange: (SurfArea) -> Unit,
     points: List<Pair<SurfArea, Point>>
 ) {
     val trondheim = Point.fromLngLat(10.4, 63.4) //trondheim kommer i senter av skjermen, kan endre koordinater så hele norge synes?
     val context = LocalContext.current
-
     val marker = remember(context) {
         context.getDrawable(R.drawable.marker )!!.toBitmap()
     }
+
     var pointAnnotationManager: PointAnnotationManager? by remember {
         mutableStateOf(null)
     }
+
 
 
     AndroidView(
@@ -101,17 +115,39 @@ fun MapBoxMap(
             }
         },
         update = { mapView ->
-                pointAnnotationManager?.let {
-                    it.deleteAll() //fjerner alle tidligere markører hvis kartet oppdateres for å forhindre duplikater/uønskede markører
+            pointAnnotationManager?.let {
+               it.deleteAll() //fjerner alle tidligere markører hvis kartet oppdateres for å forhindre duplikater/uønskede markører
 
-                    points.forEach { point ->
+                /*points.map { (location, point) ->
+                    val pointAnnotationOptions = PointAnnotationOptions()
+                        .withPoint(point)
+                        .withIconImage(marker)
+                    pointAnnotationManager?.create(pointAnnotationOptions)
+                    mapView.mapboxMap.addOnMapClickListener {
+                        onPointChange(location)
+                        Log.d("Point", getLocationAtPoint(points = points, point = point).toString())
+                        Toast.makeText(
+                            context,
+                            "Marker ${getLocationAtPoint(points = points, point = point)} clicked",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        true // return true to consume the click event
+                    }
+                }*/
+
+
+                    points.forEach { (location, point) ->
+                        Log.d("PointsList", location.locationName + " " +point.toString())
+
                         val pointAnnotationOptions = PointAnnotationOptions()
-                            .withPoint(point.second)
+                            .withPoint(point)
                             .withIconImage(marker)
                         it.create(pointAnnotationOptions)
-                        it.addClickListener { annotation ->
-                            // handle marker click
-                            Toast.makeText(context, "Marker ${point.first} clicked", Toast.LENGTH_LONG).show()
+
+
+                        val tmpLocation = location
+                        it.addClickListener(){ annotation ->
+                            Toast.makeText(context, "Marker ${tmpLocation.locationName} clicked", Toast.LENGTH_LONG).show()
                             true // return true to consume the click event
                         }
                     }
@@ -122,10 +158,34 @@ fun MapBoxMap(
                 }
 
 
-
             NoOpUpdate
         },
         modifier = modifier
+    )
+}
+
+fun getLocationAtPoint(points : List<Pair<SurfArea, Point>>, point: Point): SurfArea {
+    val res = points.first { it ->
+        it.second == point
+    }
+    return res.first
+}
+
+@OptIn(MapboxExperimental::class)
+@Composable
+fun addPointer(marker: Bitmap, location: String, point: Point, context: Context){
+
+    PointAnnotation(
+        iconImageBitmap = marker,
+        point = point,
+        onClick = {
+            Toast.makeText(
+                context,
+                "Clicked on : $location.",
+                Toast.LENGTH_SHORT
+            ).show()
+            true
+        }
     )
 }
 
