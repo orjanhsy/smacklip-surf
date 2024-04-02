@@ -3,7 +3,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.R
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
-import com.example.myapplication.model.SurfArea
+import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.metalerts.Features
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,12 +27,40 @@ class HomeScreenViewModel : ViewModel() {
     val homeScreenUiState: StateFlow<HomeScreenUiState> = _homeScreenUiState.asStateFlow()
 
     init {
-        updateWindSpeed()
-        updateWindGust()
+        //updateWindSpeed()
+        //updateWindGust()
         updateWaveHeight()
         updateAlerts()
+        updateAllSurfAreasData()
     }
 
+    fun updateAllSurfAreasData(){
+        viewModelScope.launch(Dispatchers.IO){
+            val allSurfAreasData = mutableListOf<Pair<SurfArea, List<Pair<List<Int>, Double>>>>()
+            SurfArea.entries.forEach { surfArea ->
+                val windSpeed = smackLipRepository.getWindSpeed(surfArea)
+                val windGust = smackLipRepository.getWindSpeedOfGust(surfArea)
+                //val windDirection = smackLipRepository.getWindDirection(surfArea)
+                allSurfAreasData.add(surfArea to windSpeed)
+                allSurfAreasData.add(surfArea to windGust)
+
+            }
+            _homeScreenUiState.update { currentState ->
+                val filteredData = allSurfAreasData
+                    .filter { it.second.isNotEmpty() && it.second.first().second != 0.0 }
+
+                val windSpeedData = filteredData.map{it.second}
+                val windGustData = filteredData.map { it.second }
+                currentState.copy(
+                    windSpeed = windSpeedData.flatten(),
+                    windGust = windGustData.flatten()
+                )
+
+            }
+        }
+    }
+
+    /*
     fun updateWindSpeed() {
         viewModelScope.launch(Dispatchers.IO) {
             _homeScreenUiState.update {
@@ -50,7 +78,7 @@ class HomeScreenViewModel : ViewModel() {
             }
         }
     }
-
+ */
 
     fun updateWaveHeight(){
         viewModelScope.launch (Dispatchers.IO){
