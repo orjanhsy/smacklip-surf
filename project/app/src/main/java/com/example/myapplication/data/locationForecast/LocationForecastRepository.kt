@@ -16,9 +16,12 @@ class LocationForecastRepositoryImpl(
 ): LocationForecastRepository {
 
     override suspend fun getTimeSeries(surfArea: SurfArea): List<Pair<String, DataLF>> {
-        val timeSeries: List<TimeserieLF> =
-            locationForecastDataSource.fetchLocationForecastData(surfArea).properties.timeseries
-        return timeSeries.map { it.time to it.data }
+        val locationForecast = locationForecastDataSource.fetchLocationForecastData(surfArea)
+        return if(locationForecast?.properties != null) {
+            locationForecast?.properties.timeseries.map { it.time to it.data }
+        } else {
+            emptyList()
+        }
     }
 
     private suspend fun getWindData(surfArea: SurfArea, getData: (DataLF) -> Double): List<Pair<String, Double>> {
@@ -37,5 +40,12 @@ class LocationForecastRepositoryImpl(
 
     override suspend fun getWindSpeedOfGust(surfArea: SurfArea): List<Pair<String, Double>> {
         return getWindData(surfArea) { dataLF -> dataLF.instant.details.wind_speed_of_gust }
+    }
+
+    private fun inArea(lat: Double, lon: Double, surfArea: SurfArea, radius: Double = 0.1): Boolean{
+        return (
+                lat in surfArea.lat - radius..surfArea.lat + radius &&
+                lon in surfArea.lon - radius..surfArea.lon + radius
+                )
     }
 }
