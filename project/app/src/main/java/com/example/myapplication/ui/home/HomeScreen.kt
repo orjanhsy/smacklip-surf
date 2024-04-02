@@ -113,7 +113,7 @@ fun SurfAreaCard(
 
                 Row {
                     Text(
-                        text = "Wave height: ${if (waveHeight.isNotEmpty()) waveHeight[0].second else ""}"
+                        text = "Wave height: ${if (waveHeight.isNotEmpty()) waveHeight[0].second else "empty"}"
                     )
                 }
 
