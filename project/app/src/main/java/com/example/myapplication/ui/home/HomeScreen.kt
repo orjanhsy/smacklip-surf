@@ -31,7 +31,6 @@ import com.example.myapplication.R
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.model.metalerts.Properties
-import com.example.myapplication.model.surfareas.loadSurfAreas
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -157,7 +156,7 @@ fun SurfAreaCard(
         }
     }
 }
-/*
+
 @Preview(showBackground = true)
 @Composable
 private fun PreviewSurfAreaCard() {
@@ -171,7 +170,7 @@ private fun PreviewSurfAreaCard() {
         )
     }
 }
-*/
+
 
 @Preview(showBackground = true)
 @Composable
