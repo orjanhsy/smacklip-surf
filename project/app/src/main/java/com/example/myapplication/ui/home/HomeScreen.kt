@@ -38,7 +38,6 @@ import com.example.myapplication.ui.theme.MyApplicationTheme
 fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel()) {
 
     val homeScreenUiState : HomeScreenUiState by homeScreenViewModel.homeScreenUiState.collectAsState()
-    val surfAreas = SurfArea.entries.toList()
 
     Scaffold(
         topBar = {
@@ -57,17 +56,16 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel()) {
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            items(surfAreas) { surfArea ->
+            items(SurfArea.entries) { location ->
                 SurfAreaCard(
-                    surfArea = surfArea,
+                    location,
                     windSpeed = homeScreenUiState.windSpeed,
                     windGust = homeScreenUiState.windGust,
                     waveHeight = homeScreenUiState.waveHeight,
-                    alerts = homeScreenUiState.allRelevantAlerts
-                        .filter { alert ->
-                            alert.any{ it.properties?.area?.contains(surfArea.locationName) ?: false}
+                    alerts = homeScreenUiState.allRelevantAlerts.filter {alert ->
+                        alert.any{ it.properties?.area?.contains(location.locationName) ?: false}
 
-                        }
+                    }
                 )
             }
         }
@@ -103,17 +101,22 @@ fun SurfAreaCard(
                     .padding(16.dp),
                 horizontalAlignment = Alignment.Start,
             ) {
-
                 Row {
                     Text(
-                        text = "Wind: ${if (windSpeed.isNotEmpty()) windSpeed[0].second else "empty"}" +
-                                if(windGust.isNotEmpty() && windSpeed.isNotEmpty() && windGust[0].second != windSpeed[0].second) "(${windGust[0].second})" else "empty"
+                        text = surfArea.locationName,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                Row {
+                    Text(
+                        text = "Wind: ${if (windSpeed.isNotEmpty()) windSpeed[0].second else ""}" +
+                                if(windGust.isNotEmpty() && windSpeed.isNotEmpty() && windGust[0].second != windSpeed[0].second) "(${windGust[0].second})" else ""
                     )
                 }
 
                 Row {
                     Text(
-                        text = "Wave height: ${if (waveHeight.isNotEmpty()) waveHeight[0].second else "empty"}"
+                        text = "Wave height: ${if (waveHeight.isNotEmpty()) waveHeight[0].second else ""}"
                     )
                 }
 
@@ -156,7 +159,6 @@ fun SurfAreaCard(
         }
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun PreviewSurfAreaCard() {
@@ -170,7 +172,6 @@ private fun PreviewSurfAreaCard() {
         )
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

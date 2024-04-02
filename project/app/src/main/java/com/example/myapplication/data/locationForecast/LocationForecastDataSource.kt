@@ -2,6 +2,7 @@ package com.example.myapplication.data.locationForecast
 
 import com.example.myapplication.data.helpers.HTTPServiceHandler.API_HEADER
 import com.example.myapplication.data.helpers.HTTPServiceHandler.API_KEY
+import com.example.myapplication.data.helpers.HTTPServiceHandler.LOCATION_FORECAST_URL
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.locationforecast.LocationForecast
 import io.ktor.client.HttpClient
@@ -14,7 +15,7 @@ import io.ktor.util.appendIfNameAbsent
 
 
 class LocationForecastDataSource(
-    private val path: String = "https://api.met.no/weatherapi/locationforecast/2.0/complete"
+    private val path: String = LOCATION_FORECAST_URL
 
 ) {
 
@@ -28,7 +29,7 @@ class LocationForecastDataSource(
         }
     }
     suspend fun fetchLocationForecastData(surfArea: SurfArea): LocationForecast {
-        val lf = "$path?lat=$surfArea.lat}&lon=${surfArea.lon}"
+        val lf = "$path?lat=${surfArea.lat}&lon=${surfArea.lon}"
         return client.get(lf).body()
     }
 }
