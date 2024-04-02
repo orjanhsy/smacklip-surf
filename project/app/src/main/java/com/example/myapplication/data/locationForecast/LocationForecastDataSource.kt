@@ -14,7 +14,7 @@ import io.ktor.util.appendIfNameAbsent
 
 
 class LocationForecastDataSource(
-    private val path: String = "https://api.met.no/weatherapi/locationforecast/2.0/complete?lat=62.1255693551118&lon=5.152407834229069"
+    private val path: String = "https://api.met.no/weatherapi/locationforecast/2.0/complete"
 
 ) {
 
@@ -27,8 +27,8 @@ class LocationForecastDataSource(
             gson()
         }
     }
-    suspend fun fetchLocationForecastData(): LocationForecast {
-        val locationForecast: LocationForecast = client.get(path).body()
+    suspend fun fetchLocationForecastData(surfArea: SurfArea): LocationForecast {
+        val locationForecast: LocationForecast = client.get("$path=lat=${surfArea.lat}&lon=${surfArea.lon}").body()
         return locationForecast
     }
 }
