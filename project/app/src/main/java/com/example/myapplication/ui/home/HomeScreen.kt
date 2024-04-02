@@ -28,9 +28,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.R
-import com.example.myapplication.model.SurfArea
+import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.model.metalerts.Properties
+import com.example.myapplication.model.surfareas.loadSurfAreas
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,6 +39,7 @@ import com.example.myapplication.ui.theme.MyApplicationTheme
 fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel()) {
 
     val homeScreenUiState : HomeScreenUiState by homeScreenViewModel.homeScreenUiState.collectAsState()
+    val surfAreas = SurfArea.entries.toList()
 
     Scaffold(
         topBar = {
@@ -56,15 +58,17 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel()) {
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            items(SurfArea.entries) { location ->
+            items(surfAreas) { surfArea ->
                 SurfAreaCard(
-                    location,
-                    homeScreenUiState.windSpeed,
-                    homeScreenUiState.windGust,
-                    homeScreenUiState.waveHeight,
-                    homeScreenUiState.allRelevantAlerts.filter {alert ->
-                        alert.any { it.properties?.area?.contains(location.locationName) ?: false }
-                    }
+                    surfArea = surfArea,
+                    windSpeed = homeScreenUiState.windSpeed,
+                    windGust = homeScreenUiState.windGust,
+                    waveHeight = homeScreenUiState.waveHeight,
+                    alerts = homeScreenUiState.allRelevantAlerts
+                        .filter { alert ->
+                            alert.any{ it.properties?.area?.contains(surfArea.locationName) ?: false}
+
+                        }
                 )
             }
         }
@@ -100,16 +104,11 @@ fun SurfAreaCard(
                     .padding(16.dp),
                 horizontalAlignment = Alignment.Start,
             ) {
+
                 Row {
                     Text(
-                        text = surfArea.locationName,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-                Row {
-                    Text(
-                        text = "Wind: ${if (windSpeed.isNotEmpty()) windSpeed[0].second else ""}" +
-                                if(windGust.isNotEmpty() && windSpeed.isNotEmpty() && windGust[0].second != windSpeed[0].second) "(${windGust[0].second})" else ""
+                        text = "Wind: ${if (windSpeed.isNotEmpty()) windSpeed[0].second else "empty"}" +
+                                if(windGust.isNotEmpty() && windSpeed.isNotEmpty() && windGust[0].second != windSpeed[0].second) "(${windGust[0].second})" else "empty"
                     )
                 }
 
@@ -158,6 +157,7 @@ fun SurfAreaCard(
         }
     }
 }
+/*
 @Preview(showBackground = true)
 @Composable
 private fun PreviewSurfAreaCard() {
@@ -171,6 +171,7 @@ private fun PreviewSurfAreaCard() {
         )
     }
 }
+*/
 
 @Preview(showBackground = true)
 @Composable
