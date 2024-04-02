@@ -5,7 +5,7 @@ import com.example.myapplication.data.locationForecast.LocationForecastRepositor
 import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
 import com.example.myapplication.data.oceanforecast.OceanforecastRepository
 import com.example.myapplication.data.oceanforecast.OceanforecastRepositoryImpl
-import com.example.myapplication.model.SurfArea
+import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.locationforecast.DataLF
 import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.model.oceanforecast.DataOF
@@ -15,18 +15,18 @@ interface SmackLipRepository {
     suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Features>
     suspend fun getWaveHeights(): List<Pair<List<Int>, Double>>
     suspend fun getTimeSeriesOF(): List<Pair<String, DataOF>>
-    suspend fun getTimeSeriesLF(): List<Pair<String, DataLF>>
-    suspend fun getWindDirection(): List<Pair<List<Int>, Double>>
-    suspend fun getWindSpeed(): List<Pair<List<Int>, Double>>
-    suspend fun getWindSpeedOfGust(): List<Pair<List<Int>, Double>>
+    suspend fun getTimeSeriesLF(surfArea: SurfArea): List<Pair<String, DataLF>>
+    suspend fun getWindDirection(surfArea: SurfArea): List<Pair<List<Int>, Double>>
+    suspend fun getWindSpeed(surfArea: SurfArea): List<Pair<List<Int>, Double>>
+    suspend fun getWindSpeedOfGust(surfArea: SurfArea): List<Pair<List<Int>, Double>>
 
     abstract fun getTimeListFromTimeString(timeString : String): List<Int>
 
     //suspend fun getForecastNext24Hours() : MutableList<MutableList<Pair<List<Int>, Pair<Int, List<Double>>>>>
 
-    suspend fun getDataForOneDay(day : Int): List<Pair<List<Int>, List<Double>>>
+    suspend fun getDataForOneDay(day : Int, surfArea: SurfArea): List<Pair<List<Int>, List<Double>>>
 
-    suspend fun getDataForTheNext7Days(): MutableList<List<Pair<List<Int>, List<Double>>>>
+    suspend fun getDataForTheNext7Days(surfArea: SurfArea): MutableList<List<Pair<List<Int>, List<Double>>>>
 }
 
 class SmackLipRepositoryImpl (
@@ -68,26 +68,26 @@ class SmackLipRepositoryImpl (
 
 
     //LF
-    override suspend fun getTimeSeriesLF(): List<Pair<String, DataLF>> {
-        return locationForecastRepository.getTimeSeries()
+    override suspend fun getTimeSeriesLF(surfArea: SurfArea): List<Pair<String, DataLF>> {
+        return locationForecastRepository.getTimeSeries(surfArea)
     }
 
-    override suspend fun getWindDirection(): List<Pair<List<Int>, Double>> {
-        val tmpWindDirection = locationForecastRepository.getWindDirection()
+    override suspend fun getWindDirection(surfArea: SurfArea): List<Pair<List<Int>, Double>> {
+        val tmpWindDirection = locationForecastRepository.getWindDirection(surfArea)
         return tmpWindDirection.map { windDirection ->
             Pair(getTimeListFromTimeString(windDirection.first), windDirection.second)
         }
     }
 
-    override suspend fun getWindSpeed(): List<Pair<List<Int>, Double>> {
-        val tmpWindSpeed = locationForecastRepository.getWindSpeed()
+    override suspend fun getWindSpeed(surfArea: SurfArea): List<Pair<List<Int>, Double>> {
+        val tmpWindSpeed = locationForecastRepository.getWindSpeed(surfArea)
         return tmpWindSpeed.map { windSpeed ->
             Pair(getTimeListFromTimeString(windSpeed.first), windSpeed.second)
         }
     }
 
-    override suspend fun getWindSpeedOfGust(): List<Pair<List<Int>, Double>> {
-        val tmpWindGust = locationForecastRepository.getWindSpeedOfGust()
+    override suspend fun getWindSpeedOfGust(surfArea: SurfArea): List<Pair<List<Int>, Double>> {
+        val tmpWindGust = locationForecastRepository.getWindSpeedOfGust(surfArea)
         return tmpWindGust.map { windGust ->
             Pair(getTimeListFromTimeString(windGust.first), windGust.second)
         }
@@ -168,11 +168,11 @@ class SmackLipRepositoryImpl (
     //setter sammen alle parene til en liste
     //sitter til slutt igjen med en liste bestående av par med tid og tilhørende data for den tiden
     //metoden fungerer uavhengig av hvor mange tidspunkt det er data for
-    override suspend fun getDataForOneDay(day : Int): List<Pair<List<Int>, List<Double>>> {
+    override suspend fun getDataForOneDay(day : Int, surfArea: SurfArea): List<Pair<List<Int>, List<Double>>> {
         val waveHeight :  List<Pair<List<Int>, Double>> = getWaveHeights().filter { waveHeight -> waveHeight.first[2] == day }
-        val windDirection :  List<Pair<List<Int>, Double>> = getWindDirection().filter { windDirection -> windDirection.first[2] == day }
-        val windSpeed :  List<Pair<List<Int>, Double>> = getWindSpeed().filter { windSpeed -> windSpeed.first[2] == day }
-        val windSpeedOfGust :  List<Pair<List<Int>, Double>> = getWindSpeedOfGust().filter { gust -> gust.first[2] == day }
+        val windDirection :  List<Pair<List<Int>, Double>> = getWindDirection(surfArea).filter { windDirection -> windDirection.first[2] == day }
+        val windSpeed :  List<Pair<List<Int>, Double>> = getWindSpeed(surfArea).filter { windSpeed -> windSpeed.first[2] == day }
+        val windSpeedOfGust :  List<Pair<List<Int>, Double>> = getWindSpeedOfGust(surfArea).filter { gust -> gust.first[2] == day }
 
         val dataList = waveHeight.map {
             val time : List<Int> = it.first
@@ -193,11 +193,11 @@ class SmackLipRepositoryImpl (
 
     //metoden kaller getDataForOneDay 7 ganger fra og med i dag, og legger til listen med data for hver dag
     //inn i resListe som til slutt består av data med tidspunkt og data for alle 7 dager
-    override suspend fun getDataForTheNext7Days(): MutableList<List<Pair<List<Int>, List<Double>>>> {
+    override suspend fun getDataForTheNext7Days(surfArea: SurfArea): MutableList<List<Pair<List<Int>, List<Double>>>> {
         val today = getWaveHeights()[0].first[2] //regner med at det er dumt med et helt api-kall bare for å hente dagens dato
         val resList = mutableListOf<List<Pair<List<Int>, List<Double>>>>()
         for (i in today until today+7){
-            resList.add(getDataForOneDay(i))
+            resList.add(getDataForOneDay(i, surfArea))
         }
         return resList
     }

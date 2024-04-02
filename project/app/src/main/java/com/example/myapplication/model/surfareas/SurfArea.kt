@@ -1,4 +1,4 @@
-package com.example.myapplication.model
+package com.example.myapplication.model.surfareas
 
 import com.example.myapplication.R
 
