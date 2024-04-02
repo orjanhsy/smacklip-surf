@@ -1,10 +1,11 @@
 package com.example.myapplication.data.locationForecast
 
+import android.util.Log
 import com.example.myapplication.data.helpers.HTTPServiceHandler.API_HEADER
 import com.example.myapplication.data.helpers.HTTPServiceHandler.API_KEY
 import com.example.myapplication.data.helpers.HTTPServiceHandler.LOCATION_FORECAST_URL
-import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.locationforecast.LocationForecast
+import com.example.myapplication.model.surfareas.SurfArea
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -19,9 +20,10 @@ class LocationForecastDataSource(
 
 ) {
 
+
     private val client = HttpClient(){
         defaultRequest {
-            url(path)
+            url(LOCATION_FORECAST_URL)
             headers.appendIfNameAbsent(API_KEY, API_HEADER)
         }
         install(ContentNegotiation){
@@ -29,7 +31,7 @@ class LocationForecastDataSource(
         }
     }
     suspend fun fetchLocationForecastData(surfArea: SurfArea): LocationForecast {
-        val lf = "$path?lat=${surfArea.lat}&lon=${surfArea.lon}"
-        return client.get(lf).body()
+        val locationForecast: LocationForecast = client.get("$path?lat=${surfArea.lat}&lon=${surfArea.lon}").body()
+        return locationForecast
     }
 }
