@@ -1,9 +1,5 @@
 package com.example.myapplication
 
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import com.example.myapplication.data.locationForecast.LocationForecastDataSource
-import com.example.myapplication.data.locationForecast.LocationForecastRepository
 import com.example.myapplication.data.locationForecast.LocationForecastRepositoryImpl
 import com.example.myapplication.model.locationforecast.DataLF
 import kotlinx.coroutines.runBlocking
@@ -13,21 +9,15 @@ import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
 
 
 import com.example.myapplication.data.oceanforecast.OceanforecastRepositoryImpl
-import com.example.myapplication.data.oceanforecast.OceanforecastDataSource
 import com.example.myapplication.data.smackLip.SmackLipRepository
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
-import com.example.myapplication.model.SurfArea
+import com.example.myapplication.model.surfareas.SurfArea
 
 import com.example.myapplication.model.locationforecast.LocationForecast
 import com.example.myapplication.model.locationforecast.TimeserieLF
-import com.example.myapplication.model.metalerts.Features
-import com.example.myapplication.model.oceanforecast.DataOF
 
 import com.example.myapplication.model.oceanforecast.OceanForecast
 import com.example.myapplication.model.oceanforecast.TimeserieOF
-import com.example.myapplication.ui.home.HomeScreenUiState
-import com.example.myapplication.ui.home.HomeScreenViewModel
-import kotlinx.coroutines.async
 import java.io.File
 import org.junit.Test
 //import org.junit.Assert.*
