@@ -1,5 +1,7 @@
 package com.example.myapplication.data.locationForecast
 
+import android.util.Log
+import com.example.myapplication.data.helpers.HTTPServiceHandler
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.locationforecast.DataLF
 import com.example.myapplication.model.locationforecast.TimeserieLF
@@ -12,13 +14,14 @@ interface LocationForecastRepository {
 }
 
 class LocationForecastRepositoryImpl(
-    private val locationForecastDataSource: LocationForecastDataSource = LocationForecastDataSource()
+    private val locationForecastDataSource: LocationForecastDataSource = LocationForecastDataSource(path = HTTPServiceHandler.OCEAN_FORECAST_URL)
 ): LocationForecastRepository {
 
     override suspend fun getTimeSeries(surfArea: SurfArea): List<Pair<String, DataLF>> {
         val locationForecast = locationForecastDataSource.fetchLocationForecastData(surfArea)
-        return if(locationForecast?.properties != null) {
-            locationForecast?.properties.timeseries.map { it.time to it.data }
+        Log.d("LocationTimeSeries", "Location forecast for ${surfArea.locationName}: $locationForecast" )
+        return if(locationForecast?.properties?.timeseries != null) {
+            locationForecast.properties.timeseries.map { it.time to it.data }
         } else {
             emptyList()
         }
