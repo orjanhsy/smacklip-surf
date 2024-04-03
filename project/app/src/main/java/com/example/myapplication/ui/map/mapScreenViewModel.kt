@@ -2,7 +2,7 @@ package com.example.myapplication.ui.map
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapplication.data.map.mapRepositoryImpl
+import com.example.myapplication.data.map.MapRepositoryImpl
 import com.example.myapplication.model.SurfArea
 import com.mapbox.geojson.Point
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +19,7 @@ data class MapScreenUiState(
 
 class MapScreenViewModel : ViewModel() {
 
-    private val mapRepository = mapRepositoryImpl()
+    private val mapRepository = MapRepositoryImpl()
     private val _mapScreenUiState = MutableStateFlow(MapScreenUiState())
     val mapScreenUiState: StateFlow<MapScreenUiState> = _mapScreenUiState.asStateFlow()
 
@@ -30,8 +30,8 @@ class MapScreenViewModel : ViewModel() {
    fun getPoints() {
         viewModelScope.launch(Dispatchers.IO) {
             _mapScreenUiState.update {
-                val getPoints = mapRepository.locationToPoint()
-                it.copy(points = getPoints)
+                val newPoints = mapRepository.locationToPoint()
+                it.copy(points = newPoints)
             }
         }
     }

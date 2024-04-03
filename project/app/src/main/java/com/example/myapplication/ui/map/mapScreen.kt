@@ -47,9 +47,6 @@ import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 fun MapScreen(mapScreenViewModel : MapScreenViewModel = viewModel()) {
 
     val mapScreenUiState : MapScreenUiState by mapScreenViewModel.mapScreenUiState.collectAsState()
-    var location: SurfArea? by remember {
-        mutableStateOf(null)
-    }
 
     Scaffold(
         topBar = {
@@ -70,11 +67,10 @@ fun MapScreen(mapScreenViewModel : MapScreenViewModel = viewModel()) {
             MapBoxMap(
                 modifier = Modifier
                     .fillMaxSize(),
-                //locations = mapScreenUiState.points,
+                //locations = mapScreenUiState.points
                 locations = SurfArea.entries.map {
                     Pair(it, Point.fromLngLat(it.lon, it.lat))
-                },
-                onPointChange = { location = it }
+                }
             )
         }
     }
@@ -85,7 +81,6 @@ fun MapScreen(mapScreenViewModel : MapScreenViewModel = viewModel()) {
 @Composable
 fun MapBoxMap(
     modifier: Modifier = Modifier,
-    onPointChange: (SurfArea) -> Unit,
     locations: List<Pair<SurfArea, Point>>
 ) {
     val trondheim = Point.fromLngLat(10.4, 63.4) //trondheim kommer i senter av skjermen, kan endre koordinater så hele norge synes?
@@ -98,15 +93,13 @@ fun MapBoxMap(
         mutableStateOf(null)
     }
 
-
-
+    //her vises selve kartet
     AndroidView(
         factory = {
             MapView(it).also { mapView ->
                 mapView.mapboxMap.loadStyle(Style.STANDARD)
                 val annotationApi = mapView.annotations
                 pointAnnotationManager = annotationApi.createPointAnnotationManager()
-                var pointAnnotation = pointAnnotationManager!!.annotations
                 mapView.mapboxMap
                     .flyTo(CameraOptions.Builder().zoom(4.0).center(trondheim).build())
             }
@@ -123,20 +116,19 @@ fun MapBoxMap(
 
                 it.addClickListener { pointAnnotation ->
                     // Handle the click event, e.g., showing a Toast or navigating to another screen
-                    val p = pointAnnotation.point
-                    Log.d("pointAnnotation point: ", p.toString() +" "+ p.longitude() +" " +p.latitude())
+                    val clickedPoint = pointAnnotation.point
+                    Log.d("pointAnnotation point: ", clickedPoint.toString() +" "+ clickedPoint.longitude() +" " +clickedPoint.latitude())
+
                     try {
-                        val loc = locations.first { location -> isMatchingCoordinates(location.second, p) }
+                        val loc = locations.first { location -> isMatchingCoordinates(location.second, clickedPoint) }
                         Toast.makeText(context, "Clicked on marker ${loc.first.locationName}", Toast.LENGTH_SHORT).show()
-
-                    }catch (_: NoSuchElementException){
+                    }catch (_: NoSuchElementException){ //first-metode utløser unntak og appen krasjer dersom den ikke finner like koordinater
                         Toast.makeText(context, "Clicked on marker null", Toast.LENGTH_SHORT).show()
-
                     }
-
                     true // Return true to indicate that the click event has been handled
                 }
 
+                //legger til markers for hvert sted
                 locations.forEach { (location, point) ->
                     Log.d("PointsList", location.locationName + " " + point.toString())
 
@@ -155,39 +147,16 @@ fun MapBoxMap(
 }
 
 
+//hjelpemetode for å sjekke at to koordinater er tilnærmet like ved bruk av verdien threshold
 fun isMatchingCoordinates(point1: Point, point2: Point): Boolean {
     Log.d("matching coordinates", "$point1 $point2")
     val threshold = 0.1
-    // Check if the clicked point is within the threshold distance of the location
     return kotlin.math.abs(point1.latitude() - point2.latitude()) <= threshold &&
             kotlin.math.abs(point1.longitude() - point2.longitude()) <= threshold
 }
 
 
-fun getLocationAtPoint(points : List<Pair<SurfArea, Point>>, point: Point): SurfArea {
-    val res = points.first { it ->
-        it.second == point
-    }
-    return res.first
-}
 
-@OptIn(MapboxExperimental::class)
-@Composable
-fun addPointer(marker: Bitmap, location: String, point: Point, context: Context){
-
-    PointAnnotation(
-        iconImageBitmap = marker,
-        point = point,
-        onClick = {
-            Toast.makeText(
-                context,
-                "Clicked on : $location.",
-                Toast.LENGTH_SHORT
-            ).show()
-            true
-        }
-    )
-}
 
 
 
