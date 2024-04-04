@@ -44,7 +44,7 @@ class ExampleUnitTest {
     private val gson = Gson()
 
     //WaveForecast
-    val waveForecastDataSource: WaveForecastDataSource = WaveForecastDataSource()
+    private val waveForecastDataSource: WaveForecastDataSource = WaveForecastDataSource()
     @Test
     fun accessTokenAquisitionIsCorrect() = runBlocking{
         println("Access token: ${waveForecastDataSource.getTokenAccess()}")
