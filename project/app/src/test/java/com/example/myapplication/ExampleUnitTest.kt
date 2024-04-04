@@ -178,6 +178,17 @@ class ExampleUnitTest {
     }
 
     @Test
+    fun testGetWindSpeedLF() = runBlocking {
+        println("test Ervika:")
+        println(locationForecastRepository.getWindSpeed(SurfArea.ERVIKA)[0].first.toString())
+        println(locationForecastRepository.getWindSpeed(SurfArea.ERVIKA)[0].second)
+        println("test Hoddevik:")
+        println(locationForecastRepository.getWindSpeed(SurfArea.HODDEVIK)[0].first.toString())
+        println(locationForecastRepository.getWindSpeed(SurfArea.HODDEVIK)[0].second)
+    }
+
+
+    @Test
     fun testGetWindDirectionSmackLip() = runBlocking {
         println(smackLipRepository.getWindDirection(SurfArea.FEDJE)[0].first.toString())
         println(smackLipRepository.getWindDirection(SurfArea.FEDJE)[0].second)
