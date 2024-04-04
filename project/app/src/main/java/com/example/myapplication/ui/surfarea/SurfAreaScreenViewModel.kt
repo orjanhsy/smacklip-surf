@@ -40,10 +40,10 @@ class SurfAreaScreenViewModel: ViewModel() {
         }
     }
 
-    fun updateWaveHeights() {
+    fun updateWaveHeights(surfArea: SurfArea) {
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update {
-                val newWaveHeights = smackLipRepository.getWaveHeights()
+                val newWaveHeights = smackLipRepository.getWaveHeights(surfArea)
                 it.copy(waveHeights = newWaveHeights)
             }
         }
