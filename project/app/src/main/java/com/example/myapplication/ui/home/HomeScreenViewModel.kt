@@ -1,4 +1,5 @@
 package com.example.myapplication.ui.home
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.R
@@ -17,7 +18,7 @@ data class HomeScreenUiState(
     val windSpeed: List<Pair<List<Int>, Double>> = emptyList(),
     val windGust: List<Pair<List<Int>, Double>> = emptyList(),
     val windDirection: List<Pair<String, Double>> = emptyList(),
-    val waveHeight: List<Pair<List<Int>, Double>> = emptyList(),
+    val waveHeight: Map<SurfArea, List<Pair<List<Int>, Double>>> = emptyMap(),
     val allRelevantAlerts: List<List<Features>> = emptyList()
 )
 
@@ -81,13 +82,20 @@ class HomeScreenViewModel : ViewModel() {
  */
 
     fun updateWaveHeight(){
-        viewModelScope.launch (Dispatchers.IO){
-            _homeScreenUiState.update{
-                val newWaveHeight = smackLipRepository.getWaveHeights()
-
-                it.copy(waveHeight = newWaveHeight)
+        viewModelScope.launch(Dispatchers.IO) {
+            val updatedWaveHeight: MutableMap<SurfArea, List<Pair<List<Int>, Double>>> = mutableMapOf()
+            SurfArea.entries.forEach { surfArea ->
+                //Log.d("updatedWaveHeight", "processing for $surfArea")
+                val newWaveHeight = smackLipRepository.getWaveHeights(surfArea)
+                updatedWaveHeight[surfArea] = newWaveHeight
+                //Log.d("updatedAllWaveHeights", "WaveHeight for $surfArea: $newWaveHeight")
             }
+            _homeScreenUiState.update {
+                it.copy(waveHeight = updatedWaveHeight)
+            }
+            //Log.d("updatedWaveHeight", "WaveHeight Updated: $updatedWaveHeight")
         }
+
     }
 
     fun updateAlerts() {
