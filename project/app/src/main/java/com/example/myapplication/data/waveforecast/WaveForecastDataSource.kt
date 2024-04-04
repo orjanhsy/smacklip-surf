@@ -19,6 +19,7 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.utils.EmptyContent.contentType
 import io.ktor.serialization.gson.gson
+import io.ktor.serialization.kotlinx.json.json
 
 fun main() {
 
@@ -46,16 +47,44 @@ class WaveForecastDataSource {
         }
     }
 
-    private val client = HttpClient(CIO) {
+    private val bearerTokenStorage = mutableListOf<BearerTokens>()
+
+    val client = HttpClient() {
+        install(ContentNegotiation) {
+            json()
+        }
         install(Auth) {
             bearer {
-//                loadTokens {  }
-//                refreshTokens {  }
+
+                loadTokens {
+                    bearerTokenStorage.last()
+                }
+
+                //vil hente en ny token når token hentet fra loadTokens resulterer i 401 (unauthorized)
+                refreshTokens {
+                    val refreshToken: AccessToken = client.submitForm(
+                        url = "https://id.barentswatch.no/connect/token",
+                        formParameters = parameters {
+                            append("grant_type", "client_credentials")
+                            append("client_id", Config.CLIENT_ID)
+                            append("client_secret", Config.CLIENT_SECRET)
+                            append("scope", "api")
+                            append("refresh_token", oldTokens?.refreshToken ?: "")
+                        }
+                    ) {markAsRefreshTokenRequest()}.body<AccessToken>()
+                    bearerTokenStorage.add(BearerTokens(refreshToken.accessToken, oldTokens?.refreshToken!!))
+                    bearerTokenStorage.last()
+                }
+
+//                sendWithoutRequest {
+//                    it.url.host == ""
+//                }
+
             }
         }
     }
 
-    suspend fun getTokenAccess(): String? {
+    suspend fun getTokenAccess(): String {
         val requestBody = parameters {
             append("grant_type", "client_credentials")
             append("client_id", Config.CLIENT_ID)
