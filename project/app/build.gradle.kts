@@ -60,7 +60,7 @@ dependencies {
     implementation("io.ktor:ktor-serialization-gson:$ktor_version")
     implementation("io.ktor:ktor-client-json:$ktor_version")
     implementation("io.ktor:ktor-client-serialization:$ktor_version")
-
+    implementation("io.ktor:ktor-client-logging:$ktor_version")
 
     //default
     implementation("androidx.core:core-ktx:1.12.0")
