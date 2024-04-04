@@ -61,11 +61,12 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel()) {
                     location,
                     windSpeed = homeScreenUiState.windSpeed,
                     windGust = homeScreenUiState.windGust,
-                    waveHeight = homeScreenUiState.waveHeight,
+                    waveHeightMap = homeScreenUiState.waveHeight,
                     alerts = homeScreenUiState.allRelevantAlerts.filter {alert ->
                         alert.any{ it.properties?.area?.contains(location.locationName) ?: false}
 
-                    }
+                    },
+                    homeScreenViewModel = homeScreenViewModel
                 )
             }
         }
@@ -79,10 +80,11 @@ fun SurfAreaCard(
     surfArea: SurfArea,
     windSpeed: List<Pair<List<Int>, Double>>,
     windGust: List<Pair<List<Int>, Double>>,
-    waveHeight: List<Pair<List<Int>, Double>>,
+    waveHeightMap: Map<SurfArea,List<Pair<List<Int>, Double>>>,
     alerts: List<List<Features>>?,
-    homeScreenViewModel: HomeScreenViewModel = viewModel()
+    homeScreenViewModel: HomeScreenViewModel
 ) {
+    val waveHeight = waveHeightMap[surfArea] ?: listOf()
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -162,13 +164,17 @@ fun SurfAreaCard(
 @Preview(showBackground = true)
 @Composable
 private fun PreviewSurfAreaCard() {
+    val waveHeightMap: Map<SurfArea,List<Pair<List<Int>, Double>>> = mapOf(
+        SurfArea.HODDEVIK to listOf(Pair(listOf(1, 2, 3, 4), 5.0))
+    )
+    val viewModel = HomeScreenViewModel()
     MyApplicationTheme {
         SurfAreaCard(
-            SurfArea.HODDEVIK,
+            SurfArea.ERVIKA,
             listOf(Pair(listOf(2, 4, 6, 8), 1.0)),
             listOf(Pair(listOf(3, 5, 8, 32), 3.0)),
-            listOf(Pair(listOf(1, 2, 3, 4), 5.0)),
-            listOf(listOf((Features(properties = Properties(description = "Det ræinar")))))
+            waveHeightMap,
+            listOf(listOf((Features(properties = Properties(description = "Det ræinar"))))), viewModel
         )
     }
 }

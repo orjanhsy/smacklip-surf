@@ -1,5 +1,6 @@
 package com.example.myapplication.data.smackLip
 
+import android.util.Log
 import com.example.myapplication.data.locationForecast.LocationForecastRepository
 import com.example.myapplication.data.locationForecast.LocationForecastRepositoryImpl
 import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
@@ -13,8 +14,8 @@ import com.example.myapplication.model.oceanforecast.DataOF
 
 interface SmackLipRepository {
     suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Features>
-    suspend fun getWaveHeights(): List<Pair<List<Int>, Double>>
-    suspend fun getTimeSeriesOF(): List<Pair<String, DataOF>>
+    suspend fun getWaveHeights(surfArea: SurfArea): List<Pair<List<Int>, Double>>
+    suspend fun getTimeSeriesOF(surfArea: SurfArea): List<Pair<String, DataOF>>
     suspend fun getTimeSeriesLF(surfArea: SurfArea): List<Pair<String, DataLF>>
     suspend fun getWindDirection(surfArea: SurfArea): List<Pair<List<Int>, Double>>
     suspend fun getWindSpeed(surfArea: SurfArea): List<Pair<List<Int>, Double>>
@@ -43,15 +44,16 @@ class SmackLipRepositoryImpl (
 
 
     //OF
-    override suspend fun getWaveHeights(): List<Pair<List<Int>, Double>> {
-        val tmpWaveHeight = oceanforecastRepository.getWaveHeights()
-        return tmpWaveHeight.map { waveHeight ->
+    override suspend fun getWaveHeights(surfArea: SurfArea): List<Pair<List<Int>, Double>> {
+        val tempWaveHeight = oceanforecastRepository.getWaveHeights(surfArea)
+        return tempWaveHeight.map { waveHeight ->
             Pair(getTimeListFromTimeString(waveHeight.first), waveHeight.second)
         }
+
     }
 
-    override suspend fun getTimeSeriesOF(): List<Pair<String, DataOF>> {
-        return oceanforecastRepository.getTimeSeries()
+    override suspend fun getTimeSeriesOF(surfArea: SurfArea): List<Pair<String, DataOF>> {
+        return oceanforecastRepository.getTimeSeries(surfArea)
 
     }
 
@@ -169,7 +171,7 @@ class SmackLipRepositoryImpl (
     //sitter til slutt igjen med en liste bestående av par med tid og tilhørende data for den tiden
     //metoden fungerer uavhengig av hvor mange tidspunkt det er data for
     override suspend fun getDataForOneDay(day : Int, surfArea: SurfArea): List<Pair<List<Int>, List<Double>>> {
-        val waveHeight :  List<Pair<List<Int>, Double>> = getWaveHeights().filter { waveHeight -> waveHeight.first[2] == day }
+        val waveHeight :  List<Pair<List<Int>, Double>> = getWaveHeights(surfArea).filter { waveHeight -> waveHeight.first[2] == day }
         val windDirection :  List<Pair<List<Int>, Double>> = getWindDirection(surfArea).filter { windDirection -> windDirection.first[2] == day }
         val windSpeed :  List<Pair<List<Int>, Double>> = getWindSpeed(surfArea).filter { windSpeed -> windSpeed.first[2] == day }
         val windSpeedOfGust :  List<Pair<List<Int>, Double>> = getWindSpeedOfGust(surfArea).filter { gust -> gust.first[2] == day }
@@ -194,7 +196,7 @@ class SmackLipRepositoryImpl (
     //metoden kaller getDataForOneDay 7 ganger fra og med i dag, og legger til listen med data for hver dag
     //inn i resListe som til slutt består av data med tidspunkt og data for alle 7 dager
     override suspend fun getDataForTheNext7Days(surfArea: SurfArea): MutableList<List<Pair<List<Int>, List<Double>>>> {
-        val today = getWaveHeights()[0].first[2] //regner med at det er dumt med et helt api-kall bare for å hente dagens dato
+        val today = getWaveHeights(surfArea)[0].first[2] //regner med at det er dumt med et helt api-kall bare for å hente dagens dato
         val resList = mutableListOf<List<Pair<List<Int>, List<Double>>>>()
         for (i in today until today+7){
             resList.add(getDataForOneDay(i, surfArea))
