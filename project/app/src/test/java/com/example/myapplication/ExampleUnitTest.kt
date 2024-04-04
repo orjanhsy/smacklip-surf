@@ -16,6 +16,7 @@ import com.example.myapplication.data.oceanforecast.OceanforecastRepositoryImpl
 import com.example.myapplication.data.oceanforecast.OceanforecastDataSource
 import com.example.myapplication.data.smackLip.SmackLipRepository
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
+import com.example.myapplication.data.waveforecast.WaveForecastDataSource
 import com.example.myapplication.model.SurfArea
 
 import com.example.myapplication.model.locationforecast.LocationForecast
@@ -41,6 +42,13 @@ class ExampleUnitTest {
 
     //global
     private val gson = Gson()
+
+    //WaveForecast
+    val waveForecastDataSource: WaveForecastDataSource = WaveForecastDataSource()
+    @Test
+    fun accessTokenAquisitionIsCorrect() = runBlocking{
+        println("Access token: ${waveForecastDataSource.getTokenAccess()}")
+    }
 
     //MetAlerts
     private val metAlertsRepository: MetAlertsRepositoryImpl = MetAlertsRepositoryImpl()
@@ -174,12 +182,6 @@ class ExampleUnitTest {
         println(smackLipRepository.getWindSpeedOfGust()[0].second)
     }
 
-    @Test
-    fun testGetForecastNext24Hours() = runBlocking {
-        val tmp : MutableList<MutableList<Pair<List<Int>, Pair<Int, List<Double>>>>> = smackLipRepository.getForecastNext24Hours()
-
-        println(smackLipRepository.getForecastNext24Hours().toString())
-    }
 
     @Test
     fun testGetDataForOneDay() = runBlocking {
