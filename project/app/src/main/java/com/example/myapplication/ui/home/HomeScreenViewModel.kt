@@ -15,8 +15,8 @@ import kotlinx.coroutines.launch
 
 data class HomeScreenUiState(
     val locationName: String = "",
-    val windSpeed: List<Pair<List<Int>, Double>> = emptyList(),
-    val windGust: List<Pair<List<Int>, Double>> = emptyList(),
+    val windSpeed: Map<SurfArea, List<Pair<List<Int>, Double>>> = emptyMap(),
+    val windGust: Map<SurfArea, List<Pair<List<Int>, Double>>> = emptyMap(),
     val windDirection: List<Pair<String, Double>> = emptyList(),
     val waveHeight: Map<SurfArea, List<Pair<List<Int>, Double>>> = emptyMap(),
     val allRelevantAlerts: List<List<Features>> = emptyList()
@@ -28,58 +28,38 @@ class HomeScreenViewModel : ViewModel() {
     val homeScreenUiState: StateFlow<HomeScreenUiState> = _homeScreenUiState.asStateFlow()
 
     init {
-        //updateWindSpeed()
-        //updateWindGust()
+        updateWindSpeed()
+        updateWindGust()
         updateWaveHeight()
         updateAlerts()
-        updateAllSurfAreasData()
+
     }
 
-    fun updateAllSurfAreasData(){
-        viewModelScope.launch(Dispatchers.IO){
-            val allSurfAreasData = mutableListOf<Pair<SurfArea, List<Pair<List<Int>, Double>>>>()
-            SurfArea.entries.forEach { surfArea ->
-                val windSpeed = smackLipRepository.getWindSpeed(surfArea)
-                val windGust = smackLipRepository.getWindSpeedOfGust(surfArea)
-                //val windDirection = smackLipRepository.getWindDirection(surfArea)
-                allSurfAreasData.add(surfArea to windSpeed)
-                allSurfAreasData.add(surfArea to windGust)
-
-            }
-            _homeScreenUiState.update { currentState ->
-                val filteredData = allSurfAreasData
-                    .filter { it.second.isNotEmpty() && it.second.first().second != 0.0 }
-
-                val windSpeedData = filteredData.map{it.second}
-                val windGustData = filteredData.map { it.second }
-                currentState.copy(
-                    windSpeed = windSpeedData.flatten(),
-                    windGust = windGustData.flatten()
-                )
-
-            }
-        }
-    }
-
-    /*
     fun updateWindSpeed() {
         viewModelScope.launch(Dispatchers.IO) {
+            val updatedWindSpeed: MutableMap<SurfArea, List<Pair<List<Int>, Double>>> = mutableMapOf()
+            SurfArea.entries.forEach {  surfArea ->
+                val newWindSpeed = smackLipRepository.getWindSpeed(surfArea)
+                updatedWindSpeed[surfArea] = newWindSpeed
+            }
             _homeScreenUiState.update {
-                val newWindSpeed = smackLipRepository.getWindSpeed()
-                it.copy(windSpeed = newWindSpeed)
+                it.copy(windSpeed = updatedWindSpeed)
             }
         }
     }
 
     fun updateWindGust() {
         viewModelScope.launch(Dispatchers.IO) {
+            val updatedWindGust: MutableMap<SurfArea, List<Pair<List<Int>, Double>>> = mutableMapOf()
+            SurfArea.entries.forEach {surfArea ->
+                val newWindGust = smackLipRepository.getWindSpeedOfGust(surfArea)
+                updatedWindGust[surfArea] = newWindGust
+            }
             _homeScreenUiState.update {
-                val newWindGust = smackLipRepository.getWindSpeedOfGust()
-                it.copy(windGust = newWindGust)
+                it.copy(windGust = updatedWindGust)
             }
         }
     }
- */
 
     fun updateWaveHeight(){
         viewModelScope.launch(Dispatchers.IO) {
