@@ -1,6 +1,7 @@
 package com.example.myapplication.data.waveforecast
 
 import com.example.myapplication.config.Client
+import com.example.myapplication.data.helpers.HTTPServiceHandler.WAVE_FORECAST_POINT_FORECAST
 import com.example.myapplication.model.waveforecast.AccessToken
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -13,6 +14,7 @@ import io.ktor.client.plugins.auth.*
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.forms.submitForm
 import io.ktor.serialization.gson.gson
 import io.ktor.serialization.kotlinx.json.json
@@ -46,6 +48,7 @@ class WaveForecastDataSource {
     private val bearerTokenStorage = mutableListOf<BearerTokens>()
 
     val client = HttpClient() {
+        install(Logging)
         install(ContentNegotiation) {
             json()
         }
@@ -53,7 +56,7 @@ class WaveForecastDataSource {
             bearer {
 
                 loadTokens {
-                    bearerTokenStorage.last()
+                     bearerTokenStorage.last()
                 }
 
                 //vil hente en ny token når token hentet fra loadTokens resulterer i 401 (unauthorized)
@@ -61,7 +64,7 @@ class WaveForecastDataSource {
                     val refreshToken: AccessToken = client.submitForm(
                         url = "https://id.barentswatch.no/connect/token",
                         formParameters = parameters {
-                            append("grant_type", "client_credentials")
+                            append("grant_type", "refresh_token")
                             append("client_id", Client.CLIENT_ID)
                             append("client_secret", Client.CLIENT_SECRET)
                             append("scope", "api")
@@ -79,12 +82,20 @@ class WaveForecastDataSource {
             }
         }
     }
+    suspend fun fetchPointForecast(): Any {
+        if (bearerTokenStorage.isEmpty()) {
+            val initialToken = getTokenAccess()
+            bearerTokenStorage.add(BearerTokens(initialToken.first, initialToken.second!!))
+        }
+        val response = client.get(WAVE_FORECAST_POINT_FORECAST)
+        return response
+    }
 
-    suspend fun getTokenAccess(): Pair<String, String> {
+    suspend fun getTokenAccess(): Pair<String, String?> {
         val requestBody = parameters {
             append("grant_type", "client_credentials")
-            append("client_id", Client.CLIENT_ID)
-            append("client_secret", Client.CLIENT_SECRET)
+            append("client_id", "bwopenapi")
+            append("client_secret", "")
             append("scope", "api")
         }
         val accessToken = tokenClient.post("https://id.barentswatch.no/connect/token") {
