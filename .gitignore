@@ -14,3 +14,4 @@
 .cxx
 local.properties
 /project/app/src/main/java/com/example/myapplication/data/Config.kt
+/project/app/src/main/java/com/example/myapplication/config/Config.kt
