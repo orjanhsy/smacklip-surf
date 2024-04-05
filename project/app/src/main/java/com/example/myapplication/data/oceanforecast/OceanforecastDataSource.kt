@@ -10,11 +10,12 @@ import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.get
+import io.ktor.client.request.header
 import io.ktor.serialization.gson.gson
 import io.ktor.util.appendIfNameAbsent
 
 public class OceanforecastDataSource(
-    private val path: String = "https://api.met.no/weatherapi/oceanforecast/2.0/complete"
+    private val path: String = OCEAN_FORECAST_URL
 ) {
 
     private val client = HttpClient() {
@@ -28,7 +29,8 @@ public class OceanforecastDataSource(
     }
 
     suspend fun fetchOceanforecast(surfArea: SurfArea): OceanForecast {
-        val oceanForecast: OceanForecast = client.get("$path?lat=${surfArea.lat}&lon=${surfArea.lon}").body()
+        val oceanForecast: OceanForecast = client.get("$path?lat=${surfArea.lat}&lon=${surfArea.lon}"){header(
+            API_HEADER, API_KEY)}.body()
         return oceanForecast
     }
 }
