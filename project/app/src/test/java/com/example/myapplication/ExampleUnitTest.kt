@@ -39,7 +39,8 @@ class ExampleUnitTest {
     private val waveForecastDataSource: WaveForecastDataSource = WaveForecastDataSource()
     @Test
     fun accessTokenAquisitionIsCorrect() = runBlocking{
-        println("Access token: ${waveForecastDataSource.getTokenAccess()}")
+        val (accessToken, refreshToken) = waveForecastDataSource.getTokenAccess()
+        println("Access token: $accessToken\nRefresh token: $refreshToken")
     }
 
     //MetAlerts
