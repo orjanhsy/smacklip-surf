@@ -1,5 +1,6 @@
 package com.example.myapplication.data.waveforecast
 
+import com.example.myapplication.config.Client
 import com.example.myapplication.config.Config
 import com.example.myapplication.model.waveforecast.AccessToken
 import io.ktor.client.HttpClient
@@ -83,8 +84,8 @@ class WaveForecastDataSource {
     suspend fun getTokenAccess(): Pair<String, String> {
         val requestBody = parameters {
             append("grant_type", "client_credentials")
-            append("client_id", Config.CLIENT_ID)
-            append("client_secret", Config.CLIENT_SECRET)
+            append("client_id", Client.CLIENT_ID)
+            append("client_secret", Client.CLIENT_SECRET)
             append("scope", "api")
         }
         val accessToken = tokenClient.post("https://id.barentswatch.no/connect/token") {
