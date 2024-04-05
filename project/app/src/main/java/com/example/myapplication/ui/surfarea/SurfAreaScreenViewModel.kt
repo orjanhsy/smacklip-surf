@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
-import com.example.myapplication.model.SurfArea
+import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.metalerts.Features
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,47 +40,47 @@ class SurfAreaScreenViewModel: ViewModel() {
         }
     }
 
-    fun updateWaveHeights() {
+    fun updateWaveHeights(surfArea: SurfArea) {
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update {
-                val newWaveHeights = smackLipRepository.getWaveHeights()
+                val newWaveHeights = smackLipRepository.getWaveHeights(surfArea)
                 it.copy(waveHeights = newWaveHeights)
             }
         }
     }
 
-    fun updateWindDirection() {
+    fun updateWindDirection(surfArea: SurfArea) {
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update {
-                val newWindDirection = smackLipRepository.getWindDirection()
+                val newWindDirection = smackLipRepository.getWindDirection(surfArea)
                 it.copy(windDirections = newWindDirection)
             }
         }
     }
 
-    fun updateWindSpeed() {
+    fun updateWindSpeed(surfArea: SurfArea) {
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update {
-                val newWindSpeed = smackLipRepository.getWindSpeed()
+                val newWindSpeed = smackLipRepository.getWindSpeed(surfArea)
                 it.copy(windSpeeds = newWindSpeed)
             }
         }
     }
 
-    fun updateWindSpeedOfGust() {
+    fun updateWindSpeedOfGust(surfArea: SurfArea) {
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update {
-                val newWindSpeedOfGust = smackLipRepository.getWindSpeedOfGust()
+                val newWindSpeedOfGust = smackLipRepository.getWindSpeedOfGust(surfArea)
                 it.copy(windSpeedOfGusts = newWindSpeedOfGust)
             }
         }
     }
 
 
-    fun getForecastNext7Days(){
+    fun getForecastNext7Days(surfArea: SurfArea){
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update {
-                val newForecast7Days = smackLipRepository.getDataForTheNext7Days()
+                val newForecast7Days = smackLipRepository.getDataForTheNext7Days(surfArea)
                 it.copy(forecast7Days = newForecast7Days)
 
             }
