@@ -1,6 +1,7 @@
 package com.example.myapplication.data.waveforecast
 
 import com.example.myapplication.config.Client
+import com.example.myapplication.data.helpers.HTTPServiceHandler.WAVE_FORECAST_BASE
 import com.example.myapplication.data.helpers.HTTPServiceHandler.WAVE_FORECAST_POINT_FORECAST
 import com.example.myapplication.model.waveforecast.AccessToken
 import io.ktor.client.HttpClient
@@ -16,6 +17,7 @@ import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.forms.submitForm
+import io.ktor.client.statement.HttpResponse
 import io.ktor.serialization.gson.gson
 import io.ktor.serialization.kotlinx.json.json
 
@@ -32,22 +34,11 @@ class WaveForecastDataSource {
         install(ContentNegotiation) {
             gson()
         }
-
-        HttpResponseValidator {
-            handleResponseExceptionWithRequest { exception, request ->
-                val clientException = exception as? ClientRequestException ?: return@handleResponseExceptionWithRequest
-                val exceptionResponse = clientException.response
-                if (exceptionResponse.status == HttpStatusCode.BadRequest) {
-                    val exceptionResponseText = exceptionResponse.bodyAsText()
-                    throw ClientRequestException(exceptionResponse, exceptionResponseText)
-                }
-            }
-        }
     }
 
     private val bearerTokenStorage = mutableListOf<BearerTokens>()
 
-    val client = HttpClient() {
+    private val client = HttpClient() {
         install(Logging)
         install(ContentNegotiation) {
             json()
@@ -75,27 +66,37 @@ class WaveForecastDataSource {
                     bearerTokenStorage.last()
                 }
 
-//                sendWithoutRequest {
-//                    it.url.host == ""
-//                }
+                sendWithoutRequest {
+                    it.url.host == "$WAVE_FORECAST_BASE$WAVE_FORECAST_POINT_FORECAST"
+                }
 
             }
         }
+
     }
-    suspend fun fetchPointForecast(): Any {
-        if (bearerTokenStorage.isEmpty()) {
-            val initialToken = getTokenAccess()
-            bearerTokenStorage.add(BearerTokens(initialToken.first, initialToken.second!!))
+    suspend fun fetchPointForecast(): HttpResponse {
+        if (bearerTokenStorage.isEmpty()){
+            val (token, refresh) = getTokenAccess()
+            bearerTokenStorage.add(BearerTokens(token, token))
         }
-        val response = client.get(WAVE_FORECAST_POINT_FORECAST)
-        return response
+        return try {
+            val response: HttpResponse = client.get {
+                url(WAVE_FORECAST_POINT_FORECAST)
+                header(HttpHeaders.UserAgent, "smacklip")
+                header(HttpHeaders.ContentType, ContentType.Application.FormUrlEncoded)
+                header(HttpHeaders.Authorization, "bearer ${bearerTokenStorage.last()}")
+            }
+            response
+        } catch (e: Exception) {
+            throw e
+        }
     }
 
     suspend fun getTokenAccess(): Pair<String, String?> {
         val requestBody = parameters {
             append("grant_type", "client_credentials")
-            append("client_id", "bwopenapi")
-            append("client_secret", "")
+            append("client_id", Client.CLIENT_ID)
+            append("client_secret", Client.CLIENT_SECRET)
             append("scope", "api")
         }
         val accessToken = tokenClient.post("https://id.barentswatch.no/connect/token") {
