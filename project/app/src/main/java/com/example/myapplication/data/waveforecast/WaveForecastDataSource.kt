@@ -1,7 +1,6 @@
 package com.example.myapplication.data.waveforecast
 
 import com.example.myapplication.config.Client
-import com.example.myapplication.config.Config
 import com.example.myapplication.model.waveforecast.AccessToken
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -63,8 +62,8 @@ class WaveForecastDataSource {
                         url = "https://id.barentswatch.no/connect/token",
                         formParameters = parameters {
                             append("grant_type", "client_credentials")
-                            append("client_id", Config.CLIENT_ID)
-                            append("client_secret", Config.CLIENT_SECRET)
+                            append("client_id", Client.CLIENT_ID)
+                            append("client_secret", Client.CLIENT_SECRET)
                             append("scope", "api")
                             append("refresh_token", oldTokens?.refreshToken ?: "")
                         }
