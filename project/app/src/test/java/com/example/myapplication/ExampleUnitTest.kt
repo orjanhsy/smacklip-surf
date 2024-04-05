@@ -38,10 +38,15 @@ class ExampleUnitTest {
 
     //WaveForecast
     private val waveForecastDataSource: WaveForecastDataSource = WaveForecastDataSource()
+
+    @Test
+    fun fetchWaveForecastCallIs200() = runBlocking{
+        print(waveForecastDataSource.fetchPointForecast())
+    }
     @Test
     fun accessTokenAquisitionIsCorrect() = runBlocking{
         val (accessToken, refreshToken) = waveForecastDataSource.getTokenAccess()
-        println("Access token: $accessToken\nRefresh token: $refreshToken")
+        assert(accessToken.isNotBlank())
     }
 
     //MetAlerts
