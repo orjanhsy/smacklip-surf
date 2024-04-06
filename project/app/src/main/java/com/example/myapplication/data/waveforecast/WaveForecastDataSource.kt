@@ -3,6 +3,7 @@ package com.example.myapplication.data.waveforecast
 import com.example.myapplication.config.Client
 import com.example.myapplication.data.helpers.HTTPServiceHandler.WAVE_FORECAST_BASE
 import com.example.myapplication.data.helpers.HTTPServiceHandler.WAVE_FORECAST_POINT_FORECAST
+import com.example.myapplication.data.helpers.HTTPServiceHandler.WF_TEST_URL
 import com.example.myapplication.model.waveforecast.AccessToken
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -18,6 +19,7 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.statement.HttpResponse
+import io.ktor.http.HttpHeaders.Accept
 import io.ktor.serialization.gson.gson
 import io.ktor.serialization.kotlinx.json.json
 
@@ -51,24 +53,24 @@ class WaveForecastDataSource {
                 }
 
                 //vil hente en ny token når token hentet fra loadTokens resulterer i 401 (unauthorized)
-                refreshTokens {
-                    val refreshToken: AccessToken = client.submitForm(
-                        url = "https://id.barentswatch.no/connect/token",
-                        formParameters = parameters {
-                            append("grant_type", "refresh_token")
-                            append("client_id", Client.CLIENT_ID)
-                            append("client_secret", Client.CLIENT_SECRET)
-                            append("scope", "api")
-                            append("refresh_token", oldTokens?.refreshToken ?: "")
-                        }
-                    ) {markAsRefreshTokenRequest()}.body<AccessToken>()
-                    bearerTokenStorage.add(BearerTokens(refreshToken.accessToken, oldTokens?.refreshToken!!))
-                    bearerTokenStorage.last()
-                }
-
-                sendWithoutRequest {
-                    it.url.host == "$WAVE_FORECAST_BASE$WAVE_FORECAST_POINT_FORECAST"
-                }
+//                refreshTokens {
+//                    val refreshToken: AccessToken = client.submitForm(
+//                        url = "https://id.barentswatch.no/connect/token",
+//                        formParameters = parameters {
+//                            append("grant_type", "refresh_token")
+//                            append("client_id", Client.CLIENT_ID)
+//                            append("client_secret", Client.CLIENT_SECRET)
+//                            append("scope", "api")
+//                            append("refresh_token", oldTokens?.refreshToken ?: "")
+//                        }
+//                    ) {markAsRefreshTokenRequest()}.body<AccessToken>()
+//                    bearerTokenStorage.add(BearerTokens(refreshToken.accessToken, oldTokens?.refreshToken!!))
+//                    bearerTokenStorage.last()
+//                }
+//
+//                sendWithoutRequest {
+//                    it.url.host == "WAVE_FORECAST_POINT_FORECAST"
+//                }
 
             }
         }
@@ -77,14 +79,11 @@ class WaveForecastDataSource {
     suspend fun fetchPointForecast(): HttpResponse {
         if (bearerTokenStorage.isEmpty()){
             val (token, refresh) = getTokenAccess()
-            bearerTokenStorage.add(BearerTokens(token, token))
+            bearerTokenStorage.add(BearerTokens(token, ""))
         }
         return try {
             val response: HttpResponse = client.get {
-                url(WAVE_FORECAST_POINT_FORECAST)
-                header(HttpHeaders.UserAgent, "smacklip")
-                header(HttpHeaders.ContentType, ContentType.Application.FormUrlEncoded)
-                header(HttpHeaders.Authorization, "bearer ${bearerTokenStorage.last()}")
+                url(WF_TEST_URL)
             }
             response
         } catch (e: Exception) {
