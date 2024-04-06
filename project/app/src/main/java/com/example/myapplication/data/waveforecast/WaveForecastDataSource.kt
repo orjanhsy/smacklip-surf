@@ -3,6 +3,7 @@ package com.example.myapplication.data.waveforecast
 import com.example.myapplication.config.Client
 import com.example.myapplication.data.helpers.HTTPServiceHandler.WAVE_FORECAST_BASE
 import com.example.myapplication.data.helpers.HTTPServiceHandler.WAVE_FORECAST_POINT_FORECAST
+import com.example.myapplication.data.helpers.HTTPServiceHandler.WF_AVALIABLE_ALL
 import com.example.myapplication.data.helpers.HTTPServiceHandler.WF_TEST_URL
 import com.example.myapplication.model.waveforecast.AccessToken
 import io.ktor.client.HttpClient
@@ -27,7 +28,11 @@ fun main() {
 
 }
 
-
+/* TODO:
+1. get 200 response for
+2. serialize response
+3. create a way to refresh tokens
+ */
 class WaveForecastDataSource {
 
     private val tokenClient = HttpClient {
@@ -52,26 +57,6 @@ class WaveForecastDataSource {
                      bearerTokenStorage.last()
                 }
 
-                //vil hente en ny token når token hentet fra loadTokens resulterer i 401 (unauthorized)
-//                refreshTokens {
-//                    val refreshToken: AccessToken = client.submitForm(
-//                        url = "https://id.barentswatch.no/connect/token",
-//                        formParameters = parameters {
-//                            append("grant_type", "refresh_token")
-//                            append("client_id", Client.CLIENT_ID)
-//                            append("client_secret", Client.CLIENT_SECRET)
-//                            append("scope", "api")
-//                            append("refresh_token", oldTokens?.refreshToken ?: "")
-//                        }
-//                    ) {markAsRefreshTokenRequest()}.body<AccessToken>()
-//                    bearerTokenStorage.add(BearerTokens(refreshToken.accessToken, oldTokens?.refreshToken!!))
-//                    bearerTokenStorage.last()
-//                }
-//
-//                sendWithoutRequest {
-//                    it.url.host == "WAVE_FORECAST_POINT_FORECAST"
-//                }
-
             }
         }
 
@@ -82,8 +67,7 @@ class WaveForecastDataSource {
             bearerTokenStorage.add(BearerTokens(token, ""))
         }
         return try {
-            val response: HttpResponse = client.get {
-                url(WF_TEST_URL)
+            val response: HttpResponse = client.get(WF_AVALIABLE_ALL) {
             }
             response
         } catch (e: Exception) {
