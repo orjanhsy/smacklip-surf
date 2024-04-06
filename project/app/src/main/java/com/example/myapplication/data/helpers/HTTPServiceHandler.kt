@@ -17,6 +17,6 @@ object HTTPServiceHandler {
 
     //WaveForecast
     const val WAVE_FORECAST_BASE = "https://www.barentswatch.no/bwapi"
-    const val WAVE_FORECAST_POINT_FORECAST = "/v1/geodata/waveforecast/pointforecast"
-
+    const val WAVE_FORECAST_POINT_FORECAST = "https://www.barentswatch.no/bwapi/v1/geodata/waveforecast/pointforecast"
+    const val WF_TEST_URL = "${WAVE_FORECAST_BASE}/v1/geodata/waveforecast/available/?modelname=folda&fairwayid=1"
 }
