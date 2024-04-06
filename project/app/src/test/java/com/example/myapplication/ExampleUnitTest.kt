@@ -21,7 +21,6 @@ import com.example.myapplication.model.locationforecast.TimeserieLF
 
 import com.example.myapplication.model.oceanforecast.OceanForecast
 import com.example.myapplication.model.oceanforecast.TimeserieOF
-import com.example.myapplication.ui.home.HomeScreenViewModel
 import io.ktor.http.HttpStatusCode
 import junit.framework.TestCase.assertEquals
 import java.io.File
@@ -42,12 +41,12 @@ class ExampleUnitTest {
     private val waveForecastDataSource: WaveForecastDataSource = WaveForecastDataSource()
 
     @Test
-    fun fetchWaveForecastCallIs200() = runBlocking{
+    fun fetchWaveForecastCallIsOK() = runBlocking{
         assertEquals(HttpStatusCode.OK.value, waveForecastDataSource.fetchPointForecast().status.value)
     }
     @Test
-    fun accessTokenAquisitionIsCorrect() = runBlocking{
-        val (accessToken, refreshToken) = waveForecastDataSource.getTokenAccess()
+    fun accessTokenIsAcquired() = runBlocking{
+        val (accessToken, refreshToken) = waveForecastDataSource.getAccessToken()
         assert(accessToken.isNotBlank())
     }
 
