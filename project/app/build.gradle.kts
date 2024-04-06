@@ -64,6 +64,7 @@ dependencies {
     implementation("io.ktor:ktor-client-serialization:$ktor_version")
     implementation("io.ktor:ktor-client-logging:$ktor_version")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
+    implementation("io.ktor:ktor-serialization-jackson:$ktor_version")
 
     //default
     implementation("androidx.core:core-ktx:1.12.0")

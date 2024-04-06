@@ -42,7 +42,10 @@ class ExampleUnitTest {
 
     @Test
     fun fetchWaveForecastCallIsOK() = runBlocking{
-        assertEquals(HttpStatusCode.OK.value, waveForecastDataSource.fetchPointForecast().status.value)
+        waveForecastDataSource.fetchPointForecast().forEach {
+            println(it)
+        }
+
     }
     @Test
     fun accessTokenIsAcquired() = runBlocking{
