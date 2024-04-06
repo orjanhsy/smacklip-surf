@@ -22,6 +22,8 @@ import com.example.myapplication.model.locationforecast.TimeserieLF
 import com.example.myapplication.model.oceanforecast.OceanForecast
 import com.example.myapplication.model.oceanforecast.TimeserieOF
 import com.example.myapplication.ui.home.HomeScreenViewModel
+import io.ktor.http.HttpStatusCode
+import junit.framework.TestCase.assertEquals
 import java.io.File
 import org.junit.Test
 //import org.junit.Assert.*
@@ -41,7 +43,7 @@ class ExampleUnitTest {
 
     @Test
     fun fetchWaveForecastCallIs200() = runBlocking{
-        print(waveForecastDataSource.fetchPointForecast())
+        assertEquals(HttpStatusCode.OK.value, waveForecastDataSource.fetchPointForecast().status.value)
     }
     @Test
     fun accessTokenAquisitionIsCorrect() = runBlocking{
