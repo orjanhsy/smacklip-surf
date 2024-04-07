@@ -42,13 +42,19 @@ class ExampleUnitTest {
     private val waveForecastDataSource: WaveForecastDataSource = WaveForecastDataSource()
 
     @Test
-    fun fetchWaveForecastCallIsOK() = runBlocking{
+    fun fetchPointForecastCallIsOK() = runBlocking{
         val response = waveForecastDataSource.fetchPointForecast(modelName = "folda", pointId = 1, time="2024-04-08T09:00:00Z")
         println(response)
 //        assertEquals(HttpStatusCode.OK.value, response.status.value)
-
-
     }
+
+    @Test
+    fun fetchAllPointForecastsCallIsOK() = runBlocking{
+        val response = waveForecastDataSource.fetchAllPointForecasts(time="2024-04-08T09:00:00Z")
+        println(response)
+//        assertEquals(HttpStatusCode.OK.value, response.status.value)
+    }
+
     @Test
     fun accessTokenIsAcquired() = runBlocking{
         val (accessToken, refreshToken) = waveForecastDataSource.getAccessToken()
