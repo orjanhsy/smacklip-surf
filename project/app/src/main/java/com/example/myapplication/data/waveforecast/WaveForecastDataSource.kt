@@ -1,10 +1,12 @@
 package com.example.myapplication.data.waveforecast
 
+import android.system.Os.accept
 import com.example.myapplication.config.Client
 import com.example.myapplication.data.helpers.HTTPServiceHandler.WF_ACCESS_TOKEN_URL
 import com.example.myapplication.data.helpers.HTTPServiceHandler.WF_ALL_POINT_FORECASTS_URL
 import com.example.myapplication.data.helpers.HTTPServiceHandler.WF_AVALIABLE_ALL_URL
 import com.example.myapplication.data.helpers.HTTPServiceHandler.WF_BASE_URL
+import com.example.myapplication.data.helpers.HTTPServiceHandler.WF_POINT_FORECAST_URL
 import com.example.myapplication.model.waveforecast.AccessToken
 import com.example.myapplication.model.waveforecast.PointForecast
 import com.example.myapplication.model.waveforecast.PointForecasts
@@ -21,6 +23,9 @@ import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.logging.DEFAULT
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.statement.HttpResponse
@@ -55,7 +60,11 @@ class WaveForecastDataSource {
         install(DefaultRequest) {
             url(WF_BASE_URL)
         }
-        install(Logging)
+        install(Logging) {
+            logger = Logger.DEFAULT
+            level = LogLevel.ALL
+        }
+
         install(ContentNegotiation) {
             gson()
         }
@@ -68,15 +77,14 @@ class WaveForecastDataSource {
         }
 
     }
-    suspend fun fetchPointForecast(): Array<PointForecast> {
+    suspend fun fetchPointForecast(modelName: String, pointId: Int, time: String): PointForecast {
         if (bearerTokenStorage.isEmpty()){
             val (token, refresh) = getAccessToken()
             bearerTokenStorage.add(BearerTokens(token, ""))
         }
         return try {
-            val response = client.get(WF_ALL_POINT_FORECASTS_URL) {
-            }
-            response.body<Array<PointForecast>>()
+            val response = client.get("$WF_POINT_FORECAST_URL?modelname=$modelName&pointId=$pointId&time=$time")
+            response.body<PointForecast>()
         } catch (e: Exception) {
             throw e //lol
         }
