@@ -22,6 +22,7 @@ import com.example.myapplication.model.locationforecast.TimeserieLF
 import com.example.myapplication.model.oceanforecast.OceanForecast
 import com.example.myapplication.model.oceanforecast.TimeserieOF
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.content.VersionCheckResult
 import junit.framework.TestCase.assertEquals
 import java.io.File
 import org.junit.Test
@@ -42,9 +43,10 @@ class ExampleUnitTest {
 
     @Test
     fun fetchWaveForecastCallIsOK() = runBlocking{
-        waveForecastDataSource.fetchPointForecast().forEach {
-            println(it)
-        }
+        val response = waveForecastDataSource.fetchPointForecast(modelName = "folda", pointId = 1, time="2024-04-08T09:00:00Z")
+        println(response)
+//        assertEquals(HttpStatusCode.OK.value, response.status.value)
+
 
     }
     @Test
