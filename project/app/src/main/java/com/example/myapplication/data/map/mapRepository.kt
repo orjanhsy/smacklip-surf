@@ -1,6 +1,6 @@
 package com.example.myapplication.data.map
 
-import com.example.myapplication.model.SurfArea
+import com.example.myapplication.model.surfareas.SurfArea
 import com.mapbox.geojson.Point
 
 
