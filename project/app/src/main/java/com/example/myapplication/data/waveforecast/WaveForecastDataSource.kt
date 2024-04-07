@@ -88,6 +88,20 @@ class WaveForecastDataSource {
         } catch (e: Exception) {
             throw e //lol
         }
+
+    }
+
+    suspend fun fetchAllPointForecasts(time: String): List<PointForecast> {
+        if (bearerTokenStorage.isEmpty()){
+            val (token, refresh) = getAccessToken()
+            bearerTokenStorage.add(BearerTokens(token, ""))
+        }
+        return try {
+            val response = client.get("$WF_ALL_POINT_FORECASTS_URL?time=$time")
+            response.body<List<PointForecast>>()
+        } catch (e: Exception) {
+            throw e //lol
+        }
     }
 
     suspend fun getAccessToken(): Pair<String, String?> {
