@@ -27,7 +27,8 @@ import androidx.compose.ui.viewinterop.NoOpUpdate
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.R
-import com.example.myapplication.model.SurfArea
+import com.example.myapplication.data.map.MapRepositoryImpl
+import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
@@ -47,6 +48,8 @@ import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 fun MapScreen(mapScreenViewModel : MapScreenViewModel = viewModel()) {
 
     val mapScreenUiState : MapScreenUiState by mapScreenViewModel.mapScreenUiState.collectAsState()
+    val mapRepository : MapRepositoryImpl = MapRepositoryImpl() //bruker direkte maprepository fordi mapbox har sin egen viewmodel? -
+    // TODO: sjekke (maprepository) ut at dette er ok.
 
     Scaffold(
         topBar = {
@@ -68,9 +71,7 @@ fun MapScreen(mapScreenViewModel : MapScreenViewModel = viewModel()) {
                 modifier = Modifier
                     .fillMaxSize(),
                 //locations = mapScreenUiState.points
-                locations = SurfArea.entries.map {
-                    Pair(it, Point.fromLngLat(it.lon, it.lat))
-                }
+                locations = mapRepository.locationToPoint()
             )
         }
     }
