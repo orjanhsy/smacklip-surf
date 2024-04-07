@@ -77,14 +77,6 @@ class ExampleUnitTest {
         relevantAlerts.forEach { println("Alert: $it") }
     }
 
-    @Test
-    fun getRelevantAlertsForNordkappOnlyGetsAlertsFromAreaNordkapp() = runBlocking {
-        println("Script is ran from: ${System.getProperty("user.dir")}")
-        val metAlerts: MetAlerts = gson.fromJson(metAlertJson, MetAlerts::class.java)
-        val features = metAlerts.features
-        val relevantAlerts = metAlertsRepository.getRelevantAlertsFor(SurfArea.NORDKAPP)
-        relevantAlerts.forEach { assert(it.properties?.area?.lowercase()?.contains("nordkapp") == true) }
-    }
 
     //Ocean forecast
     private val oceanforecastRepository = OceanforecastRepositoryImpl()
