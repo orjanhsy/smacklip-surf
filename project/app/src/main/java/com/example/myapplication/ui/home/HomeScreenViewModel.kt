@@ -1,9 +1,10 @@
 package com.example.myapplication.ui.home
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.R
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
-import com.example.myapplication.model.SurfArea
+import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.metalerts.Features
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,10 +15,10 @@ import kotlinx.coroutines.launch
 
 data class HomeScreenUiState(
     val locationName: String = "",
-    val windSpeed: List<Pair<List<Int>, Double>> = emptyList(),
-    val windGust: List<Pair<List<Int>, Double>> = emptyList(),
+    val windSpeed: Map<SurfArea, List<Pair<List<Int>, Double>>> = emptyMap(),
+    val windGust: Map<SurfArea, List<Pair<List<Int>, Double>>> = emptyMap(),
     val windDirection: List<Pair<String, Double>> = emptyList(),
-    val waveHeight: List<Pair<List<Int>, Double>> = emptyList(),
+    val waveHeight: Map<SurfArea, List<Pair<List<Int>, Double>>> = emptyMap(),
     val allRelevantAlerts: List<List<Features>> = emptyList()
 )
 
@@ -31,35 +32,50 @@ class HomeScreenViewModel : ViewModel() {
         updateWindGust()
         updateWaveHeight()
         updateAlerts()
+
     }
 
     fun updateWindSpeed() {
         viewModelScope.launch(Dispatchers.IO) {
+            val updatedWindSpeed: MutableMap<SurfArea, List<Pair<List<Int>, Double>>> = mutableMapOf()
+            SurfArea.entries.forEach {  surfArea ->
+                val newWindSpeed = smackLipRepository.getWindSpeed(surfArea)
+                updatedWindSpeed[surfArea] = newWindSpeed
+            }
             _homeScreenUiState.update {
-                val newWindSpeed = smackLipRepository.getWindSpeed()
-                it.copy(windSpeed = newWindSpeed)
+                it.copy(windSpeed = updatedWindSpeed)
             }
         }
     }
 
     fun updateWindGust() {
         viewModelScope.launch(Dispatchers.IO) {
+            val updatedWindGust: MutableMap<SurfArea, List<Pair<List<Int>, Double>>> = mutableMapOf()
+            SurfArea.entries.forEach {surfArea ->
+                val newWindGust = smackLipRepository.getWindSpeedOfGust(surfArea)
+                updatedWindGust[surfArea] = newWindGust
+            }
             _homeScreenUiState.update {
-                val newWindGust = smackLipRepository.getWindSpeedOfGust()
-                it.copy(windGust = newWindGust)
+                it.copy(windGust = updatedWindGust)
             }
         }
     }
 
-
     fun updateWaveHeight(){
-        viewModelScope.launch (Dispatchers.IO){
-            _homeScreenUiState.update{
-                val newWaveHeight = smackLipRepository.getWaveHeights()
-
-                it.copy(waveHeight = newWaveHeight)
+        viewModelScope.launch(Dispatchers.IO) {
+            val updatedWaveHeight: MutableMap<SurfArea, List<Pair<List<Int>, Double>>> = mutableMapOf()
+            SurfArea.entries.forEach { surfArea ->
+                //Log.d("updatedWaveHeight", "processing for $surfArea")
+                val newWaveHeight = smackLipRepository.getWaveHeights(surfArea)
+                updatedWaveHeight[surfArea] = newWaveHeight
+                //Log.d("updatedAllWaveHeights", "WaveHeight for $surfArea: $newWaveHeight")
             }
+            _homeScreenUiState.update {
+                it.copy(waveHeight = updatedWaveHeight)
+            }
+            //Log.d("updatedWaveHeight", "WaveHeight Updated: $updatedWaveHeight")
         }
+
     }
 
     fun updateAlerts() {
