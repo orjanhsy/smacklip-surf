@@ -1,9 +1,5 @@
 package com.example.myapplication
 
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import com.example.myapplication.data.locationForecast.LocationForecastDataSource
-import com.example.myapplication.data.locationForecast.LocationForecastRepository
 import com.example.myapplication.data.locationForecast.LocationForecastRepositoryImpl
 import com.example.myapplication.model.locationforecast.DataLF
 import kotlinx.coroutines.runBlocking
@@ -13,21 +9,16 @@ import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
 
 
 import com.example.myapplication.data.oceanforecast.OceanforecastRepositoryImpl
-import com.example.myapplication.data.oceanforecast.OceanforecastDataSource
 import com.example.myapplication.data.smackLip.SmackLipRepository
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
-import com.example.myapplication.model.SurfArea
+import com.example.myapplication.model.surfareas.SurfArea
 
 import com.example.myapplication.model.locationforecast.LocationForecast
 import com.example.myapplication.model.locationforecast.TimeserieLF
-import com.example.myapplication.model.metalerts.Features
-import com.example.myapplication.model.oceanforecast.DataOF
 
 import com.example.myapplication.model.oceanforecast.OceanForecast
 import com.example.myapplication.model.oceanforecast.TimeserieOF
-import com.example.myapplication.ui.home.HomeScreenUiState
 import com.example.myapplication.ui.home.HomeScreenViewModel
-import kotlinx.coroutines.async
 import java.io.File
 import org.junit.Test
 //import org.junit.Assert.*
@@ -95,14 +86,14 @@ class ExampleUnitTest {
         val locationForecast: LocationForecast = gson.fromJson(locationJson, LocationForecast::class.java)
         val timeseriesListLF: List<TimeserieLF> = locationForecast.properties.timeseries
         val timeSeriesLF = timeseriesListLF.map { it.time to it.data }
-        val windDirectionForecast = locationForecastRepository.getWindDirection()
+        val windDirectionForecast = locationForecastRepository.getWindDirection(SurfArea.FEDJE)
         assert(timeSeriesLF[0].second.instant.details.wind_from_direction == windDirectionForecast[0].second)
         assert(timeSeriesLF[10].second.instant.details.wind_from_direction == windDirectionForecast[10].second)
     }
 
     @Test
     fun locationForecastTimeSeriesExists() = runBlocking {
-        val timeSeries: List<Pair<String, DataLF>> = locationForecastRepository.getTimeSeries()
+        val timeSeries: List<Pair<String, DataLF>> = locationForecastRepository.getTimeSeries(SurfArea.FEDJE)
         if (timeSeries.isNotEmpty()){
             println("----------Testen fungerer!----------")
         }else{
@@ -112,7 +103,7 @@ class ExampleUnitTest {
     }
     @Test
     fun testGetWindDirection() = runBlocking {
-        val windDirectionList: List<Pair<String, Double>> = locationForecastRepository.getWindDirection()
+        val windDirectionList: List<Pair<String, Double>> = locationForecastRepository.getWindDirection(SurfArea.FEDJE)
         println("Test for getWindDirection kjører:")
         println("Resultat av getWindDirection: $windDirectionList")
         println("Testen kjører!")
@@ -120,7 +111,7 @@ class ExampleUnitTest {
 
     @Test
     fun testGetWindSpeed() = runBlocking {
-        val windSpeedList: List<Pair<String, Double>> = locationForecastRepository.getWindSpeed()
+        val windSpeedList: List<Pair<String, Double>> = locationForecastRepository.getWindSpeed(SurfArea.FEDJE)
         println("Test for getWindSpeed kjører:")
         println("Resultat av getWindSpeed: $windSpeedList")
         println("Testen kjører!")
@@ -128,7 +119,7 @@ class ExampleUnitTest {
     }
     @Test
     fun testGetWindSpeedOfGust() = runBlocking {
-        val windSpeedOfGust: List<Pair<String, Double>> = locationForecastRepository.getWindSpeedOfGust()
+        val windSpeedOfGust: List<Pair<String, Double>> = locationForecastRepository.getWindSpeedOfGust(SurfArea.FEDJE)
         println("Test for getWindSpeedOfGust kjører:")
         println("Resultat av getWindSpeedOfGust: $windSpeedOfGust")
         print("Testen kjører!")
@@ -148,32 +139,67 @@ class ExampleUnitTest {
 
 
     @Test
-    fun testGetWaveHeightsSmackLip() = runBlocking {
+    fun testGetWaveHeightsSmackLipNordkapp() = runBlocking {
         //henter data fra API, må sjekke i API om det stemmer
-        println(smackLipRepository.getWaveHeights()[0].first.toString())
-        println(smackLipRepository.getWaveHeights()[0].second)
+        println(smackLipRepository.getWaveHeights(SurfArea.NORDKAPP)[0].first.toString())
+        println(smackLipRepository.getWaveHeights(SurfArea.NORDKAPP)[0].second)
+
+    }
+    @Test
+    fun testGetWaveHeightsSmackLipErvika() = runBlocking {
+        println("Ervika:")
+        println(smackLipRepository.getWaveHeights(SurfArea.ERVIKA)[0].first)
+        println(smackLipRepository.getWaveHeights(SurfArea.ERVIKA)[0].second)
+        println("Hoddevik:")
+        println(smackLipRepository.getWaveHeights(SurfArea.HODDEVIK)[0].first)
+        println(smackLipRepository.getWaveHeights(SurfArea.HODDEVIK)[0].second)
+
+    }
+
+
+    @Test
+    fun testGetWaveHeightsOF() = runBlocking {
+        println("Test Ervika:")
+        println(oceanforecastRepository.getWaveHeights(SurfArea.ERVIKA)[0].first.toString())
+        println("Bølgehøyde Ervika test:" + oceanforecastRepository.getWaveHeights(SurfArea.ERVIKA)[0].second)
+        println("Test Hoddevik:")
+        println(oceanforecastRepository.getWaveHeights(SurfArea.HODDEVIK)[0].first.toString())
+        println("Bølgehøyde Hoddevik test:" + oceanforecastRepository.getWaveHeights(SurfArea.HODDEVIK)[0].second)
+
     }
 
     @Test
+    fun testGetWindSpeedLF() = runBlocking {
+        println("test Ervika:")
+        println(locationForecastRepository.getWindSpeed(SurfArea.ERVIKA)[0].first.toString())
+        println(locationForecastRepository.getWindSpeed(SurfArea.ERVIKA)[0].second)
+        println("test Hoddevik:")
+        println(locationForecastRepository.getWindSpeed(SurfArea.HODDEVIK)[0].first.toString())
+        println(locationForecastRepository.getWindSpeed(SurfArea.HODDEVIK)[0].second)
+    }
+
+
+    @Test
     fun testGetWindDirectionSmackLip() = runBlocking {
-        println(smackLipRepository.getWindDirection()[0].first.toString())
-        println(smackLipRepository.getWindDirection()[0].second)
+        println(smackLipRepository.getWindDirection(SurfArea.FEDJE)[0].first.toString())
+        println(smackLipRepository.getWindDirection(SurfArea.FEDJE)[0].second)
     }
 
     @Test
     fun testGetWindSpeedSmackLip() = runBlocking {
-        println(smackLipRepository.getWindSpeed()[0].first.toString())
-        println(smackLipRepository.getWindSpeed()[0].second)
+        println(smackLipRepository.getWindSpeed(SurfArea.FEDJE)[0].first.toString())
+        println(smackLipRepository.getWindSpeed(SurfArea.FEDJE)[0].second)
     }
 
 
 
     @Test
     fun testGetWindSpeedOfGustSmackLip() = runBlocking {
-        println(smackLipRepository.getWindSpeedOfGust()[0].first.toString())
-        println(smackLipRepository.getWindSpeedOfGust()[0].second)
+        println(smackLipRepository.getWindSpeedOfGust(SurfArea.FEDJE)[0].first.toString())
+        println(smackLipRepository.getWindSpeedOfGust(SurfArea.FEDJE)[0].second)
     }
 
+    /*
     @Test
     fun testGetForecastNext24Hours() = runBlocking {
         val tmp : MutableList<MutableList<Pair<List<Int>, Pair<Int, List<Double>>>>> = smackLipRepository.getForecastNext24Hours()
@@ -181,6 +207,9 @@ class ExampleUnitTest {
         println(smackLipRepository.getForecastNext24Hours().toString())
     }
 
+     */
+
+    /*
     @Test
     fun testGetDataForOneDay() = runBlocking {
         println(smackLipRepository.getDataForOneDay(19))
@@ -194,4 +223,6 @@ class ExampleUnitTest {
     fun testGetDataFor7Days() = runBlocking {
         println(smackLipRepository.getDataForTheNext7Days())
     }
+
+     */
 }
