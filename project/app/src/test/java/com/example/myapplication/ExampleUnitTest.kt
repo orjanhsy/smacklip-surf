@@ -59,17 +59,19 @@ class ExampleUnitTest {
     }
 
     @Test
-    fun fetchAvaliableTimestampsIsOK() = runBlocking {
+    fun fetchAvaliableTimestampsReturns20ForecastTimes() = runBlocking {
         val response = waveForecastDataSource.fetchAvaliableTimestamps()
         assert(response.availableForecastTimes.size == 20) // may vary
     }
 
     @Test
-    fun pointForecastNext3Days() = runBlocking {
-        val allPointForecastsNext3Days = waveForecastRepository.next3Days()
+    fun pointForecastNext3DaysHasForecastsOfLength20() = runBlocking {
+        val allPointForecastsNext3Days = waveForecastRepository.pointForecastNext3Days()
         allPointForecastsNext3Days.forEach {
-            println(it)
+            println("${it.key} -> ${it.value}")
+            assert(it.value.size == 20) {"Length of forecast was ${it.value.size}, should be 20"}
         }
+
 
     }
 
