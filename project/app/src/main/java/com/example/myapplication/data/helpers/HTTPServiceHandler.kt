@@ -22,15 +22,18 @@ object HTTPServiceHandler {
     //--------paths for WF--------
 
     //returnerer alle tilgjengelige modeller/fairways (IKKE GJORT SERIALIZABLE) (treig)
-    const val WF_AVALIABLE_ALL_URL = "v1/geodata/waveforecast/available/all" // ? NONE
+    const val WF_ALL_FAIRWAYS_URL = "v2/geodata/waveforecast/fairway" // Ingen parameter
 
-    //returnerer  tilgjengelige forecast-timestamps for en fairway (IKKE GJORT SERIALIZABLE)
-    const val WF_AVALIABLE_URL = "/v1/geodata/waveforecast/available" // ?modelname&fairwayid
+    //returnerer alle tilgjengelige timestamps
+    const val WF_AVALIABLE_ALL_URL = "v1/geodata/waveforecast/available/all" // Ingen parameter
 
-    //returnerer bolgetilsdtander for et bestemt punkt (IKKE GJORT SERIALIZABLE)
+    //returnerer  tilgjengelige timestamps for en fairway (IKKE GJORT SERIALIZABLE)
+    const val WF_AVALIABLE_URL = "v1/geodata/waveforecast/available" // ?modelname&fairwayid
+
+    //returnerer bolgetilsdtander for et bestemt punkt
     const val WF_POINT_FORECAST_URL = "v1/geodata/waveforecast/pointforecast" // ?modelname&pointId&time
 
-    //returnerer alle pointforecasts tilgjenglig for et bestemt timestamp, kan hende vi skal bruke det istedefore pointforecast
+    //returnerer alle pointforecasts tilgjenglig for et bestemt timestamp
     const val WF_ALL_POINT_FORECASTS_URL = "v1/geodata/waveforecast/pointforecasts" // ?time
 
 

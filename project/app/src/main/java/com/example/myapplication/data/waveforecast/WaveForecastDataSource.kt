@@ -40,9 +40,7 @@ fun main() {
 }
 
 /* TODO:
-1. get 200 response necessary 200 response
-2. serialize response
-3. create a way to refresh tokens (redirect?)
+create a way to refresh tokens (redirect?), bw do not provide refresh-tokens
  */
 class WaveForecastDataSource {
 
@@ -86,7 +84,7 @@ class WaveForecastDataSource {
             val response = client.get("$WF_POINT_FORECAST_URL?modelname=$modelName&pointId=$pointId&time=$time")
             response.body<PointForecast>()
         } catch (e: Exception) {
-            throw e //lol
+            throw e // TODO: Handle exceptions appropriately
         }
 
     }
@@ -100,7 +98,7 @@ class WaveForecastDataSource {
             val response = client.get("$WF_ALL_POINT_FORECASTS_URL?time=$time")
             response.body<List<PointForecast>>()
         } catch (e: Exception) {
-            throw e //lol
+            throw e // TODO: Handle exceptions appropriately
         }
     }
 
