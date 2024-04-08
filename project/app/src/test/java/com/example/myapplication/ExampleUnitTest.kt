@@ -56,6 +56,12 @@ class ExampleUnitTest {
     }
 
     @Test
+    fun fetchAvaliableTimestampsIsOK() = runBlocking {
+        val response = waveForecastDataSource.fetchAvaliableTimestamps()
+        assert(response.availableForecastTimes.size == 20) // may vary
+    }
+
+    @Test
     fun accessTokenIsAcquired() = runBlocking{
         val (accessToken, refreshToken) = waveForecastDataSource.getAccessToken()
         assert(accessToken.isNotBlank())

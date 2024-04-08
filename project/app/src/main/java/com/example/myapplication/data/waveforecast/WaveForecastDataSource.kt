@@ -10,6 +10,7 @@ import com.example.myapplication.data.helpers.HTTPServiceHandler.WF_POINT_FORECA
 import com.example.myapplication.model.waveforecast.AccessToken
 import com.example.myapplication.model.waveforecast.PointForecast
 import com.example.myapplication.model.waveforecast.PointForecasts
+import com.example.myapplication.model.waveforecast.TimeStamps
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
@@ -75,18 +76,23 @@ class WaveForecastDataSource {
         }
 
     }
-    suspend fun fetchPointForecast(modelName: String, pointId: Int, time: String): PointForecast {
+
+    suspend fun fetchAvaliableTimestamps(): TimeStamps {
         if (bearerTokenStorage.isEmpty()){
             val (token, refresh) = getAccessToken()
             bearerTokenStorage.add(BearerTokens(token, ""))
         }
         return try {
-            val response = client.get("$WF_POINT_FORECAST_URL?modelname=$modelName&pointId=$pointId&time=$time")
-            response.body<PointForecast>()
+            val response = client.get(WF_AVALIABLE_ALL_URL)
+            response.body<TimeStamps>()
         } catch (e: Exception) {
-            throw e // TODO: Handle exceptions appropriately
+            throw e
+            /* TODO: Handle exceptions appropriately
+            - time is invalid (?)
+            - token is expired (401)
+            - other error (500)
+             */
         }
-
     }
 
     suspend fun fetchAllPointForecasts(time: String): List<PointForecast> {
@@ -98,8 +104,32 @@ class WaveForecastDataSource {
             val response = client.get("$WF_ALL_POINT_FORECASTS_URL?time=$time")
             response.body<List<PointForecast>>()
         } catch (e: Exception) {
-            throw e // TODO: Handle exceptions appropriately
+            throw e
+            /* TODO: Handle exceptions appropriately
+            - time is invalid (?)
+            - token is expired (401)
+            - other error (500)
+             */
         }
+    }
+
+    suspend fun fetchPointForecast(modelName: String, pointId: Int, time: String): PointForecast {
+        if (bearerTokenStorage.isEmpty()){
+            val (token, refresh) = getAccessToken()
+            bearerTokenStorage.add(BearerTokens(token, ""))
+        }
+        return try {
+            val response = client.get("$WF_POINT_FORECAST_URL?modelname=$modelName&pointId=$pointId&time=$time")
+            response.body<PointForecast>()
+        } catch (e: Exception) {
+            throw e
+            /* TODO: Handle exceptions appropriately
+            - parameter is invalid (?)
+            - token is expired (401)
+            - other error (500)
+             */
+        }
+
     }
 
     suspend fun getAccessToken(): Pair<String, String?> {
