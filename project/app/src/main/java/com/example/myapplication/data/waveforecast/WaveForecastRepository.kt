@@ -1,4 +1,7 @@
 package com.example.myapplication.data.waveforecast
 
-class WaveForecastRepository {
+import com.example.myapplication.model.waveforecast.PointForecast
+
+interface WaveForecastRepository {
+    suspend fun getAllRelevantPointForecasts(): List<PointForecast>
 }
