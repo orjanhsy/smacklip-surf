@@ -13,4 +13,5 @@ object HTTPServiceHandler {
 
     //Oceanforecast
     const val OCEAN_FORECAST_URL = "https://gw-uio.intark.uh-it.no/in2000/weatherapi/oceanforecast/2.0/complete"
+
 }
