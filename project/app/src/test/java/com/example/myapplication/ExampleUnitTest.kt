@@ -13,6 +13,8 @@ import com.example.myapplication.data.smackLip.SmackLipRepository
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
 
 import com.example.myapplication.data.waveforecast.WaveForecastDataSource
+import com.example.myapplication.data.waveforecast.WaveForecastRepository
+import com.example.myapplication.data.waveforecast.WaveForecastRepositoryImpl
 import com.example.myapplication.model.surfareas.SurfArea
 
 
@@ -39,6 +41,7 @@ class ExampleUnitTest {
     private val gson = Gson()
 
     //WaveForecast
+    private val waveForecastRepository: WaveForecastRepository = WaveForecastRepositoryImpl()
     private val waveForecastDataSource: WaveForecastDataSource = WaveForecastDataSource()
 
     @Test
@@ -59,6 +62,15 @@ class ExampleUnitTest {
     fun fetchAvaliableTimestampsIsOK() = runBlocking {
         val response = waveForecastDataSource.fetchAvaliableTimestamps()
         assert(response.availableForecastTimes.size == 20) // may vary
+    }
+
+    @Test
+    fun pointForecastNext3Days() = runBlocking {
+        val allPointForecastsNext3Days = waveForecastRepository.next3Days()
+        allPointForecastsNext3Days.forEach {
+            println(it)
+        }
+
     }
 
     @Test
