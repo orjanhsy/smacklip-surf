@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    kotlin("plugin.serialization") version "1.4.21"
 }
 
 android {
@@ -50,15 +51,20 @@ android {
 }
 
 dependencies {
+    implementation("com.google.android.gms:play-services-auth:21.0.0")
     //ktor
     val ktor_version = "2.3.8"
     implementation("io.ktor:ktor-client-core:$ktor_version")
     implementation("io.ktor:ktor-client-cio:$ktor_version")
+    implementation("io.ktor:ktor-client-auth:$ktor_version")
     implementation("io.ktor:ktor-client-android:$ktor_version")
     implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
     implementation("io.ktor:ktor-serialization-gson:$ktor_version")
     implementation("io.ktor:ktor-client-json:$ktor_version")
-
+    implementation("io.ktor:ktor-client-serialization:$ktor_version")
+    implementation("io.ktor:ktor-client-logging:$ktor_version")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
+    implementation("io.ktor:ktor-serialization-jackson:$ktor_version")
 
     //default
     implementation("androidx.core:core-ktx:1.12.0")
@@ -82,5 +88,9 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     val compose_version = "1.0.5"
+
+    //mapbox
+    implementation("com.mapbox.maps:android:11.2.1")
+    implementation("com.mapbox.extension:maps-compose:11.2.1")
 
 }

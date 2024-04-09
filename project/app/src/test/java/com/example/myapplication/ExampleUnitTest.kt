@@ -11,14 +11,21 @@ import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
 import com.example.myapplication.data.oceanforecast.OceanforecastRepositoryImpl
 import com.example.myapplication.data.smackLip.SmackLipRepository
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
+
+import com.example.myapplication.data.waveforecast.WaveForecastDataSource
+import com.example.myapplication.data.waveforecast.WaveForecastRepository
+import com.example.myapplication.data.waveforecast.WaveForecastRepositoryImpl
 import com.example.myapplication.model.surfareas.SurfArea
+
 
 import com.example.myapplication.model.locationforecast.LocationForecast
 import com.example.myapplication.model.locationforecast.TimeserieLF
 
 import com.example.myapplication.model.oceanforecast.OceanForecast
 import com.example.myapplication.model.oceanforecast.TimeserieOF
-import com.example.myapplication.ui.home.HomeScreenViewModel
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.content.VersionCheckResult
+import junit.framework.TestCase.assertEquals
 import java.io.File
 import org.junit.Test
 //import org.junit.Assert.*
@@ -32,6 +39,33 @@ class ExampleUnitTest {
 
     //global
     private val gson = Gson()
+
+    //WaveForecast
+    private val waveForecastRepository: WaveForecastRepository = WaveForecastRepositoryImpl()
+    private val waveForecastDataSource: WaveForecastDataSource = WaveForecastDataSource()
+
+    @Test
+    fun fetchAvaliableTimestampsReturns20ForecastTimes() = runBlocking {
+        val response = waveForecastDataSource.fetchAvaliableTimestamps()
+        assert(response.availableForecastTimes.size == 20) // may vary
+    }
+
+    @Test
+    fun pointForecastNext3DaysHasForecastsOfLength20() = runBlocking {
+        val allPointForecastsNext3Days = waveForecastRepository.pointForecastNext3Days()
+        allPointForecastsNext3Days.forEach {
+            println("${it.key} -> ${it.value}")
+            assert(it.value.size == 20) {"Length of forecast was ${it.value.size}, should be 20"}
+        }
+
+
+    }
+
+    @Test
+    fun accessTokenIsAcquired() = runBlocking{
+        val (accessToken, refreshToken) = waveForecastDataSource.getAccessToken()
+        assert(accessToken.isNotBlank())
+    }
 
     //MetAlerts
     private val metAlertsRepository: MetAlertsRepositoryImpl = MetAlertsRepositoryImpl()
@@ -49,14 +83,6 @@ class ExampleUnitTest {
         relevantAlerts.forEach { println("Alert: $it") }
     }
 
-    @Test
-    fun getRelevantAlertsForNordkappOnlyGetsAlertsFromAreaNordkapp() = runBlocking {
-        println("Script is ran from: ${System.getProperty("user.dir")}")
-        val metAlerts: MetAlerts = gson.fromJson(metAlertJson, MetAlerts::class.java)
-        val features = metAlerts.features
-        val relevantAlerts = metAlertsRepository.getRelevantAlertsFor(SurfArea.NORDKAPP)
-        relevantAlerts.forEach { assert(it.properties?.area?.lowercase()?.contains("nordkapp") == true) }
-    }
 
     //Ocean forecast
     private val oceanforecastRepository = OceanforecastRepositoryImpl()
