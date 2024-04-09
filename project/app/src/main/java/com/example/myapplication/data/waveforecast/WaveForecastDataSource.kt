@@ -1,7 +1,7 @@
 package com.example.myapplication.data.waveforecast
 
 import android.system.Os.accept
-import com.example.myapplication.config.Client
+import com.example.myapplication.data.config.Client
 import com.example.myapplication.data.helpers.HTTPServiceHandler.WF_ACCESS_TOKEN_URL
 import com.example.myapplication.data.helpers.HTTPServiceHandler.WF_ALL_POINT_FORECASTS_URL
 import com.example.myapplication.data.helpers.HTTPServiceHandler.WF_AVALIABLE_ALL_URL
@@ -33,7 +33,6 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.client.utils.EmptyContent.contentType
 import io.ktor.http.HttpHeaders.Accept
 import io.ktor.serialization.gson.gson
-import io.ktor.serialization.jackson.jackson
 import io.ktor.serialization.kotlinx.json.json
 
 fun main() {
