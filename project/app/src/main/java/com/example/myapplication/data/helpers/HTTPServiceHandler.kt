@@ -36,5 +36,4 @@ object HTTPServiceHandler {
     //returnerer alle pointforecasts tilgjenglig for et bestemt timestamp
     const val WF_ALL_POINT_FORECASTS_URL = "v1/geodata/waveforecast/pointforecasts" // ?time
 
-
 }
