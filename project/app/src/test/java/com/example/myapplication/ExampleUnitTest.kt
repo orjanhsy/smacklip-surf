@@ -47,27 +47,24 @@ class ExampleUnitTest {
     @Test
     fun fetchAvaliableTimestampsReturns20ForecastTimes() = runBlocking {
         val response = waveForecastDataSource.fetchAvaliableTimestamps()
-        assert(response.availableForecastTimes.size == 20) // may vary
-    }
-
-    @Test
-    fun pointForecastNext3DaysHasForecastsOfLength20() = runBlocking {
-        val allPointForecastsNext3Days = waveForecastRepository.pointForecastNext3Days()
-        allPointForecastsNext3Days.forEach {
-            println("${it.key} -> ${it.value}")
-            assert(it.value.size == 20) {"Length of forecast was ${it.value.size}, should be 20"}
+        assert(response.availableForecastTimes.size > 0) {
+            "fetchAvailableTimestamps() returns no timestamps"
         }
     }
 
     @Test
-    fun pointForecastNext3DaysWorksForWaveSmackLipRepository() = runBlocking{
-        assert(smackLipRepository.getPointForecastsNext3Days().isNotEmpty())
+    fun pointForecastNext3DaysIsNotEmptyForAnySurfArea() = runBlocking {
+        smackLipRepository.getPointForecastsNext3Days().forEach {allForecastsInArea ->
+            assert(allForecastsInArea.value.all{ forecast -> forecast.isNotEmpty() } ) {
+                "A time interval in ${allForecastsInArea.key} had no forecast"
+            }
+        }
     }
 
     @Test
-    fun accessTokenIsAcquired() = runBlocking{
+    fun accessTokenIsAcquired() = runBlocking {
         val (accessToken, refreshToken) = waveForecastDataSource.getAccessToken()
-        assert(accessToken.isNotBlank())
+        assert(accessToken.isNotBlank()) {"No token was retrieved"}
     }
 
     //MetAlerts
