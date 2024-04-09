@@ -67,20 +67,21 @@ class ExampleUnitTest {
         assert(accessToken.isNotBlank()) {"No token was retrieved"}
     }
 
+
     //MetAlerts
     private val metAlertsRepository: MetAlertsRepositoryImpl = MetAlertsRepositoryImpl()
-    private val metAlertJson = File("src/test/java/com/example/myapplication/metAlerts.json").readText()
-    @Test
-    fun testMetAlertsAreaNameWithProxy() = runBlocking {
-        val feature = metAlertsRepository.getFeatures()[0]
-        println(feature.properties?.area)
-    }
 
     @Test
-    fun getRelevantAlertsForFedjeByApiCall() = runBlocking {
-        val relevantAlerts = metAlertsRepository.getRelevantAlertsFor(SurfArea.FEDJE)
-        println(relevantAlerts)
-        relevantAlerts.forEach { println("Alert: $it") }
+    fun metAlertsContainGeoDataIfNotEmpty() = runBlocking {
+        SurfArea.entries.forEach {
+            val alerts = metAlertsRepository.getRelevantAlertsFor(it)
+            assert(if (alerts.isNotEmpty()) alerts.all{alert ->
+                    alert.geometry?.type == "Polygon" || alert.geometry?.type == "MultiPolygon"
+                } else true
+            ) {
+                "Metalerts provided data, however the geodata type was incorrect"
+            }
+        }
     }
 
 
