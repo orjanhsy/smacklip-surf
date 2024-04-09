@@ -177,18 +177,21 @@ fun SurfAreaCard(surfArea: SurfArea){
         Column (
             modifier = Modifier.fillMaxSize()
         ) {
+            //Overskrift: navn på stedet
             Text(text = surfArea.locationName,
                 fontWeight = FontWeight.Bold,
                 fontSize = 30.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
-
-            Text(text = "info",
+            //tekstlig beskrivelse av stedet
+            Text(text = surfArea.description,
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
+
+            //info om vind, bølger og temperatur
             Row (
                 modifier = Modifier
                     .fillMaxWidth()
