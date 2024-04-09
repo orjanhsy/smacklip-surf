@@ -57,8 +57,11 @@ class ExampleUnitTest {
             println("${it.key} -> ${it.value}")
             assert(it.value.size == 20) {"Length of forecast was ${it.value.size}, should be 20"}
         }
+    }
 
-
+    @Test
+    fun pointForecastNext3DaysWorksForWaveSmackLipRepository() = runBlocking{
+        assert(smackLipRepository.getPointForecastsNext3Days().isNotEmpty())
     }
 
     @Test
