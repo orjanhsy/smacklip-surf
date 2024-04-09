@@ -4,9 +4,14 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -21,7 +26,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.viewinterop.NoOpUpdate
 import androidx.core.graphics.drawable.toBitmap
@@ -157,11 +167,63 @@ fun isMatchingCoordinates(point1: Point, point2: Point): Boolean {
 }
 
 
+@Composable
+fun SurfAreaCard(surfArea: SurfArea){
+    Card (
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ){
+        Column (
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Text(text = surfArea.locationName,
+                fontWeight = FontWeight.Bold,
+                fontSize = 30.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
 
+            Text(text = "info",
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+            Row (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.Center
+            ){
+                Text(text = "vind(kast)", modifier = Modifier.padding(8.dp))
+                Text(text = "bølger", modifier = Modifier.padding(8.dp))
+                Text(text = "grader", modifier = Modifier.padding(8.dp))
+                Text(text = "forhold", modifier = Modifier.padding(8.dp))
+            }
 
+            if (surfArea.image != 0) {
+                Image(
+                    painter = painterResource(id = surfArea.image),
+                    contentDescription = null,
+                    modifier = Modifier.padding(16.dp)
 
+                )
+            }
+
+        }
+    }
+}
 
 @Preview
+@Composable
+fun SurfAreaPreview(){
+    MyApplicationTheme {
+        SurfAreaCard(surfArea = SurfArea.HODDEVIK)
+    }
+}
+
+
+//@Preview
 @Composable
 fun MapScreenPreview(){
     MyApplicationTheme {
