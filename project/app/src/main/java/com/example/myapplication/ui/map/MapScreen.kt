@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -135,7 +136,7 @@ fun MapBoxMap(
 
 
 
-                    it.deleteAll() //fjerner alle tidligere markører hvis kartet oppdateres for å forhindre duplikater/uønskede markører
+                    //it.deleteAll() //fjerner alle tidligere markører hvis kartet oppdateres for å forhindre duplikater/uønskede markører
 
                     it.addClickListener { pointAnnotation ->
                         // Handle the click event, e.g., showing a Toast or navigating to another screen
@@ -153,14 +154,8 @@ fun MapBoxMap(
                                 )
                             }
                             selectedMarker.value = loc.first
-                            Toast.makeText(
-                                context,
-                                "Clicked on marker ${loc.first.locationName}",
-                                Toast.LENGTH_SHORT
-                            ).show()
+
                         } catch (_: NoSuchElementException) { //first-metode utløser unntak og appen krasjer dersom den ikke finner like koordinater
-                            Toast.makeText(context, "Clicked on marker null", Toast.LENGTH_SHORT)
-                                .show()
                             selectedMarker.value = null
                         }
                         true // Return true to indicate that the click event has been handled
@@ -183,8 +178,8 @@ fun MapBoxMap(
             modifier = modifier
         )
         if (selectedMarker.value != null) {
-            Log.d("if-test surfarea", selectedMarker.value.toString())
-            SurfAreaCard(surfArea = selectedMarker.value!!)
+            SurfAreaCard(surfArea = selectedMarker.value!!,
+                onCloseClick = {selectedMarker.value = null})
         }
     }
 
@@ -193,7 +188,6 @@ fun MapBoxMap(
 
 //hjelpemetode for å sjekke at to koordinater er tilnærmet like ved bruk av verdien threshold
 fun isMatchingCoordinates(point1: Point, point2: Point): Boolean {
-    Log.d("matching coordinates", "$point1 $point2")
     val threshold = 0.1
     return kotlin.math.abs(point1.latitude() - point2.latitude()) <= threshold &&
             kotlin.math.abs(point1.longitude() - point2.longitude()) <= threshold
@@ -201,7 +195,10 @@ fun isMatchingCoordinates(point1: Point, point2: Point): Boolean {
 
 
 @Composable
-fun SurfAreaCard(surfArea: SurfArea){
+fun SurfAreaCard(
+    surfArea: SurfArea,
+    onCloseClick: () -> Unit){
+
     Card (
         modifier = Modifier
             .fillMaxWidth()
@@ -211,6 +208,17 @@ fun SurfAreaCard(surfArea: SurfArea){
             modifier = Modifier
                 .fillMaxWidth()
         ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ){
+                Button(onClick = onCloseClick,
+                ) {
+                    Text("X")
+                }
+            }
+
             //Overskrift: navn på stedet
             Text(text = surfArea.locationName,
                 fontWeight = FontWeight.Bold,
@@ -228,8 +236,7 @@ fun SurfAreaCard(surfArea: SurfArea){
             //info om vind, bølger og temperatur
             Row (
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ){
                 Text(text = "vind(kast)", modifier = Modifier.padding(8.dp))
@@ -247,6 +254,18 @@ fun SurfAreaCard(surfArea: SurfArea){
                 )
             }
 
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ){
+                Button(onClick = onCloseClick, //TODO: må byttes ut med navigation
+                    modifier = Modifier.fillMaxWidth().padding(16.dp)
+                ) {
+                    Text("Gå til "+surfArea.locationName)
+                }
+            }
+
         }
     }
 }
@@ -255,7 +274,7 @@ fun SurfAreaCard(surfArea: SurfArea){
 @Composable
 fun SurfAreaPreview(){
     MyApplicationTheme {
-        SurfAreaCard(surfArea = SurfArea.HODDEVIK)
+        SurfAreaCard(surfArea = SurfArea.HODDEVIK, {})
     }
 }
 
