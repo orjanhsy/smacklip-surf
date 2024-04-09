@@ -6,10 +6,13 @@ import com.example.myapplication.data.locationForecast.LocationForecastRepositor
 import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
 import com.example.myapplication.data.oceanforecast.OceanforecastRepository
 import com.example.myapplication.data.oceanforecast.OceanforecastRepositoryImpl
+import com.example.myapplication.data.waveforecast.WaveForecastRepository
+import com.example.myapplication.data.waveforecast.WaveForecastRepositoryImpl
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.locationforecast.DataLF
 import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.model.oceanforecast.DataOF
+import com.example.myapplication.model.waveforecast.PointForecast
 
 
 interface SmackLipRepository {
@@ -28,14 +31,16 @@ interface SmackLipRepository {
     suspend fun getDataForOneDay(day : Int, surfArea: SurfArea): List<Pair<List<Int>, List<Double>>>
 
     suspend fun getDataForTheNext7Days(surfArea: SurfArea): MutableList<List<Pair<List<Int>, List<Double>>>>
+
+    suspend fun getPointForecastsNext3Days(): Map<String, List<List<PointForecast>>>
 }
 
 class SmackLipRepositoryImpl (
     private val metAlertsRepository: MetAlertsRepositoryImpl = MetAlertsRepositoryImpl(),
     private val locationForecastRepository: LocationForecastRepository = LocationForecastRepositoryImpl(),
-    private  val oceanforecastRepository: OceanforecastRepository = OceanforecastRepositoryImpl()
-
-    ): SmackLipRepository {
+    private  val oceanForecastRepository: OceanforecastRepository = OceanforecastRepositoryImpl(),
+    private val waveForecastRepository: WaveForecastRepository = WaveForecastRepositoryImpl()
+): SmackLipRepository {
 
     //MET
     override suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Features> {
@@ -45,7 +50,7 @@ class SmackLipRepositoryImpl (
 
     //OF
     override suspend fun getWaveHeights(surfArea: SurfArea): List<Pair<List<Int>, Double>> {
-        val tempWaveHeight = oceanforecastRepository.getWaveHeights(surfArea)
+        val tempWaveHeight = oceanForecastRepository.getWaveHeights(surfArea)
         return tempWaveHeight.map { waveHeight ->
             Pair(getTimeListFromTimeString(waveHeight.first), waveHeight.second)
         }
@@ -53,7 +58,7 @@ class SmackLipRepositoryImpl (
     }
 
     override suspend fun getTimeSeriesOF(surfArea: SurfArea): List<Pair<String, DataOF>> {
-        return oceanforecastRepository.getTimeSeries(surfArea)
+        return oceanForecastRepository.getTimeSeries(surfArea)
 
     }
 
@@ -105,66 +110,6 @@ class SmackLipRepositoryImpl (
 
     //totalt: List<Pair<List<Int>, List<Pair<Int, List<Double>>>>
 
-    /*
-    ------BRUKER IKKE DENNE METODEN LENGER, NYE METODER UNDER------
-
-    override suspend fun getForecastNext24Hours() : MutableList<MutableList<Pair<List<Int>, Pair<Int, List<Double>>>>> {
-        val allDays24Hours : MutableList<MutableList<Pair<List<Int>, Pair<Int, List<Double>>>>> = mutableListOf()
-
-        //Pair<List<Int>, Pair<Int, List<Double>>>
-
-        val waveHeight = getWaveHeights()
-        val windDirection = getWindDirection()
-        val windSpeed = getWindSpeed()
-        val windSpeedOfGust = getWindSpeedOfGust()
-
-        println(waveHeight.size)
-        println(windDirection.size)
-        println(windSpeed.size)
-        println(windSpeedOfGust.size)
-
-        var listIndex : Int = 0
-
-        for (i in 0 until 3) { //24 timer de neste 3 dagene
-
-            val date : List<Int> = listOf(waveHeight[listIndex].first[1], waveHeight[listIndex].first[2]) //dato = [mnd, dag]
-            val forecast24HoursList : MutableList<Pair<List<Int>, Pair<Int, List<Double>>>> = mutableListOf() //data for hver time den dagen = [(time, [waveHeight, windDirection, windSpeed, windSpeedOfGust])]
-
-            var nextIndexCounter : Int = 0
-
-            for (j in 0  until  24-waveHeight[listIndex].first[3]) {
-                val forecastOneHour = Pair(
-                    waveHeight[j+listIndex].first[3], //timen
-                    listOf(                 //værmelding den timen
-                        waveHeight[j+listIndex].second,
-                        windDirection[j+listIndex].second,
-                        windSpeed[j+listIndex].second,
-                        windSpeedOfGust[j+listIndex].second
-                    )
-                )
-
-                nextIndexCounter ++
-
-                println("sjekke tider:")
-                println(waveHeight[j].first.toString())
-                println(windDirection[j].first.toString())
-                println(windSpeed[j].first.toString())
-                println(windSpeedOfGust[j].first.toString())
-                println()
-                forecast24HoursList.add(Pair(date, forecastOneHour)) //legger inn ny entry for den enkelte timen, totalt 24 ganger per dag
-
-            }
-
-            listIndex += nextIndexCounter
-            allDays24Hours.add(forecast24HoursList)
-        }
-
-        return allDays24Hours
-    }
-
-     */
-
-
     //sender med dato (dag)
     //metoden finner felles tider for alle dataenelistene og lager et par av denne tiden og en liste md de 4 dataene
     //setter sammen alle parene til en liste
@@ -202,6 +147,10 @@ class SmackLipRepositoryImpl (
             resList.add(getDataForOneDay(i, surfArea))
         }
         return resList
+    }
+
+    override suspend fun getPointForecastsNext3Days(): Map<String, List<List<PointForecast>>>{
+        return waveForecastRepository.pointForecastNext3Days()
     }
 
 }
