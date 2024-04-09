@@ -1,6 +1,7 @@
 package com.example.myapplication
 
 import com.example.myapplication.data.locationForecast.LocationForecastRepositoryImpl
+import com.example.myapplication.data.metalerts.MetAlertsDataSource
 import com.example.myapplication.model.locationforecast.DataLF
 import kotlinx.coroutines.runBlocking
 import com.example.myapplication.model.metalerts.MetAlerts
@@ -70,6 +71,7 @@ class ExampleUnitTest {
 
     //MetAlerts
     private val metAlertsRepository: MetAlertsRepositoryImpl = MetAlertsRepositoryImpl()
+    private val metAlertsDataSource: MetAlertsDataSource = MetAlertsDataSource()
 
     @Test
     fun metAlertsContainGeoDataIfNotEmpty() = runBlocking {
@@ -80,6 +82,20 @@ class ExampleUnitTest {
                 } else true
             ) {
                 "Metalerts provided data, however the geodata type was incorrect"
+            }
+        }
+    }
+
+    @Test
+    fun relevantAlertsDoesNotLeaveOutAnyRelevantAlerts(): Unit = runBlocking {
+        val relevantAlerts = SurfArea.entries.map { it to metAlertsRepository.getRelevantAlertsFor(it) }
+        val allAlerts = metAlertsDataSource.fetchMetAlertsData().features
+        relevantAlerts.map {(area, alerts) ->
+            val sizeAll = allAlerts.filter {alert ->
+                alert.properties?.area?.contains(area.locationName) ?: false
+            }.size
+            assert(sizeAll <= alerts.size) {
+                "All alerts contains $sizeAll alerts for ${area.locationName}, relevantAlerts() recovered ${alerts.size} of them"
             }
         }
     }
@@ -102,8 +118,8 @@ class ExampleUnitTest {
         //sjekker om bølgehøyden er lik ved å direkte aksessere den i filen og ved å bruke repositoryet sin get-metode for bølgehøyde
         //assert(timeSeries[0].second.instant.details.sea_surface_wave_height == oceanforecastRepository.getWaveHeights()[0].second)
         //assert(timeSeries[10].second.instant.details.sea_surface_wave_height == oceanforecastRepository.getWaveHeights()[10].second)
-
     }
+
     
     //Location Forecast
     private val locationForecastRepository = LocationForecastRepositoryImpl()
