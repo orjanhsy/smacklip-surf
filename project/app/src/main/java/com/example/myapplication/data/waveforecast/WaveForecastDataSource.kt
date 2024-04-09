@@ -33,7 +33,6 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.client.utils.EmptyContent.contentType
 import io.ktor.http.HttpHeaders.Accept
 import io.ktor.serialization.gson.gson
-import io.ktor.serialization.jackson.jackson
 import io.ktor.serialization.kotlinx.json.json
 
 fun main() {
