@@ -11,7 +11,7 @@ class WaveForecastRepositoryImpl(
     private val waveForecastDataSource: WaveForecastDataSource = WaveForecastDataSource()
 ): WaveForecastRepository {
 
-    private fun inArea(lat: Double?, lon: Double?, surfArea: SurfArea, radius: Double = 0.1): Boolean {
+    private fun inArea(lat: Double?, lon: Double?, surfArea: SurfArea, radius: Double = 0.5): Boolean {
         return (
                 lat!! in surfArea.lat - radius..surfArea.lat + radius &&
                 lon!! in surfArea.lon - radius..surfArea.lon + radius
