@@ -1,7 +1,7 @@
 package com.example.myapplication.data.waveforecast
 
 import android.system.Os.accept
-import com.example.myapplication.config.Client
+import com.example.myapplication.data.config.Client
 import com.example.myapplication.data.helpers.HTTPServiceHandler.WF_ACCESS_TOKEN_URL
 import com.example.myapplication.data.helpers.HTTPServiceHandler.WF_ALL_POINT_FORECASTS_URL
 import com.example.myapplication.data.helpers.HTTPServiceHandler.WF_AVALIABLE_ALL_URL
