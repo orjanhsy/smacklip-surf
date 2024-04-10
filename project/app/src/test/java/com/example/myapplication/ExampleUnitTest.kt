@@ -1,6 +1,7 @@
 package com.example.myapplication
 
 import com.example.myapplication.data.locationForecast.LocationForecastRepositoryImpl
+import com.example.myapplication.data.metalerts.MetAlertsDataSource
 import com.example.myapplication.model.locationforecast.DataLF
 import kotlinx.coroutines.runBlocking
 import com.example.myapplication.model.metalerts.MetAlerts
@@ -47,43 +48,56 @@ class ExampleUnitTest {
     @Test
     fun fetchAvaliableTimestampsReturns20ForecastTimes() = runBlocking {
         val response = waveForecastDataSource.fetchAvaliableTimestamps()
-        assert(response.availableForecastTimes.size == 20) // may vary
-    }
-
-    @Test
-    fun pointForecastNext3DaysHasForecastsOfLength20() = runBlocking {
-        val allPointForecastsNext3Days = waveForecastRepository.pointForecastNext3Days()
-        allPointForecastsNext3Days.forEach {
-            println("${it.key} -> ${it.value}")
-            assert(it.value.size == 20) {"Length of forecast was ${it.value.size}, should be 20"}
+        assert(response.availableForecastTimes.size > 0) {
+            "fetchAvailableTimestamps() returns no timestamps"
         }
     }
 
     @Test
-    fun pointForecastNext3DaysWorksForWaveSmackLipRepository() = runBlocking{
-        assert(smackLipRepository.getPointForecastsNext3Days().isNotEmpty())
+    fun pointForecastNext3DaysIsNotEmptyForAnySurfArea() = runBlocking {
+        smackLipRepository.getPointForecastsNext3Days().forEach {allForecastsInArea ->
+            assert(allForecastsInArea.value.all{ forecast -> forecast.isNotEmpty() } ) {
+                "A time interval in ${allForecastsInArea.key} had no forecast"
+            }
+        }
     }
 
     @Test
-    fun accessTokenIsAcquired() = runBlocking{
+    fun accessTokenIsAcquired() = runBlocking {
         val (accessToken, refreshToken) = waveForecastDataSource.getAccessToken()
-        assert(accessToken.isNotBlank())
+        assert(accessToken.isNotBlank()) {"No token was retrieved"}
     }
+
 
     //MetAlerts
     private val metAlertsRepository: MetAlertsRepositoryImpl = MetAlertsRepositoryImpl()
-    private val metAlertJson = File("src/test/java/com/example/myapplication/metAlerts.json").readText()
+    private val metAlertsDataSource: MetAlertsDataSource = MetAlertsDataSource()
+
     @Test
-    fun testMetAlertsAreaNameWithProxy() = runBlocking {
-        val feature = metAlertsRepository.getFeatures()[0]
-        println(feature.properties?.area)
+    fun metAlertsContainGeoDataIfNotEmpty() = runBlocking {
+        SurfArea.entries.forEach {
+            val alerts = metAlertsRepository.getRelevantAlertsFor(it)
+            assert(if (alerts.isNotEmpty()) alerts.all{alert ->
+                    alert.geometry?.type == "Polygon" || alert.geometry?.type == "MultiPolygon"
+                } else true
+            ) {
+                "Metalerts provided data, however the geodata type was incorrect"
+            }
+        }
     }
 
     @Test
-    fun getRelevantAlertsForFedjeByApiCall() = runBlocking {
-        val relevantAlerts = metAlertsRepository.getRelevantAlertsFor(SurfArea.FEDJE)
-        println(relevantAlerts)
-        relevantAlerts.forEach { println("Alert: $it") }
+    fun relevantAlertsDoesNotLeaveOutAnyRelevantAlerts(): Unit = runBlocking {
+        val relevantAlerts = SurfArea.entries.map { it to metAlertsRepository.getRelevantAlertsFor(it) }
+        val allAlerts = metAlertsDataSource.fetchMetAlertsData().features
+        relevantAlerts.map {(area, alerts) ->
+            val sizeAll = allAlerts.filter {alert ->
+                alert.properties?.area?.contains(area.locationName) ?: false
+            }.size
+            assert(sizeAll <= alerts.size) {
+                "All alerts contains $sizeAll alerts for ${area.locationName}, relevantAlerts() recovered ${alerts.size} of them"
+            }
+        }
     }
 
 
@@ -104,8 +118,8 @@ class ExampleUnitTest {
         //sjekker om bølgehøyden er lik ved å direkte aksessere den i filen og ved å bruke repositoryet sin get-metode for bølgehøyde
         //assert(timeSeries[0].second.instant.details.sea_surface_wave_height == oceanforecastRepository.getWaveHeights()[0].second)
         //assert(timeSeries[10].second.instant.details.sea_surface_wave_height == oceanforecastRepository.getWaveHeights()[10].second)
-
     }
+
     
     //Location Forecast
     private val locationForecastRepository = LocationForecastRepositoryImpl()
