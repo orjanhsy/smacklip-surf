@@ -13,15 +13,14 @@ class WaveForecastRepositoryImpl(
 
     private fun inArea(lat: Double?, lon: Double?, surfArea: SurfArea, radius: Double = 0.5): Boolean {
         return (
-                lat!! in surfArea.lat - radius..surfArea.lat + radius &&
-                lon!! in surfArea.lon - radius..surfArea.lon + radius
-                )
+            lat!! in surfArea.lat - radius..surfArea.lat + radius &&
+            lon!! in surfArea.lon - radius..surfArea.lon + radius
+        )
     }
 
     /*
     TODO:
-    Make it faster. Unsure how to do that without hardcoding
-    - Might not have to retrieve all the data in one single call
+    Make it call on pointforecast for each surfarea instead of filtering from fetchAllPointForecasts and measure time spent.
     */
     override suspend fun pointForecastNext3Days(): Map<String, List<List<PointForecast>>> {
         val availableForecastTimes = waveForecastDataSource.fetchAvaliableTimestamps().availableForecastTimes
@@ -39,6 +38,14 @@ class WaveForecastRepositoryImpl(
         }
 
         return allPointForecastsNext3Days
+    }
+
+    //hardkodet: Surfarea.
+    suspend fun areaPointForecastNext3Days(surfArea: SurfArea, time: String)  {
+        val availableForecastTimes = waveForecastDataSource.fetchAvaliableTimestamps().availableForecastTimes
+
+        val forecast = waveForecastDataSource.fetchPointForecast(surfArea.modelName, surfArea.pointId, time)
+
     }
 }
 

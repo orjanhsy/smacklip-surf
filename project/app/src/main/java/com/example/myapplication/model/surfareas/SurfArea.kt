@@ -9,7 +9,11 @@ enum class SurfArea(
     val lon: Double,
     val image: Int,
     val direction: Int,
-    val description: String
+    val description: String,
+    val modelName: String = "",
+    val pointId: Int = 1,
+
+
 ) {
     //surf areas
 
