@@ -1,11 +1,10 @@
 package com.example.myapplication.ui.surfarea
 
 import androidx.lifecycle.ViewModel
-
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
-import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.metalerts.Features
+import com.example.myapplication.model.surfareas.SurfArea
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -86,5 +85,7 @@ class SurfAreaScreenViewModel: ViewModel() {
             }
         }
     }
+
+
 }
 
