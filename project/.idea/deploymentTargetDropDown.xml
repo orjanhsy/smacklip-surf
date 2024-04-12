@@ -2,21 +2,17 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="PreviewDailyScreen">
+        <State />
+      </entry>
+      <entry key="PreviewDailyScreen (1)">
+        <State />
+      </entry>
       <entry key="PreviewHomeScreen">
-        <State>
-          <targetSelectedWithDropDown>
-            <Target>
-              <type value="QUICK_BOOT_TARGET" />
-              <deviceKey>
-                <Key>
-                  <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\hamme\.android\avd\Resizable_Experimental_API_33.avd" />
-                </Key>
-              </deviceKey>
-            </Target>
-          </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-04-09T10:45:32.018348900Z" />
-        </State>
+        <State />
+      </entry>
+      <entry key="PreviewSurfAreaScreen">
+        <State />
       </entry>
       <entry key="app">
         <State>
