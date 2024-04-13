@@ -56,6 +56,7 @@ class ExampleUnitTest {
         }
     }
 
+    // slow ver.
     @Test
     fun pointForecastNext3DaysIsNotEmptyForAnySurfArea() = runBlocking {
         smackLipRepository.getPointForecastsNext3Days().forEach {allForecastsInArea ->
@@ -69,6 +70,23 @@ class ExampleUnitTest {
     fun accessTokenIsAcquired() = runBlocking {
         val (accessToken, refreshToken) = waveForecastDataSource.getAccessToken()
         assert(accessToken.isNotBlank()) {"No token was retrieved"}
+    }
+
+    //fast ver.
+    @Test
+    fun allRelevantWavePeriodAndDirNext3DaysWorks() = runBlocking {
+        val relevantForecasts = waveForecastRepository.allRelevantWavePeriodAndDirNext3Days()
+        relevantForecasts.forEach {
+            println(it)
+        }
+        assert(relevantForecasts.size == SurfArea.entries.size) {"Missing forecast(s) for certain surfarea(s)"}
+        assert(relevantForecasts.all { (_, forecast) -> forecast.size <= 20 }) {"Some forecast is not of length 20 (ie. 60hrs long)"}
+    }
+
+    @Test
+    fun retrievesRelevantModelNamesAndPointIdsWorks() = runBlocking{
+        val data = waveForecastRepository.retrieveRelevantModelNamesAndPointIds()
+        println(data)
     }
 
 
