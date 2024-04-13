@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.R
+import com.example.myapplication.model.oceanforecast.DataOF
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.surfarea.DailySurfAreaScreenUiState
 import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
@@ -42,6 +43,8 @@ import java.time.LocalTime
 fun DailySurfAreaScreen(dailySurfAreaScreenViewModel: DailySurfAreaScreenViewModel = viewModel()) {
     val dailySurfAreaScreenUiState: DailySurfAreaScreenUiState by dailySurfAreaScreenViewModel.dailySurfAreaScreenUiState.collectAsState()
     val remainingHours = getRemainingHoursOfDay()
+    val timeSeriesMap = mutableMapOf<SurfArea, List<Pair<String, DataOF>>>()
+
     val waveHeightMap: Map<SurfArea,List<Pair<List<Int>, Double>>> = mapOf(
         SurfArea.HODDEVIK to listOf(Pair(listOf(1, 2, 3, 4), 5.0))
     )
@@ -78,7 +81,8 @@ fun AllInfoCard(
     surfArea: SurfArea,
     waveHeightMap: Map<SurfArea,List<Pair<List<Int>, Double>>>,
     windSpeedMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
-    windGustMap: Map<SurfArea, List<Pair<List<Int>, Double>>>) {
+    windGustMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
+    ) {
 
     val waveHeight = waveHeightMap[surfArea] ?: listOf()
     val windSpeed = windSpeedMap[surfArea] ?: listOf()
