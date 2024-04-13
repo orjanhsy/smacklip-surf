@@ -44,14 +44,14 @@ class WaveForecastRepositoryImpl(
 
 
     //hardkodet: Surfarea.modelName (område), SurfArea.pointId(punkt)
-    private suspend fun pointForecast(surfArea: SurfArea, time: String): PointForecast {
+    private suspend fun pointForecast(modelName: String, pointId: Int, time: String): PointForecast {
 
-        return waveForecastDataSource.fetchPointForecast(surfArea.modelName, surfArea.pointId, time)
+        return waveForecastDataSource.fetchPointForecast(modelName, pointId, time)
     }
 
     //Pair<direction, wavePeriod>
-    private suspend fun waveDirAndPeriod(surfArea: SurfArea, time: String): Pair<Double?, Double?> {
-        val forecast = pointForecast(surfArea, time)
+    private suspend fun waveDirAndPeriod(modelName: String, pointId: Int, time: String): Pair<Double?, Double?> {
+        val forecast = pointForecast(modelName, pointId, time)
         return Pair(forecast.dirLocal, forecast.tpLocal)
     }
 
@@ -59,10 +59,10 @@ class WaveForecastRepositoryImpl(
     .size=60, apiet henter de neste 60 timene, denne returnerer (ca?) 20 pair<dir, tp>
     - altså hver tredje time - for et område.
      */
-    suspend fun waveDirAndPeriodNext3DaysForArea(surfArea: SurfArea): List<Pair<Double?, Double?>> {
+    suspend fun waveDirAndPeriodNext3DaysForArea(modelName: String, pointId: Int): List<Pair<Double?, Double?>> {
         val availableForecastTimes = waveForecastDataSource.fetchAvaliableTimestamps().availableForecastTimes
         val dirAndTp: List<Pair<Double?, Double?>> = availableForecastTimes.map {time ->
-            waveDirAndPeriod(surfArea, time)
+            waveDirAndPeriod(modelName, pointId, time)
         }
         assert(dirAndTp.size == 20) {"Size should be 20, was ${dirAndTp.size}"}
         return dirAndTp
@@ -70,13 +70,18 @@ class WaveForecastRepositoryImpl(
 
     // map[surfarea] -> List<Pair<Direction, period>>  .size=20
     suspend fun allRelevantWavePeriodAndDirNext3Days(): Map<SurfArea, List<Pair<Double?, Double?>>> {
-        val allForecasts = SurfArea.entries.associateWith{ area ->
-            waveDirAndPeriodNext3DaysForArea(area)
+        val modelNamesAndPointIds: Map<SurfArea, Pair<String?, Int?>> = retrieveRelevantModelNamesAndPointIds()
+        val relevantForecasts: Map<SurfArea, List<Pair<Double?, Double?>>> = SurfArea.entries.associateWith {sa ->
+            val modelName = modelNamesAndPointIds[sa]?.first!!
+            val pointId = modelNamesAndPointIds[sa]?.second!!
+
+            waveDirAndPeriodNext3DaysForArea(modelName, pointId)
         }
-        return allForecasts
+        return relevantForecasts
     }
 
-    private suspend fun retrieveRelevantModelNamesAndPointIds(): Map<SurfArea, Pair<String?, Double?>> {
+    // Map( SurfArea -> (modelName, pointId)
+    private suspend fun retrieveRelevantModelNamesAndPointIds(): Map<SurfArea, Pair<String?, Int?>> {
         val time = waveForecastDataSource.fetchAvaliableTimestamps().availableForecastTimes[0]
         val allForecasts = waveForecastDataSource.fetchAllPointForecasts(time)
         val modelNamesAndIds = SurfArea.entries.associateWith {area ->
