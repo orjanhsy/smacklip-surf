@@ -1,5 +1,7 @@
 package com.example.myapplication
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import com.example.myapplication.data.locationForecast.LocationForecastRepositoryImpl
 import com.example.myapplication.data.metalerts.MetAlertsDataSource
 import com.example.myapplication.model.locationforecast.DataLF
@@ -24,6 +26,7 @@ import com.example.myapplication.model.locationforecast.TimeserieLF
 
 import com.example.myapplication.model.oceanforecast.OceanForecast
 import com.example.myapplication.model.oceanforecast.TimeserieOF
+import com.example.myapplication.ui.surfarea.SurfAreaScreenViewModel
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.VersionCheckResult
 import junit.framework.TestCase.assertEquals
@@ -120,7 +123,6 @@ class ExampleUnitTest {
         //assert(timeSeries[10].second.instant.details.sea_surface_wave_height == oceanforecastRepository.getWaveHeights()[10].second)
     }
 
-    
     //Location Forecast
     private val locationForecastRepository = LocationForecastRepositoryImpl()
 
@@ -177,6 +179,15 @@ class ExampleUnitTest {
         assert(timeList[1] == 3)
         assert(timeList[2] == 13)
         assert(timeList[3] == 19)
+
+    }
+
+    @Test
+    fun waveHeightsAreParsedCorrectly() = runBlocking {
+        val dataNext7 = smackLipRepository.getDataForTheNext7Days(SurfArea.HODDEVIK)
+        val waveHeights = dataNext7.map{ dayForecast -> dayForecast.map { dayData -> dayData.first to dayData.second[0]}}
+        println("Size of all wave heights ${waveHeights.size}")
+        println("Size of waveheighs one step in ${waveHeights[1]}")
 
     }
 
