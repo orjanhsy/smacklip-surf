@@ -30,6 +30,7 @@ class SurfAreaScreenViewModel: ViewModel() {
     val surfAreaScreenUiState: StateFlow<SurfAreaScreenUiState> = _surfAreaScreenUiState.asStateFlow()
 
 
+
     fun updateAlerts() {
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update {

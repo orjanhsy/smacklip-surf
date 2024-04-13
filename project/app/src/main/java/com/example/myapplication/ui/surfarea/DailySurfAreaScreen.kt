@@ -31,24 +31,34 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.R
-import com.example.myapplication.ui.surfarea.SurfAreaScreenUiState
-import com.example.myapplication.ui.surfarea.SurfAreaScreenViewModel
+import com.example.myapplication.model.surfareas.SurfArea
+import com.example.myapplication.ui.surfarea.DailySurfAreaScreenUiState
+import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import java.time.LocalTime
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun DailySurfAreaScreen(surfAreaScreenViewModel: SurfAreaScreenViewModel = viewModel()) {
-    val surfAreaScreenUiState: SurfAreaScreenUiState by surfAreaScreenViewModel.surfAreaScreenUiState.collectAsState()
+fun DailySurfAreaScreen(dailySurfAreaScreenViewModel: DailySurfAreaScreenViewModel = viewModel()) {
+    val dailySurfAreaScreenUiState: DailySurfAreaScreenUiState by dailySurfAreaScreenViewModel.dailySurfAreaScreenUiState.collectAsState()
     val remainingHours = getRemainingHoursOfDay()
-
+    val waveHeightMap: Map<SurfArea,List<Pair<List<Int>, Double>>> = mapOf(
+        SurfArea.HODDEVIK to listOf(Pair(listOf(1, 2, 3, 4), 5.0))
+    )
+    val windSpeedMap: Map<SurfArea,List<Pair<List<Int>, Double>>> = mapOf(
+        SurfArea.HODDEVIK to listOf(Pair(listOf(2, 4, 6, 8), 1.0))
+    )
+    val windGustMap: Map<SurfArea,List<Pair<List<Int>, Double>>> = mapOf(
+        SurfArea.HODDEVIK to listOf(Pair(listOf(3, 5, 8, 32), 3.0))
+    )
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(12.dp)
     ) {
         items(remainingHours) { index ->
-                AllInfoCard()
+                AllInfoCard(SurfArea.HODDEVIK, waveHeightMap, windSpeedMap,
+                    windGustMap)
             }
         }
     }
@@ -64,7 +74,15 @@ fun getRemainingHoursOfDay(): Int {
 }
 
 @Composable
-fun AllInfoCard() {
+fun AllInfoCard(
+    surfArea: SurfArea,
+    waveHeightMap: Map<SurfArea,List<Pair<List<Int>, Double>>>,
+    windSpeedMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
+    windGustMap: Map<SurfArea, List<Pair<List<Int>, Double>>>) {
+
+    val waveHeight = waveHeightMap[surfArea] ?: listOf()
+    val windSpeed = windSpeedMap[surfArea] ?: listOf()
+    val windGust = windGustMap[surfArea] ?: listOf()
     Card(
         modifier = Modifier
             .padding(3.dp)
@@ -99,7 +117,8 @@ fun AllInfoCard() {
             )
 
             Text(
-                text = "6(12)",
+                text = "${if (windSpeed.isNotEmpty()) windSpeed[0].second else ""}" +
+                        if(windGust.isNotEmpty() && windSpeed.isNotEmpty() && windGust[0].second != windSpeed[0].second) "(${windGust[0].second})" else "",
                 style = TextStyle(
                     fontSize = 13.sp,
                     lineHeight = 15.sp,
@@ -121,7 +140,7 @@ fun AllInfoCard() {
             )
 
             Text(
-                text = "2m",
+                text = "${if (waveHeight.isNotEmpty()) waveHeight[0].second else ""}",
                 style = TextStyle(
                     fontSize = 13.sp,
                     lineHeight = 15.sp,
