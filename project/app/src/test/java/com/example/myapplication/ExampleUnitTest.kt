@@ -68,6 +68,13 @@ class ExampleUnitTest {
         assert(accessToken.isNotBlank()) {"No token was retrieved"}
     }
 
+    @Test
+    fun allRelevantWavePeriodAndDirNext3DaysWorks() = runBlocking {
+        val relevantForecasts = waveForecastRepository.allRelevantWavePeriodAndDirNext3Days()
+        assert(relevantForecasts.size == SurfArea.entries.size) {"Missing forecast(s) for certain surfarea(s)"}
+        assert(relevantForecasts.all { (_, forecast) -> forecast.size == 20 }) {"Some forecast is not of length 20 (ie. about 3 days)"}
+    }
+
 
     //MetAlerts
     private val metAlertsRepository: MetAlertsRepositoryImpl = MetAlertsRepositoryImpl()
