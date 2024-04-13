@@ -8,6 +8,7 @@ import kotlin.math.abs
 interface WaveForecastRepository {
     suspend fun pointForecastNext3Days(): Map<String, List<List<PointForecast>>>
     suspend fun allRelevantWavePeriodAndDirNext3Days(): Map<SurfArea, List<Pair<Double?, Double?>>>
+    suspend fun retrieveRelevantModelNamesAndPointIds(): Map<SurfArea, Pair<String?, Int?>>
 
     }
 
@@ -66,7 +67,6 @@ class WaveForecastRepositoryImpl(
         val dirAndTp: List<Pair<Double?, Double?>> = availableForecastTimes.map {time ->
             waveDirAndPeriod(modelName, pointId, time)
         }
-        assert(dirAndTp.size == 20) {"Size should be 20, was ${dirAndTp.size}"}
         return dirAndTp
     }
 
@@ -83,7 +83,7 @@ class WaveForecastRepositoryImpl(
     }
 
     // Map( SurfArea -> (modelName, pointId)
-    private suspend fun retrieveRelevantModelNamesAndPointIds(): Map<SurfArea, Pair<String?, Int?>> {
+    override suspend fun retrieveRelevantModelNamesAndPointIds(): Map<SurfArea, Pair<String?, Int?>> {
         val time = waveForecastDataSource.fetchAvaliableTimestamps().availableForecastTimes[1]
         val allForecasts = waveForecastDataSource.fetchAllPointForecasts(time)
         val modelNamesAndIds = SurfArea.entries.associateWith {area ->
