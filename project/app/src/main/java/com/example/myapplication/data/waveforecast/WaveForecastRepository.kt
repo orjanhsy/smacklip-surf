@@ -7,7 +7,9 @@ import kotlin.math.abs
 
 interface WaveForecastRepository {
     suspend fun pointForecastNext3Days(): Map<String, List<List<PointForecast>>>
-}
+    suspend fun allRelevantWavePeriodAndDirNext3Days(): Map<SurfArea, List<Pair<Double?, Double?>>>
+
+    }
 
 class WaveForecastRepositoryImpl(
     private val waveForecastDataSource: WaveForecastDataSource = WaveForecastDataSource()
@@ -69,7 +71,7 @@ class WaveForecastRepositoryImpl(
     }
 
     // map[surfarea] -> List<Pair<Direction, period>>  .size=20
-    suspend fun allRelevantWavePeriodAndDirNext3Days(): Map<SurfArea, List<Pair<Double?, Double?>>> {
+    override suspend fun allRelevantWavePeriodAndDirNext3Days(): Map<SurfArea, List<Pair<Double?, Double?>>> {
         val modelNamesAndPointIds: Map<SurfArea, Pair<String?, Int?>> = retrieveRelevantModelNamesAndPointIds()
         val relevantForecasts: Map<SurfArea, List<Pair<Double?, Double?>>> = SurfArea.entries.associateWith {sa ->
             val modelName = modelNamesAndPointIds[sa]?.first!!
@@ -82,7 +84,7 @@ class WaveForecastRepositoryImpl(
 
     // Map( SurfArea -> (modelName, pointId)
     private suspend fun retrieveRelevantModelNamesAndPointIds(): Map<SurfArea, Pair<String?, Int?>> {
-        val time = waveForecastDataSource.fetchAvaliableTimestamps().availableForecastTimes[0]
+        val time = waveForecastDataSource.fetchAvaliableTimestamps().availableForecastTimes[1]
         val allForecasts = waveForecastDataSource.fetchAllPointForecasts(time)
         val modelNamesAndIds = SurfArea.entries.associateWith {area ->
             var closest: Pair<Double, PointForecast?> = Pair(100.0, null)
