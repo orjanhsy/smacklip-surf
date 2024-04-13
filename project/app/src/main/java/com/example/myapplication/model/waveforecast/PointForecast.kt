@@ -15,7 +15,7 @@ data class PointForecast (
     @SerializedName("dirLocal"                ) var dirLocal                : Double?           = null,
     @SerializedName("hMaxLocal"               ) var hMaxLocal               : Double?           = null,
     @SerializedName("hsLocal"                 ) var hsLocal                 : Double?           = null,
-    @SerializedName("lat"                     ) var lat                     : Double?           = null,
-    @SerializedName("lon"                     ) var lon                     : Double?           = null
+    @SerializedName("lat"                     ) var lat                     : Double           = 0.0,
+    @SerializedName("lon"                     ) var lon                     : Double          = 0.0
 
 )
