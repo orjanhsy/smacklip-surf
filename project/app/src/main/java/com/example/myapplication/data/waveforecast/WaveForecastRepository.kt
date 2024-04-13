@@ -2,6 +2,8 @@ package com.example.myapplication.data.waveforecast
 
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.waveforecast.PointForecast
+import io.ktor.http.content.NullBody
+import kotlin.math.abs
 
 interface WaveForecastRepository {
     suspend fun pointForecastNext3Days(): Map<String, List<List<PointForecast>>>
@@ -40,7 +42,8 @@ class WaveForecastRepositoryImpl(
         return allPointForecastsNext3Days
     }
 
-    //hardkodet: Surfarea.
+
+    //hardkodet: Surfarea.modelName (område), SurfArea.pointId(punkt)
     private suspend fun pointForecast(surfArea: SurfArea, time: String): PointForecast {
 
         return waveForecastDataSource.fetchPointForecast(surfArea.modelName, surfArea.pointId, time)
@@ -65,12 +68,35 @@ class WaveForecastRepositoryImpl(
         return dirAndTp
     }
 
-    // map[surfarea] -> List<Pair<Direcation, period>>  .size=20
+    // map[surfarea] -> List<Pair<Direction, period>>  .size=20
     suspend fun allRelevantWavePeriodAndDirNext3Days(): Map<SurfArea, List<Pair<Double?, Double?>>> {
         val allForecasts = SurfArea.entries.associateWith{ area ->
             waveDirAndPeriodNext3DaysForArea(area)
         }
         return allForecasts
+    }
+
+    private suspend fun retrieveRelevantModelNamesAndPointIds(): Map<SurfArea, Pair<String?, Double?>> {
+        val time = waveForecastDataSource.fetchAvaliableTimestamps().availableForecastTimes[0]
+        val allForecasts = waveForecastDataSource.fetchAllPointForecasts(time)
+        val modelNamesAndIds = SurfArea.entries.associateWith {area ->
+            var closest: Pair<Double, PointForecast?> = Pair(100.0, null)
+            allForecasts.forEach { pointForecast ->
+                val distanceToPoint = distanceTo(pointForecast.lat, pointForecast.lon, area)
+                if(distanceToPoint < closest.first) {
+                    closest = Pair(distanceToPoint, pointForecast)
+                }
+            }
+            Pair(closest.second?.modelName, closest.second?.idNumber)
+        }
+        return modelNamesAndIds
+    }
+
+    private fun distanceTo(lat: Double, lon: Double, surfArea: SurfArea): Double {
+        val areaLat = surfArea.lat
+        val areaLon = surfArea.lon
+
+        return abs(areaLat-lat + areaLon-lon)
     }
 }
 
