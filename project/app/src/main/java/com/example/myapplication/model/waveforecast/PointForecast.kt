@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 data class PointForecast (
 
-    @SerializedName("idNumber"                ) var idNumber                : Double?           = null,
+    @SerializedName("idNumber"                ) var idNumber                : Int?           = null,
     @SerializedName("modelName"               ) var modelName               : String?           = null,
     @SerializedName("forcastDateTime"         ) var forcastDateTime         : String?           = null,
     @SerializedName("modelRunDateTime"        ) var modelRunDateTime        : String?           = null,
