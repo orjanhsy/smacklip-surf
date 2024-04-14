@@ -74,6 +74,12 @@ class ExampleUnitTest {
     }
 
     @Test
+    fun waveDirANdPeriodNext3DaysForHoddevikIs3DaysLong() = runBlocking{
+        val result = waveForecastRepository.waveDirAndPeriodNext3DaysForArea(SurfArea.HODDEVIK.modelName, SurfArea.HODDEVIK.pointId)
+        assert(result.size in 18..20)
+    }
+
+    @Test
     fun retrievesRelevantModelNamesAndPointIdsWorks() = runBlocking{
         val data = waveForecastRepository.retrieveRelevantModelNamesAndPointIds()
         println(data)
