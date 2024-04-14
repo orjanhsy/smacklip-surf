@@ -11,6 +11,7 @@ import kotlin.math.sqrt
 import kotlin.math.atan2
 import kotlin.math.pow
 import kotlin.math.PI
+import kotlin.math.acos
 
 
 interface WaveForecastRepository {
@@ -94,22 +95,14 @@ class WaveForecastRepositoryImpl(
     }
 
     override fun distanceTo(lat: Double, lon: Double, surfArea: SurfArea): Double {
-        // acos(sin(lat1)*sin(lat2)+cos(lat1)*cos(lat2)*cos(lon2-lon1))*6371
-        val radius = 6371.0 // Earth radius in kilometers
-        val lat1Rad = lat * PI / 180.0
-        val lon1Rad = lon * PI / 180.0
-        val lat2Rad = surfArea.lat * PI / 180.0
-        val lon2Rad = surfArea.lon * PI / 180.0
-        val dLat = lat2Rad - lat1Rad
-        val dLon = lon2Rad - lon1Rad
-        val a = sin(dLat / 2).pow(2) +
-                cos(lat1Rad) * cos(lat2Rad) *
-                sin(dLon / 2).pow(2)
-        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
-        return radius * c
+        // acos(sin(lat1)*sin(lat2)+cos(lat1)*cos(lat2)*cos(lon2-lon1))*6371 (6371 is Earth radius in km.)
+        val radiusEarth = 6371
+        val lat1 = surfArea.lat * PI / 180
+        val lon1 = surfArea.lon * PI / 180
+        val lat2 = lat * PI / 180
+        val lon2 = lon * PI / 180
+        return acos(sin(lat1) * sin(lat2) + cos(lat1) * cos(lat2) * cos(lon2-lon1)) * radiusEarth
     }
-
-
 }
 
 

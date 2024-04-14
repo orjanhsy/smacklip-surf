@@ -100,11 +100,11 @@ class ExampleUnitTest {
             val result = waveForecastRepository.distanceTo(
                 pointForecast.lat,
                 pointForecast.lon,
-                SurfArea.HODDEVIK
+                area
             )
             println(area.locationName)
             println("Modelname: ${pointForecast.modelName} ID: ${pointForecast.idNumber}")
-            println("Distance from point (${pointForecast.lat}, ${pointForecast.lon}) to (${SurfArea.HODDEVIK.lat}, ${SurfArea.HODDEVIK.lon}) was $${result}km\n")
+            println("Distance from point (${pointForecast.lat}, ${pointForecast.lon}) to (${area.lat}, ${area.lon}) was $${result}km\n")
         }
     }
 
