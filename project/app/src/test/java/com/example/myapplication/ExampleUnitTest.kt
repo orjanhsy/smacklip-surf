@@ -64,13 +64,13 @@ class ExampleUnitTest {
 
     //fast ver.
     @Test
-    fun allRelevantWavePeriodAndDirNext3DaysWorks() = runBlocking {
+    fun allRelevantWavePeriodAndDirsGet60HrsOfData() = runBlocking {
         val relevantForecasts = waveForecastRepository.allRelevantWavePeriodAndDirNext3Days()
         relevantForecasts.forEach {
             println(it)
         }
         assert(relevantForecasts.size == SurfArea.entries.size) {"Missing forecast(s) for certain surfarea(s)"}
-        assert(relevantForecasts.all { (_, forecast) -> forecast.size <= 20 }) {"Some forecast is not of length 20 (ie. 60hrs long)"}
+        assert(relevantForecasts.all { (_, forecast) -> forecast.size in 18..20 }) {"Some forecast is not of length 20 (ie. 60hrs long)"}
     }
 
     @Test
