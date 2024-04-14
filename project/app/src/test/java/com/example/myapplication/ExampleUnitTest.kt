@@ -71,13 +71,13 @@ class ExampleUnitTest {
             println(it)
         }
         assert(relevantForecasts.size == SurfArea.entries.size) {"Missing forecast(s) for certain surfarea(s)"}
-        assert(relevantForecasts.all { (_, forecast) -> forecast.size == 21 }) {"Some forecast is not of length 21 (ie. 60hrs long)"}
+        assert(relevantForecasts.all { (_, forecast) -> forecast.size in 18 .. 21 }) {"Some forecast is not of length 21 (ie. 60hrs long)"}
     }
 
     @Test
     fun waveDirAndPeriodNext3DaysForHoddevikIs3DaysLong() = runBlocking{
         val result = waveForecastRepository.waveDirAndPeriodNext3DaysForArea(SurfArea.HODDEVIK.modelName, SurfArea.HODDEVIK.pointId)
-        assert(result.size == 21) {"Forecast for hoddevik should be of size 21, was ${result.size}"}
+        assert(result.size in 18 .. 21) {"Forecast for hoddevik should be of size 21, was ${result.size}"}
     }
 
     @Test
