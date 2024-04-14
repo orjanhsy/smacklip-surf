@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.view.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import com.example.myapplication.data.locationForecast.LocationForecastRepositoryImpl
@@ -70,13 +71,13 @@ class ExampleUnitTest {
             println(it)
         }
         assert(relevantForecasts.size == SurfArea.entries.size) {"Missing forecast(s) for certain surfarea(s)"}
-        assert(relevantForecasts.all { (_, forecast) -> forecast.size in 18..20 }) {"Some forecast is not of length 20 (ie. 60hrs long)"}
+        assert(relevantForecasts.all { (_, forecast) -> forecast.size == 21 }) {"Some forecast is not of length 21 (ie. 60hrs long)"}
     }
 
     @Test
     fun waveDirAndPeriodNext3DaysForHoddevikIs3DaysLong() = runBlocking{
         val result = waveForecastRepository.waveDirAndPeriodNext3DaysForArea(SurfArea.HODDEVIK.modelName, SurfArea.HODDEVIK.pointId)
-        assert(result.size in 18..20)
+        assert(result.size == 21) {"Forecast for hoddevik should be of size 21, was ${result.size}"}
     }
 
     @Test
@@ -90,6 +91,14 @@ class ExampleUnitTest {
     fun retrievesRelevantModelNamesAndPointIdsWorks() = runBlocking{
         val data = waveForecastRepository.retrieveRelevantModelNamesAndPointIds()
         println(data)
+    }
+
+    @Test
+    fun distanceToIsCorrectForHoddevik() = runBlocking{
+        val pointForecast = waveForecastRepository.pointForecast(SurfArea.HODDEVIK.modelName, SurfArea.HODDEVIK.pointId, time="2024-04-14T12:00:00Z")
+        val result = waveForecastRepository.distanceTo(pointForecast.lat, pointForecast.lon, SurfArea.HODDEVIK)
+        println("Modelname: ${pointForecast.modelName}\nID: ${pointForecast.idNumber}")
+        println("Distance from point (${pointForecast.lat}, ${pointForecast.lon}) to (${SurfArea.HODDEVIK.lat}, ${SurfArea.HODDEVIK.lon}) was $result")
     }
 
 

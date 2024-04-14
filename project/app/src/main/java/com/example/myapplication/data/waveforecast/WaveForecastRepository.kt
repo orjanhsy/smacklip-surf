@@ -8,10 +8,12 @@ import kotlin.math.abs
 
 interface WaveForecastRepository {
     suspend fun allRelevantWavePeriodAndDirNext3Days(): Map<SurfArea, List<Pair<Double?, Double?>>>
-    suspend fun retrieveRelevantModelNamesAndPointIds(): Map<SurfArea, Pair<String?, Int?>>
+    suspend fun retrieveRelevantModelNamesAndPointIds(): Map<SurfArea, Pair<String?, Int?>> // for tests
 
     suspend fun waveDirAndPeriodNext3DaysForArea(modelName: String, pointId: Int): List<Pair<Double?, Double?>>
     suspend fun allRelevantWavePeriodAndDirNext3DaysHardCoded(): Map<SurfArea, List<Pair<Double?, Double?>>>
+    fun distanceTo(lat: Double, lon: Double, surfArea: SurfArea): Double // for tests
+    suspend fun pointForecast(modelName: String, pointId: Int, time: String): PointForecast // for tests
     }
 
 class WaveForecastRepositoryImpl(
@@ -20,7 +22,7 @@ class WaveForecastRepositoryImpl(
 
 
     //hardkodet: Surfarea.modelName (område), SurfArea.pointId(punkt)
-    private suspend fun pointForecast(modelName: String, pointId: Int, time: String): PointForecast {
+    override suspend fun pointForecast(modelName: String, pointId: Int, time: String): PointForecast {
         return waveForecastDataSource.fetchPointForecast(modelName, pointId, time)
     }
 
@@ -84,11 +86,11 @@ class WaveForecastRepositoryImpl(
         return Pair(closest.second?.modelName, closest.second?.idNumber)
     }
 
-    private fun distanceTo(lat: Double, lon: Double, surfArea: SurfArea): Double {
+    override fun distanceTo(lat: Double, lon: Double, surfArea: SurfArea): Double {
         val areaLat = surfArea.lat
         val areaLon = surfArea.lon
 
-        return abs(areaLat-lat + areaLon-lon)
+        return abs(areaLat-lat) + abs(areaLon-lon)
     }
 }
 
