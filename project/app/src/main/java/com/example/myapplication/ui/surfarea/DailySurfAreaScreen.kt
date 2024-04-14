@@ -1,5 +1,6 @@
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -31,53 +32,56 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.R
-import com.example.myapplication.model.oceanforecast.DataOF
 import com.example.myapplication.model.surfareas.SurfArea
-import com.example.myapplication.ui.surfarea.DailySurfAreaScreenUiState
 import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
 import com.example.myapplication.ui.theme.MyApplicationTheme
-import java.time.LocalTime
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DailySurfAreaScreen(dailySurfAreaScreenViewModel: DailySurfAreaScreenViewModel = viewModel()) {
-    val dailySurfAreaScreenUiState: DailySurfAreaScreenUiState by dailySurfAreaScreenViewModel.dailySurfAreaScreenUiState.collectAsState()
-    val remainingHours = getRemainingHoursOfDay()
-    val timeSeriesMap = mutableMapOf<SurfArea, List<Pair<String, DataOF>>>()
+    val dailySurfAreaScreenUiState by dailySurfAreaScreenViewModel.dailySurfAreaScreenUiState.collectAsState()
+    Log.d("hallo","i luken")
 
-    val waveHeightMap: Map<SurfArea,List<Pair<List<Int>, Double>>> = mapOf(
+    val nextSevenDays = dailySurfAreaScreenUiState.forecast7Days
+    Log.d("size","${nextSevenDays.size}")
+    val waveHeightMap: Map<SurfArea, List<Pair<List<Int>, Double>>> = mapOf(
         SurfArea.HODDEVIK to listOf(Pair(listOf(1, 2, 3, 4), 5.0))
     )
-    val windSpeedMap: Map<SurfArea,List<Pair<List<Int>, Double>>> = mapOf(
+    val windSpeedMap: Map<SurfArea, List<Pair<List<Int>, Double>>> = mapOf(
         SurfArea.HODDEVIK to listOf(Pair(listOf(2, 4, 6, 8), 1.0))
     )
-    val windGustMap: Map<SurfArea,List<Pair<List<Int>, Double>>> = mapOf(
+    val windGustMap: Map<SurfArea, List<Pair<List<Int>, Double>>> = mapOf(
         SurfArea.HODDEVIK to listOf(Pair(listOf(3, 5, 8, 32), 3.0))
     )
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(12.dp)
     ) {
-        items(remainingHours) { index ->
-                AllInfoCard(SurfArea.HODDEVIK, waveHeightMap, windSpeedMap,
-                    windGustMap)
+        val surfAreaDataForDay = nextSevenDays.getOrElse(0) { emptyList() } //0 er altså i dag
+
+        items(surfAreaDataForDay.size) { hourIndex -> //altså timer igjen av dagen
+            val surfAreaDataForHour = surfAreaDataForDay[hourIndex] //henter objektet for timen som er en liste med Pair<List<Int>, Double>
+            // List<Int> = tiden
+            val timestamp = surfAreaDataForHour.first[3] //
+            Log.d("timestamp","$surfAreaDataForHour.first[3]")
+            AllInfoCard(
+                    timestamp = timestamp.toString(),
+                    surfArea = SurfArea.HODDEVIK,
+                    waveHeightMap = waveHeightMap,
+                    windSpeedMap = windSpeedMap,
+                    windGustMap = windGustMap
+                )
             }
         }
     }
 
 
-@RequiresApi(Build.VERSION_CODES.O)
-fun getRemainingHoursOfDay(): Int {
-    val now = LocalTime.now()
-    val endOfDay = LocalTime.MAX
-    val remainingHours = endOfDay.hour - now.hour
-
-    return if (remainingHours < 0) 0 else remainingHours
-}
 
 @Composable
 fun AllInfoCard(
+    timestamp : String,
     surfArea: SurfArea,
     waveHeightMap: Map<SurfArea,List<Pair<List<Int>, Double>>>,
     windSpeedMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
@@ -101,7 +105,7 @@ fun AllInfoCard(
         )
         {
             Text(
-                text = "00",
+                text = "$timestamp",
                 style = TextStyle(
                     fontSize = 13.sp,
                     fontWeight = FontWeight(400),
@@ -178,7 +182,7 @@ fun AllInfoCard(
             )
 
             Text(
-                text = "18°",
+                text = "18",
                 style = TextStyle(
                     fontSize = 15.sp,
                     fontWeight = FontWeight(400),
