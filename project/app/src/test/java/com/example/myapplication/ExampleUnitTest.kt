@@ -94,11 +94,18 @@ class ExampleUnitTest {
     }
 
     @Test
-    fun distanceToIsCorrectForHoddevik() = runBlocking{
-        val pointForecast = waveForecastRepository.pointForecast(SurfArea.HODDEVIK.modelName, SurfArea.HODDEVIK.pointId, time="2024-04-14T12:00:00Z")
-        val result = waveForecastRepository.distanceTo(pointForecast.lat, pointForecast.lon, SurfArea.HODDEVIK)
-        println("Modelname: ${pointForecast.modelName}\nID: ${pointForecast.idNumber}")
-        println("Distance from point (${pointForecast.lat}, ${pointForecast.lon}) to (${SurfArea.HODDEVIK.lat}, ${SurfArea.HODDEVIK.lon}) was $result")
+    fun distanceToIsCorrectForAreas() = runBlocking{
+        val allPointForecast = SurfArea.entries.map { it to waveForecastRepository.pointForecast(it.modelName, it.pointId, time="2024-04-14T12:00:00Z")}
+        allPointForecast.forEach { (area, pointForecast) ->
+            val result = waveForecastRepository.distanceTo(
+                pointForecast.lat,
+                pointForecast.lon,
+                SurfArea.HODDEVIK
+            )
+            println(area.locationName)
+            println("Modelname: ${pointForecast.modelName} ID: ${pointForecast.idNumber}")
+            println("Distance from point (${pointForecast.lat}, ${pointForecast.lon}) to (${SurfArea.HODDEVIK.lat}, ${SurfArea.HODDEVIK.lon}) was $${result}km\n")
+        }
     }
 
 
