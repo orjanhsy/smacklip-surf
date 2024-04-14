@@ -74,9 +74,16 @@ class ExampleUnitTest {
     }
 
     @Test
-    fun waveDirANdPeriodNext3DaysForHoddevikIs3DaysLong() = runBlocking{
+    fun waveDirAndPeriodNext3DaysForHoddevikIs3DaysLong() = runBlocking{
         val result = waveForecastRepository.waveDirAndPeriodNext3DaysForArea(SurfArea.HODDEVIK.modelName, SurfArea.HODDEVIK.pointId)
         assert(result.size in 18..20)
+    }
+
+    @Test
+    fun hardcodedWaveForecastIsSameAsNonHardcoded() = runBlocking{
+        val hardcoded = waveForecastRepository.allRelevantWavePeriodAndDirNext3DaysHardCoded()
+        val nonHardcoded = waveForecastRepository.allRelevantWavePeriodAndDirNext3Days()
+        assert(hardcoded==nonHardcoded)
     }
 
     @Test
