@@ -66,7 +66,7 @@ class DailySurfAreaScreenViewModel: ViewModel() {
     }
 
 
-    fun getForecastNext7Days(surfArea: SurfArea){
+    fun getForecastNext7Days(surfArea: SurfArea)  {
         viewModelScope.launch(Dispatchers.IO) {
             _dailySurfAreaScreenUiState.update {
                 val newForecast7Days = smackLipRepository.getDataForTheNext7Days(surfArea)
@@ -75,6 +75,7 @@ class DailySurfAreaScreenViewModel: ViewModel() {
             }
         }
     }
+
 
 
 }
