@@ -10,6 +10,8 @@ interface WaveForecastRepository {
     suspend fun allRelevantWavePeriodAndDirNext3Days(): Map<SurfArea, List<Pair<Double?, Double?>>>
     suspend fun retrieveRelevantModelNamesAndPointIds(): Map<SurfArea, Pair<String?, Int?>>
 
+    suspend fun waveDirAndPeriodNext3DaysForArea(modelName: String, pointId: Int): List<Pair<Double?, Double?>>
+    suspend fun allRelevantWavePeriodAndDirNext3DaysHardCoded(): Map<SurfArea, List<Pair<Double?, Double?>>>
     }
 
 class WaveForecastRepositoryImpl(
@@ -32,7 +34,7 @@ class WaveForecastRepositoryImpl(
     .size=60, apiet henter de neste 60 timene, denne returnerer (ca?) 20 pair<dir, tp>
     - altså hver tredje time - for et område.
      */
-    suspend fun waveDirAndPeriodNext3DaysForArea(modelName: String, pointId: Int): List<Pair<Double?, Double?>> {
+    override suspend fun waveDirAndPeriodNext3DaysForArea(modelName: String, pointId: Int): List<Pair<Double?, Double?>> {
         val availableForecastTimes = waveForecastDataSource.fetchAvaliableTimestamps().availableForecastTimes
         val dirAndTp: List<Pair<Double?, Double?>> = availableForecastTimes.map {time ->
             waveDirAndPeriod(modelName, pointId, time)
@@ -42,6 +44,17 @@ class WaveForecastRepositoryImpl(
 
     // map[surfarea] -> List<Pair<Direction, period>>  .size=20
     override suspend fun allRelevantWavePeriodAndDirNext3Days(): Map<SurfArea, List<Pair<Double?, Double?>>> {
+        val modelNamesAndPointIds: Map<SurfArea, Pair<String?, Int?>> = retrieveRelevantModelNamesAndPointIds()
+        val relevantForecasts: Map<SurfArea, List<Pair<Double?, Double?>>> = SurfArea.entries.associateWith {sa ->
+            val modelName = modelNamesAndPointIds[sa]?.first!!
+            val pointId = modelNamesAndPointIds[sa]?.second!!
+
+            waveDirAndPeriodNext3DaysForArea(modelName, pointId)
+        }
+        return relevantForecasts
+    }
+
+    override suspend fun allRelevantWavePeriodAndDirNext3DaysHardCoded(): Map<SurfArea, List<Pair<Double?, Double?>>> {
         val modelNamesAndPointIds: Map<SurfArea, Pair<String?, Int?>> = retrieveRelevantModelNamesAndPointIds()
         val relevantForecasts: Map<SurfArea, List<Pair<Double?, Double?>>> = SurfArea.entries.associateWith {sa ->
             val modelName = modelNamesAndPointIds[sa]?.first!!
