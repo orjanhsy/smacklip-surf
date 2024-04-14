@@ -2,6 +2,7 @@ package com.example.myapplication.data.waveforecast
 
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.waveforecast.PointForecast
+import com.example.myapplication.model.waveforecast.PointForecasts
 import io.ktor.http.content.NullBody
 import kotlin.math.abs
 
@@ -16,39 +17,9 @@ class WaveForecastRepositoryImpl(
     private val waveForecastDataSource: WaveForecastDataSource = WaveForecastDataSource()
 ): WaveForecastRepository {
 
-    private fun inArea(lat: Double?, lon: Double?, surfArea: SurfArea, radius: Double = 0.5): Boolean {
-        return (
-            lat!! in surfArea.lat - radius..surfArea.lat + radius &&
-            lon!! in surfArea.lon - radius..surfArea.lon + radius
-        )
-    }
-
-    /*
-    TODO:
-    Make it call on pointforecast for each surfarea instead of filtering from fetchAllPointForecasts and measure time spent.
-    */
-    override suspend fun pointForecastNext3Days(): Map<String, List<List<PointForecast>>> {
-        val availableForecastTimes = waveForecastDataSource.fetchAvaliableTimestamps().availableForecastTimes
-
-        val allPointForecastsNext3Days = mutableMapOf<String, List<List<PointForecast>>>()
-        SurfArea.entries.map{
-            allPointForecastsNext3Days.put(
-                it.locationName,
-                availableForecastTimes.map {time ->
-                    waveForecastDataSource.fetchAllPointForecasts(time).filter { pointForecast ->
-                        inArea(pointForecast.lat, pointForecast.lon, it)
-                    }.sortedBy { pointForecast -> pointForecast.forcastDateTime}
-                }
-            )
-        }
-
-        return allPointForecastsNext3Days
-    }
-
 
     //hardkodet: Surfarea.modelName (område), SurfArea.pointId(punkt)
     private suspend fun pointForecast(modelName: String, pointId: Int, time: String): PointForecast {
-
         return waveForecastDataSource.fetchPointForecast(modelName, pointId, time)
     }
 
@@ -87,16 +58,20 @@ class WaveForecastRepositoryImpl(
         val time = waveForecastDataSource.fetchAvaliableTimestamps().availableForecastTimes[1]
         val allForecasts = waveForecastDataSource.fetchAllPointForecasts(time)
         val modelNamesAndIds = SurfArea.entries.associateWith {area ->
-            var closest: Pair<Double, PointForecast?> = Pair(100.0, null)
-            allForecasts.forEach { pointForecast ->
-                val distanceToPoint = distanceTo(pointForecast.lat, pointForecast.lon, area)
-                if(distanceToPoint < closest.first) {
-                    closest = Pair(distanceToPoint, pointForecast)
-                }
-            }
-            Pair(closest.second?.modelName, closest.second?.idNumber)
+            getClosestPointForecast(allForecasts, area)
         }
         return modelNamesAndIds
+    }
+
+    private fun getClosestPointForecast(allForecasts: List<PointForecast>, surfArea: SurfArea): Pair<String?, Int?> {
+        var closest: Pair<Double, PointForecast?> = Pair(100.0, null)
+        allForecasts.forEach { pointForecast ->
+            val distanceToPoint = distanceTo(pointForecast.lat, pointForecast.lon, surfArea)
+            if(distanceToPoint < closest.first) {
+                closest = Pair(distanceToPoint, pointForecast)
+            }
+        }
+        return Pair(closest.second?.modelName, closest.second?.idNumber)
     }
 
     private fun distanceTo(lat: Double, lon: Double, surfArea: SurfArea): Double {
