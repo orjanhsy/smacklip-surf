@@ -5,6 +5,13 @@ import com.example.myapplication.model.waveforecast.PointForecast
 import com.example.myapplication.model.waveforecast.PointForecasts
 import io.ktor.http.content.NullBody
 import kotlin.math.abs
+import kotlin.math.sin
+import kotlin.math.cos
+import kotlin.math.sqrt
+import kotlin.math.atan2
+import kotlin.math.pow
+import kotlin.math.PI
+
 
 interface WaveForecastRepository {
     suspend fun allRelevantWavePeriodAndDirNext3Days(): Map<SurfArea, List<Pair<Double?, Double?>>>
@@ -87,11 +94,22 @@ class WaveForecastRepositoryImpl(
     }
 
     override fun distanceTo(lat: Double, lon: Double, surfArea: SurfArea): Double {
-        val areaLat = surfArea.lat
-        val areaLon = surfArea.lon
-
-        return abs(areaLat-lat) + abs(areaLon-lon)
+        // acos(sin(lat1)*sin(lat2)+cos(lat1)*cos(lat2)*cos(lon2-lon1))*6371
+        val radius = 6371.0 // Earth radius in kilometers
+        val lat1Rad = lat * PI / 180.0
+        val lon1Rad = lon * PI / 180.0
+        val lat2Rad = surfArea.lat * PI / 180.0
+        val lon2Rad = surfArea.lon * PI / 180.0
+        val dLat = lat2Rad - lat1Rad
+        val dLon = lon2Rad - lon1Rad
+        val a = sin(dLat / 2).pow(2) +
+                cos(lat1Rad) * cos(lat2Rad) *
+                sin(dLon / 2).pow(2)
+        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
+        return radius * c
     }
+
+
 }
 
 
