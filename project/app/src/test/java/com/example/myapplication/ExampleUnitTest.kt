@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.view.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import com.example.myapplication.data.locationForecast.LocationForecastRepositoryImpl
@@ -56,16 +57,6 @@ class ExampleUnitTest {
         }
     }
 
-    // slow ver.
-    @Test
-    fun pointForecastNext3DaysIsNotEmptyForAnySurfArea() = runBlocking {
-        smackLipRepository.getPointForecastsNext3Days().forEach {allForecastsInArea ->
-            assert(allForecastsInArea.value.all{ forecast -> forecast.isNotEmpty() } ) {
-                "A time interval in ${allForecastsInArea.key} had no forecast"
-            }
-        }
-    }
-
     @Test
     fun accessTokenIsAcquired() = runBlocking {
         val (accessToken, refreshToken) = waveForecastDataSource.getAccessToken()
@@ -74,19 +65,47 @@ class ExampleUnitTest {
 
     //fast ver.
     @Test
-    fun allRelevantWavePeriodAndDirNext3DaysWorks() = runBlocking {
+    fun allRelevantWavePeriodAndDirsGet60HrsOfData() = runBlocking {
         val relevantForecasts = waveForecastRepository.allRelevantWavePeriodAndDirNext3Days()
         relevantForecasts.forEach {
             println(it)
         }
         assert(relevantForecasts.size == SurfArea.entries.size) {"Missing forecast(s) for certain surfarea(s)"}
-        assert(relevantForecasts.all { (_, forecast) -> forecast.size <= 20 }) {"Some forecast is not of length 20 (ie. 60hrs long)"}
+        assert(relevantForecasts.all { (_, forecast) -> forecast.size in 18 .. 21 }) {"Some forecast is not of length 21 (ie. 60hrs long)"}
+    }
+
+    @Test
+    fun waveDirAndPeriodNext3DaysForHoddevikIs3DaysLong() = runBlocking{
+        val result = waveForecastRepository.waveDirAndPeriodNext3DaysForArea(SurfArea.HODDEVIK.modelName, SurfArea.HODDEVIK.pointId)
+        assert(result.size in 18 .. 21) {"Forecast for hoddevik should be of size 21, was ${result.size}"}
+    }
+
+    @Test
+    fun hardcodedWaveForecastIsSameAsNonHardcoded() = runBlocking{
+        val hardcoded = waveForecastRepository.allRelevantWavePeriodAndDirNext3DaysHardCoded()
+        val nonHardcoded = waveForecastRepository.allRelevantWavePeriodAndDirNext3Days()
+        assert(hardcoded==nonHardcoded)
     }
 
     @Test
     fun retrievesRelevantModelNamesAndPointIdsWorks() = runBlocking{
         val data = waveForecastRepository.retrieveRelevantModelNamesAndPointIds()
         println(data)
+    }
+
+    @Test
+    fun distanceToIsCorrectForAreas() = runBlocking{
+        val allPointForecast = SurfArea.entries.map { it to waveForecastRepository.pointForecast(it.modelName, it.pointId, time="2024-04-14T12:00:00Z")}
+        allPointForecast.forEach { (area, pointForecast) ->
+            val result = waveForecastRepository.distanceTo(
+                pointForecast.lat,
+                pointForecast.lon,
+                area
+            )
+            println(area.locationName)
+            println("Modelname: ${pointForecast.modelName} ID: ${pointForecast.idNumber}")
+            println("Distance from point (${pointForecast.lat}, ${pointForecast.lon}) to (${area.lat}, ${area.lon}) was $${result}km\n")
+        }
     }
 
 
