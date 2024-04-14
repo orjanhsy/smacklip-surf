@@ -33,6 +33,8 @@ interface SmackLipRepository {
 
     suspend fun getAllWaveForecastsNext3Days(): Map<SurfArea, List<Pair<Double?, Double?>>>
 
+    suspend fun getWaveForecastsNext3DaysForArea(surfArea: SurfArea): List<Pair<Double?, Double?>>
+
     suspend fun getTimeSeriesDayByDay(surfArea: SurfArea): List<List<Pair<String, DataOF>>>
 }
 
@@ -155,7 +157,15 @@ class SmackLipRepositoryImpl (
     }
 
     override suspend fun getAllWaveForecastsNext3Days(): Map<SurfArea, List<Pair<Double?, Double?>>> {
-        return waveForecastRepository.allRelevantWavePeriodAndDirNext3Days()
+        return try {
+            waveForecastRepository.allRelevantWavePeriodAndDirNext3DaysHardCoded()
+        } catch (e: Exception) {
+            waveForecastRepository.allRelevantWavePeriodAndDirNext3Days()
+        }
+    }
+
+    override suspend fun getWaveForecastsNext3DaysForArea(surfArea: SurfArea): List<Pair<Double?, Double?>> {
+        return waveForecastRepository.waveDirAndPeriodNext3DaysForArea(surfArea.modelName, surfArea.pointId)
     }
 
     override suspend fun getTimeSeriesDayByDay(surfArea: SurfArea): List<List<Pair<String, DataOF>>> {
