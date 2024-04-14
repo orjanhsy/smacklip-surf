@@ -56,16 +56,6 @@ class ExampleUnitTest {
         }
     }
 
-    // slow ver.
-    @Test
-    fun pointForecastNext3DaysIsNotEmptyForAnySurfArea() = runBlocking {
-        smackLipRepository.getPointForecastsNext3Days().forEach {allForecastsInArea ->
-            assert(allForecastsInArea.value.all{ forecast -> forecast.isNotEmpty() } ) {
-                "A time interval in ${allForecastsInArea.key} had no forecast"
-            }
-        }
-    }
-
     @Test
     fun accessTokenIsAcquired() = runBlocking {
         val (accessToken, refreshToken) = waveForecastDataSource.getAccessToken()

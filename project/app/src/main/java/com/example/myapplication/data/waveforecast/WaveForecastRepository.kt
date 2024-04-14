@@ -7,7 +7,6 @@ import io.ktor.http.content.NullBody
 import kotlin.math.abs
 
 interface WaveForecastRepository {
-    suspend fun pointForecastNext3Days(): Map<String, List<List<PointForecast>>>
     suspend fun allRelevantWavePeriodAndDirNext3Days(): Map<SurfArea, List<Pair<Double?, Double?>>>
     suspend fun retrieveRelevantModelNamesAndPointIds(): Map<SurfArea, Pair<String?, Int?>>
 
