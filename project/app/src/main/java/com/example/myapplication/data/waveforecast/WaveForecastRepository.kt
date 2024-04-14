@@ -44,12 +44,8 @@ class WaveForecastRepositoryImpl(
 
     // map[surfarea] -> List<Pair<Direction, period>>  .size=20
     override suspend fun allRelevantWavePeriodAndDirNext3Days(): Map<SurfArea, List<Pair<Double?, Double?>>> {
-        val modelNamesAndPointIds: Map<SurfArea, Pair<String?, Int?>> = retrieveRelevantModelNamesAndPointIds()
         val relevantForecasts: Map<SurfArea, List<Pair<Double?, Double?>>> = SurfArea.entries.associateWith {sa ->
-            val modelName = modelNamesAndPointIds[sa]?.first!!
-            val pointId = modelNamesAndPointIds[sa]?.second!!
-
-            waveDirAndPeriodNext3DaysForArea(modelName, pointId)
+            waveDirAndPeriodNext3DaysForArea(sa.modelName, sa.pointId)
         }
         return relevantForecasts
     }
