@@ -43,6 +43,7 @@ fun DailySurfAreaScreen(dailySurfAreaScreenViewModel: DailySurfAreaScreenViewMod
     val dailySurfAreaScreenUiState by dailySurfAreaScreenViewModel.dailySurfAreaScreenUiState.collectAsState()
     Log.d("hallo", "i luken")
     val nextSevenDays = dailySurfAreaScreenUiState.forecast7Days
+    dailySurfAreaScreenViewModel.getForecastNext7Days(SurfArea.HODDEVIK)
 
     Log.d("size", "${nextSevenDays.size}")
     val waveHeightMap: Map<SurfArea, List<Pair<List<Int>, Double>>> = mapOf(
@@ -69,7 +70,7 @@ fun DailySurfAreaScreen(dailySurfAreaScreenViewModel: DailySurfAreaScreenViewMod
                 val surfAreaDataForHour =
                     surfAreaDataForDay[hourIndex] //henter objektet for timen som er en liste med Pair<List<Int>, Double>
                 // List<Int> = tiden
-                val timestamp = surfAreaDataForHour.first[0] //3??
+                val timestamp = surfAreaDataForHour.first[3] //3??
                 Log.d("timestamp", "$timestamp")
                 AllInfoCard(
                     timestamp = timestamp.toString(),
