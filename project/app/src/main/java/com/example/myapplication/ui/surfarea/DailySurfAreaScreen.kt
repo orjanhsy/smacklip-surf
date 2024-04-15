@@ -1,4 +1,3 @@
-
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -65,21 +64,23 @@ fun DailySurfAreaScreen(dailySurfAreaScreenViewModel: DailySurfAreaScreenViewMod
         Log.d("klikker!!", "${nextSevenDays.size}")
 
         if (surfAreaDataForDay.isNotEmpty()) {
-        //if(nextSevenDays.isNotEmpty()){
             items(surfAreaDataForDay.size) { hourIndex -> //altså timer igjen av dagen
                 val surfAreaDataForHour =
                     surfAreaDataForDay[hourIndex] //henter objektet for timen som er en liste med Pair<List<Int>, Double>
                 // List<Int> = tiden
                 val timestamp = surfAreaDataForHour.first[3] //3??
+                val waveHeight = surfAreaDataForHour.second[0]
+                val windSpeed = surfAreaDataForHour.second[1]
+                val windGust = surfAreaDataForHour.second[1]
+
                 Log.d("timestamp", "$timestamp")
                 AllInfoCard(
                     timestamp = timestamp.toString(),
                     surfArea = SurfArea.HODDEVIK,
-                    waveHeightMap = waveHeightMap,
-                    windSpeedMap = windSpeedMap,
-                    windGustMap = windGustMap,
+                    waveHeight = waveHeight,
+                    windSpeed = windSpeed,
+                    windGust = windGust,
                     dailySurfAreaScreenUiState
-
                 )
             }
         } else {
@@ -87,9 +88,9 @@ fun DailySurfAreaScreen(dailySurfAreaScreenViewModel: DailySurfAreaScreenViewMod
                 AllInfoCard(
                     timestamp = "nei",
                     surfArea = SurfArea.HODDEVIK,
-                    waveHeightMap = waveHeightMap,
-                    windSpeedMap = windSpeedMap,
-                    windGustMap = windGustMap,
+                    waveHeight = 0.0,
+                    windSpeed = 0.0,
+                    windGust = 0.0,
                     dailySurfAreaScreenUiState
                 )
             }
@@ -97,35 +98,26 @@ fun DailySurfAreaScreen(dailySurfAreaScreenViewModel: DailySurfAreaScreenViewMod
     }
 }
 
-
-
-
 @Composable
 fun AllInfoCard(
     timestamp : String,
     surfArea: SurfArea,
-    waveHeightMap: Map<SurfArea,List<Pair<List<Int>, Double>>>,
-    windSpeedMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
-    windGustMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
+    waveHeight: Double,
+    windSpeed: Double,
+    windGust: Double,
     dailySurfAreaScreenUiState: DailySurfAreaScreenUiState
-    ) {
-
-    val waveHeight = waveHeightMap[surfArea] ?: listOf()
-    val windSpeed = windSpeedMap[surfArea] ?: listOf()
-    val windGust = windGustMap[surfArea] ?: listOf()
+) {
     Card(
         modifier = Modifier
             .padding(3.dp)
             .width(331.dp)
             .height(49.dp)
-
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(0.dp, Alignment.CenterHorizontally),
             verticalAlignment = Alignment.CenterVertically,
-        )
-        {
+        ) {
             Text(
                 text = "$timestamp",
                 style = TextStyle(
@@ -147,8 +139,7 @@ fun AllInfoCard(
             )
 
             Text(
-                text = "${if (windSpeed.isNotEmpty()) windSpeed[0].second else ""}" +
-                        if(windGust.isNotEmpty() && windSpeed.isNotEmpty() && windGust[0].second != windSpeed[0].second) "(${windGust[0].second})" else "",
+                text = "$windSpeed (${windGust})",
                 style = TextStyle(
                     fontSize = 13.sp,
                     lineHeight = 15.sp,
@@ -170,7 +161,7 @@ fun AllInfoCard(
             )
 
             Text(
-                text = "${if (waveHeight.isNotEmpty()) waveHeight[0].second else ""}",
+                text = "$waveHeight",
                 style = TextStyle(
                     fontSize = 13.sp,
                     lineHeight = 15.sp,
@@ -231,8 +222,6 @@ fun AllInfoCard(
         }
     }
 }
-
-
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
