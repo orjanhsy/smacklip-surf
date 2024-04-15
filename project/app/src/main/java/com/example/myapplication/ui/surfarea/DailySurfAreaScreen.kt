@@ -41,8 +41,8 @@ import com.example.myapplication.ui.theme.MyApplicationTheme
 fun DailySurfAreaScreen(dailySurfAreaScreenViewModel: DailySurfAreaScreenViewModel = viewModel()) {
     val dailySurfAreaScreenUiState by dailySurfAreaScreenViewModel.dailySurfAreaScreenUiState.collectAsState()
     Log.d("hallo", "i luken")
-
     val nextSevenDays = dailySurfAreaScreenUiState.forecast7Days
+
     Log.d("size", "${nextSevenDays.size}")
     val waveHeightMap: Map<SurfArea, List<Pair<List<Int>, Double>>> = mapOf(
         SurfArea.HODDEVIK to listOf(Pair(listOf(1, 2, 3, 4), 5.0))
@@ -60,7 +60,10 @@ fun DailySurfAreaScreen(dailySurfAreaScreenViewModel: DailySurfAreaScreenViewMod
             .padding(12.dp)
     ) {
         val surfAreaDataForDay = nextSevenDays.getOrElse(0) { emptyList() } //0 er altså i dag
+        Log.d("klikker!!", "${nextSevenDays.size}")
+
         if (surfAreaDataForDay.isNotEmpty()) {
+        //if(nextSevenDays.isNotEmpty()){
             items(surfAreaDataForDay.size) { hourIndex -> //altså timer igjen av dagen
                 val surfAreaDataForHour =
                     surfAreaDataForDay[hourIndex] //henter objektet for timen som er en liste med Pair<List<Int>, Double>
