@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.R
 import com.example.myapplication.model.surfareas.SurfArea
+import com.example.myapplication.ui.surfarea.DailySurfAreaScreenUiState
 import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
@@ -75,7 +76,9 @@ fun DailySurfAreaScreen(dailySurfAreaScreenViewModel: DailySurfAreaScreenViewMod
                     surfArea = SurfArea.HODDEVIK,
                     waveHeightMap = waveHeightMap,
                     windSpeedMap = windSpeedMap,
-                    windGustMap = windGustMap
+                    windGustMap = windGustMap,
+                    dailySurfAreaScreenUiState
+
                 )
             }
         } else {
@@ -85,7 +88,8 @@ fun DailySurfAreaScreen(dailySurfAreaScreenViewModel: DailySurfAreaScreenViewMod
                     surfArea = SurfArea.HODDEVIK,
                     waveHeightMap = waveHeightMap,
                     windSpeedMap = windSpeedMap,
-                    windGustMap = windGustMap
+                    windGustMap = windGustMap,
+                    dailySurfAreaScreenUiState
                 )
             }
         }
@@ -102,6 +106,7 @@ fun AllInfoCard(
     waveHeightMap: Map<SurfArea,List<Pair<List<Int>, Double>>>,
     windSpeedMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
     windGustMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
+    dailySurfAreaScreenUiState: DailySurfAreaScreenUiState
     ) {
 
     val waveHeight = waveHeightMap[surfArea] ?: listOf()
