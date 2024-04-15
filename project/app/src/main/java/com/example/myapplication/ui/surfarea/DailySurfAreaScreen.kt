@@ -40,10 +40,10 @@ import com.example.myapplication.ui.theme.MyApplicationTheme
 @Composable
 fun DailySurfAreaScreen(dailySurfAreaScreenViewModel: DailySurfAreaScreenViewModel = viewModel()) {
     val dailySurfAreaScreenUiState by dailySurfAreaScreenViewModel.dailySurfAreaScreenUiState.collectAsState()
-    Log.d("hallo","i luken")
+    Log.d("hallo", "i luken")
 
     val nextSevenDays = dailySurfAreaScreenUiState.forecast7Days
-    Log.d("size","${nextSevenDays.size}")
+    Log.d("size", "${nextSevenDays.size}")
     val waveHeightMap: Map<SurfArea, List<Pair<List<Int>, Double>>> = mapOf(
         SurfArea.HODDEVIK to listOf(Pair(listOf(1, 2, 3, 4), 5.0))
     )
@@ -60,14 +60,25 @@ fun DailySurfAreaScreen(dailySurfAreaScreenViewModel: DailySurfAreaScreenViewMod
             .padding(12.dp)
     ) {
         val surfAreaDataForDay = nextSevenDays.getOrElse(0) { emptyList() } //0 er altså i dag
-
-        items(surfAreaDataForDay.size) { hourIndex -> //altså timer igjen av dagen
-            val surfAreaDataForHour = surfAreaDataForDay[hourIndex] //henter objektet for timen som er en liste med Pair<List<Int>, Double>
-            // List<Int> = tiden
-            val timestamp = surfAreaDataForHour.first[3] //
-            Log.d("timestamp","$surfAreaDataForHour.first[3]")
-            AllInfoCard(
+        if (surfAreaDataForDay.isNotEmpty()) {
+            items(surfAreaDataForDay.size) { hourIndex -> //altså timer igjen av dagen
+                val surfAreaDataForHour =
+                    surfAreaDataForDay[hourIndex] //henter objektet for timen som er en liste med Pair<List<Int>, Double>
+                // List<Int> = tiden
+                val timestamp = surfAreaDataForHour.first[0] //3??
+                Log.d("timestamp", "$timestamp")
+                AllInfoCard(
                     timestamp = timestamp.toString(),
+                    surfArea = SurfArea.HODDEVIK,
+                    waveHeightMap = waveHeightMap,
+                    windSpeedMap = windSpeedMap,
+                    windGustMap = windGustMap
+                )
+            }
+        } else {
+            item {
+                AllInfoCard(
+                    timestamp = "nei",
                     surfArea = SurfArea.HODDEVIK,
                     waveHeightMap = waveHeightMap,
                     windSpeedMap = windSpeedMap,
@@ -76,6 +87,8 @@ fun DailySurfAreaScreen(dailySurfAreaScreenViewModel: DailySurfAreaScreenViewMod
             }
         }
     }
+}
+
 
 
 
