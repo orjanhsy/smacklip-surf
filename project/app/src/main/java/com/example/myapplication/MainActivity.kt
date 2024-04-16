@@ -47,8 +47,10 @@ fun SmackLipNavigation(){
             }
         }
         composable("SurfAreaScreen/{id}") { backStackEntry ->
-            val id = backStackEntry.arguments?.getString("id") ?: ""
-            SurfAreaScreen()
+            val surfArea = backStackEntry.arguments?.getString("SurfArea") ?: ""
+            SurfAreaScreen(){
+
+            }
 
         }
     }
