@@ -79,10 +79,9 @@ import com.mapbox.maps.extension.style.expressions.dsl.generated.e
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), navController: NavHostController){
+fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNavigateToSurfAreaScreen: (SurfArea) -> Unit ){
     val homeScreenUiState: HomeScreenUiState by homeScreenViewModel.homeScreenUiState.collectAsState()
     val favoriteSurfAreas by homeScreenViewModel.favoriteSurfAreas.collectAsState()
-
     val isSearchActive = remember { mutableStateOf(false) }
 
     Scaffold(
@@ -113,7 +112,8 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), navContr
                 windGustMap = homeScreenUiState.windGust,
                 windDirectionMap = homeScreenUiState.windDirection,
                 waveHeightMap = homeScreenUiState.waveHeight,
-                alerts = homeScreenUiState.allRelevantAlerts
+                alerts = homeScreenUiState.allRelevantAlerts,
+                onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
             )
             Column {
 
@@ -145,7 +145,8 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), navContr
                             alert.any {
                                 it.properties?.area?.contains(location.locationName) ?: false }
                         },
-                        homeScreenViewModel = homeScreenViewModel
+                        homeScreenViewModel = homeScreenViewModel,
+                        onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
                     )
                 }
             }
@@ -245,7 +246,8 @@ fun FavoritesList(
     windGustMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
     windDirectionMap:Map<SurfArea, List<Pair<List<Int>, Double>>>,
     waveHeightMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
-    alerts: List<List<Features>>?
+    alerts: List<List<Features>>?,
+    onNavigateToSurfAreaScreen: (SurfArea) -> Unit
 ) {
     Column {
 
@@ -276,7 +278,8 @@ fun FavoritesList(
                         waveHeightMap = waveHeightMap,
                         alerts = alerts,
                         homeScreenViewModel = HomeScreenViewModel(),
-                        showFavoriteButton = false
+                        showFavoriteButton = false,
+                        onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
                     )
                     if (alerts != null && alerts.isNotEmpty()) {
                         Image(
@@ -342,7 +345,8 @@ fun SurfAreaCard(
     waveHeightMap: Map<SurfArea,List<Pair<List<Int>, Double>>>,
     alerts: List<List<Features>>?,
     homeScreenViewModel: HomeScreenViewModel,
-    showFavoriteButton: Boolean = true
+    showFavoriteButton: Boolean = true,
+    onNavigateToSurfAreaScreen: (SurfArea) -> Unit
 ) {
 
     val windSpeed = windSpeedMap[surfArea] ?: listOf()
@@ -356,6 +360,8 @@ fun SurfAreaCard(
         modifier = Modifier
             .wrapContentSize()
             .padding(start = 8.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)
+            .clickable(
+                onClick = { onNavigateToSurfAreaScreen(surfArea) })
     ) {
 
         Box(
@@ -528,7 +534,8 @@ private fun PreviewSurfAreaCard() {
             waveHeightMap,
             listOf(listOf((Features(properties = Properties(description = "Det ræinar"))))),
             viewModel,
-            true
+            true,
+            onNavigateToSurfAreaScreen = {}
         )
     }
 }
@@ -537,6 +544,6 @@ private fun PreviewSurfAreaCard() {
 @Composable
 private fun PreviewHomeScreen() {
     MyApplicationTheme {
-        HomeScreen()
+        HomeScreen(){}
     }
 }
