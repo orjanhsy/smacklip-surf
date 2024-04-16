@@ -31,8 +31,12 @@ interface SmackLipRepository {
 
     suspend fun getDataForTheNext7Days(surfArea: SurfArea): MutableList<List<Pair<List<Int>, List<Double>>>>
 
-    suspend fun getPointForecastsNext3Days(): Map<String, List<List<PointForecast>>>
-    suspend fun getTimeSeriesDayByDay(surfArea: SurfArea): List<List<Pair<String, DataOF>>> }
+    suspend fun getAllWaveForecastsNext3Days(): Map<SurfArea, List<Pair<Double?, Double?>>>
+
+    suspend fun getWaveForecastsNext3DaysForArea(surfArea: SurfArea): List<Pair<Double?, Double?>>
+
+    suspend fun getTimeSeriesDayByDay(surfArea: SurfArea): List<List<Pair<String, DataOF>>>
+}
 
 class SmackLipRepositoryImpl (
     private val metAlertsRepository: MetAlertsRepositoryImpl = MetAlertsRepositoryImpl(),
@@ -152,8 +156,18 @@ class SmackLipRepositoryImpl (
         return resList
     }
 
-    override suspend fun getPointForecastsNext3Days(): Map<String, List<List<PointForecast>>>{
-        return waveForecastRepository.pointForecastNext3Days()
+    // mapper hvert enkelt surfarea til en liste med (bølgeretning, bølgeperiode) lik de i 'getWaveForecastNext3DaysForArea()' under.
+    override suspend fun getAllWaveForecastsNext3Days(): Map<SurfArea, List<Pair<Double?, Double?>>> {
+        return try {
+            waveForecastRepository.allRelevantWavePeriodAndDirNext3DaysHardCoded()
+        } catch (e: Exception) {
+            waveForecastRepository.allRelevantWavePeriodAndDirNext3Days()
+        }
+    }
+
+    // liste med pair(bølgeretning, bølgeperiode), .size in 18..20 (3timers intervaller, totalt 60 timer). Vet ikke hvorfor den av og til er 19 lang, da er det i så fall bare 57 timer forecast.
+    override suspend fun getWaveForecastsNext3DaysForArea(surfArea: SurfArea): List<Pair<Double?, Double?>> {
+        return waveForecastRepository.waveDirAndPeriodNext3DaysForArea(surfArea.modelName, surfArea.pointId)
     }
 
     override suspend fun getTimeSeriesDayByDay(surfArea: SurfArea): List<List<Pair<String, DataOF>>> {
