@@ -108,8 +108,8 @@ fun InfoCard() {
                 modifier = Modifier.padding(bottom = 8.dp) // Add padding to separate text from other content
             )
             Text(
-                text = "Vegen til kystbygda Hoddevik i Nordfjord er spektakulær i seg selv. Den går over en fjellovergang før den fortsetter nedover mot Hoddevik. Det er en vakker utsikt fra fjellpasset ned mot vegen med hårnålsvingene og videre ned til Hoddevik og den hvite Hoddevikstranda mot det blå Atlanterhavet.",
-                style = TextStyle( //har ikke lagt inn disse enda, skal gjøre det!
+                text = "${SurfArea.HODDEVIK.description}",
+                style = TextStyle(
                     fontSize = 13.sp,
                     fontWeight = FontWeight(400),
                     color = Color(0xFF4D5E6F),
@@ -118,7 +118,7 @@ fun InfoCard() {
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp) // Add padding to the text
             )
             Image(
-                painter = painterResource(id = R.drawable.rectangle12305),
+                painter = painterResource(id = SurfArea.HODDEVIK.image),
                 contentDescription = "image description",
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier
@@ -139,11 +139,9 @@ fun HeaderCard() {
     val formatter2 = DateTimeFormatter.ofPattern("EEEE, d.MM.", Locale.ENGLISH)
     val formatter1 = DateTimeFormatter.ofPattern("E, MMM. d", Locale.ENGLISH)
 
-    // Format the date using the first formatter
     val formattedDate1 = formatter1.format(currentDate)
     println("Formatted date 1: $formattedDate1")
 
-    // Format the date using the second formatter
     val formattedDate2 = formatter2.format(currentDate)
     println("Formatted date 2: $formattedDate2")
 
@@ -236,16 +234,7 @@ fun DayPreviewCard(surfAreaScreenUiState: SurfAreaScreenUiState, day: Int) {
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = when (day) {
-                        0 -> "mandag"
-                        1 -> "tirsdag"
-                        2 -> "onsdag"
-                        3 -> "torsdag"
-                        4 -> "fredag"
-                        5 -> "lørdag"
-                        6 -> "søndag"
-                        else -> "noneday"
-                    },
+                    text = "", //når merget så jeg kan se på Daily lettere
                     style = TextStyle(
                         fontSize = 9.sp,
                         fontWeight = FontWeight(400),
@@ -260,7 +249,7 @@ fun DayPreviewCard(surfAreaScreenUiState: SurfAreaScreenUiState, day: Int) {
                 horizontalArrangement = Arrangement.Center
             ){
                 Image(
-                    painter = painterResource(id = R.drawable.surfboard_5525217),
+                    painter = painterResource(id = R.drawable.surfboard_5525217), //trenger algoritme
                     contentDescription = "image description",
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier
@@ -282,7 +271,7 @@ fun DayPreviewCard(surfAreaScreenUiState: SurfAreaScreenUiState, day: Int) {
                         contentAlignment = Alignment.Center
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.tmpwave),
+                            painter = painterResource(id = R.drawable.tmpwave), //finne bedre
                             contentDescription = "image description",
                             contentScale = ContentScale.Crop,
                             //modifier = Modifier.fillMaxSize()
@@ -294,7 +283,7 @@ fun DayPreviewCard(surfAreaScreenUiState: SurfAreaScreenUiState, day: Int) {
                     }
                 }
                 Column {
-                    Text(
+                    Text( //se på hvorfan jeg har gjort det i Daily når merget
                         text = if (surfAreaScreenUiState.maxWaveHeights.isNotEmpty()) "${surfAreaScreenUiState.maxWaveHeights[day]}m" else "",
                         style = TextStyle(
                             fontSize = 13.sp,
