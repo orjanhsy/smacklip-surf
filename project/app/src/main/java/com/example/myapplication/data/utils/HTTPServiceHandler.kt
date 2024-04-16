@@ -1,4 +1,4 @@
-package com.example.myapplication.data.helpers
+package com.example.myapplication.data.utils
 
 object HTTPServiceHandler {
     //Global API authenticator

@@ -1,39 +1,28 @@
 package com.example.myapplication.data.waveforecast
 
-import android.system.Os.accept
 import com.example.myapplication.data.config.Client
-import com.example.myapplication.data.helpers.HTTPServiceHandler.WF_ACCESS_TOKEN_URL
-import com.example.myapplication.data.helpers.HTTPServiceHandler.WF_ALL_POINT_FORECASTS_URL
-import com.example.myapplication.data.helpers.HTTPServiceHandler.WF_AVALIABLE_ALL_URL
-import com.example.myapplication.data.helpers.HTTPServiceHandler.WF_BASE_URL
-import com.example.myapplication.data.helpers.HTTPServiceHandler.WF_POINT_FORECAST_URL
+import com.example.myapplication.data.utils.HTTPServiceHandler.WF_ACCESS_TOKEN_URL
+import com.example.myapplication.data.utils.HTTPServiceHandler.WF_ALL_POINT_FORECASTS_URL
+import com.example.myapplication.data.utils.HTTPServiceHandler.WF_AVALIABLE_ALL_URL
+import com.example.myapplication.data.utils.HTTPServiceHandler.WF_BASE_URL
+import com.example.myapplication.data.utils.HTTPServiceHandler.WF_POINT_FORECAST_URL
 import com.example.myapplication.model.waveforecast.AccessToken
 import com.example.myapplication.model.waveforecast.PointForecast
-import com.example.myapplication.model.waveforecast.PointForecasts
 import com.example.myapplication.model.waveforecast.TimeStamps
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.DefaultRequest
-import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.request.*
-import io.ktor.client.statement.bodyAsText
 import io.ktor.http.*
 import io.ktor.client.plugins.auth.*
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.DEFAULT
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
-import io.ktor.client.request.forms.submitForm
-import io.ktor.client.statement.HttpResponse
-import io.ktor.client.utils.EmptyContent.contentType
-import io.ktor.http.HttpHeaders.Accept
 import io.ktor.serialization.gson.gson
-import io.ktor.serialization.kotlinx.json.json
 
 fun main() {
 

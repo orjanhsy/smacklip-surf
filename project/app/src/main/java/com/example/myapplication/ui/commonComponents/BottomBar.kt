@@ -53,40 +53,34 @@ fun BottomBar(){
             unselectedIcon = Icons.Default.Settings
         ),
     )
-    Scaffold(
-        bottomBar = {
-            NavigationBar {
-                items.forEachIndexed{index, item->
-                    NavigationBarItem(
-                        selected = selectedItemIndex == index,
-                        onClick = {
-                                  selectedItemIndex = index
-                            // her man bruker navController
+    NavigationBar {
+        items.forEachIndexed{index, item->
+            NavigationBarItem(
+                selected = selectedItemIndex == index,
+                onClick = {
+                    selectedItemIndex = index
+                    // her man bruker navController
 
-                        },
-                        label = {
-                                Text(text = item.title)
-                        },
-                        icon = {
-                            BadgedBox(
-                                badge = {
+                },
+                label = {
+                    Text(text = item.title)
+                },
+                icon = {
+                    BadgedBox(
+                        badge = {
 
-                                }) {
-                                Icon(
-                                    imageVector = if(index == selectedItemIndex){
-                                        item.selectedIcon }
-                                    else item.unselectedIcon
-                                            ,
-                                    contentDescription = item.title
-                                )
-                            }
-                        }
-                    )
+                        }) {
+                        Icon(
+                            imageVector = if(index == selectedItemIndex){
+                                item.selectedIcon }
+                            else item.unselectedIcon
+                            ,
+                            contentDescription = item.title
+                        )
+                    }
                 }
-            }
+            )
         }
-    ) {
-
     }
 }
 
