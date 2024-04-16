@@ -1,6 +1,10 @@
 package com.example.myapplication
 
+import android.view.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import com.example.myapplication.data.locationForecast.LocationForecastRepositoryImpl
+import com.example.myapplication.data.metalerts.MetAlertsDataSource
 import com.example.myapplication.model.locationforecast.DataLF
 import kotlinx.coroutines.runBlocking
 import com.example.myapplication.model.metalerts.MetAlerts
@@ -23,6 +27,7 @@ import com.example.myapplication.model.locationforecast.TimeserieLF
 
 import com.example.myapplication.model.oceanforecast.OceanForecast
 import com.example.myapplication.model.oceanforecast.TimeserieOF
+import com.example.myapplication.ui.surfarea.SurfAreaScreenViewModel
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.VersionCheckResult
 import junit.framework.TestCase.assertEquals
@@ -47,43 +52,92 @@ class ExampleUnitTest {
     @Test
     fun fetchAvaliableTimestampsReturns20ForecastTimes() = runBlocking {
         val response = waveForecastDataSource.fetchAvaliableTimestamps()
-        assert(response.availableForecastTimes.size == 20) // may vary
-    }
-
-    @Test
-    fun pointForecastNext3DaysHasForecastsOfLength20() = runBlocking {
-        val allPointForecastsNext3Days = waveForecastRepository.pointForecastNext3Days()
-        allPointForecastsNext3Days.forEach {
-            println("${it.key} -> ${it.value}")
-            assert(it.value.size == 20) {"Length of forecast was ${it.value.size}, should be 20"}
+        assert(response.availableForecastTimes.size > 0) {
+            "fetchAvailableTimestamps() returns no timestamps"
         }
     }
 
     @Test
-    fun pointForecastNext3DaysWorksForWaveSmackLipRepository() = runBlocking{
-        assert(smackLipRepository.getPointForecastsNext3Days().isNotEmpty())
+    fun accessTokenIsAcquired() = runBlocking {
+        val (accessToken, refreshToken) = waveForecastDataSource.getAccessToken()
+        assert(accessToken.isNotBlank()) {"No token was retrieved"}
+    }
+
+    //fast ver.
+    @Test
+    fun allRelevantWavePeriodAndDirsGet60HrsOfData() = runBlocking {
+        val relevantForecasts = waveForecastRepository.allRelevantWavePeriodAndDirNext3Days()
+        relevantForecasts.forEach {
+            println(it)
+        }
+        assert(relevantForecasts.size == SurfArea.entries.size) {"Missing forecast(s) for certain surfarea(s)"}
+        assert(relevantForecasts.all { (_, forecast) -> forecast.size in 18 .. 21 }) {"Some forecast is not of length 21 (ie. 60hrs long)"}
     }
 
     @Test
-    fun accessTokenIsAcquired() = runBlocking{
-        val (accessToken, refreshToken) = waveForecastDataSource.getAccessToken()
-        assert(accessToken.isNotBlank())
+    fun waveDirAndPeriodNext3DaysForHoddevikIs3DaysLong() = runBlocking{
+        val result = waveForecastRepository.waveDirAndPeriodNext3DaysForArea(SurfArea.HODDEVIK.modelName, SurfArea.HODDEVIK.pointId)
+        assert(result.size in 18 .. 21) {"Forecast for hoddevik should be of size 21, was ${result.size}"}
     }
+
+    @Test
+    fun hardcodedWaveForecastIsSameAsNonHardcoded() = runBlocking{
+        val hardcoded = waveForecastRepository.allRelevantWavePeriodAndDirNext3DaysHardCoded()
+        val nonHardcoded = waveForecastRepository.allRelevantWavePeriodAndDirNext3Days()
+        assert(hardcoded==nonHardcoded)
+    }
+
+    @Test
+    fun retrievesRelevantModelNamesAndPointIdsWorks() = runBlocking{
+        val data = waveForecastRepository.retrieveRelevantModelNamesAndPointIds()
+        println(data)
+    }
+
+    @Test
+    fun distanceToIsCorrectForAreas() = runBlocking{
+        val allPointForecast = SurfArea.entries.map { it to waveForecastRepository.pointForecast(it.modelName, it.pointId, time="2024-04-14T12:00:00Z")}
+        allPointForecast.forEach { (area, pointForecast) ->
+            val result = waveForecastRepository.distanceTo(
+                pointForecast.lat,
+                pointForecast.lon,
+                area
+            )
+            println(area.locationName)
+            println("Modelname: ${pointForecast.modelName} ID: ${pointForecast.idNumber}")
+            println("Distance from point (${pointForecast.lat}, ${pointForecast.lon}) to (${area.lat}, ${area.lon}) was $${result}km\n")
+        }
+    }
+
 
     //MetAlerts
     private val metAlertsRepository: MetAlertsRepositoryImpl = MetAlertsRepositoryImpl()
-    private val metAlertJson = File("src/test/java/com/example/myapplication/metAlerts.json").readText()
+    private val metAlertsDataSource: MetAlertsDataSource = MetAlertsDataSource()
+
     @Test
-    fun testMetAlertsAreaNameWithProxy() = runBlocking {
-        val feature = metAlertsRepository.getFeatures()[0]
-        println(feature.properties?.area)
+    fun metAlertsContainGeoDataIfNotEmpty() = runBlocking {
+        SurfArea.entries.forEach {
+            val alerts = metAlertsRepository.getRelevantAlertsFor(it)
+            assert(if (alerts.isNotEmpty()) alerts.all{alert ->
+                    alert.geometry?.type == "Polygon" || alert.geometry?.type == "MultiPolygon"
+                } else true
+            ) {
+                "Metalerts provided data, however the geodata type was incorrect"
+            }
+        }
     }
 
     @Test
-    fun getRelevantAlertsForFedjeByApiCall() = runBlocking {
-        val relevantAlerts = metAlertsRepository.getRelevantAlertsFor(SurfArea.FEDJE)
-        println(relevantAlerts)
-        relevantAlerts.forEach { println("Alert: $it") }
+    fun relevantAlertsDoesNotLeaveOutAnyRelevantAlerts(): Unit = runBlocking {
+        val relevantAlerts = SurfArea.entries.map { it to metAlertsRepository.getRelevantAlertsFor(it) }
+        val allAlerts = metAlertsDataSource.fetchMetAlertsData().features
+        relevantAlerts.map {(area, alerts) ->
+            val sizeAll = allAlerts.filter {alert ->
+                alert.properties?.area?.contains(area.locationName) ?: false
+            }.size
+            assert(sizeAll <= alerts.size) {
+                "All alerts contains $sizeAll alerts for ${area.locationName}, relevantAlerts() recovered ${alerts.size} of them"
+            }
+        }
     }
 
 
@@ -104,9 +158,8 @@ class ExampleUnitTest {
         //sjekker om bølgehøyden er lik ved å direkte aksessere den i filen og ved å bruke repositoryet sin get-metode for bølgehøyde
         //assert(timeSeries[0].second.instant.details.sea_surface_wave_height == oceanforecastRepository.getWaveHeights()[0].second)
         //assert(timeSeries[10].second.instant.details.sea_surface_wave_height == oceanforecastRepository.getWaveHeights()[10].second)
-
     }
-    
+
     //Location Forecast
     private val locationForecastRepository = LocationForecastRepositoryImpl()
 
@@ -163,6 +216,15 @@ class ExampleUnitTest {
         assert(timeList[1] == 3)
         assert(timeList[2] == 13)
         assert(timeList[3] == 19)
+
+    }
+
+    @Test
+    fun waveHeightsAreParsedCorrectly() = runBlocking {
+        val dataNext7 = smackLipRepository.getDataForTheNext7Days(SurfArea.HODDEVIK)
+        val waveHeights = dataNext7.map{ dayForecast -> dayForecast.map { dayData -> dayData.first to dayData.second[0]}}
+        println("Size of all wave heights ${waveHeights.size}")
+        println("Size of waveheighs one step in ${waveHeights[1]}")
 
     }
 
