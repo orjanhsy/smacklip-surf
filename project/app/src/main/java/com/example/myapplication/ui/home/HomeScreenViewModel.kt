@@ -1,15 +1,18 @@
 package com.example.myapplication.ui.home
-import android.util.Log
+
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.R
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
-import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.metalerts.Features
+import com.example.myapplication.model.surfareas.SurfArea
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -17,7 +20,7 @@ data class HomeScreenUiState(
     val locationName: String = "",
     val windSpeed: Map<SurfArea, List<Pair<List<Int>, Double>>> = emptyMap(),
     val windGust: Map<SurfArea, List<Pair<List<Int>, Double>>> = emptyMap(),
-    val windDirection: List<Pair<String, Double>> = emptyList(),
+    val windDirection: Map<SurfArea,List<Pair<List<Int>, Double>>> = emptyMap(),
     val waveHeight: Map<SurfArea, List<Pair<List<Int>, Double>>> = emptyMap(),
     val allRelevantAlerts: List<List<Features>> = emptyList()
 )
@@ -25,11 +28,16 @@ data class HomeScreenUiState(
 class HomeScreenViewModel : ViewModel() {
     private val smackLipRepository = SmackLipRepositoryImpl()
     private val _homeScreenUiState = MutableStateFlow(HomeScreenUiState())
+    private val _searchQuery = MutableStateFlow("")
+    private val _favoriteSurfAreas = MutableStateFlow<List<SurfArea>>(emptyList())
     val homeScreenUiState: StateFlow<HomeScreenUiState> = _homeScreenUiState.asStateFlow()
+    val searchQuery = _searchQuery.asStateFlow()
+    val favoriteSurfAreas: StateFlow<List<SurfArea>> = _favoriteSurfAreas
 
     init {
         updateWindSpeed()
         updateWindGust()
+        updateWindDirection()
         updateWaveHeight()
         updateAlerts()
 
@@ -57,6 +65,18 @@ class HomeScreenViewModel : ViewModel() {
             }
             _homeScreenUiState.update {
                 it.copy(windGust = updatedWindGust)
+            }
+        }
+    }
+    fun updateWindDirection() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val updatedWindDirection: MutableMap<SurfArea, List<Pair<List<Int>, Double>>> = mutableMapOf()
+            SurfArea.entries.forEach {surfArea ->
+                val newWindDirection = smackLipRepository.getWindDirection(surfArea)
+                updatedWindDirection[surfArea] = newWindDirection
+            }
+            _homeScreenUiState.update {
+                it.copy(windDirection = updatedWindDirection)
             }
         }
     }
@@ -108,6 +128,37 @@ class HomeScreenViewModel : ViewModel() {
         }
     }
 
+    /* val searchResults: StateFlow<List<SurfArea>> =
+        snapshotFlow { searchQuery }
+            .combine(flowOf(listOf(SurfArea.entries))) { searchQuery, surfAreas ->
+                when {
+                    searchQuery.isNotEmpty() -> surfAreas.filter { surfArea ->
+                        surfArea.locationName.contains(searchQuery, ignoreCase = true)
+                    }
+                    else -> surfAreas
+                }
+            }.stateIn(
+                scope = viewModelScope,
+                initialValue = emptyList()
+            )
+
+    fun onSearchQueryChange(newQuery: String) {
+        searchQuery = newQuery
+    } */
+
+    fun updateFavorites(surfArea: SurfArea) {
+        if (_favoriteSurfAreas.value.contains(surfArea)) {
+            _favoriteSurfAreas.value -= surfArea
+        } else {
+            _favoriteSurfAreas.value += surfArea
+        }
+    }
+
+    fun updateFavoritesIcon(surfArea: SurfArea): Int {
+        return if (_favoriteSurfAreas.value.contains(surfArea)) {
+            R.drawable.yellow_star_icon
+        } else {
+            R.drawable.empty_star_icon
+        }
+    }
 }
-
-

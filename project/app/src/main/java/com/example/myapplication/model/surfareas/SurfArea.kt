@@ -15,16 +15,16 @@ enum class SurfArea(
 
 ) {
     HODDEVIK("Hoddevik",62.1237, 5.1615833, R.drawable.cover___hoddevik, 300, "description", modelName = "stad20143x2v", pointId = 2),
-    ERVIKA("Ervika", 62.166674, 5.115609, 0, 310, "description", modelName = "stad20143x2v", pointId = 2),
+    ERVIKA("Ervika", 62.166674, 5.115609,R.drawable.cover__ervika , 310, "description", modelName = "stad20143x2v", pointId = 2),
 
     //Lofoten
-    SKAGSANDEN("Skagsanden", 68.107052, 13.295348, 0, 300, "description", modelName = "lofoten2v", pointId = 9),
-    UNSTAD("Unstad", 68.268527, 13.580834, 0, 320, "description", modelName = "lofoten2v", pointId = 10),
+    SKAGSANDEN("Skagsanden", 68.107052, 13.295348, R.drawable.cover__skagsanden, 300, "description", modelName = "lofoten2v", pointId = 9),
+    UNSTAD("Unstad", 68.268527, 13.580834,R.drawable.cover__unstad , 320, "description", modelName = "lofoten2v", pointId = 10),
     GIMSTAD("Gimstad", 68.637591, 14.427877, 0, 270, "description", modelName = "vesteralen2v", pointId = 20),
     SANDVIKBUKTA("Sandvikbukta", 68.757964, 14.470910, 0, 230, "description", modelName = "vesteralen2v", pointId = 20),
 
     //Sør-vest
-    JAEREN("Jæren (Boresanden)", 58.800230, 5.548844, 0, 270, "description", modelName = "rogaland2v", pointId = 36),
+    JAEREN("Jæren (Boresanden)", 58.800230, 5.548844, R.drawable.cover__jeren, 270, "description", modelName = "rogaland2v", pointId = 36),
     KARMOEY("Karmøy (Stavasanden)", 59.233526, 5.183540, 0, 320, "description", modelName = "rogaland2v", pointId = 55),
 
     //Østlandet
@@ -36,3 +36,4 @@ enum class SurfArea(
     FEDJE("Fedje",60.7789, 4.71486, 0, 360, "description", modelName = "bremanger2v", pointId = 127),
 
 }
+
