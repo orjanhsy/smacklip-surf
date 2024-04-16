@@ -127,7 +127,7 @@ fun InfoCard() {
 }
 
 
-@RequiresApi
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HeaderCard() {
     val norwegianLocale = Locale("no", "NO")
