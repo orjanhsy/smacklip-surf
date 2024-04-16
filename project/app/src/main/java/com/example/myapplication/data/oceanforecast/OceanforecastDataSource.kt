@@ -1,8 +1,8 @@
 package com.example.myapplication.data.oceanforecast
 
-import com.example.myapplication.data.helpers.HTTPServiceHandler.API_HEADER
-import com.example.myapplication.data.helpers.HTTPServiceHandler.API_KEY
-import com.example.myapplication.data.helpers.HTTPServiceHandler.OCEAN_FORECAST_URL
+import com.example.myapplication.data.utils.HTTPServiceHandler.API_HEADER
+import com.example.myapplication.data.utils.HTTPServiceHandler.API_KEY
+import com.example.myapplication.data.utils.HTTPServiceHandler.OCEAN_FORECAST_URL
 import com.example.myapplication.model.oceanforecast.OceanForecast
 import com.example.myapplication.model.surfareas.SurfArea
 import io.ktor.client.HttpClient

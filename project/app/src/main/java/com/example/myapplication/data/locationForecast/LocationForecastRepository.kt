@@ -23,13 +23,14 @@ class LocationForecastRepositoryImpl(
     private fun findWindSpeedFromData(dataLF: DataLF): Double{
         return dataLF.instant.details.wind_speed
     }
+
     private fun findWindSpeedOfGustFromData(dataLF: DataLF): Double{
         return dataLF.instant.details.wind_speed_of_gust
     }
+
     private fun findWindDirectionFromData(dataLF: DataLF): Double{
         return dataLF.instant.details.wind_from_direction
     }
-
 
     override suspend fun getWindDirection(surfArea: SurfArea): List<Pair<String, Double>> {
         // Henter timeSeries for det spesifikke surfArea-området
