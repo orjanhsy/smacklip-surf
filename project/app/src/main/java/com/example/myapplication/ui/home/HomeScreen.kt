@@ -71,6 +71,7 @@ import com.example.myapplication.R
 import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.model.metalerts.Properties
 import com.example.myapplication.model.surfareas.SurfArea
+import com.example.myapplication.ui.commonComponents.BottomBar
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.mapbox.maps.extension.style.expressions.dsl.generated.e
 
@@ -94,6 +95,9 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel()) {
                     surfAreas = SurfArea.entries.toList()
                 )
             }
+        },
+        bottomBar = {
+            BottomBar()
         }
     ) { innerPadding ->
         Column(
@@ -304,7 +308,7 @@ fun EmptyFavoriteCard() {
         modifier =
         Modifier
             .wrapContentSize()
-            .padding(start =8.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)
+            .padding(start = 8.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)
             //.border(width = 0.80835.dp, color = Color(0xFFBEC8CA), shape = RoundedCornerShape(size = 6.70023.dp ))
             .padding(horizontal = 8.dp, vertical = 8.dp)
             .size(width = 135.89417.dp, height = 251.48856.dp)
@@ -349,7 +353,7 @@ fun SurfAreaCard(
     Card(
         modifier = Modifier
             .wrapContentSize()
-            .padding(start =   8.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)
+            .padding(start = 8.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)
     ) {
 
         Box(
