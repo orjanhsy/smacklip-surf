@@ -121,8 +121,8 @@ class ExampleUnitTest {
         SurfArea.entries.forEach {
             val alerts = metAlertsRepository.getRelevantAlertsFor(it)
             assert(if (alerts.isNotEmpty()) alerts.all{alert ->
-                    alert.geometry?.type == "Polygon" || alert.geometry?.type == "MultiPolygon"
-                } else true
+                alert.geometry?.type == "Polygon" || alert.geometry?.type == "MultiPolygon"
+            } else true
             ) {
                 "Metalerts provided data, however the geodata type was incorrect"
             }

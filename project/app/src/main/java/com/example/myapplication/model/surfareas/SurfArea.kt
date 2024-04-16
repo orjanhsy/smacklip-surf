@@ -12,10 +12,8 @@ enum class SurfArea(
     val description: String,
     val modelName: String,
     val pointId: Int
-) {
-    //surf areas
 
-    //Stadt
+) {
     HODDEVIK("Hoddevik",62.1237, 5.1615833, R.drawable.cover___hoddevik, 300, "description", modelName = "stad20143x2v", pointId = 2),
     ERVIKA("Ervika", 62.166674, 5.115609,R.drawable.cover__ervika , 310, "description", modelName = "stad20143x2v", pointId = 2),
 
@@ -37,5 +35,5 @@ enum class SurfArea(
     NORDKAPP("Nordkapp",71.1655, 25.7992, 0, 360, "description", modelName = "nordkapp2v", pointId = 5),
     FEDJE("Fedje",60.7789, 4.71486, 0, 360, "description", modelName = "bremanger2v", pointId = 127),
 
-
 }
+

@@ -1,7 +1,9 @@
 package com.example.myapplication.ui.surfarea
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -38,12 +40,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.R
-import com.example.myapplication.data.smackLip.SmackLipRepository
-import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.ui.theme.SchemesSurface
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
+
+@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -77,10 +82,6 @@ fun SurfAreaScreen(surfArea: SurfArea, surfAreaScreenViewModel: SurfAreaScreenVi
     }
 }
 
-
-
-
-
 @Composable
 fun InfoCard() {
     Card(
@@ -95,7 +96,7 @@ fun InfoCard() {
             horizontalAlignment = Alignment.CenterHorizontally // Center content horizontally
         ) {
             Text(
-                text = "Hoddevik",
+                text = SurfArea.HODDEVIK.locationName, //lett når vi lager NavHost
                 style = TextStyle(
                     fontSize = 20.sp,
                     fontWeight = FontWeight(400),
@@ -104,7 +105,7 @@ fun InfoCard() {
                 modifier = Modifier.padding(bottom = 8.dp) // Add padding to separate text from other content
             )
             Text(
-                text = "Vegen til kystbygda Hoddevik i Nordfjord er spektakulær i seg selv. Den går over en fjellovergang før den fortsetter nedover mot Hoddevik. Det er en vakker utsikt fra fjellpasset ned mot vegen med hårnålsvingene og videre ned til Hoddevik og den hvite Hoddevikstranda mot det blå Atlanterhavet.",
+                text = SurfArea.HODDEVIK.description,
                 style = TextStyle(
                     fontSize = 13.sp,
                     fontWeight = FontWeight(400),
@@ -114,7 +115,7 @@ fun InfoCard() {
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp) // Add padding to the text
             )
             Image(
-                painter = painterResource(id = R.drawable.rectangle12305),
+                painter = painterResource(id = SurfArea.HODDEVIK.image),
                 contentDescription = "image description",
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier
@@ -126,8 +127,21 @@ fun InfoCard() {
 }
 
 
+@RequiresApi
 @Composable
 fun HeaderCard() {
+    val norwegianLocale = Locale("no", "NO")
+
+    val currentDate = LocalDate.now()
+    val formatter2 = DateTimeFormatter.ofPattern("EEEE, d.MM.", Locale.ENGLISH)
+    val formatter1 = DateTimeFormatter.ofPattern("E, MMM. d", Locale.ENGLISH)
+
+    val formattedDate1 = formatter1.format(currentDate)
+    println("Formatted date 1: $formattedDate1")
+
+    val formattedDate2 = formatter2.format(currentDate)
+    println("Formatted date 2: $formattedDate2")
+
     Card(
         modifier = Modifier
             .shadow(
@@ -151,7 +165,7 @@ fun HeaderCard() {
         Column {
             Row {
                 Text(
-                    text = "Hoddevik,\nStadt",
+                    text = "Hoddevik,\nStadt", //gjør det når vi får navHost
                     style = TextStyle(
                         fontSize = 30.sp,
                         //fontFamily = FontFamily(Font(R.font.inter)),
@@ -165,7 +179,7 @@ fun HeaderCard() {
             }
             Row {
                 Text(
-                    text = "Tue, Jun 30",
+                    text = formattedDate1,
                     style = TextStyle(
                         fontSize = 13.sp,
                         //  fontFamily = FontFamily(Font(R.font.inter)),
@@ -188,7 +202,7 @@ fun HeaderCard() {
                     .padding(1.24752.dp)
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.cludy),
+                    painter = painterResource(id = R.drawable.cludy), //trenger mer i Next7days i smacklip for å hente
                     contentDescription = "image description",
                     contentScale = ContentScale.None,
                     modifier = Modifier
@@ -217,16 +231,7 @@ fun DayPreviewCard(surfAreaScreenUiState: SurfAreaScreenUiState, day: Int) {
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = when (day) {
-                        0 -> "mandag"
-                        1 -> "tirsdag"
-                        2 -> "onsdag"
-                        3 -> "torsdag"
-                        4 -> "fredag"
-                        5 -> "lørdag"
-                        6 -> "søndag"
-                        else -> "noneday"
-                    },
+                    text = "", //når merget så jeg kan se på Daily lettere
                     style = TextStyle(
                         fontSize = 9.sp,
                         fontWeight = FontWeight(400),
@@ -241,7 +246,7 @@ fun DayPreviewCard(surfAreaScreenUiState: SurfAreaScreenUiState, day: Int) {
                 horizontalArrangement = Arrangement.Center
             ){
                 Image(
-                    painter = painterResource(id = R.drawable.surfboard_5525217),
+                    painter = painterResource(id = R.drawable.surfboard_5525217), //trenger algoritme
                     contentDescription = "image description",
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier
@@ -263,7 +268,7 @@ fun DayPreviewCard(surfAreaScreenUiState: SurfAreaScreenUiState, day: Int) {
                         contentAlignment = Alignment.Center
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.tmpwave),
+                            painter = painterResource(id = R.drawable.tmpwave), //finne bedre
                             contentDescription = "image description",
                             contentScale = ContentScale.Crop,
                             //modifier = Modifier.fillMaxSize()
@@ -275,7 +280,7 @@ fun DayPreviewCard(surfAreaScreenUiState: SurfAreaScreenUiState, day: Int) {
                     }
                 }
                 Column {
-                    Text(
+                    Text( //se på hvordan jeg har gjort det i Daily når merget
                         text = if (surfAreaScreenUiState.maxWaveHeights.isNotEmpty()) "${surfAreaScreenUiState.maxWaveHeights[day]}m" else "",
                         style = TextStyle(
                             fontSize = 13.sp,
@@ -290,6 +295,7 @@ fun DayPreviewCard(surfAreaScreenUiState: SurfAreaScreenUiState, day: Int) {
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 private fun PreviewSurfAreaScreen() {
