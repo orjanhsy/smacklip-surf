@@ -42,6 +42,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.R
 import com.example.myapplication.data.map.MapRepositoryImpl
 import com.example.myapplication.model.surfareas.SurfArea
+import com.example.myapplication.ui.commonComponents.BottomBar
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
@@ -78,7 +79,9 @@ fun MapScreen(mapScreenViewModel : MapScreenViewModel = viewModel()) {
                 title = {
                     Text(text = "Locations")
                 })
-        }) { innerPadding ->
+        },
+       // bottomBar = { BottomBar() } kartet vises ikke og topappbar blir borte??
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
