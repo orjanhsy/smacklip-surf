@@ -81,10 +81,6 @@ fun SurfAreaScreen(surfArea: SurfArea, surfAreaScreenViewModel: SurfAreaScreenVi
     }
 }
 
-
-
-
-
 @Composable
 fun InfoCard() {
     Card(
@@ -99,7 +95,7 @@ fun InfoCard() {
             horizontalAlignment = Alignment.CenterHorizontally // Center content horizontally
         ) {
             Text(
-                text = "Hoddevik", //lett når vi lager NAvHost
+                text = SurfArea.HODDEVIK.locationName, //lett når vi lager NavHost
                 style = TextStyle(
                     fontSize = 20.sp,
                     fontWeight = FontWeight(400),
@@ -108,7 +104,7 @@ fun InfoCard() {
                 modifier = Modifier.padding(bottom = 8.dp) // Add padding to separate text from other content
             )
             Text(
-                text = "${SurfArea.HODDEVIK.description}",
+                text = SurfArea.HODDEVIK.description,
                 style = TextStyle(
                     fontSize = 13.sp,
                     fontWeight = FontWeight(400),
@@ -182,7 +178,7 @@ fun HeaderCard() {
             }
             Row {
                 Text(
-                    text = "$formattedDate1",
+                    text = formattedDate1,
                     style = TextStyle(
                         fontSize = 13.sp,
                         //  fontFamily = FontFamily(Font(R.font.inter)),
@@ -283,7 +279,7 @@ fun DayPreviewCard(surfAreaScreenUiState: SurfAreaScreenUiState, day: Int) {
                     }
                 }
                 Column {
-                    Text( //se på hvorfan jeg har gjort det i Daily når merget
+                    Text( //se på hvordan jeg har gjort det i Daily når merget
                         text = if (surfAreaScreenUiState.maxWaveHeights.isNotEmpty()) "${surfAreaScreenUiState.maxWaveHeights[day]}m" else "",
                         style = TextStyle(
                             fontSize = 13.sp,
