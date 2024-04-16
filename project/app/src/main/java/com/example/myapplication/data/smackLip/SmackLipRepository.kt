@@ -69,7 +69,7 @@ class SmackLipRepositoryImpl (
 
     //tar inn hele time-strengen på følgende format "time": "2024-03-13T18:00:00Z"
     //returnerer en liste slik: [år, måned, dag, time]
-     override fun getTimeListFromTimeString(timeString : String) : List<Int> {
+    override fun getTimeListFromTimeString(timeString : String) : List<Int> {
         return listOf(
             timeString.substring(0, 4).toInt(),
             timeString.substring(5, 7).toInt(),
@@ -108,9 +108,9 @@ class SmackLipRepositoryImpl (
     //en funksjon som returnerer en liste med par av
     // 1. dato og
     // 2. dataene for de 24 timene den dagen, som består av en liste med par av
-            // 1. timen og
-            // 2. en liste med de fire dataene for den timen
-                    // [waveHeight, windDirection, windSpeed, windSpeedOfGust]
+    // 1. timen og
+    // 2. en liste med de fire dataene for den timen
+    // [waveHeight, windDirection, windSpeed, windSpeedOfGust]
 
     //totalt: List<Pair<List<Int>, List<Pair<Int, List<Double>>>>
 
@@ -146,7 +146,7 @@ class SmackLipRepositoryImpl (
 
     //metoden kaller getDataForOneDay 7 ganger fra og med i dag, og legger til listen med data for hver dag
     //inn i resListe som til slutt består av data med tidspunkt og data for alle 7 dager
-                                                                    //Days<Hours<Pair<Time, DataAtTime>>>>    .size=7
+    //Days<Hours<Pair<Time, DataAtTime>>>>    .size=7
     override suspend fun getDataForTheNext7Days(surfArea: SurfArea): MutableList<List<Pair<List<Int>, List<Double>>>> {
         val today = getWaveHeights(surfArea)[0].first[2] //regner med at det er dumt med et helt api-kall bare for å hente dagens dato
         val resList = mutableListOf<List<Pair<List<Int>, List<Double>>>>()

@@ -36,6 +36,7 @@ class SurfAreaScreenViewModel: ViewModel() {
     init {
     }
 
+
     fun updateAlerts() {
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update {
