@@ -1,10 +1,8 @@
 package com.example.myapplication.data.locationForecast
 
-import android.util.Log
-import com.example.myapplication.data.helpers.HTTPServiceHandler
-import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.locationforecast.DataLF
 import com.example.myapplication.model.locationforecast.TimeserieLF
+import com.example.myapplication.model.surfareas.SurfArea
 
 interface LocationForecastRepository {
     suspend fun getTimeSeries(surfArea: SurfArea): List<Pair<String, DataLF>>
@@ -33,37 +31,24 @@ class LocationForecastRepositoryImpl(
     }
 
 
-
-
     override suspend fun getWindDirection(surfArea: SurfArea): List<Pair<String, Double>> {
-        // Henter alle timeSeries for alle surfArea-områder
-        val allTimeSeries = SurfArea.entries.associateWith { getTimeSeries(it) }
         // Henter timeSeries for det spesifikke surfArea-området
-        val timeSeriesForArea = allTimeSeries[surfArea]
+        val timeSeriesForArea = getTimeSeries(surfArea)
         // Map og konverter timeSeries-dataene til vindretning
-        return timeSeriesForArea?.map {it.first to findWindDirectionFromData(it.second)} ?: emptyList()
-
+        return timeSeriesForArea.map {it.first to findWindDirectionFromData(it.second)}
     }
 
     override suspend fun getWindSpeed(surfArea: SurfArea): List<Pair<String, Double>> {
-        // Henter alle timeSeries for alle surfArea-områder
-        val allTimeSeries = SurfArea.entries.associateWith { getTimeSeries(it) }
         // Henter timeSeries for det spesifikke surfArea-området
-        val timeSeriesForArea = allTimeSeries[surfArea]
+        val timeSeriesForArea = getTimeSeries(surfArea)
         // Map og konverter timeSeries-dataene til vindhastighet
-        return timeSeriesForArea?.map {it.first to findWindSpeedFromData(it.second)} ?: emptyList()
-
-
+        return timeSeriesForArea.map {it.first to findWindSpeedFromData(it.second)}
     }
 
     override suspend fun getWindSpeedOfGust(surfArea: SurfArea): List<Pair<String, Double>> {
-        // Henter alle timeSeries for alle surfArea-områder
-        val allTimeSeries = SurfArea.entries.associateWith { getTimeSeries(it) }
         // Henter timeSeries for det spesifikke surfArea-området
-        val timeSeriesForArea = allTimeSeries[surfArea]
+        val timeSeriesForArea = getTimeSeries(surfArea)
         // Map og konverter timeSeries-dataene til vindretning
-        return timeSeriesForArea?.map {it.first to findWindSpeedOfGustFromData(it.second)} ?: emptyList()
-
+        return timeSeriesForArea.map {it.first to findWindSpeedOfGustFromData(it.second)}
     }
-
 }
