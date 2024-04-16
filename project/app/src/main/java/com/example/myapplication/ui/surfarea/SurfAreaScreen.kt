@@ -48,7 +48,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 
-@RequiresApi(Build.VERSION_CODES.O)
+
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
