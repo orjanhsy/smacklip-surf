@@ -7,6 +7,8 @@ import com.example.myapplication.data.oceanforecast.OceanforecastRepository
 import com.example.myapplication.data.oceanforecast.OceanforecastRepositoryImpl
 import com.example.myapplication.data.waveforecast.WaveForecastRepository
 import com.example.myapplication.data.waveforecast.WaveForecastRepositoryImpl
+import com.example.myapplication.model.conditions.ConditionDescriptions
+import com.example.myapplication.model.conditions.Conditions
 import com.example.myapplication.model.locationforecast.DataLF
 import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.model.oceanforecast.DataOF
@@ -174,7 +176,19 @@ class SmackLipRepositoryImpl (
         return oceanForecastRepository.getTimeSeriesDayByDay(surfArea)
     }
 
-    fun getConditionStatus(windSpeed, windGust, windDir, waveSpeed, waveHeight, waveDir, wavePeriod, alerts) {
+    fun getConditionStatus(windSpeed: Double, windGust: Double, windDir: Int, waveSpeed: Double, waveHeight: Double, waveDir: Int, wavePeriod: Int, alerts: List<Features>): String {
+        var windStatus: ConditionDescriptions = ConditionDescriptions.DECENT
+
+        // variables that result in bad conditions regardless of other variables.
+        if (
+            windSpeed >= Conditions.WIND_SPEED_UPPER_BOUNDS.value
+            || waveHeight <= Conditions.WAVE_HEIGHT_LOWER_BOUNDS.value
+            || wavePeriod <= Conditions.WAVE_PERIOD_LOWER_BOUNDS.value
+        ) {
+            windStatus = ConditionDescriptions.POOR
+            return windStatus.description
+        }
+
     }
 
 }
