@@ -36,7 +36,6 @@ import com.example.myapplication.ui.surfarea.DailySurfAreaScreenUiState
 import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DailySurfAreaScreen(dailySurfAreaScreenViewModel: DailySurfAreaScreenViewModel = viewModel()) {
     val dailySurfAreaScreenUiState by dailySurfAreaScreenViewModel.dailySurfAreaScreenUiState.collectAsState()
@@ -223,7 +222,6 @@ fun AllInfoCard(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 private fun PreviewDailyScreen() {
