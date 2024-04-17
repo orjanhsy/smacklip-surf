@@ -14,8 +14,8 @@ enum class SurfArea(
     val pointId: Int
 
 ) {
-    HODDEVIK("Hoddevik",62.1237, 5.1615833, R.drawable.cover___hoddevik, 300, "description", modelName = "stad20143x2v", pointId = 2),
-    ERVIKA("Ervika", 62.166674, 5.115609,R.drawable.cover__ervika , 310, "description", modelName = "stad20143x2v", pointId = 2),
+    HODDEVIK("Hoddevik",62.1237, 5.1615833, R.drawable.cover___hoddevik, 300, "Det kommer surfere fra hele verden for å oppleve bølgene i Hoddevik. Mye på grunn av det praktfulle landskapet med hvite sandstrender omkranset av høye fjellsider, men også fordi det ekstra godt egnet å surfe under ekstreme vindforhold fordi de høye fjellene skjermer stranden for den verste vinden. ", modelName = "stad20143x2v", pointId = 2),
+    ERVIKA("Ervika", 62.166674, 5.115609,R.drawable.cover__ervika , 310, "Ytterst på Stadlandet inne i en vik, finner du den historiske bygda Ervik. Her finner du Ervikstranda som også er en av de beste surfestrendene i Norge. Det er alltid mye bølger her som gjør det perfekt for avanserte surfere, men vær oppmerksom og ta forhåndsregler for det kan være en del undervannsstrømmer og vrakrester her. Her blir surfinga en fantastisk naturopplevelse med krystallklart vann og majestetiske fjell på alle kanter. På Ervikstranda har du nesten bølgegaranti, med bølger som slår inn både fra sørvest og nordvest.  ", modelName = "stad20143x2v", pointId = 2),
 
     //Lofoten
     SKAGSANDEN("Skagsanden", 68.107052, 13.295348, R.drawable.cover__skagsanden, 300, "description", modelName = "lofoten2v", pointId = 9),
