@@ -3,7 +3,6 @@ package com.example.myapplication.ui.surfarea
 import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -52,7 +51,16 @@ import java.util.Locale
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SurfAreaScreen(surfArea: SurfArea, surfAreaScreenViewModel: SurfAreaScreenViewModel = viewModel()) {
+fun SurfAreaScreen(surfAreaName: String, surfAreaScreenViewModel: SurfAreaScreenViewModel = viewModel()) {
+    /* val surfArea: SurfArea = SurfArea.entries.find {
+        it.locationName == surfAreaName
+    }!! */
+
+    var surfArea: SurfArea = SurfArea.ERVIKA
+    when (surfAreaName) {
+        "Hoddevik" -> surfArea = SurfArea.HODDEVIK
+    }
+
     val surfAreaScreenUiState: SurfAreaScreenUiState by surfAreaScreenViewModel.surfAreaScreenUiState.collectAsState()
     surfAreaScreenViewModel.updateForecastNext7Days(surfArea)
 
@@ -127,7 +135,6 @@ fun InfoCard() {
 }
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HeaderCard() {
     val norwegianLocale = Locale("no", "NO")
@@ -295,12 +302,11 @@ fun DayPreviewCard(surfAreaScreenUiState: SurfAreaScreenUiState, day: Int) {
 }
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 private fun PreviewSurfAreaScreen() {
     MyApplicationTheme {
-        SurfAreaScreen(SurfArea.HODDEVIK)
+        SurfAreaScreen("Hoddevik")
         //DayPreviewCard()
         //HeaderCard()
         //InfoCard()
