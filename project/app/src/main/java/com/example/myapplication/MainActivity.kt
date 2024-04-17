@@ -34,6 +34,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 @Composable
 fun SmackLipNavigation(){
     val navController = rememberNavController()
@@ -53,4 +54,3 @@ fun SmackLipNavigation(){
         }
     }
 }
-

@@ -51,7 +51,7 @@ fun SurfAreaScreen(
     surfAreaName: String,
     surfAreaScreenViewModel: SurfAreaScreenViewModel = viewModel(),
     onNavigateToDailySurfAreaScreen: (String) -> Unit
-    ) {
+) {
 
     val surfArea: SurfArea = SurfArea.entries.find {
         it.locationName == surfAreaName
@@ -91,12 +91,11 @@ fun SurfAreaScreen(
                 }
             }
         }
-
         Spacer(modifier = Modifier.height(16.dp))
         InfoCard(surfArea)
     }
-
 }
+
 @Composable
 fun InfoCard(surfArea: SurfArea) {
     Card(
