@@ -44,6 +44,49 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun SurfAreaScreen(surfArea: SurfArea, surfAreaScreenViewModel: SurfAreaScreenViewModel = viewModel()) {
+    val surfAreaScreenUiState: SurfAreaScreenUiState by surfAreaScreenViewModel.surfAreaScreenUiState.collectAsState()
+    val nextSevenDays = surfAreaScreenUiState.forecast7Days
+    surfAreaScreenViewModel.updateForecastNext7Days(surfArea)
+
+    val formatter = DateTimeFormatter.ofPattern("EEEE, d. MMMM", Locale("no", "NO"))
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        HeaderCard()
+        Spacer(modifier = Modifier.height(16.dp))
+        LazyRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            if (nextSevenDays.isNotEmpty()) {
+                val today = LocalDate.now()
+                items(nextSevenDays.size) { dayIndex ->
+                    val date = today.plusDays(dayIndex.toLong())
+                    val formattedDate = formatter.format(date)
+                    DayPreviewCard(surfAreaScreenUiState, formattedDate)
+                }
+            } else {
+                items(6) { dayIndex ->
+                    DayPreviewCard(surfAreaScreenUiState, "no data")
+
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        InfoCard()
+    }
+
+}
 @Composable
 fun InfoCard() {
     Card(
@@ -255,49 +298,7 @@ fun DayPreviewCard(surfAreaScreenUiState: SurfAreaScreenUiState, day: String) {
 }
 
 
-@RequiresApi(Build.VERSION_CODES.O)
-@Composable
-fun SurfAreaScreen(surfArea: SurfArea, surfAreaScreenViewModel: SurfAreaScreenViewModel = viewModel()) {
-    val surfAreaScreenUiState: SurfAreaScreenUiState by surfAreaScreenViewModel.surfAreaScreenUiState.collectAsState()
-    val nextSevenDays = surfAreaScreenUiState.forecast7Days
-    surfAreaScreenViewModel.updateForecastNext7Days(surfArea)
 
-    val formatter = DateTimeFormatter.ofPattern("EEEE, d. MMMM", Locale("no", "NO"))
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        HeaderCard()
-        Spacer(modifier = Modifier.height(16.dp))
-        LazyRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            if (nextSevenDays.isNotEmpty()) {
-                val today = LocalDate.now()
-                items(nextSevenDays.size) { dayIndex ->
-                    val date = today.plusDays(dayIndex.toLong())
-                    val formattedDate = formatter.format(date)
-                    DayPreviewCard(surfAreaScreenUiState, formattedDate)
-                }
-            } else {
-                items(6) { dayIndex ->
-                    DayPreviewCard(surfAreaScreenUiState, "no data")
-
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-        InfoCard()
-    }
-
-}
 
 
 @RequiresApi(Build.VERSION_CODES.O)
