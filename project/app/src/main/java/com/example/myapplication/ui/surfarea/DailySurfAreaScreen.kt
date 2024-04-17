@@ -1,6 +1,4 @@
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -37,21 +35,26 @@ import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
 @Composable
-fun DailySurfAreaScreen(dailySurfAreaScreenViewModel: DailySurfAreaScreenViewModel = viewModel()) {
+fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: DailySurfAreaScreenViewModel = viewModel()) {
+
+    val surfArea: SurfArea = SurfArea.entries.find {
+        it.locationName == surfAreaName
+    }!!
+
     val dailySurfAreaScreenUiState by dailySurfAreaScreenViewModel.dailySurfAreaScreenUiState.collectAsState()
     Log.d("hallo", "i luken")
     val nextSevenDays = dailySurfAreaScreenUiState.forecast7Days
-    dailySurfAreaScreenViewModel.getForecastNext7Days(SurfArea.HODDEVIK)
+    dailySurfAreaScreenViewModel.getForecastNext7Days(surfArea = surfArea)
 
     Log.d("size", "${nextSevenDays.size}")
     val waveHeightMap: Map<SurfArea, List<Pair<List<Int>, Double>>> = mapOf(
-        SurfArea.HODDEVIK to listOf(Pair(listOf(1, 2, 3, 4), 5.0))
+        surfArea to listOf(Pair(listOf(1, 2, 3, 4), 5.0))
     )
     val windSpeedMap: Map<SurfArea, List<Pair<List<Int>, Double>>> = mapOf(
-        SurfArea.HODDEVIK to listOf(Pair(listOf(2, 4, 6, 8), 1.0))
+        surfArea to listOf(Pair(listOf(2, 4, 6, 8), 1.0))
     )
     val windGustMap: Map<SurfArea, List<Pair<List<Int>, Double>>> = mapOf(
-        SurfArea.HODDEVIK to listOf(Pair(listOf(3, 5, 8, 32), 3.0))
+        surfArea to listOf(Pair(listOf(3, 5, 8, 32), 3.0))
     )
 
     LazyColumn(
@@ -75,7 +78,7 @@ fun DailySurfAreaScreen(dailySurfAreaScreenViewModel: DailySurfAreaScreenViewMod
                 Log.d("timestamp", "$timestamp")
                 AllInfoCard(
                     timestamp = timestamp.toString(),
-                    surfArea = SurfArea.HODDEVIK,
+                    surfArea = surfArea.locationName,
                     waveHeight = waveHeight,
                     windSpeed = windSpeed,
                     windGust = windGust,
@@ -86,7 +89,7 @@ fun DailySurfAreaScreen(dailySurfAreaScreenViewModel: DailySurfAreaScreenViewMod
             item {
                 AllInfoCard(
                     timestamp = "nei",
-                    surfArea = SurfArea.HODDEVIK,
+                    surfArea = surfArea.locationName,
                     waveHeight = 0.0,
                     windSpeed = 0.0,
                     windGust = 0.0,
@@ -99,8 +102,8 @@ fun DailySurfAreaScreen(dailySurfAreaScreenViewModel: DailySurfAreaScreenViewMod
 
 @Composable
 fun AllInfoCard(
-    timestamp : String,
-    surfArea: SurfArea,
+    timestamp: String,
+    surfArea: String,
     waveHeight: Double,
     windSpeed: Double,
     windGust: Double,
@@ -226,6 +229,6 @@ fun AllInfoCard(
 @Composable
 private fun PreviewDailyScreen() {
     MyApplicationTheme {
-        DailySurfAreaScreen()
+        DailySurfAreaScreen("Hoddevik")
     }
 }
