@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.home.HomeScreen
 import com.example.myapplication.ui.surfarea.SurfAreaScreen
 import com.example.myapplication.ui.theme.MyApplicationTheme
@@ -47,11 +48,8 @@ fun SmackLipNavigation(){
             }
         }
         composable("SurfAreaScreen/{id}") { backStackEntry ->
-            val surfArea = backStackEntry.arguments?.getString("SurfArea") ?: ""
-            SurfAreaScreen(){
-
-            }
-
+            val surfArea = backStackEntry.arguments?.getString("surfArea") ?: ""
+            SurfAreaScreen(surfArea)
         }
     }
 }
