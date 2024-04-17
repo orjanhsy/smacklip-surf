@@ -78,7 +78,7 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                 Log.d("timestamp", "$timestamp")
                 AllInfoCard(
                     timestamp = timestamp.toString(),
-                    surfArea = surfArea.locationName,
+                    surfArea = surfArea,
                     waveHeight = waveHeight,
                     windSpeed = windSpeed,
                     windGust = windGust,
@@ -89,7 +89,7 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
             item {
                 AllInfoCard(
                     timestamp = "nei",
-                    surfArea = surfArea.locationName,
+                    surfArea = surfArea,
                     waveHeight = 0.0,
                     windSpeed = 0.0,
                     windGust = 0.0,
@@ -103,7 +103,7 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
 @Composable
 fun AllInfoCard(
     timestamp: String,
-    surfArea: String,
+    surfArea: SurfArea,
     waveHeight: Double,
     windSpeed: Double,
     windGust: Double,
