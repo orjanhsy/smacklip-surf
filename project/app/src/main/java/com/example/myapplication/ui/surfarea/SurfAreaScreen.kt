@@ -52,14 +52,10 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SurfAreaScreen(surfAreaName: String, surfAreaScreenViewModel: SurfAreaScreenViewModel = viewModel()) {
-    /* val surfArea: SurfArea = SurfArea.entries.find {
-        it.locationName == surfAreaName
-    }!! */
 
-    var surfArea: SurfArea = SurfArea.ERVIKA
-    when (surfAreaName) {
-        "Hoddevik" -> surfArea = SurfArea.HODDEVIK
-    }
+    val surfArea: SurfArea = SurfArea.entries.find {
+        it.locationName == surfAreaName
+    }!!
 
     val surfAreaScreenUiState: SurfAreaScreenUiState by surfAreaScreenViewModel.surfAreaScreenUiState.collectAsState()
     surfAreaScreenViewModel.updateForecastNext7Days(surfArea)
@@ -85,13 +81,13 @@ fun SurfAreaScreen(surfAreaName: String, surfAreaScreenViewModel: SurfAreaScreen
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
-            InfoCard()
+            InfoCard(surfArea)
         }
     }
 }
 
 @Composable
-fun InfoCard() {
+fun InfoCard(surfArea: SurfArea) {
     Card(
         modifier = Modifier
             .width(336.dp)
@@ -104,7 +100,7 @@ fun InfoCard() {
             horizontalAlignment = Alignment.CenterHorizontally // Center content horizontally
         ) {
             Text(
-                text = SurfArea.HODDEVIK.locationName, //lett når vi lager NavHost
+                text = surfArea.locationName, //lett når vi lager NavHost
                 style = TextStyle(
                     fontSize = 20.sp,
                     fontWeight = FontWeight(400),
@@ -113,7 +109,7 @@ fun InfoCard() {
                 modifier = Modifier.padding(bottom = 8.dp) // Add padding to separate text from other content
             )
             Text(
-                text = SurfArea.HODDEVIK.description,
+                text = surfArea.description,
                 style = TextStyle(
                     fontSize = 13.sp,
                     fontWeight = FontWeight(400),
@@ -123,7 +119,7 @@ fun InfoCard() {
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp) // Add padding to the text
             )
             Image(
-                painter = painterResource(id = SurfArea.HODDEVIK.image),
+                painter = painterResource(id = surfArea.image),
                 contentDescription = "image description",
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier

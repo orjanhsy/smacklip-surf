@@ -44,12 +44,12 @@ fun SmackLipNavigation(){
         ){
         composable("HomeScreen"){
             HomeScreen(){
-                navController.navigate("SurfAreaScreen/{surfArea}")
+                navController.navigate("SurfAreaScreen/$it")
             }
         }
-        composable("SurfAreaScreen/{id}") { backStackEntry ->
+        composable("SurfAreaScreen/{surfArea}") { backStackEntry ->
             val surfArea = backStackEntry.arguments?.getString("surfArea") ?: ""
-            SurfAreaScreen(surfArea)
+            SurfAreaScreen(surfAreaName = surfArea)
         }
     }
 }
