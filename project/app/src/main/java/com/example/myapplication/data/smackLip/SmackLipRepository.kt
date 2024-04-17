@@ -184,11 +184,13 @@ class SmackLipRepositoryImpl (
             windSpeed >= Conditions.WIND_SPEED_UPPER_BOUNDS.value
             || waveHeight <= Conditions.WAVE_HEIGHT_LOWER_BOUNDS.value
             || wavePeriod <= Conditions.WAVE_PERIOD_LOWER_BOUNDS.value
+            || alerts.isNotEmpty()
         ) {
             windStatus = ConditionDescriptions.POOR
             return windStatus.description
         }
-
+        var totalScore = 100.0
+        // make test-driven
     }
 
 }
