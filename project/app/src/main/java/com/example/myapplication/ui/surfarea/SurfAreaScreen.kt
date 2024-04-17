@@ -1,8 +1,7 @@
 package com.example.myapplication.ui.surfarea
 
 import android.os.Build
-import android.util.Log
-
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -46,6 +45,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SurfAreaScreen(
     surfAreaName: String,
@@ -61,7 +61,7 @@ fun SurfAreaScreen(
     val nextSevenDays = surfAreaScreenUiState.forecast7Days
     surfAreaScreenViewModel.updateForecastNext7Days(surfArea)
 
-    val formatter = DateTimeFormatter.ofPattern("EEEE, d. MMMM", Locale("no", "NO"))
+    val formatter = DateTimeFormatter.ofPattern("EEE", Locale("no", "NO"))
 
     Column(
         modifier = Modifier
@@ -105,18 +105,18 @@ fun InfoCard(surfArea: SurfArea) {
             .padding(16.dp), // Add padding to provide space around the content
     ) {
         Column(
-            modifier = Modifier.fillMaxSize(), // Fill the entire size of the card
-            verticalArrangement = Arrangement.Center, // Center content vertically
-            horizontalAlignment = Alignment.CenterHorizontally // Center content horizontally
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = surfArea.locationName, //lett når vi lager NavHost
+                text = surfArea.locationName,
                 style = TextStyle(
                     fontSize = 20.sp,
                     fontWeight = FontWeight(400),
                     color = Color(0xFF313341)
                 ),
-                modifier = Modifier.padding(bottom = 8.dp) // Add padding to separate text from other content
+                modifier = Modifier.padding(16.dp)
             )
             Text(
                 text = surfArea.description,
@@ -125,14 +125,14 @@ fun InfoCard(surfArea: SurfArea) {
                     fontWeight = FontWeight(400),
                     color = Color(0xFF4D5E6F),
                 ),
-                textAlign = TextAlign.Center, // Center text within the column
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp) // Add padding to the text
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
             Image(
                 painter = painterResource(id = surfArea.image),
                 contentDescription = "image description",
-                contentScale = ContentScale.FillBounds,
-                modifier = Modifier
+                //contentScale = ContentScale.FillBounds,
+                modifier = Modifier.padding(10.dp)
                     .width(312.dp)
                     .height(110.dp)
             )
@@ -141,20 +141,17 @@ fun InfoCard(surfArea: SurfArea) {
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HeaderCard(surfArea: SurfArea) {
-    val norwegianLocale = Locale("no", "NO")
 
     val currentDate = LocalDate.now()
-    val formatter2 = DateTimeFormatter.ofPattern("EEEE, d.MM.", Locale.ENGLISH)
-    val formatter1 = DateTimeFormatter.ofPattern("E, MMM. d", Locale.ENGLISH)
+    val formatter1 = DateTimeFormatter.ofPattern("E d. MMM",  Locale("no", "NO"))
 
-    //to forslag
     val formattedDate1 = formatter1.format(currentDate)
-    println("Formatted date 1: $formattedDate1")
+    println("$formattedDate1")
 
-    val formattedDate2 = formatter2.format(currentDate)
-    println("Formatted date 2: $formattedDate2")
+
 
     Card(
         modifier = Modifier
@@ -186,7 +183,7 @@ fun HeaderCard(surfArea: SurfArea) {
                         fontWeight = FontWeight(500),
                         color = Color(0xFF313341),
                     ),
-                    modifier = Modifier
+                    modifier = Modifier.padding(16.dp)
                         .width(145.dp)
                         .height(72.dp)
                 )
@@ -200,7 +197,7 @@ fun HeaderCard(surfArea: SurfArea) {
                         fontWeight = FontWeight(400),
                         color = Color(0xFF9A938C),
                     ),
-                    modifier = Modifier
+                    modifier = Modifier.padding(5.dp)
                         .width(73.dp)
                         .height(16.dp)
                 )
@@ -300,6 +297,7 @@ fun DayPreviewCard(surfArea: SurfArea, day: String, onNavigateToDailySurfAreaScr
 
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 private fun PreviewSurfAreaScreen() {
