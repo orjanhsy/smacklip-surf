@@ -1,8 +1,6 @@
 package com.example.myapplication.ui.surfarea
 
-import android.annotation.SuppressLint
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -20,8 +18,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -49,39 +45,48 @@ import java.util.Locale
 
 
 @RequiresApi(Build.VERSION_CODES.O)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SurfAreaScreen(surfArea: SurfArea, surfAreaScreenViewModel: SurfAreaScreenViewModel = viewModel()) {
     val surfAreaScreenUiState: SurfAreaScreenUiState by surfAreaScreenViewModel.surfAreaScreenUiState.collectAsState()
+    val nextSevenDays = surfAreaScreenUiState.forecast7Days
     surfAreaScreenViewModel.updateForecastNext7Days(surfArea)
 
-    Log.d("SASCREEN", "Creating screen with state $surfAreaScreenUiState")
-    Scaffold {
-        Column(
+    val formatter = DateTimeFormatter.ofPattern("EEEE, d. MMMM", Locale("no", "NO"))
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        HeaderCard()
+        Spacer(modifier = Modifier.height(16.dp))
+        LazyRow(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxWidth()
+                .padding(16.dp)
         ) {
-            HeaderCard()
-            Spacer(modifier = Modifier.height(16.dp))
-            LazyRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                items(7) { index ->
-                      DayPreviewCard(surfAreaScreenUiState, index)
+            if (nextSevenDays.isNotEmpty()) {
+                val today = LocalDate.now()
+                items(nextSevenDays.size) { dayIndex ->
+                    val date = today.plusDays(dayIndex.toLong())
+                    val formattedDate = formatter.format(date)
+                    DayPreviewCard(surfAreaScreenUiState, formattedDate)
+                }
+            } else {
+                items(6) { dayIndex ->
+                    DayPreviewCard(surfAreaScreenUiState, "no data")
+
                 }
             }
-            Spacer(modifier = Modifier.height(16.dp))
-            InfoCard()
         }
-    }
-}
 
+        Spacer(modifier = Modifier.height(16.dp))
+        InfoCard()
+    }
+
+}
 @Composable
 fun InfoCard() {
     Card(
@@ -136,6 +141,7 @@ fun HeaderCard() {
     val formatter2 = DateTimeFormatter.ofPattern("EEEE, d.MM.", Locale.ENGLISH)
     val formatter1 = DateTimeFormatter.ofPattern("E, MMM. d", Locale.ENGLISH)
 
+    //to forslag
     val formattedDate1 = formatter1.format(currentDate)
     println("Formatted date 1: $formattedDate1")
 
@@ -165,7 +171,7 @@ fun HeaderCard() {
         Column {
             Row {
                 Text(
-                    text = "Hoddevik,\nStadt", //gjør det når vi får navHost
+                    text = "${SurfArea.HODDEVIK.locationName}", //hadde vært fint med Stadt
                     style = TextStyle(
                         fontSize = 30.sp,
                         //fontFamily = FontFamily(Font(R.font.inter)),
@@ -214,7 +220,7 @@ fun HeaderCard() {
     }
 }
 @Composable
-fun DayPreviewCard(surfAreaScreenUiState: SurfAreaScreenUiState, day: Int) {
+fun DayPreviewCard(surfAreaScreenUiState: SurfAreaScreenUiState, day: String) {
     Card(
         modifier = Modifier
             .padding(6.dp)
@@ -231,7 +237,7 @@ fun DayPreviewCard(surfAreaScreenUiState: SurfAreaScreenUiState, day: Int) {
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "", //når merget så jeg kan se på Daily lettere
+                    text = day,
                     style = TextStyle(
                         fontSize = 9.sp,
                         fontWeight = FontWeight(400),
@@ -246,7 +252,7 @@ fun DayPreviewCard(surfAreaScreenUiState: SurfAreaScreenUiState, day: Int) {
                 horizontalArrangement = Arrangement.Center
             ){
                 Image(
-                    painter = painterResource(id = R.drawable.surfboard_5525217), //trenger algoritme
+                    painter = painterResource(id = R.drawable.surfboard_5525217),
                     contentDescription = "image description",
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier
@@ -264,24 +270,21 @@ fun DayPreviewCard(surfAreaScreenUiState: SurfAreaScreenUiState, day: Int) {
                         modifier = Modifier
                             .padding(0.03158.dp)
                             .size(24.dp),
-                            //.background(color = Color(0xFF9C9EAA)),
                         contentAlignment = Alignment.Center
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.tmpwave), //finne bedre
+                            painter = painterResource(id = R.drawable.tmpwave),
                             contentDescription = "image description",
                             contentScale = ContentScale.Crop,
-                            //modifier = Modifier.fillMaxSize()
                             modifier = Modifier
-                                //.fillMaxSize()
                                 .width(40.dp)
                                 .height(40.dp)
                         )
                     }
                 }
                 Column {
-                    Text( //se på hvordan jeg har gjort det i Daily når merget
-                        text = if (surfAreaScreenUiState.maxWaveHeights.isNotEmpty()) "${surfAreaScreenUiState.maxWaveHeights[day]}m" else "",
+                    Text( //fikser når vi har en algoritme for peak?
+                        text = if (surfAreaScreenUiState.maxWaveHeights.isNotEmpty()) "${surfAreaScreenUiState.maxWaveHeights[0]}m" else "",
                         style = TextStyle(
                             fontSize = 13.sp,
                             fontWeight = FontWeight(400),
@@ -293,6 +296,9 @@ fun DayPreviewCard(surfAreaScreenUiState: SurfAreaScreenUiState, day: Int) {
         }
     }
 }
+
+
+
 
 
 @RequiresApi(Build.VERSION_CODES.O)
