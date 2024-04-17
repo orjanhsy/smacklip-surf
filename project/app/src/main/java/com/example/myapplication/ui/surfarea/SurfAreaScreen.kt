@@ -5,6 +5,7 @@ import android.os.Build
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -51,7 +52,11 @@ import java.util.Locale
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SurfAreaScreen(surfAreaName: String, surfAreaScreenViewModel: SurfAreaScreenViewModel = viewModel()) {
+fun SurfAreaScreen(
+    surfAreaName: String,
+    surfAreaScreenViewModel: SurfAreaScreenViewModel = viewModel(),
+    onNavigateToDailySurfAreaScreen: (String) -> Unit
+    ) {
 
     val surfArea: SurfArea = SurfArea.entries.find {
         it.locationName == surfAreaName
@@ -77,7 +82,7 @@ fun SurfAreaScreen(surfAreaName: String, surfAreaScreenViewModel: SurfAreaScreen
                     .padding(16.dp)
             ) {
                 items(7) { index ->
-                      DayPreviewCard(surfAreaScreenUiState, index)
+                      DayPreviewCard(surfArea, index)
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -217,13 +222,16 @@ fun HeaderCard() {
     }
 }
 @Composable
-fun DayPreviewCard(surfAreaScreenUiState: SurfAreaScreenUiState, day: Int) {
+fun DayPreviewCard(surfArea: SurfArea, day: Int, onNavigateToDailySurfAreaScreen: (String) -> Unit) {
     Card(
         modifier = Modifier
             .padding(6.dp)
             .width(93.dp)
             .height(147.dp)
             .background(color = SchemesSurface, shape = RoundedCornerShape(size = 20.dp))
+            .clickable(
+                onClick = { onNavigateToDailySurfAreaScreen(surfArea.locationName) }
+            )
     ){
         Column(
             modifier = Modifier
@@ -281,16 +289,6 @@ fun DayPreviewCard(surfAreaScreenUiState: SurfAreaScreenUiState, day: Int) {
                                 .height(40.dp)
                         )
                     }
-                }
-                Column {
-                    Text( //se på hvordan jeg har gjort det i Daily når merget
-                        text = if (surfAreaScreenUiState.maxWaveHeights.isNotEmpty()) "${surfAreaScreenUiState.maxWaveHeights[day]}m" else "",
-                        style = TextStyle(
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight(400),
-                            color = Color(0xFF9C9EAA),
-                        )
-                    )
                 }
             }
         }
