@@ -1,8 +1,8 @@
 package com.example.myapplication.ui.surfarea
 
-import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,8 +20,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -48,9 +46,6 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 
-
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SurfAreaScreen(
     surfAreaName: String,
@@ -63,34 +58,45 @@ fun SurfAreaScreen(
     }!!
 
     val surfAreaScreenUiState: SurfAreaScreenUiState by surfAreaScreenViewModel.surfAreaScreenUiState.collectAsState()
+    val nextSevenDays = surfAreaScreenUiState.forecast7Days
     surfAreaScreenViewModel.updateForecastNext7Days(surfArea)
 
-    Log.d("SASCREEN", "Creating screen with state $surfAreaScreenUiState")
-    Scaffold {
-        Column(
+    val formatter = DateTimeFormatter.ofPattern("EEEE, d. MMMM", Locale("no", "NO"))
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        HeaderCard(surfArea)
+        Spacer(modifier = Modifier.height(16.dp))
+        LazyRow(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxWidth()
+                .padding(16.dp)
         ) {
-            HeaderCard()
-            Spacer(modifier = Modifier.height(16.dp))
-            LazyRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                items(7) { index ->
-                      DayPreviewCard(surfArea, index)
+    if (nextSevenDays.isNotEmpty()) {
+                val today = LocalDate.now()
+                items(nextSevenDays.size) { dayIndex ->
+                    val date = today.plusDays(dayIndex.toLong())
+                    val formattedDate = formatter.format(date)
+                    DayPreviewCard(surfArea, formattedDate){}
+                }
+            } else {
+                items(6) { dayIndex ->
+                    DayPreviewCard(surfArea, "no data"){}
+
                 }
             }
-            Spacer(modifier = Modifier.height(16.dp))
-            InfoCard(surfArea)
         }
-    }
-}
 
+        Spacer(modifier = Modifier.height(16.dp))
+        InfoCard(surfArea)
+    }
+
+}
 @Composable
 fun InfoCard(surfArea: SurfArea) {
     Card(
@@ -137,13 +143,14 @@ fun InfoCard(surfArea: SurfArea) {
 
 
 @Composable
-fun HeaderCard() {
+fun HeaderCard(surfArea: SurfArea) {
     val norwegianLocale = Locale("no", "NO")
 
     val currentDate = LocalDate.now()
     val formatter2 = DateTimeFormatter.ofPattern("EEEE, d.MM.", Locale.ENGLISH)
     val formatter1 = DateTimeFormatter.ofPattern("E, MMM. d", Locale.ENGLISH)
 
+    //to forslag
     val formattedDate1 = formatter1.format(currentDate)
     println("Formatted date 1: $formattedDate1")
 
@@ -173,7 +180,7 @@ fun HeaderCard() {
         Column {
             Row {
                 Text(
-                    text = "Hoddevik,\nStadt", //gjør det når vi får navHost
+                    text = surfArea.locationName, //hadde vært fint med Stadt
                     style = TextStyle(
                         fontSize = 30.sp,
                         //fontFamily = FontFamily(Font(R.font.inter)),
@@ -222,7 +229,7 @@ fun HeaderCard() {
     }
 }
 @Composable
-fun DayPreviewCard(surfArea: SurfArea, day: Int, onNavigateToDailySurfAreaScreen: (String) -> Unit) {
+fun DayPreviewCard(surfArea: SurfArea, day: String, onNavigateToDailySurfAreaScreen: (String) -> Unit) {
     Card(
         modifier = Modifier
             .padding(6.dp)
@@ -242,7 +249,7 @@ fun DayPreviewCard(surfArea: SurfArea, day: Int, onNavigateToDailySurfAreaScreen
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "", //når merget så jeg kan se på Daily lettere
+                    text = day,
                     style = TextStyle(
                         fontSize = 9.sp,
                         fontWeight = FontWeight(400),
@@ -257,7 +264,7 @@ fun DayPreviewCard(surfArea: SurfArea, day: Int, onNavigateToDailySurfAreaScreen
                 horizontalArrangement = Arrangement.Center
             ){
                 Image(
-                    painter = painterResource(id = R.drawable.surfboard_5525217), //trenger algoritme
+                    painter = painterResource(id = R.drawable.surfboard_5525217),
                     contentDescription = "image description",
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier
@@ -275,16 +282,13 @@ fun DayPreviewCard(surfArea: SurfArea, day: Int, onNavigateToDailySurfAreaScreen
                         modifier = Modifier
                             .padding(0.03158.dp)
                             .size(24.dp),
-                            //.background(color = Color(0xFF9C9EAA)),
                         contentAlignment = Alignment.Center
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.tmpwave), //finne bedre
+                            painter = painterResource(id = R.drawable.tmpwave),
                             contentDescription = "image description",
                             contentScale = ContentScale.Crop,
-                            //modifier = Modifier.fillMaxSize()
                             modifier = Modifier
-                                //.fillMaxSize()
                                 .width(40.dp)
                                 .height(40.dp)
                         )
@@ -296,11 +300,12 @@ fun DayPreviewCard(surfArea: SurfArea, day: Int, onNavigateToDailySurfAreaScreen
 }
 
 
+
 @Preview(showBackground = true)
 @Composable
 private fun PreviewSurfAreaScreen() {
     MyApplicationTheme {
-        SurfAreaScreen("Hoddevik")
+        SurfAreaScreen("Hoddevik"){}
         //DayPreviewCard()
         //HeaderCard()
         //InfoCard()
