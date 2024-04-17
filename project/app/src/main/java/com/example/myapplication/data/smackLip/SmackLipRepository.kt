@@ -174,4 +174,7 @@ class SmackLipRepositoryImpl (
         return oceanForecastRepository.getTimeSeriesDayByDay(surfArea)
     }
 
+    fun getConditionStatus(windSpeed, windGust, windDir, waveSpeed, waveHeight, waveDir, wavePeriod, alerts) {
+    }
+
 }
