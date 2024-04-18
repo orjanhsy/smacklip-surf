@@ -2,13 +2,17 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+<<<<<<< HEAD
       <entry key="PreviewHomeScreen">
         <State />
       </entry>
       <entry key="PreviewSurfAreaScreen">
+=======
+      <entry key="MainActivity">
+>>>>>>> main
         <State />
       </entry>
-      <entry key="PreviewDailyScreen (1)">
+      <entry key="PreviewDailyScreen">
         <State />
       </entry>
       <entry key="PreviewSurfAreaScreen">
