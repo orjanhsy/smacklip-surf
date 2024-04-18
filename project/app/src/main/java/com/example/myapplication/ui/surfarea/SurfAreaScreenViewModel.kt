@@ -19,6 +19,7 @@ data class SurfAreaScreenUiState(
     // .size=7 for the following:
     val waveHeights: List<List<Pair<List<Int>, Double>>> = emptyList(),
     val waveDirections: List<List<Pair<List<Int>, Double>>> = emptyList(),
+    val wavePeriods: List<Double?> = emptyList(),
     val maxWaveHeights: List<Double>  = emptyList(),
     val windDirections: List<List<Pair<List<Int>, Double>>> = emptyList(),
     val windSpeeds: List<List<Pair<List<Int>, Double>>> = emptyList(),
@@ -55,6 +56,19 @@ class SurfAreaScreenViewModel: ViewModel() {
                     maxWaveHeights = state.waveHeights.map {
                         day -> day.maxBy {hour -> hour.second}
                     }.map {it.second}
+                )
+            }
+        }
+    }
+
+    fun updateWavePeriods() {
+        viewModelScope.launch {
+            _surfAreaScreenUiState.update {state ->
+                val newWavePeriods = if (state.location != null) {
+                    smackLipRepository.getWavePeriodsNext3DaysForArea(state.location)
+                } else { emptyList() }
+                state.copy(
+                    wavePeriods = newWavePeriods
                 )
             }
         }
