@@ -63,6 +63,7 @@ fun SurfAreaScreen(
 
     val formatter = DateTimeFormatter.ofPattern("EEE", Locale("no", "NO"))
 
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -77,17 +78,36 @@ fun SurfAreaScreen(
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-    if (nextSevenDays.isNotEmpty()) {
+            if (nextSevenDays.isNotEmpty()) {
                 val today = LocalDate.now()
+
                 items(nextSevenDays.size) { dayIndex ->
                     val date = today.plusDays(dayIndex.toLong())
                     val formattedDate = formatter.format(date)
-                    DayPreviewCard(surfArea, formattedDate){}
-                }
-            } else {
-                items(6) { dayIndex ->
-                    DayPreviewCard(surfArea, "no data"){}
 
+                    //kalkulere bølgehøyde
+                    val surfAreaDataForDay = nextSevenDays.getOrElse(dayIndex) { emptyList() }
+                    var maxWaveHeight = 0.0
+                    surfAreaDataForDay.forEach { surfAreaDataForHour ->
+                        if (maxWaveHeight < surfAreaDataForHour.second[0]) {
+                            maxWaveHeight = surfAreaDataForHour.second[0]
+                        }
+                    }
+
+                    //lage kortet
+                    val maxWaveHeightperDay = maxWaveHeight
+
+                        DayPreviewCard(
+                            surfArea,
+                            formattedDate,
+                            maxWaveHeightperDay.toString()
+                        ) {}
+                    }
+                }
+
+            else {
+                items(6) { dayIndex ->
+                    DayPreviewCard(surfArea, "no data", "no data"){}
                 }
             }
         }
@@ -176,7 +196,7 @@ fun HeaderCard(surfArea: SurfArea) {
         Column {
             Row {
                 Text(
-                    text = surfArea.locationName, //hadde vært fint med Stadt
+                    text = surfArea.locationName, //+surfArea.areaName //hadde vært fint med Stadt
                     style = TextStyle(
                         fontSize = 30.sp,
                         //fontFamily = FontFamily(Font(R.font.inter)),
@@ -225,7 +245,7 @@ fun HeaderCard(surfArea: SurfArea) {
     }
 }
 @Composable
-fun DayPreviewCard(surfArea: SurfArea, day: String, onNavigateToDailySurfAreaScreen: (String) -> Unit) {
+fun DayPreviewCard(surfArea: SurfArea, day: String, waveheight: String, onNavigateToDailySurfAreaScreen: (String) -> Unit) {
     Card(
         modifier = Modifier
             .padding(6.dp)
@@ -288,7 +308,13 @@ fun DayPreviewCard(surfArea: SurfArea, day: String, onNavigateToDailySurfAreaScr
                                 .width(40.dp)
                                 .height(40.dp)
                         )
+
                     }
+                }
+                Column{
+                    Text(
+                        text = "$waveheight"
+                    )
                 }
             }
         }
