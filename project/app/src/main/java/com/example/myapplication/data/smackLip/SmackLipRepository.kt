@@ -33,7 +33,13 @@ interface SmackLipRepository {
     suspend fun getDataForTheNext7Days(surfArea: SurfArea): MutableList<List<Pair<List<Int>, List<Double>>>>
     suspend fun getTimeSeriesDayByDay(surfArea: SurfArea): List<List<Pair<String, DataOF>>>
 
-<<<<<<< HEAD
+
+    // waveforecast
+    suspend fun getAllWaveForecastsNext3Days(): Map<SurfArea, List<Pair<Double?, Double?>>>
+    suspend fun getWaveForecastsNext3DaysForArea(surfArea: SurfArea): List<Pair<Double?, Double?>>
+    suspend fun getAllWavePeriodsNext3Days(): Map<SurfArea, List<Double?>>
+    suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): List<Double?>
+
     fun getConditionStatus(
         windSpeed: Double,
         windGust: Double,
@@ -43,14 +49,7 @@ interface SmackLipRepository {
         wavePeriod: Double,
         alerts: List<Features>
     ): String
-=======
-    // waveforecast
-    suspend fun getAllWaveForecastsNext3Days(): Map<SurfArea, List<Pair<Double?, Double?>>>
-    suspend fun getWaveForecastsNext3DaysForArea(surfArea: SurfArea): List<Pair<Double?, Double?>>
-    suspend fun getAllWavePeriodsNext3Days(): Map<SurfArea, List<Double?>>
-    suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): List<Double?>
 
->>>>>>> feature/wave-dir-and-period-in-smackliprepo
 }
 
 class SmackLipRepositoryImpl (
@@ -179,6 +178,10 @@ class SmackLipRepositoryImpl (
         return resList
     }
 
+    override suspend fun getTimeSeriesDayByDay(surfArea: SurfArea): List<List<Pair<String, DataOF>>> {
+        return oceanForecastRepository.getTimeSeriesDayByDay(surfArea)
+    }
+
     // mapper hvert enkelt surfarea til en liste med (bølgeretning, bølgeperiode) lik de i 'getWaveForecastNext3DaysForArea()' under.
     override suspend fun getAllWaveForecastsNext3Days(): Map<SurfArea, List<Pair<Double?, Double?>>> {
         return try {
@@ -190,13 +193,11 @@ class SmackLipRepositoryImpl (
 
     // liste med pair(bølgeretning, bølgeperiode), .size in 18..20 (3timers intervaller, totalt 60 timer). Vet ikke hvorfor den av og til er 19 lang, da er det i så fall bare 57 timer forecast.
     override suspend fun getWaveForecastsNext3DaysForArea(surfArea: SurfArea): List<Pair<Double?, Double?>> {
-        return waveForecastRepository.waveDirAndPeriodNext3DaysForArea(surfArea.modelName, surfArea.pointId)
+        return waveForecastRepository.waveDirAndPeriodNext3DaysForArea(
+            surfArea.modelName,
+            surfArea.pointId
+        )
     }
-
-    override suspend fun getTimeSeriesDayByDay(surfArea: SurfArea): List<List<Pair<String, DataOF>>> {
-        return oceanForecastRepository.getTimeSeriesDayByDay(surfArea)
-    }
-
 
 
     // wf men bare med waveperiods, i motsetning (wavedir, waveperiod) over.
