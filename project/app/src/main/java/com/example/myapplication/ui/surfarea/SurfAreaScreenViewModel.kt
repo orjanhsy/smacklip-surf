@@ -18,6 +18,8 @@ data class SurfAreaScreenUiState(
     val alerts: List<Features> = emptyList(),
     // .size=7 for the following:
     val waveHeights: List<List<Pair<List<Int>, Double>>> = emptyList(),
+    val waveDirections: List<List<Pair<List<Int>, Double>>> = emptyList(),
+    val wavePeriods: List<Double?> = emptyList(),
     val maxWaveHeights: List<Double>  = emptyList(),
     val windDirections: List<List<Pair<List<Int>, Double>>> = emptyList(),
     val windSpeeds: List<List<Pair<List<Int>, Double>>> = emptyList(),
@@ -46,41 +48,6 @@ class SurfAreaScreenViewModel: ViewModel() {
         }
     }
 
-//    fun updateWaveHeights(surfArea: SurfArea) {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            _surfAreaScreenUiState.update {
-//                val newWaveHeights = smackLipRepository.getWaveHeights(surfArea)
-//                it.copy(waveHeights = newWaveHeights)
-//            }
-//        }
-//    }
-//
-//    fun updateWindDirection(surfArea: SurfArea) {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            _surfAreaScreenUiState.update {
-//                val newWindDirection = smackLipRepository.getWindDirection(surfArea)
-//                it.copy(windDirections = newWindDirection)
-//            }
-//        }
-//    }
-//
-//    fun updateWindSpeed(surfArea: SurfArea) {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            _surfAreaScreenUiState.update {
-//                val newWindSpeed = smackLipRepository.getWindSpeed(surfArea)
-//                it.copy(windSpeeds = newWindSpeed)
-//            }
-//        }
-//    }
-//
-//    fun updateWindSpeedOfGust(surfArea: SurfArea) {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            _surfAreaScreenUiState.update {
-//                val newWindSpeedOfGust = smackLipRepository.getWindSpeedOfGust(surfArea)
-//                it.copy(windSpeedOfGusts = newWindSpeedOfGust)
-//            }
-//        }
-//    }
 
     fun updateMaxWaveHeights() {
         viewModelScope.launch {
@@ -94,6 +61,19 @@ class SurfAreaScreenViewModel: ViewModel() {
         }
     }
 
+    fun updateWavePeriods() {
+        viewModelScope.launch {
+            _surfAreaScreenUiState.update {state ->
+                val newWavePeriods = if (state.location != null) {
+                    smackLipRepository.getWavePeriodsNext3DaysForArea(state.location)
+                } else { emptyList() }
+                state.copy(
+                    wavePeriods = newWavePeriods
+                )
+            }
+        }
+    }
+
     fun updateForecastNext7Days(surfArea: SurfArea){
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update {state ->
@@ -101,9 +81,10 @@ class SurfAreaScreenViewModel: ViewModel() {
                 Log.d("SAVM", "Updating forcast of vm by dat containing ${newForecast7Days.size} elements")
                 val newWaveHeights = newForecast7Days.map { dayForecast ->  dayForecast.map { dayData -> dayData.first to dayData.second[0]}}
                 val newMaxWaveHeights = newWaveHeights.map {day -> day.maxBy {hour -> hour.second}}.map {it.second}
-                val newWindDirections = newForecast7Days.map { dayForecast ->  dayForecast.map { dayData -> dayData.first to dayData.second[1]}}
-                val newWindSpeeds = newForecast7Days.map { dayForecast ->  dayForecast.map { dayData -> dayData.first to dayData.second[2]}}
-                val newWindSpeedOfGusts = newForecast7Days.map { dayForecast ->  dayForecast.map { dayData -> dayData.first to dayData.second[3]}}
+                val newWaveDirections = newForecast7Days.map { dayForecast ->  dayForecast.map { dayData -> dayData.first to dayData.second[1]}}
+                val newWindDirections = newForecast7Days.map { dayForecast ->  dayForecast.map { dayData -> dayData.first to dayData.second[2]}}
+                val newWindSpeeds = newForecast7Days.map { dayForecast ->  dayForecast.map { dayData -> dayData.first to dayData.second[3]}}
+                val newWindSpeedOfGusts = newForecast7Days.map { dayForecast ->  dayForecast.map { dayData -> dayData.first to dayData.second[4]}}
 
 
                 assert(newForecast7Days.isNotEmpty())
@@ -115,6 +96,7 @@ class SurfAreaScreenViewModel: ViewModel() {
                 state.copy(
                     forecast7Days = newForecast7Days,
                     waveHeights = newWaveHeights,
+                    waveDirections = newWaveDirections,
                     maxWaveHeights = newMaxWaveHeights,
                     windDirections = newWindDirections,
                     windSpeeds = newWindSpeeds,
