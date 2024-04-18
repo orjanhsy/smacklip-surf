@@ -163,6 +163,12 @@ class ExampleUnitTest {
         //assert(timeSeries[10].second.instant.details.sea_surface_wave_height == oceanforecastRepository.getWaveHeights()[10].second)
     }
 
+    @Test
+    fun getWaveHeightIsNotEmptyForHoddevik()= runBlocking{
+        val data = oceanforecastRepository.getWaveDirections(SurfArea.HODDEVIK)
+        assert(data.isNotEmpty())
+    }
+
     //Location Forecast
     private val locationForecastRepository = LocationForecastRepositoryImpl()
 
