@@ -12,6 +12,8 @@ interface OceanforecastRepository{
     suspend fun getTimeSeries(surfArea: SurfArea): List<Pair<String, DataOF>>
     suspend fun getWaveHeights(surfArea: SurfArea): List<Pair<String, Double>>
 
+    suspend fun getWaveDirections(surfArea: SurfArea): List<Pair<String, Double>>
+
     suspend fun getTimeSeriesDayByDay(surfArea: SurfArea): List<List<Pair<String, DataOF>>>
 }
 
@@ -59,6 +61,10 @@ class OceanforecastRepositoryImpl(
         return dataOF.instant.details.sea_surface_wave_height
     }
 
+    private fun findWaveDirectionFromData(dataOF: DataOF): Double {
+        return dataOF.instant.details.sea_water_to_direction
+    }
+
 
     override suspend fun getWaveHeights(surfArea: SurfArea): List<Pair<String, Double>> {
         // Hent alle timeSeries for alle surfArea-områder
@@ -69,5 +75,10 @@ class OceanforecastRepositoryImpl(
 
     }
 
+    override suspend fun getWaveDirections(surfArea: SurfArea): List<Pair<String, Double>> {
+        val timeSeriesForArea = getTimeSeries(surfArea)
+
+        return timeSeriesForArea.map { it.first to findWaveDirectionFromData(it.second)}
+    }
 
 }
