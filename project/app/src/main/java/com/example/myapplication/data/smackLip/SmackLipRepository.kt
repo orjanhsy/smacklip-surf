@@ -17,6 +17,7 @@ import com.example.myapplication.model.waveforecast.PointForecast
 interface SmackLipRepository {
     suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Features>
     suspend fun getWaveHeights(surfArea: SurfArea): List<Pair<List<Int>, Double>>
+    suspend fun getWaveDirections(surfArea: SurfArea): List<Pair<List<Int>, Double>>
     suspend fun getTimeSeriesOF(surfArea: SurfArea): List<Pair<String, DataOF>>
     suspend fun getTimeSeriesLF(surfArea: SurfArea): List<Pair<String, DataLF>>
     suspend fun getWindDirection(surfArea: SurfArea): List<Pair<List<Int>, Double>>
@@ -31,9 +32,9 @@ interface SmackLipRepository {
 
     suspend fun getDataForTheNext7Days(surfArea: SurfArea): MutableList<List<Pair<List<Int>, List<Double>>>>
 
-    suspend fun getAllWaveForecastsNext3Days(): Map<SurfArea, List<Pair<Double?, Double?>>>
+    suspend fun getAllWavePeriodsNext3Days(): Map<SurfArea, List<Pair<Double?, Double?>>>
 
-    suspend fun getWaveForecastsNext3DaysForArea(surfArea: SurfArea): List<Pair<Double?, Double?>>
+    suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): List<Pair<Double?, Double?>>
 
     suspend fun getTimeSeriesDayByDay(surfArea: SurfArea): List<List<Pair<String, DataOF>>>
 }
@@ -157,7 +158,7 @@ class SmackLipRepositoryImpl (
     }
 
     // mapper hvert enkelt surfarea til en liste med (bølgeretning, bølgeperiode) lik de i 'getWaveForecastNext3DaysForArea()' under.
-    override suspend fun getAllWaveForecastsNext3Days(): Map<SurfArea, List<Pair<Double?, Double?>>> {
+    override suspend fun getAllWavePeriodsNext3Days(): Map<SurfArea, List<Pair<Double?, Double?>>> {
         return try {
             waveForecastRepository.allRelevantWavePeriodAndDirNext3DaysHardCoded()
         } catch (e: Exception) {
@@ -166,7 +167,7 @@ class SmackLipRepositoryImpl (
     }
 
     // liste med pair(bølgeretning, bølgeperiode), .size in 18..20 (3timers intervaller, totalt 60 timer). Vet ikke hvorfor den av og til er 19 lang, da er det i så fall bare 57 timer forecast.
-    override suspend fun getWaveForecastsNext3DaysForArea(surfArea: SurfArea): List<Pair<Double?, Double?>> {
+    override suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): List<Pair<Double?, Double?>> {
         return waveForecastRepository.waveDirAndPeriodNext3DaysForArea(surfArea.modelName, surfArea.pointId)
     }
 
