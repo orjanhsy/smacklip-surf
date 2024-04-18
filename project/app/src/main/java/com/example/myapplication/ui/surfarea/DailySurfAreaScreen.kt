@@ -61,7 +61,7 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
         modifier = Modifier
             .fillMaxSize()
             .padding(12.dp)
-    ) {
+    ) {//vent dette er feil, dette er jo bare for i dag
         val surfAreaDataForDay = nextSevenDays.getOrElse(0) { emptyList() } //0 er altså i dag
         Log.d("klikker!!", "${nextSevenDays.size}")
 
