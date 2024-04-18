@@ -38,6 +38,16 @@ interface SmackLipRepository {
     suspend fun getWaveForecastsNext3DaysForArea(surfArea: SurfArea): List<Pair<Double?, Double?>>
 
     suspend fun getTimeSeriesDayByDay(surfArea: SurfArea): List<List<Pair<String, DataOF>>>
+
+    fun getConditionStatus(
+        windSpeed: Double,
+        windGust: Double,
+        windDir: Double,
+        waveHeight: Double,
+        waveDir: Double,
+        wavePeriod: Double,
+        alerts: List<Features>
+    ): String
 }
 
 class SmackLipRepositoryImpl (
@@ -176,21 +186,32 @@ class SmackLipRepositoryImpl (
         return oceanForecastRepository.getTimeSeriesDayByDay(surfArea)
     }
 
-    fun getConditionStatus(windSpeed: Double, windGust: Double, windDir: Int, waveSpeed: Double, waveHeight: Double, waveDir: Int, wavePeriod: Int, alerts: List<Features>): String {
-        var windStatus: ConditionDescriptions = ConditionDescriptions.DECENT
+    override fun getConditionStatus(
+        windSpeed: Double,
+        windGust: Double,
+        windDir: Double,
+        waveHeight: Double,
+        waveDir: Double,
+        wavePeriod: Double,
+        alerts: List<Features>
+    ): String {
+        var conditionStatus: ConditionDescriptions = ConditionDescriptions.DECENT
 
         // variables that result in bad conditions regardless of other variables.
         if (
-            windSpeed >= Conditions.WIND_SPEED_UPPER_BOUNDS.value
-            || waveHeight <= Conditions.WAVE_HEIGHT_LOWER_BOUNDS.value
-            || wavePeriod <= Conditions.WAVE_PERIOD_LOWER_BOUNDS.value
+            windSpeed >= Conditions.WIND_SPEED_UPPER_BOUND.value
+            || waveHeight <= Conditions.WAVE_HEIGHT_LOWER_BOUND.value
+            || waveHeight >= Conditions.WAVE_HEIGH_UPPER_BOUND.value
+            || wavePeriod <= Conditions.WAVE_PERIOD_LOWER_BOUND.value
             || alerts.isNotEmpty()
         ) {
-            windStatus = ConditionDescriptions.POOR
-            return windStatus.description
+            conditionStatus = ConditionDescriptions.POOR
+            return conditionStatus.description
         }
-        var totalScore = 100.0
-        // make test-driven
+
+
+        return conditionStatus.description
+
     }
 
 }

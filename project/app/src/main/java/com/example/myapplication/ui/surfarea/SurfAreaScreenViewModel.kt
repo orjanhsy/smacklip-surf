@@ -113,6 +113,7 @@ class SurfAreaScreenViewModel: ViewModel() {
                 Log.d("SAVM", "Updating windspeed with ${newMaxWaveHeights.size} elements")
                 Log.d("SAVM", "Updating windgust with ${newMaxWaveHeights.size} elements")
                 state.copy(
+                    location = surfArea,
                     forecast7Days = newForecast7Days,
                     waveHeights = newWaveHeights,
                     maxWaveHeights = newMaxWaveHeights,
