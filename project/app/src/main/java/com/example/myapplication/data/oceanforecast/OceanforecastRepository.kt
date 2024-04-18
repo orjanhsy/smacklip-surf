@@ -81,5 +81,4 @@ class OceanforecastRepositoryImpl(
         return timeSeriesForArea.map { it.first to findWaveDirectionFromData(it.second)}
     }
 
-
 }
