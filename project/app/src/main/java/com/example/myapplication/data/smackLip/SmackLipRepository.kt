@@ -17,25 +17,26 @@ import com.example.myapplication.model.waveforecast.PointForecast
 interface SmackLipRepository {
     suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Features>
     suspend fun getWaveHeights(surfArea: SurfArea): List<Pair<List<Int>, Double>>
+
+    suspend fun getWaveDirections(surfArea: SurfArea): List<Pair<List<Int>, Double>>
+
     suspend fun getTimeSeriesOF(surfArea: SurfArea): List<Pair<String, DataOF>>
     suspend fun getTimeSeriesLF(surfArea: SurfArea): List<Pair<String, DataLF>>
     suspend fun getWindDirection(surfArea: SurfArea): List<Pair<List<Int>, Double>>
     suspend fun getWindSpeed(surfArea: SurfArea): List<Pair<List<Int>, Double>>
     suspend fun getWindSpeedOfGust(surfArea: SurfArea): List<Pair<List<Int>, Double>>
-
     abstract fun getTimeListFromTimeString(timeString : String): List<Int>
-
     //suspend fun getForecastNext24Hours() : MutableList<MutableList<Pair<List<Int>, Pair<Int, List<Double>>>>>
-
     suspend fun getDataForOneDay(day : Int, surfArea: SurfArea): List<Pair<List<Int>, List<Double>>>
-
     suspend fun getDataForTheNext7Days(surfArea: SurfArea): MutableList<List<Pair<List<Int>, List<Double>>>>
-
-    suspend fun getAllWaveForecastsNext3Days(): Map<SurfArea, List<Pair<Double?, Double?>>>
-
-    suspend fun getWaveForecastsNext3DaysForArea(surfArea: SurfArea): List<Pair<Double?, Double?>>
-
     suspend fun getTimeSeriesDayByDay(surfArea: SurfArea): List<List<Pair<String, DataOF>>>
+
+    // waveforecast
+    suspend fun getAllWaveForecastsNext3Days(): Map<SurfArea, List<Pair<Double?, Double?>>>
+    suspend fun getWaveForecastsNext3DaysForArea(surfArea: SurfArea): List<Pair<Double?, Double?>>
+    suspend fun getAllWavePeriodsNext3Days(): Map<SurfArea, List<Double?>>
+    suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): List<Double?>
+
 }
 
 class SmackLipRepositoryImpl (
@@ -58,6 +59,12 @@ class SmackLipRepositoryImpl (
             Pair(getTimeListFromTimeString(waveHeight.first), waveHeight.second)
         }
 
+    }
+    override suspend fun getWaveDirections(surfArea: SurfArea): List<Pair<List<Int>, Double>> {
+        val tempWaveDir = oceanForecastRepository.getWaveDirections(surfArea)
+        return tempWaveDir.map { waveDir ->
+            Pair(getTimeListFromTimeString(waveDir.first), waveDir.second)
+        }
     }
 
     override suspend fun getTimeSeriesOF(surfArea: SurfArea): List<Pair<String, DataOF>> {
@@ -123,6 +130,7 @@ class SmackLipRepositoryImpl (
     //List<Pair<Time, DataAtTime>>>  .size= 0..24 ('i dag' vil vise så mange timer det er igjen av døgnet, resten vil vise 24 timer.)
     override suspend fun getDataForOneDay(day : Int, surfArea: SurfArea): List<Pair<List<Int>, List<Double>>> {
         val waveHeight :  List<Pair<List<Int>, Double>> = getWaveHeights(surfArea).filter { waveHeight -> waveHeight.first[2] == day }
+        val waveDirection: List<Pair<List<Int>, Double>> = getWaveDirections(surfArea).filter {waveDir -> waveDir.first[2] == day}
         val windDirection :  List<Pair<List<Int>, Double>> = getWindDirection(surfArea).filter { windDirection -> windDirection.first[2] == day }
         val windSpeed :  List<Pair<List<Int>, Double>> = getWindSpeed(surfArea).filter { windSpeed -> windSpeed.first[2] == day }
         val windSpeedOfGust :  List<Pair<List<Int>, Double>> = getWindSpeedOfGust(surfArea).filter { gust -> gust.first[2] == day }
@@ -130,10 +138,11 @@ class SmackLipRepositoryImpl (
         val dataList = waveHeight.map {
             val time : List<Int> = it.first
             try {
+                val waveDirectionAtTime = waveDirection.first {data -> data.first.equals(time)}.second
                 val windDirectionAtTime = windDirection.first {data -> data.first.equals(time)}.second
                 val windSpeedAtTime = windSpeed.first() {data -> data.first.equals(time)}.second
                 val windSpeedOfGustAtTime = windSpeedOfGust.first() {data -> data.first.equals(time)}.second
-                val dataAtTime : List<Double> = listOf(it.second, windDirectionAtTime, windSpeedAtTime, windSpeedOfGustAtTime)
+                val dataAtTime : List<Double> = listOf(it.second, waveDirectionAtTime, windDirectionAtTime, windSpeedAtTime, windSpeedOfGustAtTime)
                 Pair(time, dataAtTime)
 
             }catch (_: NoSuchElementException){
@@ -172,6 +181,15 @@ class SmackLipRepositoryImpl (
 
     override suspend fun getTimeSeriesDayByDay(surfArea: SurfArea): List<List<Pair<String, DataOF>>> {
         return oceanForecastRepository.getTimeSeriesDayByDay(surfArea)
+    }
+
+    // wf men bare med waveperiods, i motsetning (wavedir, waveperiod) over.
+    override suspend fun getAllWavePeriodsNext3Days(): Map<SurfArea, List<Double?>> {
+        return getAllWaveForecastsNext3Days().entries.associate{it.key to it.value.map{data -> data.second}}
+    }
+
+    override suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): List<Double?> {
+        return getWaveForecastsNext3DaysForArea(surfArea).map{it.second}
     }
 
 }

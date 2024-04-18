@@ -41,7 +41,7 @@ import com.example.myapplication.ui.theme.MyApplicationTheme
 fun DailySurfAreaScreen(dailySurfAreaScreenViewModel: DailySurfAreaScreenViewModel = viewModel()) {
     val dailySurfAreaScreenUiState by dailySurfAreaScreenViewModel.dailySurfAreaScreenUiState.collectAsState()
     val nextSevenDays = dailySurfAreaScreenUiState.forecast7Days
-    dailySurfAreaScreenViewModel.getForecastNext7Days(SurfArea.HODDEVIK)
+    dailySurfAreaScreenViewModel.updateForecastNext7Days(SurfArea.HODDEVIK)
 
 
     LazyColumn(
@@ -56,8 +56,10 @@ fun DailySurfAreaScreen(dailySurfAreaScreenViewModel: DailySurfAreaScreenViewMod
                     surfAreaDataForDay[hourIndex] //henter objektet for timen som er en liste med Pair<List<Int>, Double>
                 val timestamp = surfAreaDataForHour.first[3] //3??
                 val waveHeight = surfAreaDataForHour.second[0]
-                val windSpeed = surfAreaDataForHour.second[1]
-                val windGust = surfAreaDataForHour.second[1]
+                val waveDir = surfAreaDataForHour.second[1]
+                val windDir = surfAreaDataForHour.second[2]
+                val windSpeed = surfAreaDataForHour.second[3]
+                val windGust = surfAreaDataForHour.second[4]
 
                 Log.d("timestamp", "$timestamp")
                 AllInfoCard(

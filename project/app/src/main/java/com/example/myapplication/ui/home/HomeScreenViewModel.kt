@@ -22,6 +22,9 @@ data class HomeScreenUiState(
     val windGust: Map<SurfArea, List<Pair<List<Int>, Double>>> = emptyMap(),
     val windDirection: Map<SurfArea,List<Pair<List<Int>, Double>>> = emptyMap(),
     val waveHeight: Map<SurfArea, List<Pair<List<Int>, Double>>> = emptyMap(),
+    val waveDirections: Map<SurfArea, List<Pair<List<Int>, Double>>> = emptyMap(),
+    val wavePeriods: Map<SurfArea, List<Double?>> = emptyMap(),
+    val windPeriods: Map<SurfArea, List<Double?>> = emptyMap(),
     val allRelevantAlerts: List<List<Features>> = emptyList()
 )
 
@@ -97,6 +100,32 @@ class HomeScreenViewModel : ViewModel() {
         }
 
     }
+    fun updateWaveDirections(){
+        viewModelScope.launch(Dispatchers.IO) {
+            val updatedWaveDirections: MutableMap<SurfArea, List<Pair<List<Int>, Double>>> = mutableMapOf()
+            SurfArea.entries.forEach { surfArea ->
+                val newWaveDirection = smackLipRepository.getWaveDirections(surfArea)
+                updatedWaveDirections[surfArea] = newWaveDirection
+            }
+            _homeScreenUiState.update {
+                it.copy(waveDirections = updatedWaveDirections)
+            }
+        }
+    }
+
+    fun updateWavePeriods() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val updatedWavePeriods: MutableMap<SurfArea, List<Double?>> = mutableMapOf()
+            SurfArea.entries.forEach { surfArea ->
+                val newWavePeriods = smackLipRepository.getWavePeriodsNext3DaysForArea(surfArea)
+                updatedWavePeriods[surfArea] = newWavePeriods
+            }
+            _homeScreenUiState.update {
+                it.copy(wavePeriods = updatedWavePeriods)
+            }
+        }
+    }
+
 
     fun updateAlerts() {
         viewModelScope.launch(Dispatchers.IO) {
