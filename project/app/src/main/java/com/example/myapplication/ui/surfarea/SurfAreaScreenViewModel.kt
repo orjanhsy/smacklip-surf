@@ -46,42 +46,6 @@ class SurfAreaScreenViewModel: ViewModel() {
         }
     }
 
-//    fun updateWaveHeights(surfArea: SurfArea) {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            _surfAreaScreenUiState.update {
-//                val newWaveHeights = smackLipRepository.getWaveHeights(surfArea)
-//                it.copy(waveHeights = newWaveHeights)
-//            }
-//        }
-//    }
-//
-//    fun updateWindDirection(surfArea: SurfArea) {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            _surfAreaScreenUiState.update {
-//                val newWindDirection = smackLipRepository.getWindDirection(surfArea)
-//                it.copy(windDirections = newWindDirection)
-//            }
-//        }
-//    }
-//
-//    fun updateWindSpeed(surfArea: SurfArea) {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            _surfAreaScreenUiState.update {
-//                val newWindSpeed = smackLipRepository.getWindSpeed(surfArea)
-//                it.copy(windSpeeds = newWindSpeed)
-//            }
-//        }
-//    }
-//
-//    fun updateWindSpeedOfGust(surfArea: SurfArea) {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            _surfAreaScreenUiState.update {
-//                val newWindSpeedOfGust = smackLipRepository.getWindSpeedOfGust(surfArea)
-//                it.copy(windSpeedOfGusts = newWindSpeedOfGust)
-//            }
-//        }
-//    }
-
     fun updateMaxWaveHeights() {
         viewModelScope.launch {
             _surfAreaScreenUiState.update {state ->
