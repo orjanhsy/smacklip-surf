@@ -38,7 +38,13 @@ class SurfAreaScreenViewModel: ViewModel() {
     init {
     }
 
-
+    fun updateLocation(surfArea: SurfArea) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _surfAreaScreenUiState.update {
+                it.copy (location = surfArea)
+            }
+        }
+    }
     fun updateAlerts() {
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update {
