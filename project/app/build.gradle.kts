@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.myapplication"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -67,6 +67,10 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
     implementation("io.ktor:ktor-serialization-jackson:$ktor_version")
 
+    //Navigation
+    val nav_version = "2.7.7"
+    implementation("androidx.navigation:navigation-compose:$nav_version")
+
     //default
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
@@ -93,5 +97,9 @@ dependencies {
     //mapbox
     implementation("com.mapbox.maps:android:11.2.1")
     implementation("com.mapbox.extension:maps-compose:11.2.1")
+
+    //material symbols
+    implementation("androidx.compose.material:material-icons-extended:1.6.6")
+
 
 }
