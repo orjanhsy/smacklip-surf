@@ -67,6 +67,7 @@ class TDDRepo {
     fun conditionsArePoorIfAlertsArePresent() {
         assert(
             SmackLipRepositoryImpl().getConditionStatus(
+                greatConditionsWithAlert.location,
                 greatConditionsWithAlert.windSpeed,
                 greatConditionsWithAlert.windDir,
                 greatConditionsWithAlert.windGust,
@@ -82,6 +83,7 @@ class TDDRepo {
     fun conditionsAreDecentWhenStateIsConsideredDecent() {
         assert(
             SmackLipRepositoryImpl().getConditionStatus(
+                decentConditionsHoddevik.location,
                 decentConditionsHoddevik.windSpeed,
                 decentConditionsHoddevik.windDir,
                 decentConditionsHoddevik.windGust,
@@ -97,6 +99,7 @@ class TDDRepo {
         // while some conditions are great, it should be poor if the rest are bad
         assert(
             SmackLipRepositoryImpl().getConditionStatus(
+                splitConditions.location,
                 splitConditions.windSpeed,
                 splitConditions.windDir,
                 splitConditions.windGust,
@@ -112,6 +115,7 @@ class TDDRepo {
         // while some conditions are great, it should be poor if the rest are bad
         assert(
             SmackLipRepositoryImpl().getConditionStatus(
+                greatConditionsWithoutAlert.location,
                 greatConditionsWithoutAlert.windSpeed,
                 greatConditionsWithoutAlert.windDir,
                 greatConditionsWithoutAlert.windGust,
@@ -127,6 +131,7 @@ class TDDRepo {
     fun vmConditionStatusEqualsRepoImplementation() {
         assert(
             vm.getConditionStatus(
+                decentConditionsHoddevik.location,
                 decentConditionsHoddevik.windSpeed,
                 decentConditionsHoddevik.windDir,
                 decentConditionsHoddevik.windGust,
@@ -135,6 +140,7 @@ class TDDRepo {
                 decentConditionsHoddevik.wavePeriod,
                 decentConditionsHoddevik.alerts
             ) == repo.getConditionStatus(
+                decentConditionsHoddevik.location,
                 decentConditionsHoddevik.windSpeed,
                 decentConditionsHoddevik.windDir,
                 decentConditionsHoddevik.windGust,

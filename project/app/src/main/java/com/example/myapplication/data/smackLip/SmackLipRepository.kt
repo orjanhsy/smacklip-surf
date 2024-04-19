@@ -41,6 +41,7 @@ interface SmackLipRepository {
     suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): List<Double?>
 
     fun getConditionStatus(
+        location: SurfArea
         windSpeed: Double,
         windGust: Double,
         windDir: Double,
@@ -210,6 +211,7 @@ class SmackLipRepositoryImpl (
     }
 
     override fun getConditionStatus(
+        location: SurfArea,
         windSpeed: Double,
         windGust: Double,
         windDir: Double,
@@ -232,7 +234,7 @@ class SmackLipRepositoryImpl (
             return conditionStatus.description
         }
         val status = mutableMapOf<String, Double>()
-        status["windSpeed"] = windSpeed  / 4 // anything below 4 mp/s is great, anything above 16 is poor
+        status["windSpeed"] = windSpeed
         status["windGust"] = windGust / 4 // -- || --
         status["windDir"] = 0.0,
         status["waveDir"] = 0.0,
