@@ -14,6 +14,9 @@ class TDDRepo {
     //  repository: smacklip
     private val repo: SmackLipRepository = SmackLipRepositoryImpl()
 
+    // vm: SurfAreaScreen
+    private val vm = SurfAreaScreenViewModel()
+
 
     object greatConditionsWithAlert {
         val windSpeed = 4.0
@@ -113,6 +116,29 @@ class TDDRepo {
                 greatConditionsWithoutAlert.wavePeriod,
                 greatConditionsWithoutAlert.alerts,
             ) == ConditionDescriptions.GREAT.description
+        )
+    }
+
+    @Test
+    fun vmConditionStatusEqualsRepoImplementation() {
+        assert(
+            vm.getConditionStatus(
+                decentConditionsHoddevik.windSpeed,
+                decentConditionsHoddevik.windDir,
+                decentConditionsHoddevik.windGust,
+                decentConditionsHoddevik.waveHeight,
+                decentConditionsHoddevik.waveDir,
+                decentConditionsHoddevik.wavePeriod,
+                decentConditionsHoddevik.alerts
+            ) == repo.getConditionStatus(
+                decentConditionsHoddevik.windSpeed,
+                decentConditionsHoddevik.windDir,
+                decentConditionsHoddevik.windGust,
+                decentConditionsHoddevik.waveHeight,
+                decentConditionsHoddevik.waveDir,
+                decentConditionsHoddevik.wavePeriod,
+                decentConditionsHoddevik.alerts
+            )
         )
     }
 }

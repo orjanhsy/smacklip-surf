@@ -231,6 +231,7 @@ class SmackLipRepositoryImpl (
             conditionStatus = ConditionDescriptions.POOR
             return conditionStatus.description
         }
+        val status = mapOf()
         return conditionStatus.description
     }
 
