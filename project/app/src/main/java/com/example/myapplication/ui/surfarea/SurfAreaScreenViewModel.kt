@@ -113,6 +113,7 @@ class SurfAreaScreenViewModel: ViewModel() {
     }
 
     fun getConditionStatus(
+        location: SurfArea,
         windSpeed: Double,
         windGust: Double,
         windDir: Double,
@@ -121,7 +122,7 @@ class SurfAreaScreenViewModel: ViewModel() {
         wavePeriod: Double,
         alerts: List<Features>
     ): String {
-        return smackLipRepository.getConditionStatus(windSpeed, windGust, windDir, waveHeight, waveDir, wavePeriod, alerts)
+        return smackLipRepository.getConditionStatus(location, windSpeed, windGust, windDir, waveHeight, waveDir, wavePeriod, alerts)
     }
 
 }
