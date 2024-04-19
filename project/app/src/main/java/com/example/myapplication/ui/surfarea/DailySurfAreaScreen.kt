@@ -1,7 +1,5 @@
 
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -36,19 +34,34 @@ import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun DailySurfAreaScreen(dailySurfAreaScreenViewModel: DailySurfAreaScreenViewModel = viewModel()) {
+fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: DailySurfAreaScreenViewModel = viewModel()) {
+
+    val surfArea: SurfArea = SurfArea.entries.find {
+        it.locationName == surfAreaName
+    }!!
+
     val dailySurfAreaScreenUiState by dailySurfAreaScreenViewModel.dailySurfAreaScreenUiState.collectAsState()
     val nextSevenDays = dailySurfAreaScreenUiState.forecast7Days
-    dailySurfAreaScreenViewModel.updateForecastNext7Days(SurfArea.HODDEVIK)
+    dailySurfAreaScreenViewModel.updateForecastNext7Days(surfArea = surfArea)
+
+    Log.d("size", "${nextSevenDays.size}")
+    val waveHeightMap: Map<SurfArea, List<Pair<List<Int>, Double>>> = mapOf(
+        surfArea to listOf(Pair(listOf(1, 2, 3, 4), 5.0))
+    )
+    val windSpeedMap: Map<SurfArea, List<Pair<List<Int>, Double>>> = mapOf(
+        surfArea to listOf(Pair(listOf(2, 4, 6, 8), 1.0))
+    )
+    val windGustMap: Map<SurfArea, List<Pair<List<Int>, Double>>> = mapOf(
+        surfArea to listOf(Pair(listOf(3, 5, 8, 32), 3.0))
+    )
 
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(12.dp)
-    ) {
+    ) {//vent dette er feil, dette er jo bare for i dag, må fikses med onclick
         val surfAreaDataForDay = nextSevenDays.getOrElse(0) { emptyList() } //0 er altså i dag
         if (surfAreaDataForDay.isNotEmpty()) {
             items(surfAreaDataForDay.size) { hourIndex -> //altså timer igjen av dagen
@@ -64,6 +77,7 @@ fun DailySurfAreaScreen(dailySurfAreaScreenViewModel: DailySurfAreaScreenViewMod
                 Log.d("timestamp", "$timestamp")
                 AllInfoCard(
                     timestamp = timestamp.toString(),
+                    surfArea = surfArea,
                     waveHeight = waveHeight,
                     windSpeed = windSpeed,
                     windGust = windGust
@@ -73,6 +87,7 @@ fun DailySurfAreaScreen(dailySurfAreaScreenViewModel: DailySurfAreaScreenViewMod
             item {
                 AllInfoCard(
                     timestamp = "nei",
+                    surfArea = surfArea,
                     waveHeight = 0.0,
                     windSpeed = 0.0,
                     windGust = 0.0
@@ -84,7 +99,8 @@ fun DailySurfAreaScreen(dailySurfAreaScreenViewModel: DailySurfAreaScreenViewMod
 
 @Composable
 fun AllInfoCard(
-    timestamp : String,
+    timestamp: String,
+    surfArea: SurfArea,
     waveHeight: Double,
     windSpeed: Double,
     windGust: Double,
@@ -205,11 +221,10 @@ fun AllInfoCard(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 private fun PreviewDailyScreen() {
     MyApplicationTheme {
-        DailySurfAreaScreen()
+        DailySurfAreaScreen("Hoddevik")
     }
 }
