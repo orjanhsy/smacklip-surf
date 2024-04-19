@@ -119,6 +119,7 @@ fun SurfAreaScreen(
     }
 }
 
+
 @Composable
 fun InfoCard(surfArea: SurfArea) {
     Card(
@@ -172,7 +173,7 @@ fun InfoCard(surfArea: SurfArea) {
 fun HeaderCard(surfArea: SurfArea) {
 
     val currentDate = LocalDate.now()
-    val formatter1 = DateTimeFormatter.ofPattern("E d. MMM",  Locale("no", "NO"))
+    val formatter1 = DateTimeFormatter.ofPattern("E d. MMM", Locale("no", "NO"))
 
     val formattedDate1 = formatter1.format(currentDate)
     println("$formattedDate1")
@@ -193,143 +194,150 @@ fun HeaderCard(surfArea: SurfArea) {
             .height(132.dp)
             .background(color = Color(0xFFEFF5F5), shape = RoundedCornerShape(size = 12.dp))
     ) {
-        Row (
-            horizontalArrangement = Arrangement.spacedBy(0.dp, Alignment.CenterHorizontally),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-        Column {
-            Row {
-                Text(
-                    text = surfArea.locationName + "," + "\n " +surfArea.areaName, //+surfArea.areaName //hadde vært fint med Stadt
-                    style = TextStyle(
-                        fontSize = 30.sp,
-                        //fontFamily = FontFamily(Font(R.font.inter)),
-                        fontWeight = FontWeight(500),
-                        color = Color(0xFF313341),
-                    ),
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .width(145.dp)
-                        .height(72.dp)
-                )
-            }
-            Row {
-                Text(
-                    text = formattedDate1,
-                    style = TextStyle(
-                        fontSize = 13.sp,
-                        //  fontFamily = FontFamily(Font(R.font.inter)),
-                        fontWeight = FontWeight(400),
-                        color = Color(0xFF9A938C),
-                    ),
-                    modifier = Modifier
-                        .padding(5.dp)
-                        .width(73.dp)
-                        .height(16.dp)
-                )
-            }
-        }
-            Column(
-                modifier = Modifier
-                    .shadow(
-                        elevation = 37.425743103027344.dp,
-                        spotColor = Color(0x0D000000),
-                        ambientColor = Color(0x0D000000)
-                    )
-                    .padding(1.24752.dp)
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(0.dp, Alignment.CenterHorizontally),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.cludy), //trenger mer i Next7days i smacklip for å hente
-                    contentDescription = "image description",
-                    contentScale = ContentScale.None,
-                    modifier = Modifier
-                        .width(126.dp)
-                        .height(126.dp)
-                )
-            }
-        }
-    }
-}
-@Composable
-fun DayPreviewCard(surfArea: SurfArea, day: String, waveheight: String, onNavigateToDailySurfAreaScreen: (String) -> Unit) {
-    Card(
-        modifier = Modifier
-            .padding(6.dp)
-            .width(93.dp)
-            .height(147.dp)
-            .background(color = SchemesSurface, shape = RoundedCornerShape(size = 20.dp))
-            .clickable(
-                onClick = { onNavigateToDailySurfAreaScreen(surfArea.locationName) }
-            )
-    ){
-        Column(
-            modifier = Modifier
-                .padding(5.dp)
-        ){
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = day,
-                    style = TextStyle(
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight(400),
-                        color = Color(0xFF9A938C),
-
-                ),
-                    modifier = Modifier
-                        .align(Alignment.CenterVertically)
-                        .padding(5.dp)
-                )
-            }
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ){
-                Image(
-                    painter = painterResource(id = R.drawable.surfboard_5525217),
-                    contentDescription = "image description",
-                    contentScale = ContentScale.FillBounds,
-                    modifier = Modifier
-                        .width(40.dp)
-                        .height(40.dp)
-                        //.padding(5.dp)
-                )
-            }
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ){
                 Column {
-                    Box(
-                        modifier = Modifier
-                            .padding(0.03158.dp)
-                            .size(24.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.Tsunami,
-                            contentDescription = "tsunami",
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .width(40.dp)
-                            .height(40.dp)
+                    Row {
+                        Text(
+                            text = surfArea.locationName + "," + "\n " + surfArea.areaName, //+surfArea.areaName //hadde vært fint med Stadt
+                            style = TextStyle(
+                                fontSize = 30.sp,
+                                //fontFamily = FontFamily(Font(R.font.inter)),
+                                fontWeight = FontWeight(500),
+                                color = Color(0xFF313341),
+                            ),
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .width(145.dp)
+                                .height(72.dp)
                         )
-
+                    }
+                    Row {
+                        Text(
+                            text = formattedDate1,
+                            style = TextStyle(
+                                fontSize = 13.sp,
+                                //  fontFamily = FontFamily(Font(R.font.inter)),
+                                fontWeight = FontWeight(400),
+                                color = Color(0xFF9A938C),
+                            ),
+                            modifier = Modifier
+                                .padding(5.dp)
+                                .width(73.dp)
+                                .height(16.dp)
+                        )
                     }
                 }
-                Column{
-                    Text(
-                        text = "$waveheight"
+                Column(
+                    modifier = Modifier
+                        .shadow(
+                            elevation = 37.425743103027344.dp,
+                            spotColor = Color(0x0D000000),
+                            ambientColor = Color(0x0D000000)
+                        )
+                        .padding(1.24752.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.cludy), //trenger mer i Next7days i smacklip for å hente
+                        contentDescription = "image description",
+                        contentScale = ContentScale.None,
+                        modifier = Modifier
+                            .width(126.dp)
+                            .height(126.dp)
                     )
                 }
             }
         }
     }
-}
+
+    @Composable
+    fun DayPreviewCard(
+        surfArea: SurfArea,
+        day: String,
+        waveheight: String,
+        onNavigateToDailySurfAreaScreen: (String) -> Unit
+    ) {
+        Card(
+            modifier = Modifier
+                .padding(6.dp)
+                .width(93.dp)
+                .height(147.dp)
+                .background(color = SchemesSurface, shape = RoundedCornerShape(size = 20.dp))
+                .clickable(
+                    onClick = { onNavigateToDailySurfAreaScreen(surfArea.locationName) }
+                )
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(5.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = day,
+                        style = TextStyle(
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight(400),
+                            color = Color(0xFF9A938C),
+
+                            ),
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically)
+                            .padding(5.dp)
+                    )
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.surfboard_5525217),
+                        contentDescription = "image description",
+                        contentScale = ContentScale.FillBounds,
+                        modifier = Modifier
+                            .width(40.dp)
+                            .height(40.dp)
+                        //.padding(5.dp)
+                    )
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Column {
+                        Box(
+                            modifier = Modifier
+                                .padding(0.03158.dp)
+                                .size(24.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Tsunami,
+                                contentDescription = "tsunami",
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .width(40.dp)
+                                    .height(40.dp)
+                            )
+
+                        }
+                    }
+                    Column {
+                        Text(
+                            text = "$waveheight"
+                        )
+                    }
+                }
+            }
+        }
+    }
+
 
 
 
