@@ -19,41 +19,45 @@ class TDDRepo {
 
 
     object greatConditionsWithAlert {
-        val windSpeed = 4.0
-        val windGust = 5.0
-        val windDir = 100.0
-        val waveHeight = 4.0
-        val waveDir = 100.0
+        val location = SurfArea.HODDEVIK
+        val windSpeed = 2.0
+        val windGust = 2.5
+        val windDir = location.optimalWindDir
+        val waveHeight = 2.0
+        val waveDir = location.optimalWaveDir
         val wavePeriod = 10.0
         val alerts: List<Features> = listOf(Features())
     }
 
     object greatConditionsWithoutAlert {
-        val windSpeed = 4.0
-        val windGust = 5.0
-        val windDir = 100.0
-        val waveHeight = 4.0
-        val waveDir = 100.0
-        val wavePeriod = 10.0
+        val location = SurfArea.HODDEVIK
+        val windSpeed = 2.0
+        val windGust = 3.0
+        val windDir = location.optimalWindDir
+        val waveHeight = 2.0
+        val waveDir = location.optimalWaveDir
+        val wavePeriod = 12.0
         val alerts: List<Features> = emptyList()
     }
 
     object decentConditionsHoddevik {
-        val windSpeed = 8.0 //tbd
-        val windGust = 10.0 //tbd
-        val windDir = SurfArea.HODDEVIK.optimalDirection - 45
+        val location = SurfArea.HODDEVIK
+        val windSpeed = 6.0
+        val windGust = 10.0
+        val windDir = location.optimalWindDir
         val waveHeight = 3.0
-        val waveDir = SurfArea.HODDEVIK.optimalDirection - 45
-        val wavePeriod = 8.5
+        val waveDir = location.optimalWaveDir - 35 % 360
+        val wavePeriod = 9.0
         val alerts: List<Features> = emptyList()
     }
     object splitConditions {
+        val location = SurfArea.HODDEVIK
         val windSpeed = 12.0 //tbd
-        val windGust = 17.0 //tbd
-        val windDir = SurfArea.HODDEVIK.optimalDirection - 90
+        val windGust = 12.0 //tbd
+        val windDir = SurfArea.HODDEVIK.optimalWindDir - 90 % 360
         val waveHeight = 2.0
-        val waveDir = SurfArea.HODDEVIK.optimalDirection
-        val wavePeriod = 9.5
+        val waveDir = SurfArea.HODDEVIK.optimalWaveDir
+        val wavePeriod = 10.6
         val alerts: List<Features> = emptyList()
     }
 

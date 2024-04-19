@@ -10,7 +10,7 @@ enum class SurfArea(
     val lon: Double,
     val image: Int,
     val optimalWaveDir: Double,
-    optimalWindDir: Double,
+    val optimalWindDir: Double,
     val description: String,
     val modelName: String,
     val pointId: Int
