@@ -54,18 +54,6 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
     val nextSevenDays = dailySurfAreaScreenUiState.forecast7Days
     dailySurfAreaScreenViewModel.updateForecastNext7Days(surfArea = surfArea)
 
-    Log.d("size", "${nextSevenDays.size}")
-    val waveHeightMap: Map<SurfArea, List<Pair<List<Int>, Double>>> = mapOf(
-        surfArea to listOf(Pair(listOf(1, 2, 3, 4), 5.0))
-    )
-    val windSpeedMap: Map<SurfArea, List<Pair<List<Int>, Double>>> = mapOf(
-        surfArea to listOf(Pair(listOf(2, 4, 6, 8), 1.0))
-    )
-    val windGustMap: Map<SurfArea, List<Pair<List<Int>, Double>>> = mapOf(
-        surfArea to listOf(Pair(listOf(3, 5, 8, 32), 3.0))
-    )
-
-
     Scaffold(
         bottomBar = {
             BottomBar()
@@ -144,7 +132,7 @@ fun AllInfoCard(
     Card(
         modifier = Modifier
             .padding(3.dp)
-            .width(331.dp)
+            .width(340.dp)
             .height(49.dp)
     ) {
         Row(
@@ -170,15 +158,6 @@ fun AllInfoCard(
                     .width(20.dp)
                     .height(20.dp)
             )
-           /* Image(
-                painter = painterResource(id = R.drawable.air),
-                contentDescription = "image description",
-                contentScale = ContentScale.None,
-                modifier = Modifier
-                    .padding(4.dp)
-                    .size(24.dp)
-                    .aspectRatio(1f)
-            )*/
 
             Text(
                 text = "$windSpeed (${windGust})",
