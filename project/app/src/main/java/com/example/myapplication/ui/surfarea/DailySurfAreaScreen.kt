@@ -12,7 +12,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Air
+import androidx.compose.material.icons.outlined.CallMade
+import androidx.compose.material.icons.outlined.Tsunami
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -101,7 +106,10 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                             surfArea = surfArea,
                             waveHeight = waveHeight,
                             windSpeed = windSpeed,
-                            windGust = windGust
+                            windGust = windGust,
+                            windDir = windDir,
+                            waveDir = waveDir
+
                         )
                     }
                 } else {
@@ -111,7 +119,9 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                             surfArea = surfArea,
                             waveHeight = 0.0,
                             windSpeed = 0.0,
-                            windGust = 0.0
+                            windGust = 0.0,
+                            windDir = 0.0,
+                            waveDir = 0.0
                         )
                     }
                 }
@@ -128,6 +138,8 @@ fun AllInfoCard(
     waveHeight: Double,
     windSpeed: Double,
     windGust: Double,
+    windDir: Double,
+    waveDir: Double,
 ) {
     Card(
         modifier = Modifier
@@ -150,7 +162,15 @@ fun AllInfoCard(
                 modifier = Modifier.padding(4.dp)
             )
 
-            Image(
+            Icon(
+                imageVector = Icons.Outlined.Air,
+                contentDescription = "air",
+                modifier = Modifier
+                    //.fillMaxSize()
+                    .width(20.dp)
+                    .height(20.dp)
+            )
+           /* Image(
                 painter = painterResource(id = R.drawable.air),
                 contentDescription = "image description",
                 contentScale = ContentScale.None,
@@ -158,7 +178,7 @@ fun AllInfoCard(
                     .padding(4.dp)
                     .size(24.dp)
                     .aspectRatio(1f)
-            )
+            )*/
 
             Text(
                 text = "$windSpeed (${windGust})",
@@ -172,18 +192,38 @@ fun AllInfoCard(
                 modifier = Modifier.padding(4.dp)
             )
 
-            Image(
-                painter = painterResource(id = R.drawable.tsunami),
-                contentDescription = "image description",
-                contentScale = ContentScale.None,
+            Icon(
+                imageVector = Icons.Outlined.CallMade,
+                contentDescription = "arrow",
                 modifier = Modifier
-                    .padding(4.dp)
-                    .size(24.dp)
-                    .aspectRatio(1f)
+                    //.fillMaxSize()
+                    .width(17.dp)
+                    .height(17.dp)
             )
 
             Text(
-                text = "$waveHeight",
+                text = "$windDir",
+                style = TextStyle(
+                    fontSize = 13.sp,
+                    lineHeight = 15.sp,
+                    fontWeight = FontWeight(400),
+                    color = Color(0xFF9C9EAA),
+                    textAlign = TextAlign.Center,
+                ),
+                modifier = Modifier.padding(4.dp)
+            )
+
+            Icon(
+                imageVector = Icons.Outlined.Tsunami,
+                contentDescription = "arrow",
+                modifier = Modifier
+                    //.fillMaxSize()
+                    .width(18.dp)
+                    .height(18.dp)
+            )
+
+            Text(
+                text = "$waveHeight m",
                 style = TextStyle(
                     fontSize = 13.sp,
                     lineHeight = 15.sp,
@@ -206,14 +246,13 @@ fun AllInfoCard(
                 modifier = Modifier.padding(4.dp)
             )
 
-            Image(
-                painter = painterResource(id = R.drawable.call_made),
-                contentDescription = "image description",
-                contentScale = ContentScale.None,
+            Icon(
+                imageVector = Icons.Outlined.CallMade,
+                contentDescription = "arrow",
                 modifier = Modifier
-                    .padding(4.dp)
-                    .size(24.dp)
-                    .aspectRatio(1f)
+                    //.fillMaxSize()
+                    .width(17.dp)
+                    .height(17.dp)
             )
 
             Text(
