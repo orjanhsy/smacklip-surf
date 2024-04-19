@@ -220,18 +220,32 @@ class SmackLipRepositoryImpl (
     ): String {
         var conditionStatus: ConditionDescriptions = ConditionDescriptions.DECENT
 
-        // variables that result in bad conditions regardless of other variables.
+        // conditions that result in poor status regardless of other variables.
         if (
             windSpeed >= Conditions.WIND_SPEED_UPPER_BOUND.value
             || waveHeight <= Conditions.WAVE_HEIGHT_LOWER_BOUND.value
-            || waveHeight >= Conditions.WAVE_HEIGH_UPPER_BOUND.value
+            || waveHeight >= Conditions.WAVE_HEIGHT_UPPER_BOUND.value
             || wavePeriod <= Conditions.WAVE_PERIOD_LOWER_BOUND.value
             || alerts.isNotEmpty()
         ) {
             conditionStatus = ConditionDescriptions.POOR
             return conditionStatus.description
         }
-        val status = mapOf()
+        val status = mutableMapOf<String, Double>()
+        status["windSpeed"] = windSpeed  / 4 // anything below 4 mp/s is great, anything above 16 is poor
+        status["windGust"] = windGust / 4 // -- || --
+        status["windDir"] = 0.0,
+        status["waveDir"] = 0.0,
+        status["wavePeriod"] = 0.0,
+        status["alerts"] = 0.0,
+
+        val averageStatus = status.values.sum() / status.size
+
+        conditionStatus = when {
+            averageStatus < 1 -> ConditionDescriptions.GREAT
+            averageStatus in 1.0 .. 3.0 -> ConditionDescriptions.DECENT
+            else -> ConditionDescriptions.POOR
+        }
         return conditionStatus.description
     }
 

@@ -48,11 +48,11 @@ class TDDRepo {
         val alerts: List<Features> = emptyList()
     }
     object splitConditions {
-        val windSpeed = 17.0 //tbd
+        val windSpeed = 12.0 //tbd
         val windGust = 17.0 //tbd
-        val windDir = SurfArea.HODDEVIK.optimalDirection - 45
+        val windDir = SurfArea.HODDEVIK.optimalDirection - 90
         val waveHeight = 2.0
-        val waveDir = SurfArea.HODDEVIK.optimalDirection - 45
+        val waveDir = SurfArea.HODDEVIK.optimalDirection
         val wavePeriod = 9.5
         val alerts: List<Features> = emptyList()
     }
