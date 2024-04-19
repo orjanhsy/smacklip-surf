@@ -1,6 +1,5 @@
 package com.example.myapplication.ui.surfarea
 
-import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
@@ -18,7 +17,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Tsunami
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -38,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.R
 import com.example.myapplication.model.surfareas.SurfArea
+import com.example.myapplication.ui.commonComponents.BottomBar
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.ui.theme.SchemesSurface
 import java.time.LocalDate
@@ -45,7 +49,6 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 
-@SuppressLint("SuspiciousIndentation", "UnusedMaterial3ScaffoldPaddingParameter")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SurfAreaScreen(
@@ -63,103 +66,105 @@ fun SurfAreaScreen(
     surfAreaScreenViewModel.updateForecastNext7Days(surfArea)
 
     val formatter = DateTimeFormatter.ofPattern("EEE", Locale("no", "NO"))
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        HeaderCard(surfArea)
-        //Spacer(modifier = Modifier.height(16.dp))
-        LazyRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            if (nextSevenDays.isNotEmpty()) {
-                val today = LocalDate.now()
-
-                items(nextSevenDays.size) { dayIndex ->
-                    val date = today.plusDays(dayIndex.toLong())
-                    val formattedDate = formatter.format(date)
-
-                    //kalkulere bølgehøyde
-                    val surfAreaDataForDay = nextSevenDays.getOrElse(dayIndex) { emptyList() }
-                    var maxWaveHeight = 0.0
-                    surfAreaDataForDay.forEach { surfAreaDataForHour ->
-                        if (maxWaveHeight < surfAreaDataForHour.second[0]) {
-                            maxWaveHeight = surfAreaDataForHour.second[0]
-                        }
-                    }
-
-                val maxWaveHeightperDay = maxWaveHeight
-                DayPreviewCard(
-                    surfArea,
-                    formattedDate,
-                    maxWaveHeightperDay.toString()
-                ) {}
-                }
-            }
-
-            else {
-                items(6) { dayIndex ->
-                    DayPreviewCard(surfArea, "no data", "no data"){}
-                }
-            }
+    Scaffold(
+        bottomBar = {
+            BottomBar()
         }
-        //Spacer(modifier = Modifier.height(16.dp))
-        InfoCard(surfArea)
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                //.padding(8.dp),
+                .padding(horizontal = 16.dp)
+                .padding(top = 16.dp),
 
+        verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            HeaderCard(surfArea)
+            LazyRow(
+                modifier = Modifier.padding(5.dp)
+            ) {
+                if (nextSevenDays.isNotEmpty()) {
+                    val today = LocalDate.now()
+
+                    items(nextSevenDays.size) { dayIndex ->
+                        val date = today.plusDays(dayIndex.toLong())
+                        val formattedDate = formatter.format(date)
+
+                        val surfAreaDataForDay = nextSevenDays.getOrElse(dayIndex) { emptyList() }
+                        var maxWaveHeight = 0.0
+                        surfAreaDataForDay.forEach { surfAreaDataForHour ->
+                            if (maxWaveHeight < surfAreaDataForHour.second[0]) {
+                                maxWaveHeight = surfAreaDataForHour.second[0]
+                            }
+                        }
+
+                        val maxWaveHeightperDay = maxWaveHeight
+                        DayPreviewCard(
+                            surfArea,
+                            formattedDate,
+                            maxWaveHeightperDay.toString()
+                        ) {}
+                    }
+                } else {
+                    items(6) { dayIndex ->
+                        DayPreviewCard(surfArea, "no data", "no data") {}
+                    }
+                }
+            }
+            InfoCard(surfArea)
+        }
     }
-
 }
 
 @Composable
 fun InfoCard(surfArea: SurfArea) {
     Card(
         modifier = Modifier
-            .width(336.dp)
-            .height(336.dp)
-            .padding(16.dp), // Add padding to provide space around the content
+            .width(300.dp)
+            .height(300.dp)
+            .padding(8.dp),
+        shape = RoundedCornerShape(16.dp)
     ) {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = surfArea.locationName,
                 style = TextStyle(
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight(400),
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
                     color = Color(0xFF313341)
                 ),
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(bottom = 8.dp)
             )
             Text(
                 text = surfArea.description,
                 style = TextStyle(
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight(400),
+                    fontSize = 14.sp,
                     color = Color(0xFF4D5E6F),
                 ),
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                modifier = Modifier.padding(bottom = 8.dp)
             )
             Image(
                 painter = painterResource(id = surfArea.image),
-                contentDescription = "image description",
-                //contentScale = ContentScale.FillBounds,
+                contentDescription = "Image",
+                contentScale = ContentScale.FillWidth,
                 modifier = Modifier
-                    .padding(10.dp)
-                    .width(312.dp)
-                    .height(110.dp)
+                    .width(250.dp)
+                    .height(150.dp)
             )
         }
     }
 }
+
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -195,7 +200,7 @@ fun HeaderCard(surfArea: SurfArea) {
         Column {
             Row {
                 Text(
-                    text = surfArea.locationName + " \n " +surfArea.areaName, //+surfArea.areaName //hadde vært fint med Stadt
+                    text = surfArea.locationName + "," + "\n " +surfArea.areaName, //+surfArea.areaName //hadde vært fint med Stadt
                     style = TextStyle(
                         fontSize = 30.sp,
                         //fontFamily = FontFamily(Font(R.font.inter)),
@@ -259,7 +264,7 @@ fun DayPreviewCard(surfArea: SurfArea, day: String, waveheight: String, onNaviga
     ){
         Column(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(5.dp)
         ){
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -271,8 +276,11 @@ fun DayPreviewCard(surfArea: SurfArea, day: String, waveheight: String, onNaviga
                         fontSize = 12.sp,
                         fontWeight = FontWeight(400),
                         color = Color(0xFF9A938C),
-                    ),
-                    modifier = Modifier.align(Alignment.CenterVertically)
+
+                ),
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .padding(5.dp)
                 )
             }
 
@@ -287,6 +295,7 @@ fun DayPreviewCard(surfArea: SurfArea, day: String, waveheight: String, onNaviga
                     modifier = Modifier
                         .width(40.dp)
                         .height(40.dp)
+                        //.padding(5.dp)
                 )
             }
 
@@ -301,13 +310,13 @@ fun DayPreviewCard(surfArea: SurfArea, day: String, waveheight: String, onNaviga
                             .size(24.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.tsunami),
-                            contentDescription = "image description",
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .width(40.dp)
-                                .height(40.dp)
+                        Icon(
+                            imageVector = Icons.Outlined.Tsunami,
+                            contentDescription = "tsunami",
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .width(40.dp)
+                            .height(40.dp)
                         )
 
                     }
