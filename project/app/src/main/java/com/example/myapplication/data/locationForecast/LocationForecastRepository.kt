@@ -12,9 +12,9 @@ interface LocationForecastRepository {
     suspend fun getWindSpeed(surfArea: SurfArea): List<Pair<String, Double>>
     suspend fun getWindSpeedOfGust(surfArea: SurfArea): List<Pair<String, Double>>
     suspend fun getTemperature(surfArea: SurfArea): List<Pair<String, Double>>
-    suspend fun getWeatherIconsNextOneHour(surfArea: SurfArea): List<Pair<String, Double>>
-    suspend fun getWeatherIconsNextSixHours(surfArea: SurfArea): List<Pair<String, Double>>
-    suspend fun getWeatherIconsNextTwelveHours(surfArea: SurfArea): List<Pair<String, Double>>
+    suspend fun getWeatherIconsNextOneHour(surfArea: SurfArea): List<Pair<String, String>>
+    suspend fun getWeatherIconsNextSixHours(surfArea: SurfArea): List<Pair<String, String>>
+    suspend fun getWeatherIconsNextTwelveHours(surfArea: SurfArea): List<Pair<String, String>>
 
 
 }
@@ -43,6 +43,17 @@ class LocationForecastRepositoryImpl(
     private fun findTemperatureFromData(dataLF: DataLF): Double{
         return dataLF.instant.details.air_temperature
     }
+    private fun findWeatherIconOneHourFromData(dataLF: DataLF): String {
+        return dataLF.next_1_hours.summary.symbol_code
+    }
+
+    private fun findWeatherIconSixHoursFromData(dataLF: DataLF): String {
+        return dataLF.next_6_hours.summary.symbol_code
+    }
+    private fun findWeatherIconTwelveHoursFromData(dataLF: DataLF): String {
+        return dataLF.next_12_hours.summary.symbol_code
+    }
+
 
     override suspend fun getWindDirection(surfArea: SurfArea): List<Pair<String, Double>> {
         // Henter timeSeries for det spesifikke surfArea-området
@@ -74,16 +85,19 @@ class LocationForecastRepositoryImpl(
         return timeSeriesForArea.map { it.first to findTemperatureFromData(it.second)} ?: emptyList()
     }
 
-    override suspend fun getWeatherIconsNextOneHour(surfArea: SurfArea): List<Pair<String, Double>> {
-        next_12_hours
+    override suspend fun getWeatherIconsNextOneHour(surfArea: SurfArea): List<Pair<String, String>> {
+        val timeSeriesForArea = getTimeSeries(surfArea)
+        return timeSeriesForArea.map { it.first to findWeatherIconOneHourFromData(it.second)} ?: emptyList()
     }
 
-    override suspend fun getWeatherIconsNextSixHours(surfArea: SurfArea): List<Pair<String, Double>> {
-        TODO("Not yet implemented")
+    override suspend fun getWeatherIconsNextSixHours(surfArea: SurfArea): List<Pair<String, String>> {
+        val timeSeriesForArea = getTimeSeries(surfArea)
+        return timeSeriesForArea.map { it.first to findWeatherIconSixHoursFromData(it.second)} ?: emptyList()
     }
 
-    override suspend fun getWeatherIconsNextTwelveHours(surfArea: SurfArea): List<Pair<String, Double>> {
-        TODO("Not yet implemented")
+    override suspend fun getWeatherIconsNextTwelveHours(surfArea: SurfArea): List<Pair<String, String>> {
+        val timeSeriesForArea = getTimeSeries(surfArea)
+        return timeSeriesForArea.map { it.first to findWeatherIconTwelveHoursFromData(it.second)} ?: emptyList()
     }
 
 }
