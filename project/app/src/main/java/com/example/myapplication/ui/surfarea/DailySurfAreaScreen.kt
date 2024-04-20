@@ -86,7 +86,6 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                         val windDir = surfAreaDataForHour.second[2]
                         val windSpeed = surfAreaDataForHour.second[3]
                         val windGust = surfAreaDataForHour.second[4]
-
                         Log.d("timestamp", "$timestamp")
                         AllInfoCard(
                             timestamp = timestamp.toString(),
@@ -232,6 +231,17 @@ fun AllInfoCard(
                     //.fillMaxSize()
                     .width(17.dp)
                     .height(17.dp)
+            )
+            Text(
+                text = "$waveDir",
+                style = TextStyle(
+                    fontSize = 13.sp,
+                    lineHeight = 15.sp,
+                    fontWeight = FontWeight(400),
+                    color = Color(0xFF9C9EAA),
+                    textAlign = TextAlign.Center,
+                ),
+                modifier = Modifier.padding(4.dp)
             )
 
             Text(
