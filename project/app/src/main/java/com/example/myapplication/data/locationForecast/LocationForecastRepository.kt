@@ -14,7 +14,8 @@ interface LocationForecastRepository {
     suspend fun getTemperature(surfArea: SurfArea): List<Pair<String, Double>>
     suspend fun getWeatherIconsNextOneHour(surfArea: SurfArea): List<Pair<String, String>>
     suspend fun getWeatherIconsNextSixHours(surfArea: SurfArea): List<Pair<String, String>>
-    suspend fun getWeatherIconsNextTwelveHours(surfArea: SurfArea): List<Pair<String, String>>
+
+   /* suspend fun getWeatherIconsNextTwelveHours(surfArea: SurfArea): List<Pair<String, String>>*/
 
 
 }
@@ -23,6 +24,7 @@ class LocationForecastRepositoryImpl(
     private val locationForecastDataSource: LocationForecastDataSource = LocationForecastDataSource()
 ): LocationForecastRepository {
 
+    //returnerer en liste med par av tidspunkt og data tilhørende dette tidspunktet
     override suspend fun getTimeSeries(surfArea: SurfArea): List<Pair<String, DataLF>> {
         val timeSeries : List<TimeserieLF> = locationForecastDataSource.fetchLocationForecastData(surfArea).properties.timeseries
         return timeSeries.map { it.time to it.data }
@@ -95,9 +97,11 @@ class LocationForecastRepositoryImpl(
         return timeSeriesForArea.map { it.first to findWeatherIconSixHoursFromData(it.second)} ?: emptyList()
     }
 
+    /* Denne er kanskje ikke relevant? lar den bli i tilfelle
     override suspend fun getWeatherIconsNextTwelveHours(surfArea: SurfArea): List<Pair<String, String>> {
         val timeSeriesForArea = getTimeSeries(surfArea)
         return timeSeriesForArea.map { it.first to findWeatherIconTwelveHoursFromData(it.second)} ?: emptyList()
     }
+     */
 
 }
