@@ -1,7 +1,5 @@
 package com.example.myapplication.ui.surfarea
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -39,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.myapplication.NavigationManager
 import com.example.myapplication.R
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.commonComponents.BottomBar
@@ -49,7 +48,6 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SurfAreaScreen(
     surfAreaName: String,
@@ -66,9 +64,15 @@ fun SurfAreaScreen(
     surfAreaScreenViewModel.updateForecastNext7Days(surfArea)
 
     val formatter = DateTimeFormatter.ofPattern("EEE", Locale("no", "NO"))
+    val navController = NavigationManager.navController
     Scaffold(
         bottomBar = {
-            BottomBar()
+            BottomBar(
+                onNavigateToMapScreen = {
+                    navController?.navigate("MapScreen")
+                    //navigerer til mapscreen
+                }
+            )
         }
     ) { innerPadding ->
         Column(
@@ -167,7 +171,7 @@ fun InfoCard(surfArea: SurfArea) {
 
 
 
-@RequiresApi(Build.VERSION_CODES.O)
+
 @Composable
 fun HeaderCard(surfArea: SurfArea) {
 
@@ -333,7 +337,6 @@ fun DayPreviewCard(surfArea: SurfArea, day: String, waveheight: String, onNaviga
 
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 private fun PreviewSurfAreaScreen() {
