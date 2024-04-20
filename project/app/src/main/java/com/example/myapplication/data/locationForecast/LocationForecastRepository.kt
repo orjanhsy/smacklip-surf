@@ -1,7 +1,5 @@
 package com.example.myapplication.data.locationForecast
 
-import android.util.Log
-import com.example.myapplication.data.utils.HTTPServiceHandler
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.locationforecast.DataLF
 import com.example.myapplication.model.locationforecast.TimeserieLF
@@ -12,10 +10,10 @@ interface LocationForecastRepository {
     suspend fun getWindSpeed(surfArea: SurfArea): List<Pair<String, Double>>
     suspend fun getWindSpeedOfGust(surfArea: SurfArea): List<Pair<String, Double>>
     suspend fun getTemperature(surfArea: SurfArea): List<Pair<String, Double>>
-    suspend fun getWeatherIconsNextOneHour(surfArea: SurfArea): List<Pair<String, String>>
-    suspend fun getWeatherIconsNextSixHours(surfArea: SurfArea): List<Pair<String, String>>
+    suspend fun getSymbolCodeNextOneHour(surfArea: SurfArea): List<Pair<String, String>>
+    suspend fun getSymbolCodeNextSixHours(surfArea: SurfArea): List<Pair<String, String>>
 
-   /* suspend fun getWeatherIconsNextTwelveHours(surfArea: SurfArea): List<Pair<String, String>>*/
+   /* suspend fun getSymbolCodeNextTwelveHours(surfArea: SurfArea): List<Pair<String, String>>*/
 
 
 }
@@ -45,11 +43,11 @@ class LocationForecastRepositoryImpl(
     private fun findTemperatureFromData(dataLF: DataLF): Double{
         return dataLF.instant.details.air_temperature
     }
-    private fun findWeatherIconOneHourFromData(dataLF: DataLF): String {
+    private fun findSymbolCodeOneHourFromData(dataLF: DataLF): String {
         return dataLF.next_1_hours.summary.symbol_code
     }
 
-    private fun findWeatherIconSixHoursFromData(dataLF: DataLF): String {
+    private fun findSymbolCodeSixHoursFromData(dataLF: DataLF): String {
         return dataLF.next_6_hours.summary.symbol_code
     }
     private fun findWeatherIconTwelveHoursFromData(dataLF: DataLF): String {
@@ -87,18 +85,18 @@ class LocationForecastRepositoryImpl(
         return timeSeriesForArea.map { it.first to findTemperatureFromData(it.second)} ?: emptyList()
     }
 
-    override suspend fun getWeatherIconsNextOneHour(surfArea: SurfArea): List<Pair<String, String>> {
+    override suspend fun getSymbolCodeNextOneHour(surfArea: SurfArea): List<Pair<String, String>> {
         val timeSeriesForArea = getTimeSeries(surfArea)
-        return timeSeriesForArea.map { it.first to findWeatherIconOneHourFromData(it.second)} ?: emptyList()
+        return timeSeriesForArea.map { it.first to findSymbolCodeOneHourFromData(it.second)} ?: emptyList()
     }
 
-    override suspend fun getWeatherIconsNextSixHours(surfArea: SurfArea): List<Pair<String, String>> {
+    override suspend fun getSymbolCodeNextSixHours(surfArea: SurfArea): List<Pair<String, String>> {
         val timeSeriesForArea = getTimeSeries(surfArea)
-        return timeSeriesForArea.map { it.first to findWeatherIconSixHoursFromData(it.second)} ?: emptyList()
+        return timeSeriesForArea.map { it.first to findSymbolCodeSixHoursFromData(it.second)} ?: emptyList()
     }
 
     /* Denne er kanskje ikke relevant? lar den bli i tilfelle
-    override suspend fun getWeatherIconsNextTwelveHours(surfArea: SurfArea): List<Pair<String, String>> {
+    override suspend fun getSymbolCodeNextTwelveHours(surfArea: SurfArea): List<Pair<String, String>> {
         val timeSeriesForArea = getTimeSeries(surfArea)
         return timeSeriesForArea.map { it.first to findWeatherIconTwelveHoursFromData(it.second)} ?: emptyList()
     }
