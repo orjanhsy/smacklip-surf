@@ -26,6 +26,7 @@ interface SmackLipRepository {
     suspend fun getWindSpeed(surfArea: SurfArea): List<Pair<List<Int>, Double>>
     suspend fun getWindSpeedOfGust(surfArea: SurfArea): List<Pair<List<Int>, Double>>
     suspend fun getAirTemperature(surfArea: SurfArea): List<Pair<List<Int>, Double>>
+    suspend fun getSymbolCode(surfArea: SurfArea): List<Pair<List<Int>, String>>
     abstract fun getTimeListFromTimeString(timeString : String): List<Int>
     //suspend fun getForecastNext24Hours() : MutableList<MutableList<Pair<List<Int>, Pair<Int, List<Double>>>>>
     suspend fun getDataForOneDay(day : Int, surfArea: SurfArea): List<Pair<List<Int>, List<Double>>>
@@ -120,6 +121,31 @@ class SmackLipRepositoryImpl (
         }
     }
 
+    override suspend fun getSymbolCode(surfArea: SurfArea): List<Pair<List<Int>, String>> {
+        //ønsker next_one_hour der det finnes, hvis ikke next_six_hours
+        val nextOneHour : List<Pair<String, String>> = locationForecastRepository.getSymbolCodeNextOneHour(surfArea)
+        val nextSixHours : List<Pair<String, String>> = locationForecastRepository.getSymbolCodeNextSixHours(surfArea)
+        val symbolCodesCombined = mergeListsPreserveFirst(nextOneHour, nextSixHours)
+        return symbolCodesCombined.map { symbol ->
+            Pair(getTimeListFromTimeString(symbol.first), symbol.second)
+        }
+    }
+
+    //denne gjør at next_one_hour brukes hvis den finnes, hvis ikke brukes next_six_hours
+    private fun mergeListsPreserveFirst(list1: List<Pair<String, String>>, list2: List<Pair<String, String>>): List<Pair<String, String>> {
+        // konverterer første list til map - raskere søking
+        val map1 = list1.toMap()
+
+        // konverterer andre liste til map og tar bort nøkkel-verdi-par der nøkkelen finnes i liste 1
+        val map2 = list2.toMap().filterKeys { key -> key !in map1.keys }
+
+        // setter sammen mapsene
+        val combinedMap = map1 + map2
+
+        //konverterer tilbake til liste igjen
+        return combinedMap.toList()
+    }
+
 
 
     //en funksjon som returnerer en liste med par av
@@ -145,6 +171,7 @@ class SmackLipRepositoryImpl (
         val windSpeed :  List<Pair<List<Int>, Double>> = getWindSpeed(surfArea).filter { windSpeed -> windSpeed.first[2] == day }
         val windSpeedOfGust :  List<Pair<List<Int>, Double>> = getWindSpeedOfGust(surfArea).filter { gust -> gust.first[2] == day }
         val airTemperature :  List<Pair<List<Int>, Double>> = getAirTemperature(surfArea).filter { temp -> temp.first[2] == day}
+        val symbolCode = getSymbolCode(surfArea).filter { symbol -> symbol.first[2] == day }
 
         val dataList = waveHeight.map {
             val time : List<Int> = it.first
@@ -154,7 +181,8 @@ class SmackLipRepositoryImpl (
                 val windSpeedAtTime = windSpeed.first() {data -> data.first.equals(time)}.second
                 val windSpeedOfGustAtTime = windSpeedOfGust.first() {data -> data.first.equals(time)}.second
                 val airTemperatureAtTime = airTemperature.first() {data -> data.first.equals(time)}.second
-                val dataAtTime : List<Double> = listOf(it.second, waveDirectionAtTime, windDirectionAtTime, windSpeedAtTime, windSpeedOfGustAtTime, airTemperatureAtTime)
+                val symbolCodeAtTime = symbolCode.first() {data -> data.first.equals(time)}.second
+                val dataAtTime : List<Any> = listOf(it.second, waveDirectionAtTime, windDirectionAtTime, windSpeedAtTime, windSpeedOfGustAtTime, airTemperatureAtTime, symbolCodeAtTime)
                 Pair(time, dataAtTime)
 
             }catch (_: NoSuchElementException){
