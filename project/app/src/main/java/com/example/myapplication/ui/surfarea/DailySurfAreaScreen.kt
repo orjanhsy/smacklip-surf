@@ -63,7 +63,7 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 10.dp)
                 .padding(top = 16.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -71,9 +71,8 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
             HeaderCard(surfArea)
             LazyColumn(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(12.dp)
-                    .padding(innerPadding)
+                    .padding(vertical = 12.dp)
+                    .weight(1f)
             ) {//vent dette er feil, dette er jo bare for i dag, må fikses med onclick
                 val surfAreaDataForDay =
                     nextSevenDays.getOrElse(0) { emptyList() } //0 er altså i dag
@@ -101,7 +100,7 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                         )
                     }
                 } else {
-                    item {
+                    item(7) {
                         AllInfoCard(
                             timestamp = "nei",
                             surfArea = surfArea,
@@ -132,6 +131,7 @@ fun AllInfoCard(
     Card(
         modifier = Modifier
             .padding(3.dp)
+            .fillMaxWidth()
             .width(340.dp)
             .height(49.dp)
     ) {
