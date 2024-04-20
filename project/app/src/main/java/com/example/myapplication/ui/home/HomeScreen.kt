@@ -29,6 +29,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Card
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -43,10 +45,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -147,8 +151,7 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNaviga
     }
 }
 
-
-
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SearchBar(
     onQueryChange: (String) -> Unit,
@@ -159,6 +162,8 @@ fun SearchBar(
     surfAreas: List<SurfArea>
 ) {
     var searchQuery by remember { mutableStateOf("") }
+    var expanded by remember { mutableStateOf(false) }
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     val activeChanged: (Boolean) -> Unit = { active ->
         if (!active) {
@@ -168,63 +173,77 @@ fun SearchBar(
         onActiveChanged(active)
     }
 
-    TextField(
-        value = searchQuery,
-        onValueChange = { query ->
-            searchQuery = query
-            onQueryChange(query)
-            activeChanged(true)
-        },
-        modifier = modifier
-            .padding(start = 12.dp, top = 2.dp, end = 12.dp, bottom = 12.dp)
-            .fillMaxWidth(),
-        placeholder = { Text("Søk etter surfeområde") },
-        leadingIcon = {
-            Icon(
-                imageVector = Icons.Rounded.Search,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        },
-        trailingIcon = {
-            if(isSearchActive) {
-                IconButton(
-                    onClick = {
-                        searchQuery = ""
-                        onQueryChange("")
-                        onActiveChanged(false)
+    Column(modifier = modifier) {
+        TextField(
+            value = searchQuery,
+            onValueChange = { query ->
+                searchQuery = query
+                onQueryChange(query)
+                activeChanged(true)
+                expanded = true
+            },
+            modifier = modifier
+                .padding(start = 12.dp, top = 2.dp, end = 12.dp, bottom = 12.dp)
+                .fillMaxWidth(),
+            placeholder = { Text("Søk etter surfeområde") },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Rounded.Search,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            },
+            trailingIcon = {
+                if (isSearchActive) {
+                    IconButton(
+                        onClick = {
+                            searchQuery = ""
+                            onQueryChange("")
+                            onActiveChanged(false)
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = "Clear searchbar"
+                        )
                     }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Clear,
-                        contentDescription = "Clear searchbar"
+                }
+            },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Search
+            ),
+            keyboardActions = KeyboardActions(
+                onSearch = {
+                    onSearch?.invoke(searchQuery)
+                    activeChanged(false)
+                }
+            )
+        )
+        if (expanded && searchQuery.isNotEmpty()) {
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                val filteredSurfAreas = surfAreas.filter { it.locationName.contains(searchQuery, ignoreCase = true) }
+                filteredSurfAreas.forEach { surfArea ->
+                    DropdownMenuItem(
+                        text = { Text(surfArea.locationName) },
+                        onClick = {
+                            onSearch?.invoke(surfArea.locationName)
+                            activeChanged(false)
+                            expanded = false
+                            keyboardController?.show()
+                        }
                     )
                 }
             }
-        },
-        singleLine = true,
-        keyboardOptions = KeyboardOptions.Default.copy(
-            imeAction = ImeAction.Search
-        ),
-        keyboardActions = KeyboardActions(
-            onSearch = {
-                onSearch?.invoke(searchQuery)
-                activeChanged(false)
-            }
-        )
-    )
+        }
+    }
     if (searchQuery.isNotEmpty()) {
         val filteredSurfAreas = surfAreas.filter { it.locationName.contains(searchQuery, ignoreCase = true) }
-        if (filteredSurfAreas.isNotEmpty()) {
-            LazyColumn {
-                items(filteredSurfAreas) {surfArea ->
-                    Text(
-                        text = surfArea.locationName,
-                        modifier = Modifier.clickable { onSearch?.invoke(surfArea.locationName) }
-                    )
-                }
-            }
-        } else {
+        if (filteredSurfAreas.isEmpty() && expanded) {
             Text("Ingen samsvarende surfeområder funnet")
         }
     }

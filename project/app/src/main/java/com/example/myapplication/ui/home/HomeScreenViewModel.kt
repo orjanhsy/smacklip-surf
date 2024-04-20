@@ -157,24 +157,6 @@ class HomeScreenViewModel : ViewModel() {
         }
     }
 
-    /* val searchResults: StateFlow<List<SurfArea>> =
-        snapshotFlow { searchQuery }
-            .combine(flowOf(listOf(SurfArea.entries))) { searchQuery, surfAreas ->
-                when {
-                    searchQuery.isNotEmpty() -> surfAreas.filter { surfArea ->
-                        surfArea.locationName.contains(searchQuery, ignoreCase = true)
-                    }
-                    else -> surfAreas
-                }
-            }.stateIn(
-                scope = viewModelScope,
-                initialValue = emptyList()
-            )
-
-    fun onSearchQueryChange(newQuery: String) {
-        searchQuery = newQuery
-    } */
-
     fun updateFavorites(surfArea: SurfArea) {
         if (_favoriteSurfAreas.value.contains(surfArea)) {
             _favoriteSurfAreas.value -= surfArea
