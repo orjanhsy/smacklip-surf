@@ -11,6 +11,12 @@ interface LocationForecastRepository {
     suspend fun getWindDirection(surfArea: SurfArea): List<Pair<String, Double>>
     suspend fun getWindSpeed(surfArea: SurfArea): List<Pair<String, Double>>
     suspend fun getWindSpeedOfGust(surfArea: SurfArea): List<Pair<String, Double>>
+    suspend fun getTemperature(surfArea: SurfArea): List<Pair<String, Double>>
+    suspend fun getWeatherIconsNextOneHour(surfArea: SurfArea): List<Pair<String, Double>>
+    suspend fun getWeatherIconsNextSixHours(surfArea: SurfArea): List<Pair<String, Double>>
+    suspend fun getWeatherIconsNextTwelveHours(surfArea: SurfArea): List<Pair<String, Double>>
+
+
 }
 
 class LocationForecastRepositoryImpl(
@@ -34,8 +40,11 @@ class LocationForecastRepositoryImpl(
         return dataLF.instant.details.wind_from_direction
     }
 
+    private fun findTemperatureFromData(dataLF: DataLF): Double{
+        return dataLF.instant.details.air_temperature
+    }
+
     override suspend fun getWindDirection(surfArea: SurfArea): List<Pair<String, Double>> {
-        // Henter alle timeSeries for alle surfArea-områder
         // Henter timeSeries for det spesifikke surfArea-området
         val timeSeriesForArea = getTimeSeries(surfArea)
         // Map og konverter timeSeries-dataene til vindretning
@@ -44,7 +53,6 @@ class LocationForecastRepositoryImpl(
     }
 
     override suspend fun getWindSpeed(surfArea: SurfArea): List<Pair<String, Double>> {
-        // Henter alle timeSeries for alle surfArea-områder
         // Henter timeSeries for det spesifikke surfArea-området
         val timeSeriesForArea = getTimeSeries(surfArea)
         // Map og konverter timeSeries-dataene til vindhastighet
@@ -54,12 +62,28 @@ class LocationForecastRepositoryImpl(
     }
 
     override suspend fun getWindSpeedOfGust(surfArea: SurfArea): List<Pair<String, Double>> {
-        // Henter alle timeSeries for alle surfArea-områder
         // Henter timeSeries for det spesifikke surfArea-området
         val timeSeriesForArea = getTimeSeries(surfArea)
         // Map og konverter timeSeries-dataene til vindretning
         return timeSeriesForArea.map {it.first to findWindSpeedOfGustFromData(it.second)} ?: emptyList()
 
+    }
+
+    override suspend fun getTemperature(surfArea: SurfArea): List<Pair<String, Double>> {
+        val timeSeriesForArea = getTimeSeries(surfArea)
+        return timeSeriesForArea.map { it.first to findTemperatureFromData(it.second)} ?: emptyList()
+    }
+
+    override suspend fun getWeatherIconsNextOneHour(surfArea: SurfArea): List<Pair<String, Double>> {
+        next_12_hours
+    }
+
+    override suspend fun getWeatherIconsNextSixHours(surfArea: SurfArea): List<Pair<String, Double>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getWeatherIconsNextTwelveHours(surfArea: SurfArea): List<Pair<String, Double>> {
+        TODO("Not yet implemented")
     }
 
 }
