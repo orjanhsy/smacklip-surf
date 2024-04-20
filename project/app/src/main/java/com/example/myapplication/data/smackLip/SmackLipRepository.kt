@@ -25,6 +25,7 @@ interface SmackLipRepository {
     suspend fun getWindDirection(surfArea: SurfArea): List<Pair<List<Int>, Double>>
     suspend fun getWindSpeed(surfArea: SurfArea): List<Pair<List<Int>, Double>>
     suspend fun getWindSpeedOfGust(surfArea: SurfArea): List<Pair<List<Int>, Double>>
+    suspend fun getAirTemperature(surfArea: SurfArea): List<Pair<List<Int>, Double>>
     abstract fun getTimeListFromTimeString(timeString : String): List<Int>
     //suspend fun getForecastNext24Hours() : MutableList<MutableList<Pair<List<Int>, Pair<Int, List<Double>>>>>
     suspend fun getDataForOneDay(day : Int, surfArea: SurfArea): List<Pair<List<Int>, List<Double>>>
@@ -112,6 +113,15 @@ class SmackLipRepositoryImpl (
 
     }
 
+    override suspend fun getAirTemperature(surfArea: SurfArea): List<Pair<List<Int>, Double>> {
+        val tmpTemperature = locationForecastRepository.getTemperature(surfArea)
+        return tmpTemperature.map { temp ->
+            Pair(getTimeListFromTimeString(temp.first), temp.second)
+        }
+    }
+
+
+
     //en funksjon som returnerer en liste med par av
     // 1. dato og
     // 2. dataene for de 24 timene den dagen, som består av en liste med par av
@@ -134,6 +144,7 @@ class SmackLipRepositoryImpl (
         val windDirection :  List<Pair<List<Int>, Double>> = getWindDirection(surfArea).filter { windDirection -> windDirection.first[2] == day }
         val windSpeed :  List<Pair<List<Int>, Double>> = getWindSpeed(surfArea).filter { windSpeed -> windSpeed.first[2] == day }
         val windSpeedOfGust :  List<Pair<List<Int>, Double>> = getWindSpeedOfGust(surfArea).filter { gust -> gust.first[2] == day }
+        val airTemperature :  List<Pair<List<Int>, Double>> = getAirTemperature(surfArea).filter { temp -> temp.first[2] == day}
 
         val dataList = waveHeight.map {
             val time : List<Int> = it.first
@@ -142,7 +153,8 @@ class SmackLipRepositoryImpl (
                 val windDirectionAtTime = windDirection.first {data -> data.first.equals(time)}.second
                 val windSpeedAtTime = windSpeed.first() {data -> data.first.equals(time)}.second
                 val windSpeedOfGustAtTime = windSpeedOfGust.first() {data -> data.first.equals(time)}.second
-                val dataAtTime : List<Double> = listOf(it.second, waveDirectionAtTime, windDirectionAtTime, windSpeedAtTime, windSpeedOfGustAtTime)
+                val airTemperatureAtTime = airTemperature.first() {data -> data.first.equals(time)}.second
+                val dataAtTime : List<Double> = listOf(it.second, waveDirectionAtTime, windDirectionAtTime, windSpeedAtTime, windSpeedOfGustAtTime, airTemperatureAtTime)
                 Pair(time, dataAtTime)
 
             }catch (_: NoSuchElementException){
