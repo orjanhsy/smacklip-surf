@@ -239,7 +239,7 @@ fun FavoritesList(
     windGustMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
     windDirectionMap:Map<SurfArea, List<Pair<List<Int>, Double>>>,
     waveHeightMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
-    alerts: List<Features>?,
+    alerts: Map<SurfArea, List<Features>>?,
     onNavigateToSurfAreaScreen: (String) -> Unit
 ) {
     Column {
@@ -269,7 +269,7 @@ fun FavoritesList(
                         windGustMap = windGustMap,
                         windDirectionMap = emptyMap(),
                         waveHeightMap = waveHeightMap,
-                        alerts = alerts,
+                        alerts = alerts?.get(surfArea),
                         homeScreenViewModel = HomeScreenViewModel(),
                         showFavoriteButton = false,
                         onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
@@ -525,7 +525,7 @@ private fun PreviewSurfAreaCard() {
             windGustMap,
             windDirectionMap,
             waveHeightMap,
-            listOf(listOf((Features(properties = Properties(description = "Det ræinar"))))),
+            listOf((Features(properties = Properties(description = "Det ræinar")))),
             viewModel,
             true
         ) {}
