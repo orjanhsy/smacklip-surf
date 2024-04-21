@@ -292,5 +292,39 @@ class ExampleUnitTest {
         println(smackLipRepository.getWindSpeedOfGust(SurfArea.FEDJE)[0].second)
     }
 
-    // speed
+
+
+
+    /*
+    @Test
+    fun testGetForecastNext24Hours() = runBlocking {
+        val tmp : MutableList<MutableList<Pair<List<Int>, Pair<Int, List<Double>>>>> = smackLipRepository.getForecastNext24Hours()
+
+        println(smackLipRepository.getForecastNext24Hours().toString())
+    }
+
+     */
+
+    @Test
+    fun testGetSymbolCode() = runBlocking{
+        println(smackLipRepository.getSymbolCode(surfArea = SurfArea.HODDEVIK))
+    }
+
+    @Test
+    fun testGetDataForOneDay() = runBlocking {
+
+        println(smackLipRepository.getDataForOneDay(20, SurfArea.HODDEVIK))
+        println(smackLipRepository.getDataForOneDay(21, SurfArea.HODDEVIK))
+        println(smackLipRepository.getDataForOneDay(22, SurfArea.HODDEVIK))
+        println(smackLipRepository.getDataForOneDay(23, SurfArea.HODDEVIK))
+    }
+
+
+    @Test
+    fun testGetDataFor7Days() = runBlocking {
+        println(smackLipRepository.getDataForTheNext7Days(SurfArea.HODDEVIK))
+    }
+
+
+
 }
