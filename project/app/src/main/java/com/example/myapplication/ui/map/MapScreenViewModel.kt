@@ -77,11 +77,11 @@ class MapScreenViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val updatedAirTemperature: MutableMap<SurfArea, List<Pair<List<Int>, Double>>> = mutableMapOf()
             SurfArea.entries.forEach { surfArea ->
-                val newWaveHeight = smackLipRepository.get
-                updatedAirTemperature[surfArea] = newWaveHeight
+                //val newWaveHeight = smackLipRepository.
+                //updatedAirTemperature[surfArea] = newWaveHeight
             }
             _mapScreenUiState.update {
-                it.copy(waveHeight = updatedWaveHeight)
+                it.copy(airTemperature = updatedAirTemperature)
             }
         }
     }
