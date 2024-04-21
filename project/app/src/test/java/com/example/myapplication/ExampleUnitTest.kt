@@ -292,7 +292,7 @@ class ExampleUnitTest {
         println(smackLipRepository.getWindSpeedOfGust(SurfArea.FEDJE)[0].second)
     }
 
-<<<<<<< HEAD
+
 
 
     /*
