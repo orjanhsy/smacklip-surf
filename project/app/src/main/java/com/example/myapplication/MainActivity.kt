@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import DailySurfAreaScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -54,7 +55,14 @@ fun SmackLipNavigation(){
         }
         composable("SurfAreaScreen/{surfArea}") { backStackEntry ->
             val surfArea = backStackEntry.arguments?.getString("surfArea") ?: ""
-            SurfAreaScreen(surfAreaName = surfArea){}
+            SurfAreaScreen(surfAreaName = surfArea,
+                onNavigateToDailySurfAreaScreen = {navController.navigate("DailySurfAreaScreen/$it")}
+            )
+        }
+        composable("DailySurfAreaScreen/{surfArea}") { backStackEntry ->
+            val surfArea = backStackEntry.arguments?.getString("surfArea") ?: ""
+            DailySurfAreaScreen(surfAreaName = surfArea)
+
         }
         composable("BottomBar"){
             BottomBar(

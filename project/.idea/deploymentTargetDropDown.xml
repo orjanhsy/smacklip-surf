@@ -8,7 +8,11 @@
       <entry key="MainActivity">
         <State />
       </entry>
+<<<<<<< HEAD
       <entry key="MapScreenPreview">
+>>>>>>> main
+=======
+      <entry key="PreviewHomeScreen">
 >>>>>>> main
         <State />
       </entry>
