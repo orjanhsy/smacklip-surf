@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -29,18 +30,22 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Card
+import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -50,6 +55,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -154,16 +160,17 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNaviga
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SearchBar(
+    surfAreas: List<SurfArea>,
     onQueryChange: (String) -> Unit,
     isSearchActive: Boolean,
     onActiveChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     onSearch: ((String) -> Unit)? = null,
-    surfAreas: List<SurfArea>
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
     val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
 
     val activeChanged: (Boolean) -> Unit = { active ->
         if (!active) {
@@ -174,7 +181,11 @@ fun SearchBar(
     }
 
     Column(modifier = modifier) {
-        TextField(
+        OutlinedTextField(
+            modifier = modifier
+                .padding(start = 12.dp, top = 2.dp, end = 12.dp, bottom = 12.dp)
+                .fillMaxWidth(),
+            shape = CircleShape,
             value = searchQuery,
             onValueChange = { query ->
                 searchQuery = query
@@ -182,14 +193,11 @@ fun SearchBar(
                 activeChanged(true)
                 expanded = true
             },
-            modifier = modifier
-                .padding(start = 12.dp, top = 2.dp, end = 12.dp, bottom = 12.dp)
-                .fillMaxWidth(),
             placeholder = { Text("Søk etter surfeområde") },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Rounded.Search,
-                    contentDescription = null,
+                    contentDescription = "Search icon",
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             },
@@ -200,6 +208,7 @@ fun SearchBar(
                             searchQuery = ""
                             onQueryChange("")
                             onActiveChanged(false)
+                            focusManager.clearFocus()
                         }
                     ) {
                         Icon(
@@ -217,6 +226,8 @@ fun SearchBar(
                 onSearch = {
                     onSearch?.invoke(searchQuery)
                     activeChanged(false)
+                    keyboardController?.hide()
+                    focusManager.clearFocus()
                 }
             )
         )
@@ -234,9 +245,10 @@ fun SearchBar(
                             onSearch?.invoke(surfArea.locationName)
                             activeChanged(false)
                             expanded = false
-                            keyboardController?.show()
+                            focusManager.clearFocus()
                         }
                     )
+                    Divider()
                 }
             }
         }
