@@ -171,7 +171,7 @@ class SmackLipRepositoryImpl (
         val windSpeed :  List<Pair<List<Int>, Double>> = getWindSpeed(surfArea).filter { windSpeed -> windSpeed.first[2] == day }
         val windSpeedOfGust :  List<Pair<List<Int>, Double>> = getWindSpeedOfGust(surfArea).filter { gust -> gust.first[2] == day }
         val airTemperature :  List<Pair<List<Int>, Double>> = getAirTemperature(surfArea).filter { temp -> temp.first[2] == day}
-        val symbolCode = getSymbolCode(surfArea).filter { symbol -> symbol.first[2] == day }
+        //val symbolCode = getSymbolCode(surfArea).filter { symbol -> symbol.first[2] == day }
 
         val dataList = waveHeight.map {
             val time : List<Int> = it.first
@@ -181,8 +181,8 @@ class SmackLipRepositoryImpl (
                 val windSpeedAtTime = windSpeed.first() {data -> data.first.equals(time)}.second
                 val windSpeedOfGustAtTime = windSpeedOfGust.first() {data -> data.first.equals(time)}.second
                 val airTemperatureAtTime = airTemperature.first() {data -> data.first.equals(time)}.second
-                val symbolCodeAtTime = symbolCode.first() {data -> data.first.equals(time)}.second
-                val dataAtTime : List<Any> = listOf(it.second, waveDirectionAtTime, windDirectionAtTime, windSpeedAtTime, windSpeedOfGustAtTime, airTemperatureAtTime, symbolCodeAtTime)
+                //val symbolCodeAtTime = symbolCode.first() {data -> data.first.equals(time)}.second
+                val dataAtTime : List<Double> = listOf(it.second, waveDirectionAtTime, windDirectionAtTime, windSpeedAtTime, windSpeedOfGustAtTime, airTemperatureAtTime)
                 Pair(time, dataAtTime)
 
             }catch (_: NoSuchElementException){
