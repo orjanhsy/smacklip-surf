@@ -88,7 +88,8 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNaviga
                     onActiveChanged = { isActive ->
                         isSearchActive.value = isActive
                     },
-                    surfAreas = SurfArea.entries.toList()
+                    surfAreas = SurfArea.entries.toList(),
+                    onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
                 )
             }
         },
@@ -160,6 +161,7 @@ fun SearchBar(
     onActiveChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     onSearch: ((String) -> Unit)? = null,
+    onNavigateToSurfAreaScreen: (String) -> Unit
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
@@ -241,6 +243,7 @@ fun SearchBar(
                             activeChanged(false)
                             expanded = false
                             focusManager.clearFocus()
+                            onNavigateToSurfAreaScreen(surfArea.locationName)
                         }
                     )
                     Divider()
