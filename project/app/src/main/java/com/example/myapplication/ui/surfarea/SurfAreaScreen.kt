@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.surfarea
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,12 +18,17 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Tsunami
+//import androidx.compose.material.icons.outlined.Tsunami
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -49,11 +56,12 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SurfAreaScreen(
     surfAreaName: String,
     surfAreaScreenViewModel: SurfAreaScreenViewModel = viewModel(),
-    onNavigateToDailySurfAreaScreen: (String) -> Unit
+    onNavigateToDailySurfAreaScreen: (String) -> Unit = {}
 ) {
 
     val surfArea: SurfArea = SurfArea.entries.find {
@@ -66,15 +74,34 @@ fun SurfAreaScreen(
 
     val formatter = DateTimeFormatter.ofPattern("EEE", Locale("no", "NO"))
     val navController = NavigationManager.navController
+
     Scaffold(
+        topBar ={
+            TopAppBar(title = { /*TODO*/ },
+                navigationIcon = {
+                    IconButton(onClick = { navController?.popBackStack()}) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.Black)
+
+                    }
+                },
+                modifier = Modifier.height(30.dp)
+            )
+        },
+
         bottomBar = {
             BottomBar(
                 onNavigateToMapScreen = {
                     navController?.navigate("MapScreen")
                     //navigerer til mapscreen
+                },
+                onNavigateToHomeScreen = {
+                    navController?.navigate("HomeScreen")
+                    // Navigerer til HomeScreen
                 }
             )
         }
+
+
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -84,9 +111,10 @@ fun SurfAreaScreen(
                 .padding(horizontal = 16.dp)
                 .padding(top = 16.dp),
 
-        verticalArrangement = Arrangement.Center,
+            verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Spacer(modifier = Modifier.height(8.dp))
             HeaderCard(surfArea)
             LazyRow(
                 modifier = Modifier.padding(5.dp)
@@ -101,8 +129,8 @@ fun SurfAreaScreen(
                         val surfAreaDataForDay = nextSevenDays.getOrElse(dayIndex) { emptyList() }
                         var maxWaveHeight = 0.0
                         surfAreaDataForDay.forEach { surfAreaDataForHour ->
-                            if (maxWaveHeight < surfAreaDataForHour.second[0]) {
-                                maxWaveHeight = surfAreaDataForHour.second[0]
+                            if (maxWaveHeight < surfAreaDataForHour.second[0] as Double) {
+                                maxWaveHeight = surfAreaDataForHour.second[0] as Double
                             }
                         }
 
@@ -110,8 +138,9 @@ fun SurfAreaScreen(
                         DayPreviewCard(
                             surfArea,
                             formattedDate,
-                            maxWaveHeightperDay.toString()
-                        ) {}
+                            maxWaveHeightperDay.toString(),
+                            onNavigateToDailySurfAreaScreen
+                        )
                     }
                 } else {
                     items(6) { dayIndex ->
@@ -123,6 +152,7 @@ fun SurfAreaScreen(
         }
     }
 }
+
 
 
 @Composable
@@ -187,79 +217,71 @@ fun HeaderCard(surfArea: SurfArea) {
             .width(317.dp)
             .height(150.dp)
 
-        ) {
+    ) {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = Color.Transparent,
             shape = RoundedCornerShape(size = 12.dp)
         ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(0.dp, Alignment.CenterHorizontally),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-
-                    Column(
-                        modifier = Modifier
-                            .padding(horizontal = 18.dp)
-                            .padding(top = 16.dp),
-
-                        ) {
-                        Row {
-                            Text(
-                                text = surfArea.locationName + "," + "\n " + surfArea.areaName, //+surfArea.areaName //hadde vært fint med Stadt
-                                style = TextStyle(
-                                    fontSize = 30.sp,
-                                    //fontFamily = FontFamily(Font(R.font.inter)),
-                                    fontWeight = FontWeight(500),
-                                    color = Color(0xFF313341),
-                                ),
-                                modifier = Modifier
-                                    .width(145.dp)
-                                    .height(72.dp)
-                            )
-                        }
-                        Row(
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(0.dp, Alignment.CenterHorizontally),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column {
+                    Row {
+                        Text(
+                            text = surfArea.locationName + "," + "\n " + surfArea.areaName, //+surfArea.areaName //hadde vært fint med Stadt
+                            style = TextStyle(
+                                fontSize = 30.sp,
+                                //fontFamily = FontFamily(Font(R.font.inter)),
+                                fontWeight = FontWeight(500),
+                                color = Color(0xFF313341),
+                            ),
                             modifier = Modifier
-                                .padding(horizontal = 16.dp)
-                        ) {
-                            Text(
-                                text = formattedDate1,
-                                style = TextStyle(
-                                    fontSize = 13.sp,
-                                    //  fontFamily = FontFamily(Font(R.font.inter)),
-                                    fontWeight = FontWeight(400),
-                                    color = Color(0xFF9A938C),
-                                ),
-                                modifier = Modifier
-                                    .padding(5.dp)
-                                    .width(73.dp)
-                                    .height(16.dp)
-                            )
-                        }
-                    }
-                    Column(
-                        modifier = Modifier
-                            .shadow(
-                                elevation = 37.425743103027344.dp,
-                                spotColor = Color(0x0D000000),
-                                ambientColor = Color(0x0D000000)
-                            )
-                            .padding(1.24752.dp)
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.cludy), //trenger mer i Next7days i smacklip for å hente
-                            contentDescription = "image description",
-                            //contentScale = ContentScale.None,
-                            modifier = Modifier
-                                .width(126.dp)
-                                .height(126.dp)
+                                .padding(16.dp)
+                                .width(145.dp)
+                                .height(72.dp)
                         )
                     }
+                    Row {
+                        Text(
+                            text = formattedDate1,
+                            style = TextStyle(
+                                fontSize = 13.sp,
+                                //  fontFamily = FontFamily(Font(R.font.inter)),
+                                fontWeight = FontWeight(400),
+                                color = Color(0xFF9A938C),
+                            ),
+                            modifier = Modifier
+                                .padding(5.dp)
+                                .width(73.dp)
+                                .height(16.dp)
+                        )
+                    }
+                }
+                Column(
+                    modifier = Modifier
+                        .shadow(
+                            elevation = 37.425743103027344.dp,
+                            spotColor = Color(0x0D000000),
+                            ambientColor = Color(0x0D000000)
+                        )
+                        .padding(1.24752.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.cludy), //trenger mer i Next7days i smacklip for å hente
+                        contentDescription = "image description",
+                        contentScale = ContentScale.None,
+                        modifier = Modifier
+                            .width(126.dp)
+                            .height(126.dp)
+                    )
                 }
             }
         }
     }
 
+}
 
 
     @Composable
@@ -347,6 +369,7 @@ fun HeaderCard(surfArea: SurfArea) {
             }
         }
     }
+
 
 
 

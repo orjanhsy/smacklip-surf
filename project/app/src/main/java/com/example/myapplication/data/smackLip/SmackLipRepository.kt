@@ -28,10 +28,13 @@ interface SmackLipRepository {
     suspend fun getWindDirection(surfArea: SurfArea): List<Pair<List<Int>, Double>>
     suspend fun getWindSpeed(surfArea: SurfArea): List<Pair<List<Int>, Double>>
     suspend fun getWindSpeedOfGust(surfArea: SurfArea): List<Pair<List<Int>, Double>>
+    suspend fun getAirTemperature(surfArea: SurfArea): List<Pair<List<Int>, Double>>
+    suspend fun getSymbolCode(surfArea: SurfArea): List<Pair<List<Int>, String>>
     abstract fun getTimeListFromTimeString(timeString : String): List<Int>
     //suspend fun getForecastNext24Hours() : MutableList<MutableList<Pair<List<Int>, Pair<Int, List<Double>>>>>
-    suspend fun getDataForOneDay(day : Int, surfArea: SurfArea): List<Pair<List<Int>, List<Double>>>
-    suspend fun getDataForTheNext7Days(surfArea: SurfArea): MutableList<List<Pair<List<Int>, List<Double>>>>
+    suspend fun getDataForOneDay(day : Int, surfArea: SurfArea): List<Pair<List<Int>, List<Any>>>
+    //suspend fun getSymbolCodeForOneDay(day : Int, surfArea: SurfArea): List<Pair<List<Int>, List<String>>>
+    suspend fun getDataForTheNext7Days(surfArea: SurfArea): MutableList<List<Pair<List<Int>, List<Any>>>>
     suspend fun getTimeSeriesDayByDay(surfArea: SurfArea): List<List<Pair<String, DataOF>>>
 
 
@@ -127,12 +130,46 @@ class SmackLipRepositoryImpl (
 
     }
 
+    override suspend fun getAirTemperature(surfArea: SurfArea): List<Pair<List<Int>, Double>> {
+        val tmpTemperature = locationForecastRepository.getTemperature(surfArea)
+        return tmpTemperature.map { temp ->
+            Pair(getTimeListFromTimeString(temp.first), temp.second)
+        }
+    }
+
+    override suspend fun getSymbolCode(surfArea: SurfArea): List<Pair<List<Int>, String>> {
+        //ønsker next_one_hour der det finnes, hvis ikke next_six_hours
+        val nextOneHour : List<Pair<String, String>> = locationForecastRepository.getSymbolCodeNextOneHour(surfArea)
+        val nextSixHours : List<Pair<String, String>> = locationForecastRepository.getSymbolCodeNextSixHours(surfArea)
+        val symbolCodesCombined = mergeListsPreserveFirst(nextOneHour, nextSixHours)
+        return symbolCodesCombined.map { symbol ->
+            Pair(getTimeListFromTimeString(symbol.first), symbol.second)
+        }
+    }
+
+    //denne gjør at next_one_hour brukes hvis den finnes, hvis ikke brukes next_six_hours
+    private fun mergeListsPreserveFirst(list1: List<Pair<String, String>>, list2: List<Pair<String, String>>): List<Pair<String, String>> {
+        // konverterer første list til map - raskere søking
+        val map1 = list1.toMap()
+
+        // konverterer andre liste til map og tar bort nøkkel-verdi-par der nøkkelen finnes i liste 1
+        val map2 = list2.toMap().filterKeys { key -> key !in map1.keys }
+
+        // setter sammen mapsene
+        val combinedMap = map1 + map2
+
+        //konverterer tilbake til liste igjen
+        return combinedMap.toList()
+    }
+
+
+
     //en funksjon som returnerer en liste med par av
     // 1. dato og
     // 2. dataene for de 24 timene den dagen, som består av en liste med par av
     // 1. timen og
     // 2. en liste med de fire dataene for den timen
-    // [waveHeight, windDirection, windSpeed, windSpeedOfGust]
+    // [waveHeight, windDirection, windSpeed, windSpeedOfGust, temperature, symbolCode]
 
     //totalt: List<Pair<List<Int>, List<Pair<Int, List<Double>>>>
 
@@ -143,12 +180,14 @@ class SmackLipRepositoryImpl (
     //metoden fungerer uavhengig av hvor mange tidspunkt det er data for
 
     //List<Pair<Time, DataAtTime>>>  .size= 0..24 ('i dag' vil vise så mange timer det er igjen av døgnet, resten vil vise 24 timer.)
-    override suspend fun getDataForOneDay(day : Int, surfArea: SurfArea): List<Pair<List<Int>, List<Double>>> {
+    override suspend fun getDataForOneDay(day : Int, surfArea: SurfArea): List<Pair<List<Int>, List<Any>>> {
         val waveHeight :  List<Pair<List<Int>, Double>> = getWaveHeights(surfArea).filter { waveHeight -> waveHeight.first[2] == day }
         val waveDirection: List<Pair<List<Int>, Double>> = getWaveDirections(surfArea).filter {waveDir -> waveDir.first[2] == day}
         val windDirection :  List<Pair<List<Int>, Double>> = getWindDirection(surfArea).filter { windDirection -> windDirection.first[2] == day }
         val windSpeed :  List<Pair<List<Int>, Double>> = getWindSpeed(surfArea).filter { windSpeed -> windSpeed.first[2] == day }
         val windSpeedOfGust :  List<Pair<List<Int>, Double>> = getWindSpeedOfGust(surfArea).filter { gust -> gust.first[2] == day }
+        val airTemperature :  List<Pair<List<Int>, Double>> = getAirTemperature(surfArea).filter { temp -> temp.first[2] == day}
+        val symbolCode = getSymbolCode(surfArea).filter { symbol -> symbol.first[2] == day }
 
         val dataList = waveHeight.map {
             val time : List<Int> = it.first
@@ -157,23 +196,31 @@ class SmackLipRepositoryImpl (
                 val windDirectionAtTime = windDirection.first {data -> data.first.equals(time)}.second
                 val windSpeedAtTime = windSpeed.first() {data -> data.first.equals(time)}.second
                 val windSpeedOfGustAtTime = windSpeedOfGust.first() {data -> data.first.equals(time)}.second
-                val dataAtTime : List<Double> = listOf(it.second, waveDirectionAtTime, windDirectionAtTime, windSpeedAtTime, windSpeedOfGustAtTime)
+                val airTemperatureAtTime = airTemperature.first() {data -> data.first.equals(time)}.second
+                val symbolCodeAtTime = symbolCode.first() {data -> data.first.equals(time)}.second
+                val dataAtTime : List<Any> = listOf(it.second, waveDirectionAtTime, windDirectionAtTime, windSpeedAtTime, windSpeedOfGustAtTime, airTemperatureAtTime, symbolCodeAtTime)
                 Pair(time, dataAtTime)
 
             }catch (_: NoSuchElementException){
                 //fortsetter - må fortsette i tilfelle det er flere tidspunkt som matcher
             }
         }
-        return dataList.filterIsInstance<Pair<List<Int>, List<Double>>>() //fjerner elementer som blir Kotlin.Unit pga manglende time-match
+        return dataList.filterIsInstance<Pair<List<Int>, List<Any>>>() //fjerner elementer som blir Kotlin.Unit pga manglende time-match
     }
+
+    /*
+    override suspend fun getSymbolCodeForOneDay(day : Int, surfArea: SurfArea): List<Pair<List<Int>, List<String>>>{
+        val symbolCode = getSymbolCode(surfArea).filter { symbol -> symbol.first[2] == day }
+
+    }*/
 
 
     //metoden kaller getDataForOneDay 7 ganger fra og med i dag, og legger til listen med data for hver dag
     //inn i resListe som til slutt består av data med tidspunkt og data for alle 7 dager
     //Days<Hours<Pair<Time, DataAtTime>>>>    .size=7
-    override suspend fun getDataForTheNext7Days(surfArea: SurfArea): MutableList<List<Pair<List<Int>, List<Double>>>> {
+    override suspend fun getDataForTheNext7Days(surfArea: SurfArea): MutableList<List<Pair<List<Int>, List<Any>>>> {
         val today = getWaveHeights(surfArea)[0].first[2] //regner med at det er dumt med et helt api-kall bare for å hente dagens dato
-        val resList = mutableListOf<List<Pair<List<Int>, List<Double>>>>()
+        val resList = mutableListOf<List<Pair<List<Int>, List<Any>>>>()
         for (i in today until today+7){
             resList.add(getDataForOneDay(i, surfArea))
         }
