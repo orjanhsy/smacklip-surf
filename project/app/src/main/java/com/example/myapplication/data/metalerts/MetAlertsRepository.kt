@@ -50,12 +50,12 @@ class MetAlertsRepositoryImpl (
                     i.forEach { j ->
                         val lon = j[0] as Double
                         val lat = j[1] as Double
-                        if (distanceTo(lat, lon, surfArea) < 10.0) {
+                        if (distanceTo(lat, lon, surfArea) < 10.0) { // henter alle varsel innenfor en mil
                             feature.let { relevantAlerts.add(it) }
                         }
                     }
                 }
-            } else if (feature.geometry?.type == "MultiPolygon") { // henter alle varsel innenfor en mil
+            } else if (feature.geometry?.type == "MultiPolygon") {
                 coordinates?.forEach { i ->
                     i.forEach { j ->
                         j.forEach { k ->
