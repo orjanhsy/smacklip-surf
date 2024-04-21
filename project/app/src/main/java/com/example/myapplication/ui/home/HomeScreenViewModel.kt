@@ -25,7 +25,7 @@ data class HomeScreenUiState(
     val waveDirections: Map<SurfArea, List<Pair<List<Int>, Double>>> = emptyMap(),
     val wavePeriods: Map<SurfArea, List<Double?>> = emptyMap(),
     val windPeriods: Map<SurfArea, List<Double?>> = emptyMap(),
-    val allRelevantAlerts: List<List<Features>> = emptyList()
+    val allRelevantAlerts: Map<SurfArea, List<Features>> = emptyMap()
 )
 
 class HomeScreenViewModel : ViewModel() {
@@ -43,7 +43,6 @@ class HomeScreenViewModel : ViewModel() {
         updateWindDirection()
         updateWaveHeight()
         updateAlerts()
-
     }
 
     fun updateWindSpeed() {
@@ -129,12 +128,11 @@ class HomeScreenViewModel : ViewModel() {
 
     fun updateAlerts() {
         viewModelScope.launch(Dispatchers.IO) {
-            val allAlerts: MutableList<List<Features>> = mutableListOf()
-            SurfArea.entries.forEach { surfArea ->
-                allAlerts.add(smackLipRepository.getRelevantAlertsFor(surfArea))
+            val allAlerts = SurfArea.entries.associateWith {
+                smackLipRepository.getRelevantAlertsFor(it)
             }
             _homeScreenUiState.update {
-                it.copy(allRelevantAlerts = allAlerts.toList())
+                it.copy(allRelevantAlerts = allAlerts)
             }
         }
     }

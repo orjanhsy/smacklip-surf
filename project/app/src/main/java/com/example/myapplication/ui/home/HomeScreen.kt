@@ -141,10 +141,7 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNaviga
                         windGustMap = homeScreenUiState.windGust,
                         windDirectionMap = homeScreenUiState.windDirection,
                         waveHeightMap = homeScreenUiState.waveHeight,
-                        alerts = homeScreenUiState.allRelevantAlerts.filter { alert ->
-                            alert.any {
-                                it.properties?.area?.contains(location.locationName) ?: false }
-                        },
+                        alerts = homeScreenUiState.allRelevantAlerts[location],
                         homeScreenViewModel = homeScreenViewModel,
                         onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
                     )
@@ -260,6 +257,7 @@ fun SearchBar(
 implement windspeedmap, windgustmap, waveheightmap and alerts correctly,
 to receive accurate values in favorite surfareacards
  */
+
 @Composable
 fun FavoritesList(
     favorites: List<SurfArea>,
@@ -267,7 +265,7 @@ fun FavoritesList(
     windGustMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
     windDirectionMap:Map<SurfArea, List<Pair<List<Int>, Double>>>,
     waveHeightMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
-    alerts: List<List<Features>>?,
+    alerts: Map<SurfArea, List<Features>>?,
     onNavigateToSurfAreaScreen: (String) -> Unit
 ) {
     Column {
@@ -297,7 +295,7 @@ fun FavoritesList(
                         windGustMap = windGustMap,
                         windDirectionMap = emptyMap(),
                         waveHeightMap = waveHeightMap,
-                        alerts = alerts,
+                        alerts = alerts?.get(surfArea),
                         homeScreenViewModel = HomeScreenViewModel(),
                         showFavoriteButton = false,
                         onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
@@ -364,7 +362,7 @@ fun SurfAreaCard(
     windGustMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
     windDirectionMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
     waveHeightMap: Map<SurfArea,List<Pair<List<Int>, Double>>>,
-    alerts: List<List<Features>>?,
+    alerts: List<Features>?,
     homeScreenViewModel: HomeScreenViewModel,
     showFavoriteButton: Boolean = true,
     onNavigateToSurfAreaScreen: (String) -> Unit
@@ -553,7 +551,7 @@ private fun PreviewSurfAreaCard() {
             windGustMap,
             windDirectionMap,
             waveHeightMap,
-            listOf(listOf((Features(properties = Properties(description = "Det ræinar"))))),
+            listOf((Features(properties = Properties(description = "Det ræinar")))),
             viewModel,
             true
         ) {}
