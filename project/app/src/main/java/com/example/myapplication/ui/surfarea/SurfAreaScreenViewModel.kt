@@ -38,7 +38,13 @@ class SurfAreaScreenViewModel: ViewModel() {
     init {
     }
 
-
+    fun updateLocation(surfArea: SurfArea) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _surfAreaScreenUiState.update {
+                it.copy (location = surfArea)
+            }
+        }
+    }
     fun updateAlerts() {
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update {
@@ -47,7 +53,6 @@ class SurfAreaScreenViewModel: ViewModel() {
             }
         }
     }
-
 
     fun updateMaxWaveHeights() {
         viewModelScope.launch {
@@ -94,6 +99,7 @@ class SurfAreaScreenViewModel: ViewModel() {
                 Log.d("SAVM", "Updating windspeed with ${newMaxWaveHeights.size} elements")
                 Log.d("SAVM", "Updating windgust with ${newMaxWaveHeights.size} elements")
                 state.copy(
+                    location = surfArea,
                     forecast7Days = newForecast7Days,
                     waveHeights = newWaveHeights,
                     waveDirections = newWaveDirections,
@@ -104,6 +110,19 @@ class SurfAreaScreenViewModel: ViewModel() {
                 )
             }
         }
+    }
+
+    fun getConditionStatus(
+        location: SurfArea,
+        windSpeed: Double,
+        windGust: Double,
+        windDir: Double,
+        waveHeight: Double,
+        waveDir: Double,
+        wavePeriod: Double,
+        alerts: List<Features>
+    ): String {
+        return smackLipRepository.getConditionStatus(location, windSpeed, windGust, windDir, waveHeight, waveDir, wavePeriod, alerts)
     }
 
 }

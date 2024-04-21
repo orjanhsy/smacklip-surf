@@ -74,7 +74,7 @@ class ExampleUnitTest {
             println(it)
         }
         assert(relevantForecasts.size == SurfArea.entries.size) {"Missing forecast(s) for certain surfarea(s)"}
-        assert(relevantForecasts.all { (_, forecast) -> forecast.size in 18 .. 21 }) {"Some forecast is not of length 21 (ie. 60hrs long)"}
+        assert(relevantForecasts.all { (_, forecast) -> forecast.size == 20 }) {"Some forecast is not of length 21 (ie. 60hrs long)"}
     }
 
     @Test
@@ -292,6 +292,7 @@ class ExampleUnitTest {
         println(smackLipRepository.getWindSpeedOfGust(SurfArea.FEDJE)[0].second)
     }
 
+<<<<<<< HEAD
 
 
     /*
@@ -323,6 +324,7 @@ class ExampleUnitTest {
     fun testGetDataFor7Days() = runBlocking {
         println(smackLipRepository.getDataForTheNext7Days(SurfArea.HODDEVIK))
     }
+
 
 
 }

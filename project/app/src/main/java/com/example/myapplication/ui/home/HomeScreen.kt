@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.home
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -55,6 +56,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.myapplication.NavigationManager
 import com.example.myapplication.R
 import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.model.metalerts.Properties
@@ -64,10 +66,11 @@ import com.example.myapplication.ui.theme.MyApplicationTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNavigateToSurfAreaScreen: (String) -> Unit ){
+fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNavigateToSurfAreaScreen: (String) -> Unit = {}){
     val homeScreenUiState: HomeScreenUiState by homeScreenViewModel.homeScreenUiState.collectAsState()
     val favoriteSurfAreas by homeScreenViewModel.favoriteSurfAreas.collectAsState()
     val isSearchActive = remember { mutableStateOf(false) }
+    val navController = NavigationManager.navController
 
     Scaffold(
         topBar = {
@@ -83,7 +86,12 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNaviga
             }
         },
         bottomBar = {
-            BottomBar()
+            BottomBar(
+                onNavigateToMapScreen = {
+                    navController?.navigate("MapScreen")
+                    // Navigerer til MapScreen
+                }
+            )
         }
     ) { innerPadding ->
         Column(
@@ -126,10 +134,7 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNaviga
                         windGustMap = homeScreenUiState.windGust,
                         windDirectionMap = homeScreenUiState.windDirection,
                         waveHeightMap = homeScreenUiState.waveHeight,
-                        alerts = homeScreenUiState.allRelevantAlerts.filter { alert ->
-                            alert.any {
-                                it.properties?.area?.contains(location.locationName) ?: false }
-                        },
+                        alerts = homeScreenUiState.allRelevantAlerts[location],
                         homeScreenViewModel = homeScreenViewModel,
                         onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
                     )
@@ -138,6 +143,8 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNaviga
         }
     }
 }
+
+
 
 @Composable
 fun SearchBar(
@@ -224,6 +231,7 @@ fun SearchBar(
 implement windspeedmap, windgustmap, waveheightmap and alerts correctly,
 to receive accurate values in favorite surfareacards
  */
+
 @Composable
 fun FavoritesList(
     favorites: List<SurfArea>,
@@ -231,7 +239,7 @@ fun FavoritesList(
     windGustMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
     windDirectionMap:Map<SurfArea, List<Pair<List<Int>, Double>>>,
     waveHeightMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
-    alerts: List<List<Features>>?,
+    alerts: List<Features>?,
     onNavigateToSurfAreaScreen: (String) -> Unit
 ) {
     Column {
@@ -328,7 +336,7 @@ fun SurfAreaCard(
     windGustMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
     windDirectionMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
     waveHeightMap: Map<SurfArea,List<Pair<List<Int>, Double>>>,
-    alerts: List<List<Features>>?,
+    alerts: List<Features>?,
     homeScreenViewModel: HomeScreenViewModel,
     showFavoriteButton: Boolean = true,
     onNavigateToSurfAreaScreen: (String) -> Unit
