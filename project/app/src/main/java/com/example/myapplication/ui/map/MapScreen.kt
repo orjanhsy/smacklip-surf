@@ -5,17 +5,26 @@ import android.graphics.Bitmap
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -28,8 +37,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,8 +54,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.NavigationManager
 import com.example.myapplication.R
 import com.example.myapplication.data.map.MapRepositoryImpl
+import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.commonComponents.BottomBar
+import com.example.myapplication.ui.home.HomeScreenViewModel
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
@@ -280,6 +294,140 @@ fun SurfAreaCard(
                 }
             }
 
+        }
+    }
+}
+
+@Composable
+fun SurfAreaCard(
+    surfArea: SurfArea,
+    windSpeedMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
+    windGustMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
+    windDirectionMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
+    waveHeightMap: Map<SurfArea,List<Pair<List<Int>, Double>>>,
+
+    alerts: List<Features>?,
+    homeScreenViewModel: HomeScreenViewModel,
+    showFavoriteButton: Boolean = true,
+    onNavigateToSurfAreaScreen: (String) -> Unit
+) {
+
+    val windSpeed = windSpeedMap[surfArea] ?: listOf()
+    val windGust = windGustMap[surfArea] ?: listOf()
+    val windDirection = windDirectionMap[surfArea] ?: listOf()
+    val waveHeight = waveHeightMap[surfArea] ?: listOf()
+
+
+
+
+    Card(
+        modifier = Modifier
+            .wrapContentSize()
+            .padding(start = 8.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)
+            .clickable(
+                onClick = { onNavigateToSurfAreaScreen(surfArea.locationName) })
+    ) {
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .width(162.dp)
+                .height(162.dp)
+
+        ) {
+
+            // Stjerneikon
+            if (showFavoriteButton) {
+                IconButton(
+                    onClick = { homeScreenViewModel.updateFavorites(surfArea) },
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(end = 0.dp, top = 0.dp)
+                ){
+                    Icon(
+                        painter = painterResource(id = homeScreenViewModel.updateFavoritesIcon(surfArea)),
+                        contentDescription = "Toggle favorite",
+                        modifier = Modifier.size(16.dp)
+                    )
+                }
+            }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.Start,
+            )
+            {
+
+                Row {
+
+                    Text(
+                        text = surfArea.locationName,
+                        style = TextStyle(
+                            fontSize = 12.93.sp,
+                            lineHeight = 19.4.sp,
+                            fontWeight = FontWeight(700),
+                            letterSpacing = 0.12.sp
+
+                        )
+
+                    )
+                }
+                Row {
+                    Image(
+                        painter = painterResource(id = R.drawable.tsunami),
+                        contentDescription = "wave icon",
+                        modifier = Modifier
+                            .padding(0.02021.dp)
+                            .width(15.3587.dp)
+                            .height(14.47855.dp)
+
+                    )
+
+                    Text(
+                        text = " ${if (waveHeight.isNotEmpty()) "${waveHeight[0].second}m" else ""}"
+                    )
+
+                }
+
+                Row {
+                    Image(
+                        painter = painterResource(id = R.drawable.air),
+                        contentDescription = "Air icon",
+                        modifier = Modifier
+                            .padding(0.02021.dp)
+                            .width(15.3587.dp)
+                            .height(13.6348.dp)
+                    )
+                    Text(
+                        text = " ${if (windSpeed.isNotEmpty()) windSpeed[0].second else ""}" +
+                                if(windGust.isNotEmpty() && windSpeed.isNotEmpty() && windGust[0].second != windSpeed[0].second) "(${windGust[0].second})" else ""
+                    )
+                    Text(
+                        text = " ${if (windDirection.isNotEmpty()) "${windDirection[0].second}°" else ""}"
+                    )
+                }
+
+
+                Column(
+                    horizontalAlignment = Alignment.End
+                ) {
+                    if (surfArea.image != 0) {
+                        Image(
+                            painter = painterResource(id = surfArea.image),
+                            contentDescription = "SurfArea Image",
+                            contentScale = ContentScale.FillBounds,
+                            modifier = Modifier
+                                .width(162.dp)
+                                .height(100.dp)
+                                .clip(RoundedCornerShape(8.dp))
+
+
+                        )
+                    }
+                }
+            }
         }
     }
 }
