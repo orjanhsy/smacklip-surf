@@ -55,6 +55,7 @@ fun BottomBar(onNavigateToHomeScreen: () -> Unit = {}, onNavigateToMapScreen: ()
     )
     NavigationBar() {
         items.forEachIndexed{index, item->
+            val isSelected = selectedItemIndex == index
             NavigationBarItem(
                 selected = selectedItemIndex == index,
                 onClick = {
@@ -80,7 +81,7 @@ fun BottomBar(onNavigateToHomeScreen: () -> Unit = {}, onNavigateToMapScreen: ()
 
                         }) {
                         Icon(
-                            imageVector = if(index == selectedItemIndex){
+                            imageVector = if(isSelected){
                                 item.selectedIcon }
                             else item.unselectedIcon
                             ,

@@ -8,6 +8,12 @@
       <entry key="MapScreenPreview">
         <State />
       </entry>
+      <entry key="PreviewDailyScreen">
+        <State />
+      </entry>
+      <entry key="PreviewHomeScreen">
+        <State />
+      </entry>
       <entry key="PreviewSurfAreaScreen">
         <State />
       </entry>
