@@ -13,12 +13,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Air
 import androidx.compose.material.icons.outlined.CallMade
 import androidx.compose.material.icons.outlined.Tsunami
-import androidx.compose.material3.Card
-import androidx.compose.material3.Icon
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -119,6 +117,8 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                                 val windDir = surfAreaDataForHour.second[2]
                                 val windSpeed = surfAreaDataForHour.second[3]
                                 val windGust = surfAreaDataForHour.second[4]
+                                val temp = surfAreaDataForHour.second[5]
+                                val icon = surfAreaDataForHour.second[6]
 
                                 Log.d("timestamp", "$timestamp")
                                 AllInfoCard(
@@ -128,7 +128,9 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                                     windSpeed = windSpeed,
                                     windGust = windGust,
                                     windDir = windDir,
-                                    waveDir = waveDir
+                                    waveDir = waveDir,
+                                    temp = temp,
+                                    icon = icon
 
                                 )
                             }
@@ -141,7 +143,9 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                                     windSpeed = 0.0,
                                     windGust = 0.0,
                                     windDir = 0.0,
-                                    waveDir = 0.0
+                                    waveDir = 0.0,
+                                    temp = 0,
+                                    icon = 0
                                 )
                             }
                         }
@@ -162,6 +166,8 @@ fun AllInfoCard(
     windGust: Any,
     windDir: Any,
     waveDir: Any,
+    temp : Any,
+    icon: Any
 ) {
     Card(
         modifier = Modifier
@@ -281,7 +287,7 @@ fun AllInfoCard(
             )
 
             Text(
-                text = "18",
+                text = "$temp",
                 style = TextStyle(
                     fontSize = 15.sp,
                     fontWeight = FontWeight(400),
