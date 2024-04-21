@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +14,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Air
+import androidx.compose.material.icons.outlined.CallMade
+import androidx.compose.material.icons.outlined.Tsunami
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -46,6 +48,7 @@ import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
 import com.example.myapplication.ui.surfarea.HeaderCard
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: DailySurfAreaScreenViewModel = viewModel()) {
@@ -57,102 +60,102 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
     val dailySurfAreaScreenUiState by dailySurfAreaScreenViewModel.dailySurfAreaScreenUiState.collectAsState()
     val nextSevenDays = dailySurfAreaScreenUiState.forecast7Days
     dailySurfAreaScreenViewModel.updateForecastNext7Days(surfArea = surfArea)
-
-    Log.d("size", "${nextSevenDays.size}")
-    val waveHeightMap: Map<SurfArea, List<Pair<List<Int>, Double>>> = mapOf(
-        surfArea to listOf(Pair(listOf(1, 2, 3, 4), 5.0))
-    )
-    val windSpeedMap: Map<SurfArea, List<Pair<List<Int>, Double>>> = mapOf(
-        surfArea to listOf(Pair(listOf(2, 4, 6, 8), 1.0))
-    )
-    val windGustMap: Map<SurfArea, List<Pair<List<Int>, Double>>> = mapOf(
-        surfArea to listOf(Pair(listOf(3, 5, 8, 32), 3.0))
-    )
     val navController = NavigationManager.navController
 
-    Scaffold(
-        topBar ={
-            TopAppBar(title = { /*TODO*/ },
-                navigationIcon = {
-                    IconButton(onClick = { navController?.popBackStack()}) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.Black)
+            Scaffold(
+                topBar = {
+                    TopAppBar(title = { /*TODO*/ },
+                        navigationIcon = {
+                            IconButton(onClick = { navController?.popBackStack() }) {
+                                Icon(
+                                    Icons.Default.ArrowBack,
+                                    contentDescription = "Back",
+                                    tint = Color.Black
+                                )
 
-                    }
-                }
-            )
-        },
-
-        bottomBar = {
-            BottomBar(
-                onNavigateToMapScreen = {
-                    navController?.navigate("MapScreen")
-                    //navigerer til mapscreen
+                            }
+                        }
+                    )
                 },
-                onNavigateToHomeScreen = {
-                    navController?.navigate("HomeScreen")
-                    // Navigerer til HomeScreen
+                bottomBar = {
+                    BottomBar(
+                        onNavigateToMapScreen = {
+                            navController?.navigate("MapScreen")
+                            //navigerer til mapscreen
+                        },
+                        onNavigateToHomeScreen = {
+                            navController?.navigate("HomeScreen")
+                            // Navigerer til HomeScreen
+                        }
+
+                    )
                 }
-
             )
-        }
-    )
-    { innerPadding ->
-        Column (
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(horizontal = 12.dp, vertical = 8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+            { innerPadding ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
 
-            HeaderCard(surfArea = surfArea)
-            LazyColumn(
-                modifier = Modifier
-                    .padding(5.dp)
-            ) {//vent dette er feil, dette er jo bare for i dag, må fikses med onclick
-                val surfAreaDataForDay =
-                    nextSevenDays.getOrElse(0) { emptyList() } //0 er altså i dag
-                if (surfAreaDataForDay.isNotEmpty()) {
-                    items(surfAreaDataForDay.size) { hourIndex -> //altså timer igjen av dagen
-                        val surfAreaDataForHour =
-                            surfAreaDataForDay[hourIndex] //henter objektet for timen som er en liste med Pair<List<Int>, Double>
-                        val timestamp = surfAreaDataForHour.first[3] //3??
-                        val waveHeight = surfAreaDataForHour.second[0]
-                        val waveDir = surfAreaDataForHour.second[1]
-                        val windDir = surfAreaDataForHour.second[2]
-                        val windSpeed = surfAreaDataForHour.second[3]
-                        val windGust = surfAreaDataForHour.second[4]
+                    HeaderCard(surfArea = surfArea)
+                    LazyColumn(
+                        modifier = Modifier
+                            .padding(5.dp)
+                    ) {//vent dette er feil, dette er jo bare for i dag, må fikses med onclick
+                        val surfAreaDataForDay =
+                            nextSevenDays.getOrElse(0) { emptyList() } //0 er altså i dag
+                        if (surfAreaDataForDay.isNotEmpty()) {
+                            items(surfAreaDataForDay.size) { hourIndex -> //altså timer igjen av dagen
+                                val surfAreaDataForHour =
+                                    surfAreaDataForDay[hourIndex] //henter objektet for timen som er en liste med Pair<List<Int>, Double>
+                                val timestamp = surfAreaDataForHour.first[3] //3??
+                                val waveHeight = surfAreaDataForHour.second[0]
+                                val waveDir = surfAreaDataForHour.second[1]
+                                val windDir = surfAreaDataForHour.second[2]
+                                val windSpeed = surfAreaDataForHour.second[3]
+                                val windGust = surfAreaDataForHour.second[4]
+                                val temp = surfAreaDataForHour.second[5]
+                                val icon = surfAreaDataForHour.second[6]
 
-                        Log.d("timestamp", "$timestamp")
-                        AllInfoCard(
-                            timestamp = timestamp.toString(),
-                            surfArea = surfArea,
-                            waveHeight = waveHeight,
-                            windSpeed = windSpeed,
-                            windGust = windGust
-                        )
+                                Log.d("timestamp", "$timestamp")
+                                AllInfoCard(
+                                    timestamp = timestamp.toString(),
+                                    surfArea = surfArea,
+                                    waveHeight = waveHeight,
+                                    windSpeed = windSpeed,
+                                    windGust = windGust,
+                                    windDir = windDir,
+                                    waveDir = waveDir,
+                                    temp = temp,
+                                    icon = icon
+
+                                )
+                            }
+                        } else {
+                            item(7) {
+                                AllInfoCard(
+                                    timestamp = "nei",
+                                    surfArea = surfArea,
+                                    waveHeight = 0.0,
+                                    windSpeed = 0.0,
+                                    windGust = 0.0,
+                                    windDir = 0.0,
+                                    waveDir = 0.0,
+                                    temp = 0,
+                                    icon = 0
+                                )
+                            }
+                        }
                     }
-                } else {
-                    item {
-                        AllInfoCard(
-                            timestamp = "nei",
-                            surfArea = surfArea,
-                            waveHeight = 0.0,
-                            windSpeed = 0.0,
-                            windGust = 0.0
-                        )
-                    }
+
                 }
             }
-
         }
 
 
-    }
-
-
-
-}
 
 @Composable
 fun AllInfoCard(
@@ -161,11 +164,16 @@ fun AllInfoCard(
     waveHeight: Any,
     windSpeed: Any,
     windGust: Any,
+    windDir: Any,
+    waveDir: Any,
+    temp : Any,
+    icon: Any
 ) {
     Card(
         modifier = Modifier
             .padding(3.dp)
-            .width(331.dp)
+            .fillMaxWidth()
+            .width(340.dp)
             .height(49.dp)
     ) {
         Row(
@@ -183,14 +191,13 @@ fun AllInfoCard(
                 modifier = Modifier.padding(4.dp)
             )
 
-            Image(
-                painter = painterResource(id = R.drawable.air),
-                contentDescription = "image description",
-                contentScale = ContentScale.None,
+            Icon(
+                imageVector = Icons.Outlined.Air,
+                contentDescription = "air",
                 modifier = Modifier
-                    .padding(4.dp)
-                    .size(24.dp)
-                    .aspectRatio(1f)
+                    //.fillMaxSize()
+                    .width(20.dp)
+                    .height(20.dp)
             )
 
             Text(
@@ -205,18 +212,38 @@ fun AllInfoCard(
                 modifier = Modifier.padding(4.dp)
             )
 
-            Image(
-                painter = painterResource(id = R.drawable.tsunami),
-                contentDescription = "image description",
-                contentScale = ContentScale.None,
+            Icon(
+                imageVector = Icons.Outlined.CallMade,
+                contentDescription = "arrow",
                 modifier = Modifier
-                    .padding(4.dp)
-                    .size(24.dp)
-                    .aspectRatio(1f)
+                    //.fillMaxSize()
+                    .width(17.dp)
+                    .height(17.dp)
             )
 
             Text(
-                text = "$waveHeight",
+                text = "$windDir",
+                style = TextStyle(
+                    fontSize = 13.sp,
+                    lineHeight = 15.sp,
+                    fontWeight = FontWeight(400),
+                    color = Color(0xFF9C9EAA),
+                    textAlign = TextAlign.Center,
+                ),
+                modifier = Modifier.padding(4.dp)
+            )
+
+            Icon(
+                imageVector = Icons.Outlined.Tsunami,
+                contentDescription = "arrow",
+                modifier = Modifier
+                    //.fillMaxSize()
+                    .width(18.dp)
+                    .height(18.dp)
+            )
+
+            Text(
+                text = "$waveHeight m",
                 style = TextStyle(
                     fontSize = 13.sp,
                     lineHeight = 15.sp,
@@ -239,18 +266,28 @@ fun AllInfoCard(
                 modifier = Modifier.padding(4.dp)
             )
 
-            Image(
-                painter = painterResource(id = R.drawable.call_made),
-                contentDescription = "image description",
-                contentScale = ContentScale.None,
+            Icon(
+                imageVector = Icons.Outlined.CallMade,
+                contentDescription = "arrow",
                 modifier = Modifier
-                    .padding(4.dp)
-                    .size(24.dp)
-                    .aspectRatio(1f)
+                    //.fillMaxSize()
+                    .width(17.dp)
+                    .height(17.dp)
+            )
+            Text(
+                text = "$waveDir",
+                style = TextStyle(
+                    fontSize = 13.sp,
+                    lineHeight = 15.sp,
+                    fontWeight = FontWeight(400),
+                    color = Color(0xFF9C9EAA),
+                    textAlign = TextAlign.Center,
+                ),
+                modifier = Modifier.padding(4.dp)
             )
 
             Text(
-                text = "18",
+                text = "$temp",
                 style = TextStyle(
                     fontSize = 15.sp,
                     fontWeight = FontWeight(400),
