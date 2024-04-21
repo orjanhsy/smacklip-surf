@@ -2,7 +2,9 @@
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,8 +13,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -29,11 +38,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.myapplication.NavigationManager
 import com.example.myapplication.R
 import com.example.myapplication.model.surfareas.SurfArea
+import com.example.myapplication.ui.commonComponents.BottomBar
 import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
+import com.example.myapplication.ui.surfarea.HeaderCard
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: DailySurfAreaScreenViewModel = viewModel()) {
 
@@ -55,46 +68,90 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
     val windGustMap: Map<SurfArea, List<Pair<List<Int>, Double>>> = mapOf(
         surfArea to listOf(Pair(listOf(3, 5, 8, 32), 3.0))
     )
+    val navController = NavigationManager.navController
 
+    Scaffold(
+        topBar ={
+            TopAppBar(title = { /*TODO*/ },
+                navigationIcon = {
+                    IconButton(onClick = { navController?.popBackStack()}) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.Black)
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(12.dp)
-    ) {//vent dette er feil, dette er jo bare for i dag, må fikses med onclick
-        val surfAreaDataForDay = nextSevenDays.getOrElse(0) { emptyList() } //0 er altså i dag
-        if (surfAreaDataForDay.isNotEmpty()) {
-            items(surfAreaDataForDay.size) { hourIndex -> //altså timer igjen av dagen
-                val surfAreaDataForHour =
-                    surfAreaDataForDay[hourIndex] //henter objektet for timen som er en liste med Pair<List<Int>, Double>
-                val timestamp = surfAreaDataForHour.first[3] //3??
-                val waveHeight = surfAreaDataForHour.second[0]
-                val waveDir = surfAreaDataForHour.second[1]
-                val windDir = surfAreaDataForHour.second[2]
-                val windSpeed = surfAreaDataForHour.second[3]
-                val windGust = surfAreaDataForHour.second[4]
+                    }
+                }
+            )
+        },
 
-                Log.d("timestamp", "$timestamp")
-                AllInfoCard(
-                    timestamp = timestamp.toString(),
-                    surfArea = surfArea,
-                    waveHeight = waveHeight,
-                    windSpeed = windSpeed,
-                    windGust = windGust
-                )
-            }
-        } else {
-            item {
-                AllInfoCard(
-                    timestamp = "nei",
-                    surfArea = surfArea,
-                    waveHeight = 0.0,
-                    windSpeed = 0.0,
-                    windGust = 0.0
-                )
-            }
+        bottomBar = {
+            BottomBar(
+                onNavigateToMapScreen = {
+                    navController?.navigate("MapScreen")
+                    //navigerer til mapscreen
+                },
+                onNavigateToHomeScreen = {
+                    navController?.navigate("HomeScreen")
+                    // Navigerer til HomeScreen
+                }
+
+            )
         }
+    )
+    { innerPadding ->
+        Column (
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(horizontal = 12.dp, vertical = 8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            HeaderCard(surfArea = surfArea)
+            LazyColumn(
+                modifier = Modifier
+                    .padding(5.dp)
+            ) {//vent dette er feil, dette er jo bare for i dag, må fikses med onclick
+                val surfAreaDataForDay =
+                    nextSevenDays.getOrElse(0) { emptyList() } //0 er altså i dag
+                if (surfAreaDataForDay.isNotEmpty()) {
+                    items(surfAreaDataForDay.size) { hourIndex -> //altså timer igjen av dagen
+                        val surfAreaDataForHour =
+                            surfAreaDataForDay[hourIndex] //henter objektet for timen som er en liste med Pair<List<Int>, Double>
+                        val timestamp = surfAreaDataForHour.first[3] //3??
+                        val waveHeight = surfAreaDataForHour.second[0]
+                        val waveDir = surfAreaDataForHour.second[1]
+                        val windDir = surfAreaDataForHour.second[2]
+                        val windSpeed = surfAreaDataForHour.second[3]
+                        val windGust = surfAreaDataForHour.second[4]
+
+                        Log.d("timestamp", "$timestamp")
+                        AllInfoCard(
+                            timestamp = timestamp.toString(),
+                            surfArea = surfArea,
+                            waveHeight = waveHeight,
+                            windSpeed = windSpeed,
+                            windGust = windGust
+                        )
+                    }
+                } else {
+                    item {
+                        AllInfoCard(
+                            timestamp = "nei",
+                            surfArea = surfArea,
+                            waveHeight = 0.0,
+                            windSpeed = 0.0,
+                            windGust = 0.0
+                        )
+                    }
+                }
+            }
+
+        }
+
+
     }
+
+
+
 }
 
 @Composable

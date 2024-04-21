@@ -6,6 +6,18 @@
         <State />
       </entry>
       <entry key="MapScreenPreview">
+<<<<<<< HEAD
+=======
+        <State />
+      </entry>
+      <entry key="PreviewDailyScreen">
+        <State />
+      </entry>
+      <entry key="PreviewHomeScreen">
+        <State />
+      </entry>
+      <entry key="PreviewSurfAreaScreen">
+>>>>>>> main
         <State />
       </entry>
     </value>

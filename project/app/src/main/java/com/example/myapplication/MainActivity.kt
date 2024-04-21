@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import DailySurfAreaScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,8 +15,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.model.surfareas.SurfArea
+import com.example.myapplication.ui.commonComponents.BottomBar
 import com.example.myapplication.ui.home.HomeScreen
+import com.example.myapplication.ui.map.MapScreen
 import com.example.myapplication.ui.surfarea.SurfAreaScreen
+import com.example.myapplication.NavigationManager
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
 class MainActivity : ComponentActivity() {
@@ -38,6 +42,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun SmackLipNavigation(){
     val navController = rememberNavController()
+    NavigationManager.navController = navController
     NavHost(
         navController = navController,
         startDestination = "HomeScreen",
@@ -50,7 +55,24 @@ fun SmackLipNavigation(){
         }
         composable("SurfAreaScreen/{surfArea}") { backStackEntry ->
             val surfArea = backStackEntry.arguments?.getString("surfArea") ?: ""
-            SurfAreaScreen(surfAreaName = surfArea){}
+            SurfAreaScreen(surfAreaName = surfArea,
+                onNavigateToDailySurfAreaScreen = {navController.navigate("DailySurfAreaScreen/$it")}
+            )
         }
+        composable("DailySurfAreaScreen/{surfArea}") { backStackEntry ->
+            val surfArea = backStackEntry.arguments?.getString("surfArea") ?: ""
+            DailySurfAreaScreen(surfAreaName = surfArea)
+
+        }
+        composable("BottomBar"){
+            BottomBar(
+                onNavigateToMapScreen = { navController.navigate("MapScreen")},
+                onNavigateToHomeScreen = {navController.navigate("HomeScreen")}
+            )
+        }
+        composable("MapScreen"){
+            MapScreen()
+        }
+
     }
 }
