@@ -103,6 +103,7 @@ fun SurfAreaScreen(
                 .padding(innerPadding)
                 .padding(horizontal = 16.dp)
                 .padding(top = 16.dp),
+
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -206,16 +207,16 @@ fun InfoCard(surfArea: SurfArea) {
 fun HeaderCard(surfArea: SurfArea) {
 
     val currentDate = LocalDate.now()
-    val formatter1 = DateTimeFormatter.ofPattern("E d. MMM",  Locale("no", "NO"))
+    val formatter1 = DateTimeFormatter.ofPattern("E d. MMM", Locale("no", "NO"))
 
     val formattedDate1 = formatter1.format(currentDate)
     println("$formattedDate1")
 
     Box(
         modifier = Modifier
-
             .width(317.dp)
-            .height(132.dp)
+            .height(150.dp)
+
     ) {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -285,87 +286,95 @@ fun HeaderCard(surfArea: SurfArea) {
         }
     }
 }
-@Composable
-fun DayPreviewCard(surfArea: SurfArea, day: String, waveheight: String, onNavigateToDailySurfAreaScreen: (String) -> Unit) {
-    Card(
-        modifier = Modifier
-            .padding(6.dp)
-            .width(93.dp)
-            .height(120.dp)
-            .background(color = SchemesSurface, shape = RoundedCornerShape(size = 20.dp))
-            .clickable {
-                onNavigateToDailySurfAreaScreen(surfArea.locationName)
-            }
 
-    ){
-        Column(
+
+    @Composable
+    fun DayPreviewCard(
+        surfArea: SurfArea,
+        day: String,
+        waveheight: String,
+        onNavigateToDailySurfAreaScreen: (String) -> Unit
+    ) {
+        Card(
             modifier = Modifier
-                .padding(5.dp)
-        ){
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
+                .padding(6.dp)
+                .width(93.dp)
+                .height(120.dp)
+                .background(color = SchemesSurface, shape = RoundedCornerShape(size = 20.dp))
+                .clickable(
+                    onClick = { onNavigateToDailySurfAreaScreen(surfArea.locationName) }
+                )
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(5.dp)
             ) {
-                Text(
-                    text = day,
-                    style = TextStyle(
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight(400),
-                        color = Color(0xFF9A938C),
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = day,
+                        style = TextStyle(
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight(400),
+                            color = Color(0xFF9A938C),
 
-                ),
-                    modifier = Modifier
-                        .align(Alignment.CenterVertically)
-                        .padding(5.dp)
-                )
-            }
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ){
-                Image(
-                    painter = painterResource(id = R.drawable.surfboard_5525217),
-                    contentDescription = "image description",
-                    contentScale = ContentScale.FillBounds,
-                    modifier = Modifier
-                        .width(40.dp)
-                        .height(40.dp)
-                        //.padding(5.dp)
-                )
-            }
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ){
-                Column {
-                    Box(
+                            ),
                         modifier = Modifier
-                            .padding(0.03158.dp)
-                            .size(24.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.Tsunami,
-                            contentDescription = "tsunami",
+                            .align(Alignment.CenterVertically)
+                            .padding(5.dp)
+                    )
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.surfboard_5525217),
+                        contentDescription = "image description",
+                        contentScale = ContentScale.FillBounds,
                         modifier = Modifier
-                            .fillMaxSize()
                             .width(40.dp)
                             .height(40.dp)
-                        )
-
-                    }
-                }
-                Column{
-                    Text(
-                        text = "$waveheight"
+                        //.padding(5.dp)
                     )
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Column {
+                        Box(
+                            modifier = Modifier
+                                .padding(0.03158.dp)
+                                .size(24.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Tsunami,
+                                contentDescription = "tsunami",
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .width(40.dp)
+                                    .height(40.dp)
+                            )
+
+                        }
+                    }
+                    Column {
+                        Text(
+                            text = "$waveheight"
+                        )
+                    }
                 }
             }
         }
     }
-}
+
+
 
 
 
