@@ -180,7 +180,7 @@ fun SearchBar(
     Column(modifier = modifier) {
         OutlinedTextField(
             modifier = modifier
-                .padding(start = 12.dp, top = 2.dp, end = 12.dp, bottom = 12.dp)
+                .padding(12.dp)
                 .fillMaxWidth(),
             shape = CircleShape,
             value = searchQuery,
@@ -228,13 +228,14 @@ fun SearchBar(
                 }
             )
         )
+        val filteredSurfAreas =
+            surfAreas.filter { it.locationName.contains(searchQuery, ignoreCase = true) }
         if (expanded && searchQuery.isNotEmpty()) {
             DropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                val filteredSurfAreas = surfAreas.filter { it.locationName.contains(searchQuery, ignoreCase = true) }
                 filteredSurfAreas.forEach { surfArea ->
                     DropdownMenuItem(
                         text = { Text(surfArea.locationName) },
@@ -249,12 +250,9 @@ fun SearchBar(
                 }
             }
         }
-    }
-    if (searchQuery.isNotEmpty()) {
-        val filteredSurfAreas = surfAreas.filter { it.locationName.contains(searchQuery, ignoreCase = true) }
-        if (filteredSurfAreas.isEmpty() && expanded) {
-            Text("Ingen samsvarende surfeområder funnet")
-        }
+        /* if (searchQuery.isNotEmpty() && filteredSurfAreas.isEmpty() && expanded) {
+            Text("Ingen samsvarende resultater")
+        } */
     }
 }
 
