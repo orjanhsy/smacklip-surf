@@ -1,6 +1,7 @@
 package com.example.myapplication.ui.commonComponents
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocationOn
@@ -10,7 +11,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,8 +19,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
 import com.example.myapplication.ui.theme.MyApplicationTheme
-import com.example.myapplication.ui.today.TodayScreen
 
 data class BottomNavigationItem(
     val title: String,
@@ -31,7 +31,7 @@ data class BottomNavigationItem(
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomBar(){
+fun BottomBar(onNavigateToHomeScreen: () -> Unit = {}, onNavigateToMapScreen: () -> Unit = {}) {
     var selectedItemIndex by rememberSaveable {
         mutableStateOf(0)
     }
@@ -53,14 +53,23 @@ fun BottomBar(){
             unselectedIcon = Icons.Default.Settings
         ),
     )
-    NavigationBar {
+    NavigationBar() {
         items.forEachIndexed{index, item->
             NavigationBarItem(
                 selected = selectedItemIndex == index,
                 onClick = {
                     selectedItemIndex = index
                     // her man bruker navController
-
+                    when(index) {
+                        0 -> {
+                            Log.d("Navigation", "Navigating to HomeScreen")
+                            onNavigateToHomeScreen()
+                        }
+                        1 -> {
+                            Log.d("Navigation", "Navigating to MapScreen")
+                            onNavigateToMapScreen()
+                        }
+                    }
                 },
                 label = {
                     Text(text = item.title)

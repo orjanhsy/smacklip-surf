@@ -7,11 +7,14 @@ import com.example.myapplication.data.oceanforecast.OceanforecastRepository
 import com.example.myapplication.data.oceanforecast.OceanforecastRepositoryImpl
 import com.example.myapplication.data.waveforecast.WaveForecastRepository
 import com.example.myapplication.data.waveforecast.WaveForecastRepositoryImpl
+import com.example.myapplication.model.conditions.ConditionDescriptions
+import com.example.myapplication.model.conditions.Conditions
 import com.example.myapplication.model.locationforecast.DataLF
 import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.model.oceanforecast.DataOF
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.waveforecast.PointForecast
+import kotlin.math.abs
 
 
 interface SmackLipRepository {
@@ -31,11 +34,23 @@ interface SmackLipRepository {
     suspend fun getDataForTheNext7Days(surfArea: SurfArea): MutableList<List<Pair<List<Int>, List<Double>>>>
     suspend fun getTimeSeriesDayByDay(surfArea: SurfArea): List<List<Pair<String, DataOF>>>
 
+
     // waveforecast
     suspend fun getAllWaveForecastsNext3Days(): Map<SurfArea, List<Pair<Double?, Double?>>>
     suspend fun getWaveForecastsNext3DaysForArea(surfArea: SurfArea): List<Pair<Double?, Double?>>
     suspend fun getAllWavePeriodsNext3Days(): Map<SurfArea, List<Double?>>
     suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): List<Double?>
+
+    fun getConditionStatus(
+        location: SurfArea,
+        windSpeed: Double,
+        windGust: Double,
+        windDir: Double,
+        waveHeight: Double,
+        waveDir: Double,
+        wavePeriod: Double,
+        alerts: List<Features>
+    ): String
 
 }
 
@@ -165,6 +180,10 @@ class SmackLipRepositoryImpl (
         return resList
     }
 
+    override suspend fun getTimeSeriesDayByDay(surfArea: SurfArea): List<List<Pair<String, DataOF>>> {
+        return oceanForecastRepository.getTimeSeriesDayByDay(surfArea)
+    }
+
     // mapper hvert enkelt surfarea til en liste med (bølgeretning, bølgeperiode) lik de i 'getWaveForecastNext3DaysForArea()' under.
     override suspend fun getAllWaveForecastsNext3Days(): Map<SurfArea, List<Pair<Double?, Double?>>> {
         return try {
@@ -176,12 +195,12 @@ class SmackLipRepositoryImpl (
 
     // liste med pair(bølgeretning, bølgeperiode), .size in 18..20 (3timers intervaller, totalt 60 timer). Vet ikke hvorfor den av og til er 19 lang, da er det i så fall bare 57 timer forecast.
     override suspend fun getWaveForecastsNext3DaysForArea(surfArea: SurfArea): List<Pair<Double?, Double?>> {
-        return waveForecastRepository.waveDirAndPeriodNext3DaysForArea(surfArea.modelName, surfArea.pointId)
+        return waveForecastRepository.waveDirAndPeriodNext3DaysForArea(
+            surfArea.modelName,
+            surfArea.pointId
+        )
     }
 
-    override suspend fun getTimeSeriesDayByDay(surfArea: SurfArea): List<List<Pair<String, DataOF>>> {
-        return oceanForecastRepository.getTimeSeriesDayByDay(surfArea)
-    }
 
     // wf men bare med waveperiods, i motsetning (wavedir, waveperiod) over.
     override suspend fun getAllWavePeriodsNext3Days(): Map<SurfArea, List<Double?>> {
@@ -190,6 +209,71 @@ class SmackLipRepositoryImpl (
 
     override suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): List<Double?> {
         return getWaveForecastsNext3DaysForArea(surfArea).map{it.second}
+    }
+
+    private fun withinDir(optimalDir: Double, actualDir: Double, acceptedOffset: Double): Boolean {
+
+        return abs(optimalDir - actualDir) !in acceptedOffset .. 360 - acceptedOffset
+    }
+    override fun getConditionStatus(
+        location: SurfArea,
+        windSpeed: Double,
+        windGust: Double,
+        windDir: Double,
+        waveHeight: Double,
+        waveDir: Double,
+        wavePeriod: Double,
+        alerts: List<Features>
+    ): String {
+        var conditionStatus: ConditionDescriptions = ConditionDescriptions.DECENT
+
+        // conditions that result in poor status regardless of other variables.
+        if (
+            windSpeed >= Conditions.WIND_SPEED_UPPER_BOUND.value
+            || waveHeight <= Conditions.WAVE_HEIGHT_LOWER_BOUND.value
+            || waveHeight >= Conditions.WAVE_HEIGHT_UPPER_BOUND.value
+            || wavePeriod <= Conditions.WAVE_PERIOD_LOWER_BOUND.value
+            || alerts.isNotEmpty()
+        ) {
+            conditionStatus = ConditionDescriptions.POOR
+            return conditionStatus.description
+        }
+
+        val status = mutableMapOf<String, Double>()
+        status["windSpeed"] = when {
+            windSpeed < Conditions.WIND_SPEED_GREAT_UPPER_BOUND.value -> 1.0
+            windSpeed < Conditions.WIND_SPEED_DECENT_UPPER_BOUND.value -> 2.0
+            else -> 3.0
+        }
+        status["windGust"] = status["windSpeed"]!!
+
+        val windDirFactor = when(withinDir(location.optimalWindDir, windDir, Conditions.WIND_DIR_GREAT_DEVIATION.value)) {
+            true -> 1.0
+            false -> if (withinDir(location.optimalWindDir, windDir, Conditions.WIND_DIR_DECENT_DEVIATION.value)) 1.2 else 1.5
+        }
+
+        status["windSpeed"] = status["windSpeed"]!! * windDirFactor
+
+        status["waveDir"] = when(withinDir(location.optimalWaveDir, waveDir, Conditions.WAVE_DIR_GREAT_DEVIATION.value)) {
+            true -> 1.0
+            false -> if (withinDir(location.optimalWaveDir, waveDir, Conditions.WAVE_DIR_DECENT_DEVIATION.value)) 2.0 else 3.0
+        }
+
+        status["wavePeriod"] = when {
+            wavePeriod > Conditions.WAVE_PERIOD_GREAT_LOWER_BOUND.value -> 1.0
+            wavePeriod in Conditions.WAVE_PERIOD_DECENT_LOWER_BOUND.value ..
+                    Conditions.WAVE_PERIOD_GREAT_LOWER_BOUND.value -> 2.0
+            else -> 3.0
+        }
+
+        val averageStatus = status.values.sum() / status.size
+
+        conditionStatus = when {
+            averageStatus < 1.3 -> ConditionDescriptions.GREAT
+            averageStatus in 1.3 .. 2.3 -> ConditionDescriptions.DECENT
+            else -> ConditionDescriptions.POOR
+        }
+        return conditionStatus.description
     }
 
 }

@@ -39,6 +39,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.viewinterop.NoOpUpdate
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.myapplication.NavigationManager
 import com.example.myapplication.R
 import com.example.myapplication.data.map.MapRepositoryImpl
 import com.example.myapplication.model.surfareas.SurfArea
@@ -66,6 +67,7 @@ fun MapScreen(mapScreenViewModel : MapScreenViewModel = viewModel()) {
 
     val mapScreenUiState : MapScreenUiState by mapScreenViewModel.mapScreenUiState.collectAsState()
     val mapRepository : MapRepositoryImpl = MapRepositoryImpl() //bruker direkte maprepository fordi mapbox har sin egen viewmodel? -
+    val navController = NavigationManager.navController
     // TODO: sjekke (maprepository) ut at dette er ok.
     
 
@@ -80,7 +82,14 @@ fun MapScreen(mapScreenViewModel : MapScreenViewModel = viewModel()) {
                     Text(text = "Locations")
                 })
         },
-       // bottomBar = { BottomBar() } kartet vises ikke og topappbar blir borte??
+        bottomBar = {
+            BottomBar(
+                onNavigateToHomeScreen = {
+                    navController?.navigate("HomeScreen")
+                    // Navigerer til HomeScreen
+                },
+            )
+        }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -263,7 +272,9 @@ fun SurfAreaCard(
                 horizontalArrangement = Arrangement.Center
             ){
                 Button(onClick = onCloseClick, //TODO: må byttes ut med navigation
-                    modifier = Modifier.fillMaxWidth().padding(16.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
                 ) {
                     Text("Gå til "+surfArea.locationName)
                 }
