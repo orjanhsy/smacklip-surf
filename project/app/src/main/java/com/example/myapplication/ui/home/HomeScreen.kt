@@ -234,6 +234,7 @@ fun SearchBar(
 implement windspeedmap, windgustmap, waveheightmap and alerts correctly,
 to receive accurate values in favorite surfareacards
  */
+
 @Composable
 fun FavoritesList(
     favorites: List<SurfArea>,
