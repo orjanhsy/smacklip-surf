@@ -113,8 +113,8 @@ fun MapScreen(mapScreenViewModel : MapScreenViewModel = viewModel()) {
             MapBoxMap(
                 modifier = Modifier
                     .fillMaxSize(),
-                //locations = mapScreenUiState.points
-                locations = mapRepository.locationToPoint()
+                locations = mapRepository.locationToPoint(),
+                uiState = mapScreenUiState
 
             )
         }
@@ -127,6 +127,7 @@ fun MapScreen(mapScreenViewModel : MapScreenViewModel = viewModel()) {
 fun MapBoxMap(
     modifier: Modifier = Modifier,
     locations: List<Pair<SurfArea, Point>>,
+    uiState: MapScreenUiState
 ) {
     val trondheim = Point.fromLngLat(10.4, 63.4) //trondheim kommer i senter av skjermen, kan endre koordinater så hele norge synes?
     val context = LocalContext.current
@@ -205,7 +206,9 @@ fun MapBoxMap(
         )
         if (selectedMarker.value != null) {
             SurfAreaCard(surfArea = selectedMarker.value!!,
-                onCloseClick = {selectedMarker.value = null})
+                onCloseClick = {selectedMarker.value = null},
+                uiState = uiState
+                )
         }
     }
 
@@ -223,7 +226,17 @@ fun isMatchingCoordinates(point1: Point, point2: Point): Boolean {
 @Composable
 fun SurfAreaCard(
     surfArea: SurfArea,
-    onCloseClick: () -> Unit){
+    onCloseClick: () -> Unit,
+    uiState: MapScreenUiState
+    ){
+
+    //current data for surfArea som sendes inn:
+    val windSpeed: Double = uiState.windSpeed[surfArea]?.get(0)?.second ?: 0.0
+    val windGust: Double = uiState.windGust[surfArea]?.get(0)?.second ?: 0.0
+    val windDirection: Double = uiState.windDirection[surfArea]?.get(0)?.second ?: 0.0
+    val airTemperature: Double = uiState.airTemperature[surfArea]?.get(0)?.second ?: 0.0
+    val symbolCode: String = uiState.symbolCode[surfArea]?.get(0)?.second ?: ""
+    val waveHeight: Double = uiState.waveHeight[surfArea]?.get(0)?.second ?: 0.0
 
     Card (
         modifier = Modifier
@@ -263,12 +276,38 @@ fun SurfAreaCard(
             Row (
                 modifier = Modifier
                     .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ){
-                Text(text = "vind(kast)", modifier = Modifier.padding(8.dp))
-                Text(text = "bølger", modifier = Modifier.padding(8.dp))
-                Text(text = "grader", modifier = Modifier.padding(8.dp))
-                Text(text = "forhold", modifier = Modifier.padding(8.dp))
+                Image(painter = painterResource(id = R.drawable.air),
+                    contentDescription = "Air icon",
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .width(18.dp)
+                        .height(18.dp))
+                Text(text = "$windSpeed($windGust)", modifier = Modifier.padding(8.dp))
+                Image(
+                    painter = painterResource(id = R.drawable.tsunami),
+                    contentDescription = "wave icon",
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .width(18.dp)
+                        .height(18.dp),
+
+                )
+                Text(text = "$waveHeight", modifier = Modifier.padding(8.dp))
+                val symbolCodePng :String = "$airTemperature.png"
+                Image(
+                    painter = painterResource(id = R.drawable.fair_day),
+                    contentDescription = "wave icon",
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .width(30.dp)
+                        .height(30.dp)
+
+                )
+                Text(text = "$airTemperature °C", modifier = Modifier.padding(8.dp))
+                Text(text = symbolCode, modifier = Modifier.padding(8.dp))
             }
 
             if (surfArea.image != 0) {
@@ -299,7 +338,7 @@ fun SurfAreaCard(
 }
 
 @Composable
-fun SurfAreaCard(
+fun SurfAreaCard2(
     surfArea: SurfArea,
     windSpeedMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
     windGustMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
@@ -436,7 +475,7 @@ fun SurfAreaCard(
 @Composable
 fun SurfAreaPreview(){
     MyApplicationTheme {
-        SurfAreaCard(surfArea = SurfArea.HODDEVIK, {})
+        SurfAreaCard(surfArea = SurfArea.HODDEVIK, {}, MapScreenUiState())
     }
 }
 

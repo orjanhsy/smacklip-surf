@@ -15,7 +15,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class MapScreenUiState(
-    val points: List<Pair<SurfArea, Point>> = emptyList() //bruker ikke denne, men bytter den ut når vi trenger viewmodel for andre deler av mapscreen
+    val points: List<Pair<SurfArea, Point>> = emptyList(), //bruker ikke denne, men bytter den ut når vi trenger viewmodel for andre deler av mapscreen
+
     val windSpeed: Map<SurfArea, List<Pair<List<Int>, Double>>> = emptyMap(),
     val windGust: Map<SurfArea, List<Pair<List<Int>, Double>>> = emptyMap(),
     val windDirection: Map<SurfArea,List<Pair<List<Int>, Double>>> = emptyMap(),
@@ -34,6 +35,15 @@ class MapScreenViewModel : ViewModel() {
     private val _mapScreenUiState = MutableStateFlow(MapScreenUiState())
     val mapScreenUiState: StateFlow<MapScreenUiState> = _mapScreenUiState.asStateFlow()
 
+
+    init {
+        updateWindSpeed()
+        updateWindGust()
+        updateAirTemperature()
+        updateSymbolCode()
+        updateWindDirection()
+        updateWaveHeight()
+    }
 
     fun updateWindSpeed() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -77,11 +87,24 @@ class MapScreenViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val updatedAirTemperature: MutableMap<SurfArea, List<Pair<List<Int>, Double>>> = mutableMapOf()
             SurfArea.entries.forEach { surfArea ->
-                //val newWaveHeight = smackLipRepository.
-                //updatedAirTemperature[surfArea] = newWaveHeight
+                val newWaveHeight = smackLipRepository.getAirTemperature(surfArea)
+                updatedAirTemperature[surfArea] = newWaveHeight
             }
             _mapScreenUiState.update {
                 it.copy(airTemperature = updatedAirTemperature)
+            }
+        }
+    }
+
+    fun updateSymbolCode(){
+        viewModelScope.launch(Dispatchers.IO) {
+            val updatedSymbolCode: MutableMap<SurfArea, List<Pair<List<Int>, String>>> = mutableMapOf()
+            SurfArea.entries.forEach { surfArea ->
+                val newSymbolCode = smackLipRepository.getSymbolCode(surfArea)
+                updatedSymbolCode[surfArea] = newSymbolCode
+            }
+            _mapScreenUiState.update {
+                it.copy(symbolCode = updatedSymbolCode)
             }
         }
     }
