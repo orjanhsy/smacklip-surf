@@ -101,9 +101,9 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
 fun AllInfoCard(
     timestamp: String,
     surfArea: SurfArea,
-    waveHeight: Double,
-    windSpeed: Double,
-    windGust: Double,
+    waveHeight: Any,
+    windSpeed: Any,
+    windGust: Any,
 ) {
     Card(
         modifier = Modifier

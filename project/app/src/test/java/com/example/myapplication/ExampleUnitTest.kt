@@ -304,10 +304,13 @@ class ExampleUnitTest {
 
      */
 
+    @Test
+    fun testGetSymbolCode() = runBlocking{
+        println(smackLipRepository.getSymbolCode(surfArea = SurfArea.HODDEVIK))
+    }
 
     @Test
     fun testGetDataForOneDay() = runBlocking {
-
 
         println(smackLipRepository.getDataForOneDay(20, SurfArea.HODDEVIK))
         println(smackLipRepository.getDataForOneDay(21, SurfArea.HODDEVIK))
@@ -315,11 +318,11 @@ class ExampleUnitTest {
         println(smackLipRepository.getDataForOneDay(23, SurfArea.HODDEVIK))
     }
 
-    /*
+
     @Test
     fun testGetDataFor7Days() = runBlocking {
-        println(smackLipRepository.getDataForTheNext7Days())
-    }*/
+        println(smackLipRepository.getDataForTheNext7Days(SurfArea.HODDEVIK))
+    }
 
 
 }

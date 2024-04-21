@@ -96,8 +96,8 @@ fun SurfAreaScreen(
                         val surfAreaDataForDay = nextSevenDays.getOrElse(dayIndex) { emptyList() }
                         var maxWaveHeight = 0.0
                         surfAreaDataForDay.forEach { surfAreaDataForHour ->
-                            if (maxWaveHeight < surfAreaDataForHour.second[0]) {
-                                maxWaveHeight = surfAreaDataForHour.second[0]
+                            if (maxWaveHeight < surfAreaDataForHour.second[0] as Double) {
+                                maxWaveHeight = surfAreaDataForHour.second[0] as Double
                             }
                         }
 

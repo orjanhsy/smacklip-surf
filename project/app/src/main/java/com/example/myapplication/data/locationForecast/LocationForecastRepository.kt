@@ -43,12 +43,23 @@ class LocationForecastRepositoryImpl(
     private fun findTemperatureFromData(dataLF: DataLF): Double{
         return dataLF.instant.details.air_temperature
     }
-    private fun findSymbolCodeOneHourFromData(dataLF: DataLF): String {
-        return dataLF.next_1_hours.summary.symbol_code
+
+    //Det er ikke alltif next_1_hours eller next_six_hours i en DataLF
+    //returnerer null hvis NullPointerException
+    private fun findSymbolCodeOneHourFromData(dataLF: DataLF): String? {
+        return try {
+            dataLF.next_1_hours.summary.symbol_code
+        }catch (_: NullPointerException){
+            null
+        }
     }
 
-    private fun findSymbolCodeSixHoursFromData(dataLF: DataLF): String {
-        return dataLF.next_6_hours.summary.symbol_code
+    private fun findSymbolCodeSixHoursFromData(dataLF: DataLF): String? {
+        return try {
+            dataLF.next_6_hours.summary.symbol_code
+        }catch (_: NullPointerException){
+            null
+        }
     }
     private fun findWeatherIconTwelveHoursFromData(dataLF: DataLF): String {
         return dataLF.next_12_hours.summary.symbol_code
@@ -87,13 +98,29 @@ class LocationForecastRepositoryImpl(
 
     override suspend fun getSymbolCodeNextOneHour(surfArea: SurfArea): List<Pair<String, String>> {
         val timeSeriesForArea = getTimeSeries(surfArea)
-        return timeSeriesForArea.map { it.first to findSymbolCodeOneHourFromData(it.second)} ?: emptyList()
+        return timeSeriesForArea.mapNotNull {
+            val symbolCode = findSymbolCodeOneHourFromData(it.second)
+            if (symbolCode != null) {
+                it.first to symbolCode
+            } else {
+                null
+            }
+        }
     }
+
 
     override suspend fun getSymbolCodeNextSixHours(surfArea: SurfArea): List<Pair<String, String>> {
         val timeSeriesForArea = getTimeSeries(surfArea)
-        return timeSeriesForArea.map { it.first to findSymbolCodeSixHoursFromData(it.second)} ?: emptyList()
+        return timeSeriesForArea.mapNotNull {
+            val symbolCode = findSymbolCodeSixHoursFromData(it.second)
+            if (symbolCode != null) {
+                it.first to symbolCode
+            } else {
+                null
+            }
+        }
     }
+
 
     /* Denne er kanskje ikke relevant? lar den bli i tilfelle
     override suspend fun getSymbolCodeNextTwelveHours(surfArea: SurfArea): List<Pair<String, String>> {
