@@ -124,18 +124,6 @@ fun SurfAreaScreen(
     }
 }
 
-@Composable
-fun ArrowBackHeader(){
-        Image(
-            painter = painterResource(id = R.drawable.reply), //trenger mer i Next7days i smacklip for å hente
-            contentDescription = "image description",
-            //contentScale = ContentScale.None,
-            modifier = Modifier
-                .width(60.dp)
-                .height(60.dp)
-        )
-    }
-
 
 @Composable
 fun InfoCard(surfArea: SurfArea) {
@@ -205,21 +193,8 @@ fun HeaderCard(surfArea: SurfArea) {
             color = Color.Transparent,
             shape = RoundedCornerShape(size = 12.dp)
         ) {
-            Row {
-                Row {
-                    Image(
-                        painter = painterResource(id = R.drawable.reply), //trenger mer i Next7days i smacklip for å hente
-                        contentDescription = "image description",
-                        modifier = Modifier
-                            .width(50.dp)
-                            .height(50.dp)
-                    )
-                }
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(
-                        0.dp,
-                        Alignment.CenterHorizontally
-                    ),
+                    horizontalArrangement = Arrangement.spacedBy(0.dp, Alignment.CenterHorizontally),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
 
@@ -284,7 +259,7 @@ fun HeaderCard(surfArea: SurfArea) {
             }
         }
     }
-}
+
 
 
     @Composable
