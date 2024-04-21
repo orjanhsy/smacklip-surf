@@ -7,7 +7,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,8 +33,6 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -227,32 +227,43 @@ fun SearchBar(
                 }
             )
         )
-        val filteredSurfAreas =
-            surfAreas.filter { it.locationName.contains(searchQuery, ignoreCase = true) }
         if (expanded && searchQuery.isNotEmpty()) {
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
+            LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
+                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
             ) {
-                filteredSurfAreas.forEach { surfArea ->
-                    DropdownMenuItem(
-                        text = { Text(surfArea.locationName) },
-                        onClick = {
-                            onSearch?.invoke(surfArea.locationName)
-                            activeChanged(false)
-                            expanded = false
-                            focusManager.clearFocus()
-                            onNavigateToSurfAreaScreen(surfArea.locationName)
+                val filteredSurfAreas =
+                    surfAreas.filter { it.locationName.contains(searchQuery, ignoreCase = true) }
+                items(filteredSurfAreas) { surfArea ->
+                    Column(modifier = Modifier.clickable {
+                        onNavigateToSurfAreaScreen(surfArea.locationName)
+                    }) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .padding(vertical = 8.dp)
+                        ) {
+                            Text(
+                                text = surfArea.locationName,
+                                modifier = Modifier.weight(1f)
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Image(
+                                painter = painterResource(id = surfArea.image),
+                                contentDescription = "SurfArea image",
+                                modifier = Modifier.size(48.dp),
+                                contentScale = ContentScale.Crop,
+                                alignment = Alignment.CenterEnd
+                            )
                         }
-                    )
-                    Divider()
+                        Divider(modifier = Modifier.padding(horizontal = 12.dp))
+                    }
                 }
             }
-        }
-        /* if (searchQuery.isNotEmpty() && filteredSurfAreas.isEmpty() && expanded) {
+            /* if (searchQuery.isNotEmpty() && filteredSurfAreas.isEmpty() && expanded) {
             Text("Ingen samsvarende resultater")
         } */
+        }
     }
 }
 
