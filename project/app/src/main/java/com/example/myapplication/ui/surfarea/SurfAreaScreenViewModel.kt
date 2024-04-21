@@ -17,14 +17,14 @@ data class SurfAreaScreenUiState(
     val location: SurfArea? = null,
     val alerts: List<Features> = emptyList(),
     // .size=7 for the following:
-    val waveHeights: List<List<Pair<List<Int>, Double>>> = emptyList(),
-    val waveDirections: List<List<Pair<List<Int>, Double>>> = emptyList(),
+    val waveHeights: List<List<Pair<List<Int>, Any>>> = emptyList(),
+    val waveDirections: List<List<Pair<List<Int>, Any>>> = emptyList(),
     val wavePeriods: List<Double?> = emptyList(),
-    val maxWaveHeights: List<Double>  = emptyList(),
-    val windDirections: List<List<Pair<List<Int>, Double>>> = emptyList(),
-    val windSpeeds: List<List<Pair<List<Int>, Double>>> = emptyList(),
-    val windSpeedOfGusts: List<List<Pair<List<Int>, Double>>> = emptyList(),
-    val forecast7Days: MutableList<List<Pair<List<Int>, List<Double>>>> = mutableListOf()
+    val maxWaveHeights: List<Any> = emptyList(),
+    val windDirections: List<List<Pair<List<Int>, Any>>> = emptyList(),
+    val windSpeeds: List<List<Pair<List<Int>, Any>>> = emptyList(),
+    val windSpeedOfGusts: List<List<Pair<List<Int>, Any>>> = emptyList(),
+    val forecast7Days: MutableList<List<Pair<List<Int>, List<Any>>>> = mutableListOf()
 
     )
 
@@ -54,7 +54,7 @@ class SurfAreaScreenViewModel: ViewModel() {
             _surfAreaScreenUiState.update {state ->
                 state.copy(
                     maxWaveHeights = state.waveHeights.map {
-                        day -> day.maxBy {hour -> hour.second}
+                        day -> day.maxBy {hour -> hour.second as Double}
                     }.map {it.second}
                 )
             }
@@ -80,7 +80,7 @@ class SurfAreaScreenViewModel: ViewModel() {
                 val newForecast7Days = smackLipRepository.getDataForTheNext7Days(surfArea)
                 Log.d("SAVM", "Updating forcast of vm by dat containing ${newForecast7Days.size} elements")
                 val newWaveHeights = newForecast7Days.map { dayForecast ->  dayForecast.map { dayData -> dayData.first to dayData.second[0]}}
-                val newMaxWaveHeights = newWaveHeights.map {day -> day.maxBy {hour -> hour.second}}.map {it.second}
+                val newMaxWaveHeights = newWaveHeights.map {day -> day.maxBy {hour -> hour.second as Double}}.map {it.second}
                 val newWaveDirections = newForecast7Days.map { dayForecast ->  dayForecast.map { dayData -> dayData.first to dayData.second[1]}}
                 val newWindDirections = newForecast7Days.map { dayForecast ->  dayForecast.map { dayData -> dayData.first to dayData.second[2]}}
                 val newWindSpeeds = newForecast7Days.map { dayForecast ->  dayForecast.map { dayData -> dayData.first to dayData.second[3]}}
