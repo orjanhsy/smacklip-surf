@@ -1,4 +1,5 @@
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -49,6 +50,7 @@ import com.example.myapplication.ui.surfarea.HeaderCard
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
 
+@SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: DailySurfAreaScreenViewModel = viewModel()) {
@@ -59,10 +61,14 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
 
     val dailySurfAreaScreenUiState by dailySurfAreaScreenViewModel.dailySurfAreaScreenUiState.collectAsState()
     val nextSevenDays = dailySurfAreaScreenUiState.forecast7Days
+    val wavePeriods = dailySurfAreaScreenUiState.wavePeriod
     dailySurfAreaScreenViewModel.updateForecastNext7Days(surfArea = surfArea)
+    dailySurfAreaScreenViewModel.updateWavePeriod(surfArea=surfArea)
     val navController = NavigationManager.navController
 
-            Scaffold(
+
+
+    Scaffold(
                 topBar = {
                     TopAppBar(title = { /*TODO*/ },
                         navigationIcon = {
@@ -105,8 +111,8 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                         modifier = Modifier
                             .padding(5.dp)
                     ) {//vent dette er feil, dette er jo bare for i dag, må fikses med onclick
-                        val surfAreaDataForDay =
-                            nextSevenDays.getOrElse(0) { emptyList() } //0 er altså i dag
+
+                        val surfAreaDataForDay = nextSevenDays.getOrElse(0) { emptyList() } //0 er altså i dag
                         if (surfAreaDataForDay.isNotEmpty()) {
                             items(surfAreaDataForDay.size) { hourIndex -> //altså timer igjen av dagen
                                 val surfAreaDataForHour =
@@ -119,6 +125,7 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                                 val windGust = surfAreaDataForHour.second[4]
                                 val temp = surfAreaDataForHour.second[5]
                                 val icon = surfAreaDataForHour.second[6]
+                                val waveperiod =
 
                                 Log.d("timestamp", "$timestamp")
                                 AllInfoCard(

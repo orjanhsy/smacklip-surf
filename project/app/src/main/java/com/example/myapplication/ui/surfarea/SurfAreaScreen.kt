@@ -159,7 +159,7 @@ fun InfoCard(surfArea: SurfArea) {
         modifier = Modifier
             .fillMaxWidth()
             .width(300.dp)
-            .height(300.dp)
+            .height(350.dp)
             .padding(8.dp),
         shape = RoundedCornerShape(16.dp)
     ) {

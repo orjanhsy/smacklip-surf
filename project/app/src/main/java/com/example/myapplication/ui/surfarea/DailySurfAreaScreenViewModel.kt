@@ -22,6 +22,7 @@ data class DailySurfAreaScreenUiState(
     val windSpeeds: List<Pair<List<Int>, Double>> = emptyList(),
     val windSpeedOfGusts: List<Pair<List<Int>, Double>> = emptyList(),
     val forecast7Days: MutableList<List<Pair<List<Int>, List<Any>>>> = mutableListOf(),
+    val wavePeriod: List<Double?> = emptyList()
 )
 
 class DailySurfAreaScreenViewModel: ViewModel() {
@@ -82,6 +83,14 @@ class DailySurfAreaScreenViewModel: ViewModel() {
                 val newForecast7Days = smackLipRepository.getDataForTheNext7Days(surfArea)
                 it.copy(forecast7Days = newForecast7Days)
 
+            }
+        }
+    }
+    fun updateWavePeriod(surfArea: SurfArea){
+        viewModelScope.launch(Dispatchers.IO) {
+            _dailySurfAreaScreenUiState.update {
+                val newWavePeriod = smackLipRepository.getWavePeriodsNext3DaysForArea(surfArea)
+                it.copy(wavePeriod = newWavePeriod)
             }
         }
     }
