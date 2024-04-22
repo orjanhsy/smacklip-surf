@@ -1,30 +1,21 @@
 package com.example.myapplication.ui.map
 
-import android.content.Context
-import android.graphics.Bitmap
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -41,7 +32,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,25 +44,19 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.NavigationManager
 import com.example.myapplication.R
 import com.example.myapplication.data.map.MapRepositoryImpl
-import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.commonComponents.BottomBar
-import com.example.myapplication.ui.home.HomeScreenViewModel
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.MapView
-import com.mapbox.maps.MapboxExperimental
 import com.mapbox.maps.Style
-import com.mapbox.maps.extension.compose.annotation.ViewAnnotation
-import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
 import com.mapbox.maps.plugin.animation.flyTo
 import com.mapbox.maps.plugin.annotation.annotations
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
-import com.mapbox.maps.viewannotation.viewAnnotationOptions
-import org.slf4j.Marker
+import java.io.File
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -93,7 +77,7 @@ fun MapScreen(mapScreenViewModel : MapScreenViewModel = viewModel()) {
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-                    Text(text = "Locations")
+                    Text(text = "Explore")
                 })
         },
         bottomBar = {
@@ -245,14 +229,16 @@ fun SurfAreaCard(
     ){
         Column (
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ){
-                Button(onClick = onCloseClick,
+                Button(
+                    onClick = onCloseClick,
                 ) {
                     Text("X")
                 }
@@ -296,9 +282,9 @@ fun SurfAreaCard(
 
                 )
                 Text(text = "$waveHeight", modifier = Modifier.padding(8.dp))
-                val symbolCodePng :String = "$airTemperature.png"
+                //val symbolCodePng :String = "$airTemperature.png"
                 Image(
-                    painter = painterResource(id = R.drawable.fair_day),
+                    painter = painterResource(id = findWeatherSymbol(symbolCode)),
                     contentDescription = "wave icon",
                     modifier = Modifier
                         .padding(8.dp)
@@ -307,14 +293,17 @@ fun SurfAreaCard(
 
                 )
                 Text(text = "$airTemperature °C", modifier = Modifier.padding(8.dp))
-                Text(text = symbolCode, modifier = Modifier.padding(8.dp))
             }
 
             if (surfArea.image != 0) {
                 Image(
                     painter = painterResource(id = surfArea.image),
-                    contentDescription = null,
-                    modifier = Modifier.padding(16.dp)
+                    contentDescription = "SurfArea Image",
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier
+                        .width(162.dp)
+                        .height(100.dp)
+                        .clip(RoundedCornerShape(8.dp))
 
                 )
             }
@@ -337,138 +326,97 @@ fun SurfAreaCard(
     }
 }
 
-@Composable
-fun SurfAreaCard2(
-    surfArea: SurfArea,
-    windSpeedMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
-    windGustMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
-    windDirectionMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
-    waveHeightMap: Map<SurfArea,List<Pair<List<Int>, Double>>>,
 
-    alerts: List<Features>?,
-    homeScreenViewModel: HomeScreenViewModel,
-    showFavoriteButton: Boolean = true,
-    onNavigateToSurfAreaScreen: (String) -> Unit
-) {
+//Må hoistes:
+fun findWeatherSymbol(symbolCode: String): Int {
+    //switch case har O(1) kjøretidskompelsitet
 
-    val windSpeed = windSpeedMap[surfArea] ?: listOf()
-    val windGust = windGustMap[surfArea] ?: listOf()
-    val windDirection = windDirectionMap[surfArea] ?: listOf()
-    val waveHeight = waveHeightMap[surfArea] ?: listOf()
-
-
-
-
-    Card(
-        modifier = Modifier
-            .wrapContentSize()
-            .padding(start = 8.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)
-            .clickable(
-                onClick = { onNavigateToSurfAreaScreen(surfArea.locationName) })
-    ) {
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .width(162.dp)
-                .height(162.dp)
-
-        ) {
-
-            // Stjerneikon
-            if (showFavoriteButton) {
-                IconButton(
-                    onClick = { homeScreenViewModel.updateFavorites(surfArea) },
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(end = 0.dp, top = 0.dp)
-                ){
-                    Icon(
-                        painter = painterResource(id = homeScreenViewModel.updateFavoritesIcon(surfArea)),
-                        contentDescription = "Toggle favorite",
-                        modifier = Modifier.size(16.dp)
-                    )
-                }
-            }
-
-            Column(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.Start,
-            )
-            {
-
-                Row {
-
-                    Text(
-                        text = surfArea.locationName,
-                        style = TextStyle(
-                            fontSize = 12.93.sp,
-                            lineHeight = 19.4.sp,
-                            fontWeight = FontWeight(700),
-                            letterSpacing = 0.12.sp
-
-                        )
-
-                    )
-                }
-                Row {
-                    Image(
-                        painter = painterResource(id = R.drawable.tsunami),
-                        contentDescription = "wave icon",
-                        modifier = Modifier
-                            .padding(0.02021.dp)
-                            .width(15.3587.dp)
-                            .height(14.47855.dp)
-
-                    )
-
-                    Text(
-                        text = " ${if (waveHeight.isNotEmpty()) "${waveHeight[0].second}m" else ""}"
-                    )
-
-                }
-
-                Row {
-                    Image(
-                        painter = painterResource(id = R.drawable.air),
-                        contentDescription = "Air icon",
-                        modifier = Modifier
-                            .padding(0.02021.dp)
-                            .width(15.3587.dp)
-                            .height(13.6348.dp)
-                    )
-                    Text(
-                        text = " ${if (windSpeed.isNotEmpty()) windSpeed[0].second else ""}" +
-                                if(windGust.isNotEmpty() && windSpeed.isNotEmpty() && windGust[0].second != windSpeed[0].second) "(${windGust[0].second})" else ""
-                    )
-                    Text(
-                        text = " ${if (windDirection.isNotEmpty()) "${windDirection[0].second}°" else ""}"
-                    )
-                }
-
-
-                Column(
-                    horizontalAlignment = Alignment.End
-                ) {
-                    if (surfArea.image != 0) {
-                        Image(
-                            painter = painterResource(id = surfArea.image),
-                            contentDescription = "SurfArea Image",
-                            contentScale = ContentScale.FillBounds,
-                            modifier = Modifier
-                                .width(162.dp)
-                                .height(100.dp)
-                                .clip(RoundedCornerShape(8.dp))
-
-
-                        )
-                    }
-                }
-            }
-        }
-    }
+   return when (symbolCode) {
+       "clearsky_day" -> R.drawable.clearsky_day
+       "clearsky_night" -> R.drawable.clearsky_night
+       "clearsky_polartwilight" -> R.drawable.clearsky_polartwilight
+       "fair_day" -> R.drawable.fair_day
+       "fair_night" -> R.drawable.fair_night
+       "fair_polartwilight" -> R.drawable.fair_polartwilight
+       "partlycloudy_day" -> R.drawable.partlycloudy_day
+       "partlycloudy_night" -> R.drawable.partlycloudy_night
+       "partlycloudy_polartwilight" -> R.drawable.partlycloudy_polartwilight
+       "cloudy" -> R.drawable.cloudy
+       "rainshowers_day" -> R.drawable.rainshowers_day
+       "rainshowers_night" -> R.drawable.rainshowers_night
+       "rainshowers_polartwilight" -> R.drawable.rainshowers_polartwilight
+       "rainshowersandthunder_day" -> R.drawable.rainshowersandthunder_day
+       "rainshowersandthunder_night" -> R.drawable.rainshowersandthunder_night
+       "rainshowersandthunder_polartwilight" ->R.drawable.rainshowersandthunder_polartwilight
+       "sleetshowers_day" -> R.drawable.sleetshowers_day
+       "sleetshowers_night" -> R.drawable.sleetshowers_night
+       "sleetshowers_polartwilight" -> R.drawable.sleetshowers_polartwilight
+       "snowshowers_day" -> R.drawable.snowshowers_day
+       "snowshowers_night" -> R.drawable.sleetshowers_night
+       "snowshowers_polartwilight" -> R.drawable.snowshowers_polartwilight
+       "rain" -> R.drawable.rain
+       "heavyrain" -> R.drawable.heavyrain
+       "heavyrainandthunder" -> R.drawable.heavyrainandthunder
+       "sleet" -> R.drawable.sleet
+       "snow" -> R.drawable.snow
+       "snowandthunder" -> R.drawable.snowandthunder
+       "fog" -> R.drawable.fog
+       "sleetshowersandthunder_day" -> R.drawable.sleetshowersandthunder_day
+       "sleetshowersandthunder_night" -> R.drawable.sleetshowersandthunder_night
+       "sleetshowersandthunder_polartwilight" -> R.drawable.sleetshowersandthunder_polartwilight
+       "snowshowersandthunder_day" -> R.drawable.snowshowersandthunder_day
+       "snowshowersandthunder_night" -> R.drawable.snowshowersandthunder_night
+       "snowshowersandthunder_polartwilight" -> R.drawable.snowshowersandthunder_polartwilight
+       "rainandthunder" -> R.drawable.rainandthunder
+       "sleetandthunder" -> R.drawable.sleetandthunder
+       "lightrainshowersandthunder_day" -> R.drawable.lightrainshowersandthunder_day
+       "lightrainshowersandthunder_night" -> R.drawable.lightrainshowersandthunder_night
+       "lightrainshowersandthunder_polartwilight" -> R.drawable.lightrainshowersandthunder_polartwilight
+       "heavyrainshowersandthunder_day" -> R.drawable.heavyrainshowersandthunder_day
+       "heavyrainshowersandthunder_night" -> R.drawable.heavyrainshowersandthunder_night
+       "heavyrainshowersandthunder_polartwilight" -> R.drawable.heavyrainshowersandthunder_polartwilight
+       "lightssleetshowersandthunder_day" -> R.drawable.lightssleetshowersandthunder_day
+       "lightssleetshowersandthunder_night" -> R.drawable.lightssleetshowersandthunder_night
+       "lightssleetshowersandthunder_polartwilight" -> R.drawable.lightssleetshowersandthunder_polartwilight
+       "heavysleetshowersandthunder_day" -> R.drawable.heavysleetshowersandthunder_day
+       "heavysleetshowersandthunder_night" -> R.drawable.heavysleetshowersandthunder_night
+       "heavysleetshowersandthunder_polartwilight" -> R.drawable.heavysleetshowersandthunder_polartwilight
+       "lightssnowshowersandthunder_day" -> R.drawable.lightssnowshowersandthunder_day
+       "lightssnowshowersandthunder_night" -> R.drawable.lightssnowshowersandthunder_night
+       "lightssnowshowersandthunder_polartwilight" -> R.drawable.lightssnowshowersandthunder_polartwilight
+       "heavysnowshowersandthunder_day" -> R.drawable.heavysnowshowersandthunder_day
+       "heavysnowshowersandthunder_night" -> R.drawable.heavysnowshowersandthunder_night
+       "heavysnowshowersandthunder_polartwilight" -> R.drawable.heavysnowshowersandthunder_polartwilight
+       "lightrainandthunder" -> R.drawable.lightrainandthunder
+       "lightsleetandthunder" -> R.drawable.lightsleetandthunder
+       "heavysleetandthunder" -> R.drawable.heavysleetandthunder
+       "lightsnowandthunder" -> R.drawable.lightsnowandthunder
+       "heavysnowandthunder" -> R.drawable.heavysnowandthunder
+       "lightrainshowers_day" -> R.drawable.lightrainshowers_day
+       "lightrainshowers_night" -> R.drawable.lightrainshowers_night
+       "lightrainshowers_polartwilight" -> R.drawable.lightrainshowers_polartwilight
+       "heavyrainshowers_day" -> R.drawable.heavyrainshowers_day
+       "heavyrainshowers_night" -> R.drawable.heavyrainshowers_night
+       "heavyrainshowers_polartwilight" -> R.drawable.heavyrainshowers_polartwilight
+       "lightsleetshowers_day" -> R.drawable.lightsleetshowers_day
+       "lightsleetshowers_night" -> R.drawable.lightsleetshowers_night
+       "lightsleetshowers_polartwilight" -> R.drawable.lightsleetshowers_polartwilight
+       "heavysleetshowers_day" -> R.drawable.heavysleetshowers_day
+       "heavysleetshowers_night" -> R.drawable.heavysleetshowers_night
+       "heavysleetshowers_polartwilight" -> R.drawable.heavysleetshowers_polartwilight
+       "lightsnowshowers_day" -> R.drawable.lightsnowshowers_day
+       "lightsnowshowers_night" -> R.drawable.lightsnowshowers_night
+       "lightsnowshowers_polartwilight" -> R.drawable.lightsnowshowers_polartwilight
+       "heavysnowshowers_day" -> R.drawable.heavysnowshowers_day
+       "heavysnowshowers_night" -> R.drawable.heavysnowshowers_night
+       "heavysnowshowers_polartwilight" -> R.drawable.heavysnowshowers_polartwilight
+       "lightrain" -> R.drawable.lightrain
+       "lightsleet" -> R.drawable.lightsleet
+       "heavysleet" -> R.drawable.heavysleet
+       "lightsnow" -> R.drawable.lightsnow
+       "heavysnow" -> R.drawable.heavysnow
+       else -> R.drawable.air //TODO: bytte til termometerikon kanskje?
+   }
 }
 
 @Preview
