@@ -61,7 +61,7 @@ import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MapScreen(mapScreenViewModel : MapScreenViewModel = viewModel()) {
+fun MapScreen(onNavigateToSurfAreaScreen: (String) -> Unit = {}, mapScreenViewModel : MapScreenViewModel = viewModel()) {
 
     val mapScreenUiState : MapScreenUiState by mapScreenViewModel.mapScreenUiState.collectAsState()
     val mapRepository : MapRepositoryImpl = MapRepositoryImpl() //bruker direkte maprepository fordi mapbox har sin egen viewmodel? -
@@ -98,7 +98,8 @@ fun MapScreen(mapScreenViewModel : MapScreenViewModel = viewModel()) {
                 modifier = Modifier
                     .fillMaxSize(),
                 locations = mapRepository.locationToPoint(),
-                uiState = mapScreenUiState
+                uiState = mapScreenUiState,
+                onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
 
             )
         }
@@ -111,7 +112,8 @@ fun MapScreen(mapScreenViewModel : MapScreenViewModel = viewModel()) {
 fun MapBoxMap(
     modifier: Modifier = Modifier,
     locations: List<Pair<SurfArea, Point>>,
-    uiState: MapScreenUiState
+    uiState: MapScreenUiState,
+    onNavigateToSurfAreaScreen: (String) -> Unit = {}
 ) {
     val trondheim = Point.fromLngLat(10.4, 63.4) //trondheim kommer i senter av skjermen, kan endre koordinater så hele norge synes?
     val context = LocalContext.current
@@ -191,7 +193,8 @@ fun MapBoxMap(
         if (selectedMarker.value != null) {
             SurfAreaCard(surfArea = selectedMarker.value!!,
                 onCloseClick = {selectedMarker.value = null},
-                uiState = uiState
+                uiState = uiState,
+                onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
                 )
         }
     }
@@ -211,7 +214,8 @@ fun isMatchingCoordinates(point1: Point, point2: Point): Boolean {
 fun SurfAreaCard(
     surfArea: SurfArea,
     onCloseClick: () -> Unit,
-    uiState: MapScreenUiState
+    uiState: MapScreenUiState,
+    onNavigateToSurfAreaScreen: (String) -> Unit = {}
     ){
 
     //current data for surfArea som sendes inn:
@@ -249,20 +253,20 @@ fun SurfAreaCard(
                 fontWeight = FontWeight.Bold,
                 fontSize = 30.sp,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.padding(vertical = 8.dp)
             )
             //tekstlig beskrivelse av stedet
             Text(text = surfArea.description,
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.padding(bottom = 8.dp)
             )
 
             //info om vind, bølger og temperatur
             Row (
                 modifier = Modifier
                     .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
+                horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ){
                 Image(painter = painterResource(id = R.drawable.air),
@@ -313,12 +317,16 @@ fun SurfAreaCard(
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ){
-                Button(onClick = onCloseClick, //TODO: må byttes ut med navigation
+                //Navigerer til SurfAreaScreen
+                Button(
+                    onClick = {
+                        onNavigateToSurfAreaScreen(surfArea.locationName)
+                },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
                 ) {
-                    Text("Gå til "+surfArea.locationName)
+                    Text("Gå til ${surfArea.locationName}")
                 }
             }
 
