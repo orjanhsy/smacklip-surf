@@ -67,7 +67,6 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
     val navController = NavigationManager.navController
 
 
-
     Scaffold(
                 topBar = {
                     TopAppBar(title = { /*TODO*/ },
@@ -78,7 +77,6 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                                     contentDescription = "Back",
                                     tint = Color.Black
                                 )
-
                             }
                         }
                     )
@@ -93,7 +91,6 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                             navController?.navigate("HomeScreen")
                             // Navigerer til HomeScreen
                         }
-
                     )
                 }
             )
@@ -116,9 +113,7 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                         if (surfAreaDataForDay.isNotEmpty()) {
                             items(surfAreaDataForDay.size) { hourIndex ->
                                 Log.d("hourindex","$hourIndex")
-//altså timer igjen av dagen
-                                val surfAreaDataForHour =
-                                    surfAreaDataForDay[hourIndex]
+                                val surfAreaDataForHour = surfAreaDataForDay[hourIndex]
                                 //henter objektet for timen som er en liste med Pair<List<Int>, Double>
                                 val timestamp = surfAreaDataForHour.first[3] //3??
                                 val waveHeight = surfAreaDataForHour.second[0]
@@ -128,7 +123,7 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                                 val windGust = surfAreaDataForHour.second[4]
                                 val temp = surfAreaDataForHour.second[5]
                                 val icon = surfAreaDataForHour.second[6]
-                                val waveperiod = wavePeriods[hourIndex+2]
+                                val waveperiod = wavePeriods[hourIndex]
                                 Log.d("period","$waveperiod")
 
                                 Log.d("timestamp", "$timestamp")
