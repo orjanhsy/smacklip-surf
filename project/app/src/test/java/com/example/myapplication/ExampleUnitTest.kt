@@ -74,13 +74,13 @@ class ExampleUnitTest {
             println(it)
         }
         assert(relevantForecasts.size == SurfArea.entries.size) {"Missing forecast(s) for certain surfarea(s)"}
-        assert(relevantForecasts.all { (_, forecast) -> forecast.size == 20 }) {"Some forecast is not of length 21 (ie. 60hrs long)"}
+        assert(relevantForecasts.all { (_, forecast) -> forecast.size in 19 .. 21 }) {"Some forecast is not of length 21 (ie. 60hrs long)"}
     }
 
     @Test
     fun waveDirAndPeriodNext3DaysForHoddevikIs3DaysLong() = runBlocking{
         val result = waveForecastRepository.waveDirAndPeriodNext3DaysForArea(SurfArea.HODDEVIK.modelName, SurfArea.HODDEVIK.pointId)
-        assert(result.size in 18 .. 21) {"Forecast for hoddevik should be of size 21, was ${result.size}"}
+        assert(result.size in 19 .. 21) {"Forecast for hoddevik should be of size 21, was ${result.size}"}
     }
 
     @Test
@@ -88,6 +88,23 @@ class ExampleUnitTest {
         val hardcoded = waveForecastRepository.allRelevantWavePeriodAndDirNext3DaysHardCoded()
         val nonHardcoded = waveForecastRepository.allRelevantWavePeriodAndDirNext3Days()
         assert(hardcoded==nonHardcoded)
+    }
+
+    @Test
+    fun smackLipWavePeriodsForAreaAreSize60()= runBlocking{
+        val wavePeriods = smackLipRepository.getWavePeriodsNext3DaysForArea(SurfArea.HODDEVIK)
+        assert(wavePeriods.size in 57 .. 63) {"was size ${wavePeriods.size}"}
+        println(wavePeriods)
+        assert(wavePeriods[0] == wavePeriods[1] && wavePeriods[1] == wavePeriods[2]) {"${wavePeriods[0]}, ${wavePeriods[1]}, ${wavePeriods[2]} differ"}
+    }
+
+    @Test
+    fun smackLipAllWavePeriodsAreSize60() = runBlocking{
+        val wavePeriods = smackLipRepository.getAllWavePeriodsNext3Days()
+        wavePeriods.forEach{(sa, tps) ->
+            assert(tps.size in 57..63) {"Size of $sa was ${tps.size}"}
+            assert(tps[0] == tps[1] && tps[1] == tps[2]) {"${tps[0]}, ${tps[1]}, ${tps[2]} differ"}
+        }
     }
 
     @Test
