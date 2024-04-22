@@ -72,14 +72,24 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                     TopAppBar(title = { /*TODO*/ },
                         navigationIcon = {
                             IconButton(onClick = { navController?.popBackStack() }) {
-                                Icon(
-                                    Icons.Default.ArrowBack,
-                                    contentDescription = "Back",
-                                    tint = Color.Black
-                                )
+                                Column(
+                                    modifier = Modifier
+                                        .padding(top = 6.dp)
+                                ) {
+                                    Icon(
+                                        Icons.Default.ArrowBack,
+                                        contentDescription = "Back",
+                                        tint = Color.Black,
+                                        modifier = Modifier
+                                            .width(42.dp)
+                                            .height(42.dp)
+                                    )
+
+                                }
                             }
                         }
                     )
+
                 },
                 bottomBar = {
                     BottomBar(
