@@ -13,7 +13,6 @@ import com.example.myapplication.model.locationforecast.DataLF
 import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.model.oceanforecast.DataOF
 import com.example.myapplication.model.surfareas.SurfArea
-import com.example.myapplication.model.waveforecast.PointForecast
 import kotlin.math.abs
 
 
@@ -251,11 +250,26 @@ class SmackLipRepositoryImpl (
 
     // wf men bare med waveperiods, i motsetning (wavedir, waveperiod) over.
     override suspend fun getAllWavePeriodsNext3Days(): Map<SurfArea, List<Double?>> {
-        return getAllWaveForecastsNext3Days().entries.associate{it.key to it.value.map{data -> data.second}}
+
+        val wavePeriods = getAllWaveForecastsNext3Days().entries.associate{it.key to it.value.map{ data -> data.second}}
+        val formattedWavePeriods: MutableMap<SurfArea, List<Double?>> = mutableMapOf()
+        SurfArea.entries.forEach { surfArea ->
+            formattedWavePeriods[surfArea] = wavePeriods[surfArea]!!.flatMap { listOf(it, it, it) }
+        }
+        return formattedWavePeriods
     }
 
     override suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): List<Double?> {
-        return getWaveForecastsNext3DaysForArea(surfArea).map{it.second}
+        val wavePeriods = getWaveForecastsNext3DaysForArea(surfArea).map{it.second}
+
+        // format to hour-by-hour
+        val reformattedWavePeriods = mutableListOf<Double?>()
+        wavePeriods.forEach{
+            reformattedWavePeriods.add(it)
+            reformattedWavePeriods.add(it)
+            reformattedWavePeriods.add(it)
+        }
+        return reformattedWavePeriods
     }
 
     private fun withinDir(optimalDir: Double, actualDir: Double, acceptedOffset: Double): Boolean {
