@@ -251,11 +251,14 @@ class SmackLipRepositoryImpl (
 
     // wf men bare med waveperiods, i motsetning (wavedir, waveperiod) over.
     override suspend fun getAllWavePeriodsNext3Days(): Map<SurfArea, List<Double?>> {
-        return getAllWaveForecastsNext3Days().entries.associate{it.key to it.value.map{data -> data.second}}
+
+        return getAllWaveForecastsNext3Days().entries.associate{it.key to it.value.flatMap{data -> List(3) {data.second}}}
     }
 
     override suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): List<Double?> {
-        return getWaveForecastsNext3DaysForArea(surfArea).map{it.second}
+        val wavePeriods = getWaveForecastsNext3DaysForArea(surfArea).map{it.second}
+        val wavePeriodsConverted = wavePeriods.flatMap { List(3) {it.toDouble()} }
+        return wavePeriodsConverted
     }
 
     private fun withinDir(optimalDir: Double, actualDir: Double, acceptedOffset: Double): Boolean {
