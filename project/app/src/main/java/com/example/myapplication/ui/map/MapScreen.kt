@@ -63,7 +63,7 @@ import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MapScreen(onNavigateToSurfAreaScreen: (String) -> Unit = {}, mapScreenViewModel : MapScreenViewModel = viewModel()) {
+fun MapScreen( mapScreenViewModel : MapScreenViewModel = viewModel(), onNavigateToSurfAreaScreen: (String) -> Unit = {},) {
 
     val mapScreenUiState : MapScreenUiState by mapScreenViewModel.mapScreenUiState.collectAsState()
     val mapRepository : MapRepositoryImpl = MapRepositoryImpl() //bruker direkte maprepository fordi mapbox har sin egen viewmodel? -
