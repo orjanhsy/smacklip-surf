@@ -22,7 +22,7 @@ data class DailySurfAreaScreenUiState(
     val windSpeeds: List<Pair<List<Int>, Double>> = emptyList(),
     val windSpeedOfGusts: List<Pair<List<Int>, Double>> = emptyList(),
     val forecast7Days: MutableList<List<Pair<List<Int>, List<Any>>>> = mutableListOf(),
-    val wavePeriod: List<Double?> = emptyList()
+    val wavePeriod: List<Double?> = mutableListOf(),
 )
 
 class DailySurfAreaScreenViewModel: ViewModel() {

@@ -114,9 +114,12 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
 
                         val surfAreaDataForDay = nextSevenDays.getOrElse(0) { emptyList() } //0 er altså i dag
                         if (surfAreaDataForDay.isNotEmpty()) {
-                            items(surfAreaDataForDay.size) { hourIndex -> //altså timer igjen av dagen
+                            items(surfAreaDataForDay.size) { hourIndex ->
+                                Log.d("hourindex","$hourIndex")
+//altså timer igjen av dagen
                                 val surfAreaDataForHour =
-                                    surfAreaDataForDay[hourIndex] //henter objektet for timen som er en liste med Pair<List<Int>, Double>
+                                    surfAreaDataForDay[hourIndex]
+                                //henter objektet for timen som er en liste med Pair<List<Int>, Double>
                                 val timestamp = surfAreaDataForHour.first[3] //3??
                                 val waveHeight = surfAreaDataForHour.second[0]
                                 val waveDir = surfAreaDataForHour.second[1]
@@ -125,7 +128,8 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                                 val windGust = surfAreaDataForHour.second[4]
                                 val temp = surfAreaDataForHour.second[5]
                                 val icon = surfAreaDataForHour.second[6]
-                                val waveperiod =
+                                val waveperiod = wavePeriods[hourIndex+2]
+                                Log.d("period","$waveperiod")
 
                                 Log.d("timestamp", "$timestamp")
                                 AllInfoCard(
@@ -137,14 +141,15 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                                     windDir = windDir,
                                     waveDir = waveDir,
                                     temp = temp,
-                                    icon = icon
+                                    icon = icon,
+                                    wavePeriod = waveperiod
 
                                 )
                             }
                         } else {
                             item(7) {
                                 AllInfoCard(
-                                    timestamp = "nei",
+                                    timestamp = "00",
                                     surfArea = surfArea,
                                     waveHeight = 0.0,
                                     windSpeed = 0.0,
@@ -152,7 +157,8 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                                     windDir = 0.0,
                                     waveDir = 0.0,
                                     temp = 0,
-                                    icon = 0
+                                    icon = 0,
+                                    wavePeriod = 0.0
                                 )
                             }
                         }
@@ -174,13 +180,14 @@ fun AllInfoCard(
     windDir: Any,
     waveDir: Any,
     temp : Any,
-    icon: Any
+    icon: Any,
+    wavePeriod: Double?
 ) {
     Card(
         modifier = Modifier
             .padding(3.dp)
             .fillMaxWidth()
-            .width(340.dp)
+            //.width(340.dp)
             .height(49.dp)
     ) {
         Row(
@@ -262,7 +269,7 @@ fun AllInfoCard(
             )
 
             Text(
-                text = "2 sek",
+                text = "$wavePeriod sek",
                 style = TextStyle(
                     fontSize = 13.sp,
                     lineHeight = 15.sp,

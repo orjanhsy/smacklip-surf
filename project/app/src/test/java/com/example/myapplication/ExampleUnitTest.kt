@@ -1,41 +1,29 @@
 package com.example.myapplication
 
-import android.view.Surface
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+
 import com.example.myapplication.data.locationForecast.LocationForecastRepositoryImpl
 import com.example.myapplication.data.metalerts.MetAlertsDataSource
-import com.example.myapplication.model.locationforecast.DataLF
-import kotlinx.coroutines.runBlocking
-import com.example.myapplication.model.metalerts.MetAlerts
-import com.google.gson.Gson
 import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
-
-
 import com.example.myapplication.data.oceanforecast.OceanforecastRepositoryImpl
 import com.example.myapplication.data.smackLip.SmackLipRepository
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
-
 import com.example.myapplication.data.waveforecast.WaveForecastDataSource
 import com.example.myapplication.data.waveforecast.WaveForecastRepository
 import com.example.myapplication.data.waveforecast.WaveForecastRepositoryImpl
-import com.example.myapplication.model.surfareas.SurfArea
-
-
+import com.example.myapplication.model.locationforecast.DataLF
 import com.example.myapplication.model.locationforecast.LocationForecast
 import com.example.myapplication.model.locationforecast.TimeserieLF
-
 import com.example.myapplication.model.oceanforecast.OceanForecast
 import com.example.myapplication.model.oceanforecast.TimeserieOF
-import com.example.myapplication.ui.surfarea.SurfAreaScreenViewModel
-import io.ktor.http.HttpStatusCode
-import io.ktor.http.content.VersionCheckResult
-import junit.framework.TestCase.assertEquals
+import com.example.myapplication.model.surfareas.SurfArea
+import com.google.gson.Gson
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertNotNull
 import junit.framework.TestCase.assertTrue
-import java.io.File
+import kotlinx.coroutines.runBlocking
 import org.junit.Test
+import java.io.File
+
 //import org.junit.Assert.*
 
 /**
@@ -55,6 +43,8 @@ class ExampleUnitTest {
     @Test
     fun fetchAvaliableTimestampsReturns20ForecastTimes() = runBlocking {
         val response = waveForecastDataSource.fetchAvaliableTimestamps()
+        println("her:")
+        println(response)
         assert(response.availableForecastTimes.size > 0) {
             "fetchAvailableTimestamps() returns no timestamps"
         }
@@ -64,6 +54,8 @@ class ExampleUnitTest {
     fun accessTokenIsAcquired() = runBlocking {
         val (accessToken, refreshToken) = waveForecastDataSource.getAccessToken()
         assert(accessToken.isNotBlank()) {"No token was retrieved"}
+        println("her:")
+        println(accessToken)
     }
 
     //fast ver.
