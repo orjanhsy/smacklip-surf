@@ -198,7 +198,7 @@ fun MapBoxMap(
 
 }
 
-
+//TODO: må hoistes
 //hjelpemetode for å sjekke at to koordinater er tilnærmet like ved bruk av verdien threshold
 fun isMatchingCoordinates(point1: Point, point2: Point): Boolean {
     val threshold = 0.1
@@ -327,9 +327,8 @@ fun SurfAreaCard(
 }
 
 
-//Må hoistes:
+//TODO: Må hoistes:
 fun findWeatherSymbol(symbolCode: String): Int {
-    //switch case har O(1) kjøretidskompelsitet
 
    return when (symbolCode) {
        "clearsky_day" -> R.drawable.clearsky_day
