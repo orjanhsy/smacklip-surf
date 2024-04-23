@@ -139,7 +139,7 @@ fun SurfAreaScreen(
                             val formattedDate = formatter.format(date)
 
                             val conditionStatus: ConditionStatus = try {
-                                surfAreaScreenUiState.conditionStatuses[dayIndex]!![0]
+                                surfAreaScreenUiState.bestConditionStatuses[dayIndex]!!
                             } catch (e: IndexOutOfBoundsException) {
                                 Log.d("SAscreen", "ConditionStatus at day $dayIndex was out of bounds" )
                                 ConditionStatus.BLANK
@@ -149,7 +149,7 @@ fun SurfAreaScreen(
                             }
 
                             if (conditionStatus != ConditionStatus.BLANK) {
-                                Log.d("Sascreen", "Successfully retrieved status at day $dayIndex of value ${surfAreaScreenUiState.conditionStatuses[dayIndex]!![0]}")
+                                Log.d("Sascreen", "Successfully retrieved status at day $dayIndex of value $conditionStatus")
                             }
 
                             DayPreviewCard(

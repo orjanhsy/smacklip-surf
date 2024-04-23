@@ -118,6 +118,7 @@ class SurfAreaScreenViewModel: ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update { state ->
                 var newConditionStatuses: MutableMap<Int, MutableList<ConditionStatus>> = mutableMapOf()
+                var newBestConditionStatuses: MutableMap< Int, ConditionStatus> = mutableMapOf()
 
                 for (day in 0.. 2) {
                     newConditionStatuses[day] = mutableListOf()
@@ -140,11 +141,21 @@ class SurfAreaScreenViewModel: ViewModel() {
                             )
                         )
                     }
+                    if (ConditionStatus.GREAT in newConditionStatuses[day]!!) {
+                        newBestConditionStatuses[day] = ConditionStatus.GREAT
+                    } else if (ConditionStatus.DECENT in newConditionStatuses[day]!!) {
+                        newBestConditionStatuses[day] = ConditionStatus.DECENT
+                    } else if (ConditionStatus.POOR in newConditionStatuses[day]!!) {
+                        newBestConditionStatuses[day] = ConditionStatus.POOR
+                    } else {
+                        newBestConditionStatuses[day] = ConditionStatus.BLANK
+                    }
                 }
                 Log.d("SAVM", "Updating conditionStatuses with ${newConditionStatuses.filter { it.value.all {xd -> xd != ConditionStatus.BLANK }}.size}")
 
                 state.copy(
-                    conditionStatuses = newConditionStatuses
+                    conditionStatuses = newConditionStatuses,
+                    bestConditionStatuses =  newBestConditionStatuses
                 )
             }
         }
