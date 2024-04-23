@@ -19,13 +19,13 @@ data class SurfAreaScreenUiState(
     val location: SurfArea? = null,
     val alerts: List<Features> = emptyList(),
     // .size=7 for the following:
-    val waveHeights: List<List<Pair<List<Int>, Any>>> = emptyList(),
-    val waveDirections: List<List<Pair<List<Int>, Any>>> = emptyList(),
+    val waveHeights: List<List<Pair<List<Int>, Double>>> = emptyList(),
+    val waveDirections: List<List<Pair<List<Int>, Double>>> = emptyList(),
     val wavePeriods: List<Double?> = emptyList(),
-    val maxWaveHeights: List<Any> = emptyList(),
-    val windDirections: List<List<Pair<List<Int>, Any>>> = emptyList(),
-    val windSpeeds: List<List<Pair<List<Int>, Any>>> = emptyList(),
-    val windSpeedOfGusts: List<List<Pair<List<Int>, Any>>> = emptyList(),
+    val maxWaveHeights: List<Double> = emptyList(),
+    val windDirections: List<List<Pair<List<Int>, Double>>> = emptyList(),
+    val windSpeeds: List<List<Pair<List<Int>, Double>>> = emptyList(),
+    val windSpeedOfGusts: List<List<Pair<List<Int>, Double>>> = emptyList(),
     val forecast7Days: MutableList<List<Pair<List<Int>, List<Any>>>> = mutableListOf(),
     val conditionStatuses: Map<Int, List<ConditionStatus>> = mutableMapOf(),
     val bestConditionStatuses: Map<Int, ConditionStatus> = mutableMapOf()
@@ -86,12 +86,12 @@ class SurfAreaScreenViewModel: ViewModel() {
             _surfAreaScreenUiState.update {state ->
                 val newForecast7Days = smackLipRepository.getDataForTheNext7Days(surfArea)
                 Log.d("SAVM", "Updating forcast of vm by dat containing ${newForecast7Days.size} elements")
-                val newWaveHeights = newForecast7Days.map { dayForecast ->  dayForecast.map { dayData -> dayData.first to dayData.second[0]}}
-                val newMaxWaveHeights = newWaveHeights.map {day -> day.maxBy {hour -> hour.second as Double}}.map {it.second}
-                val newWaveDirections = newForecast7Days.map { dayForecast ->  dayForecast.map { dayData -> dayData.first to dayData.second[1]}}
-                val newWindDirections = newForecast7Days.map { dayForecast ->  dayForecast.map { dayData -> dayData.first to dayData.second[2]}}
-                val newWindSpeeds = newForecast7Days.map { dayForecast ->  dayForecast.map { dayData -> dayData.first to dayData.second[3]}}
-                val newWindSpeedOfGusts = newForecast7Days.map { dayForecast ->  dayForecast.map { dayData -> dayData.first to dayData.second[4]}}
+                val newWaveHeights = newForecast7Days.map { dayForecast ->  dayForecast.map { dayData -> dayData.first to dayData.second[0] as Double}}
+                val newMaxWaveHeights = newWaveHeights.map {day -> day.maxBy {hour -> hour.second}}.map {it.second}
+                val newWaveDirections = newForecast7Days.map { dayForecast ->  dayForecast.map { dayData -> dayData.first to dayData.second[1] as Double}}
+                val newWindDirections = newForecast7Days.map { dayForecast ->  dayForecast.map { dayData -> dayData.first to dayData.second[2] as Double}}
+                val newWindSpeeds = newForecast7Days.map { dayForecast ->  dayForecast.map { dayData -> dayData.first to dayData.second[3] as Double}}
+                val newWindSpeedOfGusts = newForecast7Days.map { dayForecast ->  dayForecast.map { dayData -> dayData.first to dayData.second[4] as Double}}
 
 
                 assert(newForecast7Days.isNotEmpty())
@@ -130,11 +130,11 @@ class SurfAreaScreenViewModel: ViewModel() {
                             smackLipRepository.getConditionStatus(
                                 surfArea,
                                 wavePeriod,
-                                state.waveHeights[day][hour].second as Double,
-                                state.waveDirections[day][hour].second as Double,
-                                state.windDirections[day][hour].second as Double,
-                                state.windSpeeds[day][hour].second as Double,
-                                state.windSpeedOfGusts[day][hour].second as Double,
+                                state.waveHeights[day][hour].second,
+                                state.waveDirections[day][hour].second,
+                                state.windDirections[day][hour].second,
+                                state.windSpeeds[day][hour].second,
+                                state.windSpeedOfGusts[day][hour].second,
                                 state.alerts
                             )
                         )

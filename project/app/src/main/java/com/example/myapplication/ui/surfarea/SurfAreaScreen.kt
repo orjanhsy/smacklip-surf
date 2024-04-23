@@ -69,7 +69,6 @@ fun SurfAreaScreen(
     }!!
 
     val surfAreaScreenUiState: SurfAreaScreenUiState by surfAreaScreenViewModel.surfAreaScreenUiState.collectAsState()
-    val nextSevenDays = surfAreaScreenUiState.forecast7Days
     surfAreaScreenViewModel.updateForecastNext7Days(surfArea)
 
     val formatter = DateTimeFormatter.ofPattern("EEE", Locale("no", "NO"))
@@ -127,26 +126,17 @@ fun SurfAreaScreen(
                 LazyRow(
                     modifier = Modifier.padding(5.dp)
                 ) {
-                    if (nextSevenDays.isNotEmpty()) {
+                    if (surfAreaScreenUiState.forecast7Days.isNotEmpty()) {
                         val today = LocalDate.now()
 
-                        items(nextSevenDays.size) { dayIndex ->
+                        items(surfAreaScreenUiState.forecast7Days.size) { dayIndex ->
                             val date = today.plusDays(dayIndex.toLong())
                             val formattedDate = formatter.format(date)
 
-                            val surfAreaDataForDay = nextSevenDays.getOrElse(dayIndex) { emptyList() }
-                            var maxWaveHeight = 0.0
-                            surfAreaDataForDay.forEach { surfAreaDataForHour ->
-                                if (maxWaveHeight < surfAreaDataForHour.second[0] as Double) {
-                                    maxWaveHeight = surfAreaDataForHour.second[0] as Double
-                                }
-                            }
-
-                            val maxWaveHeightperDay = maxWaveHeight
                             DayPreviewCard(
                                 surfArea,
                                 formattedDate,
-                                maxWaveHeightperDay.toString(),
+                                surfAreaScreenUiState.maxWaveHeights[dayIndex].toString(),
                                 onNavigateToDailySurfAreaScreen
                             )
                         }
