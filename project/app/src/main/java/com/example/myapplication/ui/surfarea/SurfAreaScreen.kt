@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -51,6 +50,7 @@ import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.commonComponents.BottomBar
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.ui.theme.SchemesSurface
+import com.example.myapplication.utils.RecourseUtils
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -81,7 +81,8 @@ fun SurfAreaScreen(
                 navigationIcon = {
                     IconButton(onClick = { navController?.popBackStack() }) {
                         Column(
-                            modifier = Modifier.padding(top = 6.dp)
+                            modifier = Modifier
+                                .height(50.dp)
                         ) {
                             Icon(
                                 Icons.Default.ArrowBack,
@@ -95,7 +96,6 @@ fun SurfAreaScreen(
                         }
                     }
                 },
-                modifier = Modifier.height(40.dp)
             )
         },
         bottomBar = {
@@ -111,17 +111,15 @@ fun SurfAreaScreen(
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .padding(innerPadding)
-                .padding(horizontal = 16.dp)
-                .padding(top = 16.dp),
+                .padding(horizontal = 16.dp),
 
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             item {
-                Spacer(modifier = Modifier.height(8.dp))
-                HeaderCard(surfArea)
+                HeaderCard(surfArea = surfArea)
             }
             item {
                 LazyRow(
@@ -129,7 +127,6 @@ fun SurfAreaScreen(
                 ) {
                     if (nextSevenDays.isNotEmpty()) {
                         val today = LocalDate.now()
-
                         items(nextSevenDays.size) { dayIndex ->
                             val date = today.plusDays(dayIndex.toLong())
                             val formattedDate = formatter.format(date)
@@ -224,11 +221,13 @@ fun HeaderCard(surfArea: SurfArea) {
     val formattedDate1 = formatter1.format(currentDate)
     println("$formattedDate1")
 
+    val recourseUtils : RecourseUtils = RecourseUtils()
+
+
     Box(
         modifier = Modifier
             .width(317.dp)
             .height(150.dp)
-
     ) {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -287,7 +286,7 @@ fun HeaderCard(surfArea: SurfArea) {
                         .padding(1.24752.dp)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.cludy), //trenger mer i Next7days i smacklip for å hente
+                        painter = painterResource(id = R.drawable.cludy),
                         contentDescription = "image description",
                         modifier = Modifier
                             .width(126.dp)

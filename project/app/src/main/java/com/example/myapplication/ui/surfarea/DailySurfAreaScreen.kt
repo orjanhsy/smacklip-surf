@@ -57,10 +57,13 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
     }!!
 
     val dailySurfAreaScreenUiState by dailySurfAreaScreenViewModel.dailySurfAreaScreenUiState.collectAsState()
+
     val nextSevenDays = dailySurfAreaScreenUiState.forecast7Days
     val wavePeriods = dailySurfAreaScreenUiState.wavePeriod
+
     dailySurfAreaScreenViewModel.updateForecastNext7Days(surfArea = surfArea)
     dailySurfAreaScreenViewModel.updateWavePeriod(surfArea=surfArea)
+
     val navController = NavigationManager.navController
 
 
@@ -71,7 +74,7 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                             IconButton(onClick = { navController?.popBackStack() }) {
                                 Column(
                                     modifier = Modifier
-                                        .padding(top = 6.dp)
+                                        .height(50.dp)
                                 ) {
                                     Icon(
                                         Icons.Default.ArrowBack,
@@ -105,12 +108,11 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(innerPadding)
-                        .padding( vertical = 8.dp),
+                        .padding(innerPadding),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-                    HeaderCard(surfArea = surfArea)
+                    HeaderCard(surfArea = surfArea, "") //fikse når det funker i surfareascreen
                     LazyColumn(
                         modifier = Modifier
                             .padding(5.dp)
