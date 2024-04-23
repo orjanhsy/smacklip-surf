@@ -58,7 +58,6 @@ import com.mapbox.maps.plugin.annotation.annotations
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
-import java.io.File
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -117,7 +116,7 @@ fun MapBoxMap(
     uiState: MapScreenUiState,
     onNavigateToSurfAreaScreen: (String) -> Unit = {}
 ) {
-    val trondheim = Point.fromLngLat(10.4, 63.4) //trondheim kommer i senter av skjermen, kan endre koordinater så hele norge synes?
+    val startPosition = Point.fromLngLat(13.0, 65.1) //trondheim kommer i senter av skjermen, kan endre koordinater så hele norge synes?
     val context = LocalContext.current
     val marker = remember(context) {
         context.getDrawable(R.drawable.marker )!!.toBitmap()
@@ -137,16 +136,16 @@ fun MapBoxMap(
         AndroidView(
             factory = {
                 MapView(it).also { mapView ->
+                    //avgjør hvordan kartet skal vises når de først lastes inn:
+                    mapView.mapboxMap.flyTo(CameraOptions.Builder().zoom(3.9).center(startPosition).build())
                     mapView.mapboxMap.loadStyle(Style.STANDARD)
                     val annotationApi = mapView.annotations
                     pointAnnotationManager = annotationApi.createPointAnnotationManager()
-                    //avgjør hvordan kartet skal vises når de først lastes inn:
-                    mapView.mapboxMap
-                        .flyTo(CameraOptions.Builder().zoom(4.0).center(trondheim).build())
+
                 }
             },
             update = { mapView ->
-
+                mapView.mapboxMap.flyTo(CameraOptions.Builder().zoom(3.8).center(startPosition).build())
                 pointAnnotationManager?.let {
 
 
