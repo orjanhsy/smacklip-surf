@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -61,7 +63,7 @@ import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MapScreen(mapScreenViewModel : MapScreenViewModel = viewModel()) {
+fun MapScreen( mapScreenViewModel : MapScreenViewModel = viewModel(), onNavigateToSurfAreaScreen: (String) -> Unit = {}) {
 
     val mapScreenUiState : MapScreenUiState by mapScreenViewModel.mapScreenUiState.collectAsState()
     val mapRepository : MapRepositoryImpl = MapRepositoryImpl() //bruker direkte maprepository fordi mapbox har sin egen viewmodel? -
@@ -98,7 +100,8 @@ fun MapScreen(mapScreenViewModel : MapScreenViewModel = viewModel()) {
                 modifier = Modifier
                     .fillMaxSize(),
                 locations = mapRepository.locationToPoint(),
-                uiState = mapScreenUiState
+                uiState = mapScreenUiState,
+                onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
 
             )
         }
@@ -111,7 +114,8 @@ fun MapScreen(mapScreenViewModel : MapScreenViewModel = viewModel()) {
 fun MapBoxMap(
     modifier: Modifier = Modifier,
     locations: List<Pair<SurfArea, Point>>,
-    uiState: MapScreenUiState
+    uiState: MapScreenUiState,
+    onNavigateToSurfAreaScreen: (String) -> Unit = {}
 ) {
     val trondheim = Point.fromLngLat(10.4, 63.4) //trondheim kommer i senter av skjermen, kan endre koordinater så hele norge synes?
     val context = LocalContext.current
@@ -191,7 +195,8 @@ fun MapBoxMap(
         if (selectedMarker.value != null) {
             SurfAreaCard(surfArea = selectedMarker.value!!,
                 onCloseClick = {selectedMarker.value = null},
-                uiState = uiState
+                uiState = uiState,
+                onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
                 )
         }
     }
@@ -211,7 +216,8 @@ fun isMatchingCoordinates(point1: Point, point2: Point): Boolean {
 fun SurfAreaCard(
     surfArea: SurfArea,
     onCloseClick: () -> Unit,
-    uiState: MapScreenUiState
+    uiState: MapScreenUiState,
+    onNavigateToSurfAreaScreen: (String) -> Unit = {}
     ){
 
     //current data for surfArea som sendes inn:
@@ -229,7 +235,9 @@ fun SurfAreaCard(
     ){
         Column (
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
@@ -313,12 +321,16 @@ fun SurfAreaCard(
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ){
-                Button(onClick = onCloseClick, //TODO: må byttes ut med navigation
+                //Navigerer til SurfAreaScreen
+                Button(
+                    onClick = {
+                        onNavigateToSurfAreaScreen(surfArea.locationName)
+                },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
                 ) {
-                    Text("Gå til "+surfArea.locationName)
+                    Text("Gå til" + surfArea.locationName)
                 }
             }
 
