@@ -1,6 +1,5 @@
 package com.example.myapplication.data.smackLip
 
-import androidx.compose.ui.tooling.data.EmptyGroup.location
 import com.example.myapplication.data.locationForecast.LocationForecastRepository
 import com.example.myapplication.data.locationForecast.LocationForecastRepositoryImpl
 import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
@@ -53,7 +52,7 @@ interface SmackLipRepository {
         windSpeed: Double,
         windGust: Double,
         alerts: List<Features>
-    ): String
+    ): ConditionStatus
 
 }
 
@@ -286,11 +285,11 @@ class SmackLipRepositoryImpl (
         windSpeed: Double,
         windGust: Double,
         alerts: List<Features>
-    ): String {
+    ): ConditionStatus {
         var conditionStatus: ConditionStatus = ConditionStatus.DECENT
 
         if (wavePeriod == null) {
-            return ConditionStatus.
+            return ConditionStatus.BLANK
         }
         // conditions that result in poor status regardless of other variables.
         if (
@@ -301,7 +300,7 @@ class SmackLipRepositoryImpl (
             || alerts.isNotEmpty()
         ) {
             conditionStatus = ConditionStatus.POOR
-            return conditionStatus.description
+            return conditionStatus
         }
 
         val status = mutableMapOf<String, Double>()
@@ -338,7 +337,7 @@ class SmackLipRepositoryImpl (
             averageStatus in 1.3 .. 2.3 -> ConditionStatus.DECENT
             else -> ConditionStatus.POOR
         }
-        return conditionStatus.description
+        return conditionStatus
     }
 
 }
