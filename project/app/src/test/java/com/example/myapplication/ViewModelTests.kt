@@ -18,7 +18,7 @@ class ViewModelTests {
     @Test
     fun conditionStatusesForFirst3DaysAreSameLengthAsForecastFirst3Days()= runBlocking{
         savm.updateForecastNext7Days(SurfArea.HODDEVIK)
-        savm.updateConditionStatuses(SurfArea.HODDEVIK, savm.surfAreaScreenUiState.value.forecast7Days)
+        savm.updateConditionStatuses(SurfArea.HODDEVIK)
 
         delay(5000)
         for (day in 0 .. savm.surfAreaScreenUiState.value.conditionStatuses.size ) {

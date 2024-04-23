@@ -114,14 +114,17 @@ class SurfAreaScreenViewModel: ViewModel() {
         }
     }
 
-    fun updateConditionStatuses(surfArea: SurfArea) {
+    fun updateConditionStatuses(surfArea: SurfArea, forecast7Days: MutableList<List<Pair<List<Int>, List<Any>>>>) {
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update { state ->
                 var newConditionStatuses: MutableMap<Int, MutableList<ConditionStatus>> = mutableMapOf()
 
                 for (day in 0.. 2) {
                     newConditionStatuses[day] = mutableListOf()
-                    for (hour in 0 .. state.forecast7Days[day].size) {
+                    if (forecast7Days.isEmpty()) {
+                        return@launch
+                    }
+                    for (hour in 0 .. forecast7Days[day].size) {
                         val wavePeriod = try {state.wavePeriods[(day+1)*hour]} catch (e: IndexOutOfBoundsException) {null}
                         newConditionStatuses[day]!!.add (
                             smackLipRepository.getConditionStatus(
