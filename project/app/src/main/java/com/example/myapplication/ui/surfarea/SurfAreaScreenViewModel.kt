@@ -72,7 +72,7 @@ class SurfAreaScreenViewModel: ViewModel() {
     }
 
     fun updateWavePeriods(surfArea: SurfArea) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update {state ->
                 val newWavePeriods = smackLipRepository.getWavePeriodsNext3DaysForArea(surfArea)
                 state.copy(
