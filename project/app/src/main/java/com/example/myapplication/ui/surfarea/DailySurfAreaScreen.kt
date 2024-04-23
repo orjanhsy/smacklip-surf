@@ -112,7 +112,7 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-                    HeaderCard(surfArea = surfArea, "") //fikse når det funker i surfareascreen
+                    HeaderCard(surfArea = surfArea) //fikse når det funker i surfareascreen
                     LazyColumn(
                         modifier = Modifier
                             .padding(5.dp)
