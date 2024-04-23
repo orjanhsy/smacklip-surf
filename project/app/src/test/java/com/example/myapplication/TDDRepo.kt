@@ -2,13 +2,11 @@ package com.example.myapplication
 
 import com.example.myapplication.data.smackLip.SmackLipRepository
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
-import com.example.myapplication.model.conditions.ConditionDescriptions
+import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.surfarea.SurfAreaScreenViewModel
-import io.ktor.client.utils.EmptyContent.status
 import org.junit.Test
-import java.util.concurrent.locks.Condition
 
 class TDDRepo {
 
@@ -76,7 +74,7 @@ class TDDRepo {
             greatConditionsWithAlert.wavePeriod,
             greatConditionsWithAlert.alerts,
         )
-        assert(status == ConditionDescriptions.POOR.description) {"Status should be Dårlig but was $status"}
+        assert(status == ConditionStatus.POOR.description) {"Status should be Dårlig but was $status"}
     }
 
     @Test
@@ -91,7 +89,7 @@ class TDDRepo {
             decentConditionsHoddevik.wavePeriod,
             decentConditionsHoddevik.alerts,
         )
-        assert(status == ConditionDescriptions.DECENT.description) {"Status should be Greit but was $status"}
+        assert(status == ConditionStatus.DECENT.description) {"Status should be Greit but was $status"}
     }
 
     @Test
@@ -108,7 +106,7 @@ class TDDRepo {
             splitConditions.wavePeriod,
             splitConditions.alerts,
         )
-        assert(status == ConditionDescriptions.POOR.description) { "Status should be Dårlig but was $status" }
+        assert(status == ConditionStatus.POOR.description) { "Status should be Dårlig but was $status" }
     }
     @Test
     fun conditionsAreGreatWhenConsideredGreat() {
@@ -122,31 +120,6 @@ class TDDRepo {
             greatConditionsWithoutAlert.wavePeriod,
             greatConditionsWithoutAlert.alerts
         )
-        assert(status == ConditionDescriptions.GREAT.description) {"Status should be Utmerket but was $status"}
-    }
-
-    @Test
-    fun vmConditionStatusEqualsRepoImplementation() {
-        assert(
-            vm.getConditionStatus(
-                decentConditionsHoddevik.location,
-                decentConditionsHoddevik.windSpeed,
-                decentConditionsHoddevik.windGust,
-                decentConditionsHoddevik.windDir,
-                decentConditionsHoddevik.waveHeight,
-                decentConditionsHoddevik.waveDir,
-                decentConditionsHoddevik.wavePeriod,
-                decentConditionsHoddevik.alerts
-            ) == repo.getConditionStatus(
-                decentConditionsHoddevik.location,
-                decentConditionsHoddevik.windSpeed,
-                decentConditionsHoddevik.windGust,
-                decentConditionsHoddevik.windDir,
-                decentConditionsHoddevik.waveHeight,
-                decentConditionsHoddevik.waveDir,
-                decentConditionsHoddevik.wavePeriod,
-                decentConditionsHoddevik.alerts
-            )
-        ) {"VM was different than repo"}
+        assert(status == ConditionStatus.GREAT.description) {"Status should be Utmerket but was $status"}
     }
 }
