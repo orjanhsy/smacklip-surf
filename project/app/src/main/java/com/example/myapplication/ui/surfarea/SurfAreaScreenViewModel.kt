@@ -23,6 +23,7 @@ data class SurfAreaScreenUiState(
     val waveDirections: List<List<Pair<List<Int>, Double>>> = emptyList(),
     val wavePeriods: List<Double?> = emptyList(),
     val maxWaveHeights: List<Double> = emptyList(),
+    val minWaveHeights: List<Double> = emptyList(),
     val windDirections: List<List<Pair<List<Int>, Double>>> = emptyList(),
     val windSpeeds: List<List<Pair<List<Int>, Double>>> = emptyList(),
     val windSpeedOfGusts: List<List<Pair<List<Int>, Double>>> = emptyList(),
@@ -88,6 +89,7 @@ class SurfAreaScreenViewModel: ViewModel() {
                 Log.d("SAVM", "Updating forcast of vm by dat containing ${newForecast7Days.size} elements")
                 val newWaveHeights = newForecast7Days.map { dayForecast ->  dayForecast.map { dayData -> dayData.first to dayData.second[0] as Double}}
                 val newMaxWaveHeights = newWaveHeights.map {day -> day.maxBy {hour -> hour.second}}.map {it.second}
+                val newMinWaveHeights = newWaveHeights.map {day -> day.minBy {hour -> hour.second}}.map {it.second}
                 val newWaveDirections = newForecast7Days.map { dayForecast ->  dayForecast.map { dayData -> dayData.first to dayData.second[1] as Double}}
                 val newWindDirections = newForecast7Days.map { dayForecast ->  dayForecast.map { dayData -> dayData.first to dayData.second[2] as Double}}
                 val newWindSpeeds = newForecast7Days.map { dayForecast ->  dayForecast.map { dayData -> dayData.first to dayData.second[3] as Double}}
@@ -106,6 +108,7 @@ class SurfAreaScreenViewModel: ViewModel() {
                     waveHeights = newWaveHeights,
                     waveDirections = newWaveDirections,
                     maxWaveHeights = newMaxWaveHeights,
+                    minWaveHeights =  newMinWaveHeights,
                     windDirections = newWindDirections,
                     windSpeeds = newWindSpeeds,
                     windSpeedOfGusts = newWindSpeedOfGusts

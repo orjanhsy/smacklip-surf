@@ -148,21 +148,18 @@ fun SurfAreaScreen(
                                 ConditionStatus.BLANK
                             }
 
-                            if (conditionStatus != ConditionStatus.BLANK) {
-                                Log.d("Sascreen", "Successfully retrieved status at day $dayIndex of value $conditionStatus")
-                            }
 
                             DayPreviewCard(
                                 surfArea,
                                 formattedDate,
-                                surfAreaScreenUiState.maxWaveHeights[dayIndex].toString(),
+                                Pair(surfAreaScreenUiState.minWaveHeights[dayIndex].toString(),surfAreaScreenUiState.maxWaveHeights[dayIndex].toString()),
                                 conditionStatus,
                                 onNavigateToDailySurfAreaScreen
                             )
                         }
                     } else {
                         items(6) { dayIndex ->
-                            DayPreviewCard(surfArea, "no data", "no data", ConditionStatus.BLANK) {}
+                            DayPreviewCard(surfArea, "no data", Pair("", ""),ConditionStatus.BLANK) {}
                         }
                     }
                 }
@@ -314,7 +311,7 @@ fun HeaderCard(surfArea: SurfArea) {
 fun DayPreviewCard(
     surfArea: SurfArea,
     day: String,
-    waveHeight: String,
+    waveHeightMinMax: Pair<String, String>,
     conditionStatus: ConditionStatus?,
     onNavigateToDailySurfAreaScreen: (String) -> Unit
 ) {
@@ -392,7 +389,7 @@ fun DayPreviewCard(
                 }
                 Column {
                     Text(
-                        text = waveHeight
+                        text = "${waveHeightMinMax.first} - ${waveHeightMinMax.second}"
                     )
                 }
             }
