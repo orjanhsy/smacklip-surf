@@ -1,7 +1,6 @@
 package com.example.myapplication.ui.surfarea
 
 import android.util.Log
-import androidx.compose.ui.tooling.data.EmptyGroup.data
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
@@ -28,8 +27,8 @@ data class SurfAreaScreenUiState(
     val windSpeeds: List<List<Pair<List<Int>, Any>>> = emptyList(),
     val windSpeedOfGusts: List<List<Pair<List<Int>, Any>>> = emptyList(),
     val forecast7Days: MutableList<List<Pair<List<Int>, List<Any>>>> = mutableListOf(),
-    val conditionStatuses: Map<Int, List<ConditionStatus>>,
-    val bestConditionStatuses: Map<Int, ConditionStatus>
+    val conditionStatuses: Map<Int, List<ConditionStatus>> = mutableMapOf(),
+    val bestConditionStatuses: Map<Int, ConditionStatus> = mutableMapOf()
 
 )
 
@@ -124,10 +123,17 @@ class SurfAreaScreenViewModel: ViewModel() {
                     val dayData = state.forecast7Days[day]
                     newConditionStatuses[day] = mutableListOf()
                     for (hour in 0 .. dayData.size) {
+                        val wavePeriod = try {state.wavePeriods[(day+1)*hour]} catch (e: IndexOutOfBoundsException) {null}
                         newConditionStatuses[day]!!.add (
                             smackLipRepository.getConditionStatus(
                                 surfArea,
-                                state.wavePeriods
+                                wavePeriod,
+                                dayData[hour].second[0] as Double,
+                                dayData[hour].second[1] as Double,
+                                dayData[hour].second[2] as Double,
+                                dayData[hour].second[3] as Double,
+                                dayData[hour].second[4] as Double,
+                                state.alerts
                             )
                         )
                     }
