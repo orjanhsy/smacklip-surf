@@ -122,9 +122,10 @@ class SurfAreaScreenViewModel: ViewModel() {
                 for (day in 0.. 2) {
                     newConditionStatuses[day] = mutableListOf()
                     if (forecast7Days.isEmpty()) {
+                        Log.d("SAVM", "Attempted to update condition status on empty forecast7Days")
                         return@launch
                     }
-                    for (hour in 0 .. forecast7Days[day].size) {
+                    for (hour in 0..<forecast7Days[day].size) {
                         val wavePeriod = try {state.wavePeriods[(day+1)*hour]} catch (e: IndexOutOfBoundsException) {null}
                         newConditionStatuses[day]!!.add (
                             smackLipRepository.getConditionStatus(
@@ -140,6 +141,8 @@ class SurfAreaScreenViewModel: ViewModel() {
                         )
                     }
                 }
+                Log.d("SAVM", "Updating conditionStatuses with ${newConditionStatuses.filter { it.value.all {xd -> xd != ConditionStatus.BLANK }}.size}")
+
                 state.copy(
                     conditionStatuses = newConditionStatuses
                 )
