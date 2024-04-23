@@ -71,7 +71,12 @@ fun SmackLipNavigation(){
             )
         }
         composable("MapScreen"){
-            MapScreen()
+            MapScreen(
+                onNavigateToSurfAreaScreen = {
+                    navController.navigate("SurfAreaScreen/$it")
+
+                }
+            )
         }
 
     }
