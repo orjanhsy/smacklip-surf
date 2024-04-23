@@ -1,5 +1,6 @@
 package com.example.myapplication.data.smackLip
 
+import androidx.compose.ui.tooling.data.EmptyGroup.location
 import com.example.myapplication.data.locationForecast.LocationForecastRepository
 import com.example.myapplication.data.locationForecast.LocationForecastRepositoryImpl
 import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
@@ -7,7 +8,7 @@ import com.example.myapplication.data.oceanforecast.OceanforecastRepository
 import com.example.myapplication.data.oceanforecast.OceanforecastRepositoryImpl
 import com.example.myapplication.data.waveforecast.WaveForecastRepository
 import com.example.myapplication.data.waveforecast.WaveForecastRepositoryImpl
-import com.example.myapplication.model.conditions.ConditionDescriptions
+import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.conditions.Conditions
 import com.example.myapplication.model.locationforecast.DataLF
 import com.example.myapplication.model.metalerts.Features
@@ -45,12 +46,12 @@ interface SmackLipRepository {
 
     fun getConditionStatus(
         location: SurfArea,
-        windSpeed: Double,
-        windGust: Double,
-        windDir: Double,
+        wavePeriod: Double?,
         waveHeight: Double,
         waveDir: Double,
-        wavePeriod: Double,
+        windDir: Double,
+        windSpeed: Double,
+        windGust: Double,
         alerts: List<Features>
     ): String
 
@@ -278,16 +279,19 @@ class SmackLipRepositoryImpl (
     }
     override fun getConditionStatus(
         location: SurfArea,
-        windSpeed: Double,
-        windGust: Double,
-        windDir: Double,
+        wavePeriod: Double?,
         waveHeight: Double,
         waveDir: Double,
-        wavePeriod: Double,
+        windDir: Double,
+        windSpeed: Double,
+        windGust: Double,
         alerts: List<Features>
     ): String {
-        var conditionStatus: ConditionDescriptions = ConditionDescriptions.DECENT
+        var conditionStatus: ConditionStatus = ConditionStatus.DECENT
 
+        if (wavePeriod == null) {
+            return ConditionStatus.
+        }
         // conditions that result in poor status regardless of other variables.
         if (
             windSpeed >= Conditions.WIND_SPEED_UPPER_BOUND.value
@@ -296,7 +300,7 @@ class SmackLipRepositoryImpl (
             || wavePeriod <= Conditions.WAVE_PERIOD_LOWER_BOUND.value
             || alerts.isNotEmpty()
         ) {
-            conditionStatus = ConditionDescriptions.POOR
+            conditionStatus = ConditionStatus.POOR
             return conditionStatus.description
         }
 
@@ -330,9 +334,9 @@ class SmackLipRepositoryImpl (
         val averageStatus = status.values.sum() / status.size
 
         conditionStatus = when {
-            averageStatus < 1.3 -> ConditionDescriptions.GREAT
-            averageStatus in 1.3 .. 2.3 -> ConditionDescriptions.DECENT
-            else -> ConditionDescriptions.POOR
+            averageStatus < 1.3 -> ConditionStatus.GREAT
+            averageStatus in 1.3 .. 2.3 -> ConditionStatus.DECENT
+            else -> ConditionStatus.POOR
         }
         return conditionStatus.description
     }
