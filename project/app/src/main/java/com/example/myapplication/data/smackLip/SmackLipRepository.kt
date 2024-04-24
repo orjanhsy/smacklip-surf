@@ -23,7 +23,8 @@ interface SmackLipRepository {
 
     suspend fun getWaveDirections(surfArea: SurfArea): List<Pair<List<Int>, Double>>
 
-    suspend fun getTimeSeriesOFLF(surfArea: SurfArea): Pair<Map<Int, MutableList<Pair<String, DataOF>>>, Map<Int, MutableList<Pair<String, DataLF>>>>
+    suspend fun getTimeSeriesOFLF(surfArea: SurfArea): Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>>
+    suspend fun getOFLFOneDay(day: Int, timeseries: Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>> ): Map<List<Int>, List<Any>>
     suspend fun getWindDirection(surfArea: SurfArea): List<Pair<List<Int>, Double>>
     suspend fun getWindSpeed(surfArea: SurfArea): List<Pair<List<Int>, Double>>
     suspend fun getWindSpeedOfGust(surfArea: SurfArea): List<Pair<List<Int>, Double>>
@@ -153,7 +154,7 @@ class SmackLipRepositoryImpl (
         return combinedMap.toList()
     }
 
-    override suspend fun getTimeSeriesOFLF(surfArea: SurfArea): Pair<Map<Int, MutableList<Pair<String, DataOF>>>, Map<Int, MutableList<Pair<String, DataLF>>>> {
+    override suspend fun getTimeSeriesOFLF(surfArea: SurfArea): Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>> {
         //Par med <timeserie for OF, så timeserie LF>
         //OF er lenger enn LF
         //en timeserie er et tidsintervall med data, nærmeste dager er det hver time, deretter hver 6. time
@@ -179,14 +180,57 @@ class SmackLipRepositoryImpl (
             }
         }
 
-
-        return Pair(timeSeriesMapOF.toMap(), timeSeriesMapLF.toMap())
-
-    }
-    /*suspend fun getOFLFOneDay(timeSeries: Pair<> ){
+        return Pair(timeSeriesMapOF, timeSeriesMapLF)
 
     }
+    override suspend fun getOFLFOneDay(day: Int, timeseries: Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>> )
+    : Map<List<Int>, List<Any>>{
+        //henter data for den spesifikke dagen fra OF og LF
+        val OFmap: List<Pair<String, DataOF>>? = timeseries.first[day]
+        val LFmap: List<Pair<String, DataLF>>? = timeseries.second[day]
 
+        // [waveHeight, waveDirection, windDirection, windSpeed, windSpeedOfGust, temperature, symbolCode]
+        val map : MutableMap<List<Int>, MutableList<Any>> = mutableMapOf()
+
+        LFmap?.map {
+            val time = getTimeListFromTimeString(it.first)
+            try {
+                map[time]!!.add(it.second.instant.details.wind_speed)
+                map[time]!!.add(it.second.instant.details.wind_speed_of_gust)
+                map[time]!!.add(it.second.instant.details.wind_from_direction)
+                map[time]!!.add(it.second.instant.details.air_temperature)
+                //symbol_code
+
+            }catch (e: Exception){
+                map[time] = mutableListOf()
+                map[time]!!.add(it.second.instant.details.wind_speed)
+                map[time]!!.add(it.second.instant.details.wind_speed_of_gust)
+                map[time]!!.add(it.second.instant.details.wind_from_direction)
+                map[time]!!.add(it.second.instant.details.air_temperature)
+            }
+        }
+
+        OFmap?.map {
+            val time = getTimeListFromTimeString(it.first)
+            try {
+                map[time]!!.add(it.second.instant.details.sea_surface_wave_height)
+                map[time]!!.add(it.second.instant.details.sea_water_to_direction)
+
+                //symbol_code
+
+            }catch (_: Exception){
+
+            }
+        }
+
+        map.filter {
+            it.value.size == 6
+        }
+
+        return map
+    }
+
+    /*
     suspend fun getOFLFdataNext7Days(surfArea: SurfArea) {
         val timeseries = getTimeSeriesOFLF(surfArea = surfArea)
 
