@@ -1,15 +1,15 @@
 package com.example.myapplication.ui.AlertCard
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -33,7 +33,7 @@ fun <T> CustomAlert(
     actionText: String,
     data: T?,
     showAlert: MutableState<Boolean>,
-    actionWithValue: ((T) -> Unit)? = null,
+    //actionWithValue: ((T) -> Unit)? = null,
     action: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
@@ -41,7 +41,7 @@ fun <T> CustomAlert(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.5f))
+               // .background(Color.Black.copy(alpha = 0.5f))
                 .padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
@@ -57,7 +57,7 @@ fun <T> CustomAlert(
                     Text(
                         title,
                         modifier = Modifier.fillMaxWidth(),
-                        color = Color(0xFF47B0EC),
+                        color = Color.Gray,
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.headlineMedium,
                         textAlign = TextAlign.Center
@@ -70,28 +70,30 @@ fun <T> CustomAlert(
                             .padding(vertical = 8.dp),
                         fontSize = 19.sp,
                         textAlign = TextAlign.Center,
+                        color = Color.Gray,
                         style = MaterialTheme.typography.titleLarge
                     )
-
-                    Button(
-                        onClick = {
-                            showAlert.value = false
-                            action?.invoke()
-                        },
+                    Box(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            //backgroundColor = Color(0xFF47B0EC),
-                            contentColor = Color.White
-                        )
+                            .fillMaxWidth(0.5f) // Set width to half the available width
+                            .height(60.dp) // Set a custom height
+                            .padding(16.dp)
+                            .background(color = Color.LightGray, shape = RoundedCornerShape(35.dp))
+                            .clickable {
+                                showAlert.value = false
+                                action?.invoke()
+                            }
+                            .align(Alignment.CenterHorizontally) // Center the button horizontally
                     ) {
                         Text(
                             text = actionText,
+                            color = Color.DarkGray,
                             fontWeight = FontWeight.SemiBold,
-                            style = MaterialTheme.typography.titleMedium
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.align(Alignment.Center) // Align text to the center vertically
                         )
                     }
+
                 }
             }
         }
@@ -115,7 +117,7 @@ fun PreviewCustomAlert() {
             actionText = "OK",
             data = null,
             showAlert = remember { mutableStateOf(true) },
-            actionWithValue = null,
+            //actionWithValue = null,
             action = null
         )
     }

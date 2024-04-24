@@ -22,7 +22,7 @@ fun <T> CustomAlertDialog(
         CustomAlert(
             title = title, message = message, actionText = actionText,
             data = data, showAlert = showAlert,
-            actionWithValue = action, action = null
+            //actionWithValue = action, action = null
         )
     }
 }
@@ -42,7 +42,7 @@ fun CustomAlertDialog(
         CustomAlert(
             title = title, message = message, actionText = actionText,
             data = null, showAlert = showAlert,
-            actionWithValue = null, action = action
+           // actionWithValue = null, action = action
         )
     }
 }
