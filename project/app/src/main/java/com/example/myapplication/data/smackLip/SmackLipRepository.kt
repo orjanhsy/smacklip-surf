@@ -24,7 +24,8 @@ interface SmackLipRepository {
     suspend fun getWaveDirections(surfArea: SurfArea): List<Pair<List<Int>, Double>>
 
     suspend fun getTimeSeriesOFLF(surfArea: SurfArea): Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>>
-    suspend fun getOFLFOneDay(day: Int, timeseries: Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>> ): Map<List<Int>, List<Any>>
+    suspend fun getOFLFOneDay(day: Int, month: Int, timeseries: Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>> ): Map<List<Int>, List<Any>>
+    suspend fun getOFLFDataNext7Days(surfArea: SurfArea): List<Map<List<Int>, List<Any>>>
     suspend fun getWindDirection(surfArea: SurfArea): List<Pair<List<Int>, Double>>
     suspend fun getWindSpeed(surfArea: SurfArea): List<Pair<List<Int>, Double>>
     suspend fun getWindSpeedOfGust(surfArea: SurfArea): List<Pair<List<Int>, Double>>
@@ -183,13 +184,13 @@ class SmackLipRepositoryImpl (
         return Pair(timeSeriesMapOF, timeSeriesMapLF)
 
     }
-    override suspend fun getOFLFOneDay(day: Int, timeseries: Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>> )
+    // returnerer map<tidspunkt-> [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]>
+    override suspend fun getOFLFOneDay(day: Int, month: Int, timeseries: Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>> )
     : Map<List<Int>, List<Any>>{
         //henter data for den spesifikke dagen fra OF og LF
         val OFmap: List<Pair<String, DataOF>>? = timeseries.first[day]
         val LFmap: List<Pair<String, DataLF>>? = timeseries.second[day]
 
-        // [waveHeight, waveDirection, windDirection, windSpeed, windSpeedOfGust, temperature, symbolCode]
         val map : MutableMap<List<Int>, MutableList<Any>> = mutableMapOf()
 
         LFmap?.map {
@@ -245,15 +246,34 @@ class SmackLipRepositoryImpl (
 
     }
 
-    /*
-    suspend fun getOFLFdataNext7Days(surfArea: SurfArea) {
-        val timeseries = getTimeSeriesOFLF(surfArea = surfArea)
-
-        for (day in 0 .. 6) {
-            getOFLFOneDay(Pair(timeseries.first[day], timeseries.second[day]))
+    suspend fun nDaysInMonth(month: Int): Int {
+        return when (month) {
+            1, 3, 5, 7, 8, 10, 12 -> 31
+            4, 6, 9, 11 -> 30
+            2 -> 28 // Anta at det ikke er et skuddår for enkelhets skyld
+            else -> throw IllegalArgumentException("Ugyldig månedsnummer")
         }
     }
-*/
+
+    override suspend fun getOFLFDataNext7Days(surfArea: SurfArea): List<Map<List<Int>, List<Any>>> {
+        val timeseries:  Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>> = getTimeSeriesOFLF(surfArea = surfArea)
+        val time = getTimeListFromTimeString(oceanForecastRepository.getTimeSeries(surfArea)[0].first)
+        val day = time[2]
+        val month = time[1]
+
+        val forecastNext7Days: MutableList<Map<List<Int>, List<Any>>> = mutableListOf()
+
+        for (i in day .. (day + 6)) {
+            val daysInMonth = nDaysInMonth(month)
+            var actualDay = i
+            if (daysInMonth < i) {
+                actualDay -= daysInMonth
+            }
+            forecastNext7Days.add(getOFLFOneDay(actualDay, month, Pair(timeseries.first, timeseries.second)))
+        }
+        return forecastNext7Days
+    }
+
 
     //en funksjon som returnerer en liste med par av
     // 1. dato og
