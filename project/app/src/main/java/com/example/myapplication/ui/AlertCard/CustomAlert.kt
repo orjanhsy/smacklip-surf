@@ -2,10 +2,10 @@ package com.example.myapplication.ui.AlertCard
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -33,65 +33,65 @@ fun <T> CustomAlert(
     actionText: String,
     data: T?,
     showAlert: MutableState<Boolean>,
-    actionWithValue: ((T) -> Unit)?,
-    action: (() -> Unit)?,
+    actionWithValue: ((T) -> Unit)? = null,
+    action: (() -> Unit)? = null,
+    modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Card(
-            modifier = Modifier.padding(8.dp),
-            shape = RoundedCornerShape(35.dp)
+    if (showAlert.value) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.5f))
+                .padding(16.dp),
+            contentAlignment = Alignment.Center
         ) {
-            Column(
-                modifier = Modifier
-                    .background(MaterialTheme.colorScheme.background)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+            Card(
+                modifier = modifier,
+                shape = RoundedCornerShape(35.dp)
             ) {
-                Text(
-                    title,
-                    modifier = Modifier.fillMaxWidth(),
-                    color = Color(0xFF47B0EC),
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.headlineMedium,
-                    textAlign = TextAlign.Center
-                )
-
-                Text(
-                    message,
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    fontSize = 19.sp,
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.titleLarge
-                )
-
-                Button(
-                    onClick = {
-                        showAlert.value = false
-                        action?.invoke()
-                    },
-                    modifier = Modifier
-                        .background(
-                            color = Color(0xFF47B0EC),
-                            shape = RoundedCornerShape(35.dp)
-                        )
-                        .height(55.dp)
-                        .fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Transparent,
-                    ),
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(16.dp)
                 ) {
                     Text(
-                        text = actionText,
-                        fontWeight = FontWeight.SemiBold,
-                        style = MaterialTheme.typography.titleMedium
+                        title,
+                        modifier = Modifier.fillMaxWidth(),
+                        color = Color(0xFF47B0EC),
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.headlineMedium,
+                        textAlign = TextAlign.Center
                     )
+
+                    Text(
+                        message,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        fontSize = 19.sp,
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.titleLarge
+                    )
+
+                    Button(
+                        onClick = {
+                            showAlert.value = false
+                            action?.invoke()
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            //backgroundColor = Color(0xFF47B0EC),
+                            contentColor = Color.White
+                        )
+                    ) {
+                        Text(
+                            text = actionText,
+                            fontWeight = FontWeight.SemiBold,
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
                 }
             }
         }
