@@ -1,5 +1,6 @@
 package com.example.myapplication.data.smackLip
 
+import android.util.Log
 import com.example.myapplication.data.locationForecast.LocationForecastRepository
 import com.example.myapplication.data.locationForecast.LocationForecastRepositoryImpl
 import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
@@ -22,8 +23,9 @@ interface SmackLipRepository {
 
     suspend fun getWaveDirections(surfArea: SurfArea): List<Pair<List<Int>, Double>>
 
-    suspend fun getTimeSeriesOF(surfArea: SurfArea): List<Pair<String, DataOF>>
-    suspend fun getTimeSeriesLF(surfArea: SurfArea): List<Pair<String, DataLF>>
+    suspend fun getTimeSeriesOFLF(surfArea: SurfArea): Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>>
+    suspend fun getOFLFOneDay(day: Int, month: Int, timeseries: Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>> ): Map<List<Int>, List<Any>>
+    suspend fun getOFLFDataNext7Days(surfArea: SurfArea): List<Map<List<Int>, List<Any>>>
     suspend fun getWindDirection(surfArea: SurfArea): List<Pair<List<Int>, Double>>
     suspend fun getWindSpeed(surfArea: SurfArea): List<Pair<List<Int>, Double>>
     suspend fun getWindSpeedOfGust(surfArea: SurfArea): List<Pair<List<Int>, Double>>
@@ -84,11 +86,6 @@ class SmackLipRepositoryImpl (
         }
     }
 
-    override suspend fun getTimeSeriesOF(surfArea: SurfArea): List<Pair<String, DataOF>> {
-        return oceanForecastRepository.getTimeSeries(surfArea)
-
-    }
-
 
 
     //tar inn hele time-strengen på følgende format "time": "2024-03-13T18:00:00Z"
@@ -103,9 +100,6 @@ class SmackLipRepositoryImpl (
 
 
     //LF
-    override suspend fun getTimeSeriesLF(surfArea: SurfArea): List<Pair<String, DataLF>> {
-        return locationForecastRepository.getTimeSeries(surfArea)
-    }
 
     override suspend fun getWindDirection(surfArea: SurfArea): List<Pair<List<Int>, Double>> {
         val tmpWindDirection = locationForecastRepository.getWindDirection(surfArea)
@@ -161,6 +155,124 @@ class SmackLipRepositoryImpl (
         return combinedMap.toList()
     }
 
+    override suspend fun getTimeSeriesOFLF(surfArea: SurfArea): Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>> {
+        //Par med <timeserie for OF, så timeserie LF>
+        //OF er lenger enn LF
+        //en timeserie er et tidsintervall med data, nærmeste dager er det hver time, deretter hver 6. time
+        val timeSeries = Pair(oceanForecastRepository.getTimeSeries(surfArea), locationForecastRepository.getTimeSeries(surfArea))
+        val timeSeriesMapOF: MutableMap<Int, MutableList<Pair<String, DataOF>>> = mutableMapOf()
+        val timeSeriesMapLF: MutableMap<Int, MutableList<Pair<String, DataLF>>> = mutableMapOf()
+
+
+        val ofMapped = timeSeries.first.map {
+            val timeStamp = getTimeListFromTimeString(it.first)
+            try {timeSeriesMapOF[timeStamp[2]]!!.add(it)}
+            catch(e: Exception) {
+                timeSeriesMapOF[timeStamp[2]] = mutableListOf(it)
+            }
+        }
+
+        val lfMapped = timeSeries.second.map {
+            val timeStamp = getTimeListFromTimeString(it.first)
+            try {timeSeriesMapLF[timeStamp[2]]!!.add(it)}
+            catch(e: Exception) {
+
+                timeSeriesMapLF[timeStamp[2]] = mutableListOf(it)
+            }
+        }
+
+        return Pair(timeSeriesMapOF, timeSeriesMapLF)
+
+    }
+    // returnerer map<tidspunkt-> [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]>
+    override suspend fun getOFLFOneDay(day: Int, month: Int, timeseries: Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>> )
+    : Map<List<Int>, List<Any>>{
+        //henter data for den spesifikke dagen fra OF og LF
+        val OFmap: List<Pair<String, DataOF>>? = timeseries.first[day]
+        val LFmap: List<Pair<String, DataLF>>? = timeseries.second[day]
+
+        val map : MutableMap<List<Int>, MutableList<Any>> = mutableMapOf()
+
+        LFmap?.map {
+            val time = getTimeListFromTimeString(it.first)
+            try {
+                map[time]!!.add(it.second.instant.details.wind_speed)
+                map[time]!!.add(it.second.instant.details.wind_speed_of_gust)
+                map[time]!!.add(it.second.instant.details.wind_from_direction)
+                map[time]!!.add(it.second.instant.details.air_temperature)
+                try {
+                    map[time]!!.add(it.second.next_1_hours.summary.symbol_code)
+                } catch (e: NullPointerException){
+                    map[time]!!.add(it.second.next_6_hours.summary.symbol_code)
+                }
+
+                //symbol_code
+
+            }catch (e: Exception){
+                map[time] = mutableListOf()
+                map[time]!!.add(it.second.instant.details.wind_speed)
+                map[time]!!.add(it.second.instant.details.wind_speed_of_gust)
+                map[time]!!.add(it.second.instant.details.wind_from_direction)
+                map[time]!!.add(it.second.instant.details.air_temperature)
+                try {
+                    map[time]!!.add(it.second.next_1_hours.summary.symbol_code)
+                } catch (e: NullPointerException){
+                    map[time]!!.add(it.second.next_6_hours.summary.symbol_code)
+                }
+
+            }
+        }
+
+        OFmap?.map {
+            val time = getTimeListFromTimeString(it.first)
+            try {
+                map[time]!!.add(it.second.instant.details.sea_surface_wave_height)
+                map[time]!!.add(it.second.instant.details.sea_water_to_direction)
+
+                //symbol_code
+
+            }catch (_: Exception){
+
+            }
+        }
+/*
+        map.filter {
+            it.value.size == 7
+        }
+
+ */
+
+        return map
+
+    }
+
+    suspend fun nDaysInMonth(month: Int): Int {
+        return when (month) {
+            1, 3, 5, 7, 8, 10, 12 -> 31
+            4, 6, 9, 11 -> 30
+            2 -> 28 // Anta at det ikke er et skuddår for enkelhets skyld
+            else -> throw IllegalArgumentException("Ugyldig månedsnummer")
+        }
+    }
+
+    override suspend fun getOFLFDataNext7Days(surfArea: SurfArea): List<Map<List<Int>, List<Any>>> {
+        val timeseries:  Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>> = getTimeSeriesOFLF(surfArea = surfArea)
+        val time = getTimeListFromTimeString(oceanForecastRepository.getTimeSeries(surfArea)[0].first)
+        val day = time[2]
+        val month = time[1]
+
+        val forecastNext7Days: MutableList<Map<List<Int>, List<Any>>> = mutableListOf()
+
+        for (i in day .. (day + 6)) {
+            val daysInMonth = nDaysInMonth(month)
+            var actualDay = i
+            if (daysInMonth < i) {
+                actualDay -= daysInMonth
+            }
+            forecastNext7Days.add(getOFLFOneDay(actualDay, month, Pair(timeseries.first, timeseries.second)))
+        }
+        return forecastNext7Days
+    }
 
 
     //en funksjon som returnerer en liste med par av
@@ -200,10 +312,12 @@ class SmackLipRepositoryImpl (
                 val dataAtTime : List<Any> = listOf(it.second, waveDirectionAtTime, windDirectionAtTime, windSpeedAtTime, windSpeedOfGustAtTime, airTemperatureAtTime, symbolCodeAtTime)
                 Pair(time, dataAtTime)
 
+
             }catch (_: NoSuchElementException){
                 //fortsetter - må fortsette i tilfelle det er flere tidspunkt som matcher
             }
         }
+        Log.d("SmackLipDataOneDay", "Getting data for one day")
         return dataList.filterIsInstance<Pair<List<Int>, List<Any>>>() //fjerner elementer som blir Kotlin.Unit pga manglende time-match
     }
 
@@ -222,6 +336,7 @@ class SmackLipRepositoryImpl (
         val resList = mutableListOf<List<Pair<List<Int>, List<Any>>>>()
         for (i in today until today+7){
             resList.add(getDataForOneDay(i, surfArea))
+            Log.d("GetDataSmackLip", "Updating data for 7 days ")
         }
         return resList
     }
