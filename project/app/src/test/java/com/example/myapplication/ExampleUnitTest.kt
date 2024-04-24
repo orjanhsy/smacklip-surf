@@ -241,10 +241,11 @@ class ExampleUnitTest {
     @Test
     fun testOneDay(): Unit = runBlocking{
         val timeSeries = smackLipRepository.getTimeSeriesOFLF(SurfArea.HODDEVIK)
-        val oneDay = smackLipRepository.getOFLFOneDay(29, timeSeries)
+        val oneDay = smackLipRepository.getOFLFOneDay(27, timeSeries)
+        //assert(oneDay.size==24){oneDay.size}
 
         oneDay.map {
-            println(it.value)
+            println("${it.key}->${it.value}")
         }
     }
 
