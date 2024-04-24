@@ -1,6 +1,7 @@
 package com.example.myapplication.ui.surfarea
 
 //import androidx.compose.material.icons.outlined.Tsunami
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -46,11 +47,13 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.NavigationManager
 import com.example.myapplication.R
+import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.commonComponents.BottomBar
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.ui.theme.SchemesSurface
 import com.example.myapplication.utils.RecourseUtils
+import java.lang.NullPointerException
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -69,9 +72,14 @@ fun SurfAreaScreen(
         it.locationName == surfAreaName
     }!!
 
+
+
     val surfAreaScreenUiState: SurfAreaScreenUiState by surfAreaScreenViewModel.surfAreaScreenUiState.collectAsState()
-    val nextSevenDays = surfAreaScreenUiState.forecast7Days
     surfAreaScreenViewModel.updateForecastNext7Days(surfArea)
+    surfAreaScreenViewModel.updateWavePeriods(surfArea)
+
+    val nextSevenDays = surfAreaScreenUiState.forecast7Days
+
 
     val formatter = DateTimeFormatter.ofPattern("EEE", Locale("no", "NO"))
     val navController = NavigationManager.navController
@@ -138,31 +146,36 @@ fun SurfAreaScreen(
                 LazyRow(
                     modifier = Modifier.padding(5.dp)
                 ) {
-                    if (nextSevenDays.isNotEmpty()) {
+                    if (surfAreaScreenUiState.forecast7Days.isNotEmpty()) {
                         val today = LocalDate.now()
-                        items(nextSevenDays.size) { dayIndex ->
+                        surfAreaScreenViewModel.updateConditionStatuses(surfArea, surfAreaScreenUiState.forecast7Days)
+
+                        items(surfAreaScreenUiState.forecast7Days.size) { dayIndex ->
                             val date = today.plusDays(dayIndex.toLong())
                             val formattedDate = formatter.format(date)
 
-                            val surfAreaDataForDay = nextSevenDays.getOrElse(dayIndex) { emptyList() }
-                            var maxWaveHeight = 0.0
-                            surfAreaDataForDay.forEach { surfAreaDataForHour ->
-                                if (maxWaveHeight < surfAreaDataForHour.second[0] as Double) {
-                                    maxWaveHeight = surfAreaDataForHour.second[0] as Double
-                                }
+                            val conditionStatus: ConditionStatus = try {
+                                surfAreaScreenUiState.bestConditionStatuses[dayIndex]!!
+                            } catch (e: IndexOutOfBoundsException) {
+                                Log.d("SAscreen", "ConditionStatus at day $dayIndex was out of bounds" )
+                                ConditionStatus.BLANK
+                            } catch (e: NullPointerException) {
+                                Log.d("SAscreen", "ConditionStatus at day $dayIndex was null" )
+                                ConditionStatus.BLANK
                             }
 
-                            val maxWaveHeightperDay = maxWaveHeight
+
                             DayPreviewCard(
                                 surfArea,
                                 formattedDate,
-                                maxWaveHeightperDay.toString(),
+                                Pair(surfAreaScreenUiState.minWaveHeights[dayIndex].toString(),surfAreaScreenUiState.maxWaveHeights[dayIndex].toString()),
+                                conditionStatus,
                                 onNavigateToDailySurfAreaScreen
                             )
                         }
                     } else {
                         items(6) { dayIndex ->
-                            DayPreviewCard(surfArea, "no data", "no data") {}
+                            DayPreviewCard(surfArea, "no data", Pair("", ""),ConditionStatus.BLANK) {}
                         }
                     }
                 }
@@ -312,91 +325,95 @@ fun HeaderCard(surfArea: SurfArea, icon : String) {
 }
 
 
-    @Composable
-    fun DayPreviewCard(
-        surfArea: SurfArea,
-        day: String,
-        waveheight: String,
-        onNavigateToDailySurfAreaScreen: (String) -> Unit
+@Composable
+fun DayPreviewCard(
+    surfArea: SurfArea,
+    day: String,
+    waveHeightMinMax: Pair<String, String>,
+    conditionStatus: ConditionStatus?,
+    onNavigateToDailySurfAreaScreen: (String) -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .padding(6.dp)
+            .width(93.dp)
+            .height(120.dp)
+            .background(color = SchemesSurface, shape = RoundedCornerShape(size = 20.dp))
+            .clickable(
+                onClick = { onNavigateToDailySurfAreaScreen(surfArea.locationName) }
+            )
     ) {
-        Card(
+        Column(
             modifier = Modifier
-                .padding(6.dp)
-                .width(93.dp)
-                .height(120.dp)
-                .background(color = SchemesSurface, shape = RoundedCornerShape(size = 20.dp))
-                .clickable(
-                    onClick = { onNavigateToDailySurfAreaScreen(surfArea.locationName) }
-                )
+                .padding(5.dp)
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(5.dp)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        text = day,
-                        style = TextStyle(
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight(400),
-                            color = Color(0xFF9A938C),
+                Text(
+                    text = day,
+                    style = TextStyle(
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight(400),
+                        color = Color(0xFF9A938C),
 
-                            ),
+                        ),
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .padding(5.dp)
+                )
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text (
+                    text = conditionStatus?.description ?: ""
+                )
+//                Image(
+//                    painter = painterResource(id = R.drawable.surfboard_5525217),
+//                    contentDescription = "image description",
+//                    contentScale = ContentScale.FillBounds,
+//                    modifier = Modifier
+//                        .width(40.dp)
+//                        .height(40.dp)
+//                    //.padding(5.dp)
+//                )
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Column {
+                    Box(
                         modifier = Modifier
-                            .align(Alignment.CenterVertically)
-                            .padding(5.dp)
-                    )
-                }
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.surfboard_5525217),
-                        contentDescription = "image description",
-                        contentScale = ContentScale.FillBounds,
-                        modifier = Modifier
-                            .width(40.dp)
-                            .height(40.dp)
-                        //.padding(5.dp)
-                    )
-                }
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Column {
-                        Box(
+                            .padding(0.03158.dp)
+                            .size(24.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Tsunami,
+                            contentDescription = "tsunami",
                             modifier = Modifier
-                                .padding(0.03158.dp)
-                                .size(24.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Outlined.Tsunami,
-                                contentDescription = "tsunami",
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .width(40.dp)
-                                    .height(40.dp)
-                            )
-
-                        }
-                    }
-                    Column {
-                        Text(
-                            text = "$waveheight"
+                                .fillMaxSize()
+                                .width(40.dp)
+                                .height(40.dp)
                         )
+
                     }
+                }
+                Column {
+                    Text(
+                        text = "${waveHeightMinMax.first} - ${waveHeightMinMax.second}"
+                    )
                 }
             }
         }
     }
+}
 
 
 
