@@ -94,7 +94,7 @@ class RecourseUtils() {
             "heavysleet" -> R.drawable.heavysleet
             "lightsnow" -> R.drawable.lightsnow
             "heavysnow" -> R.drawable.heavysnow
-            else -> R.drawable.air //TODO: bytte til termometerikon kanskje?
+            else -> R.drawable.spm //TODO: bytte til termometerikon kanskje?
         }
     }
 }
