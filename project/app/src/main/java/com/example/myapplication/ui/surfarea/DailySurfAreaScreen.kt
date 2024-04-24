@@ -43,8 +43,10 @@ import com.example.myapplication.NavigationManager
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.commonComponents.BottomBar
 import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
+import com.example.myapplication.ui.surfarea.HeaderCard
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.utils.RecourseUtils
+import java.time.LocalTime
 
 @SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -110,8 +112,19 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                         .padding(innerPadding),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                        val currentHour = LocalTime.now().hour.toString().padStart(2, '0')
+                        var headerIcon = "default_icon"
+                        val surfAreaDataForDay = nextSevenDays.getOrElse(0) { emptyList() }
 
-                    //HeaderCard(surfArea = surfArea) //fikse når det funker i surfareascreen
+                        if (surfAreaDataForDay.isNotEmpty()) {
+                            for (surfAreaDataForHour in surfAreaDataForDay) {
+                                if (currentHour == surfAreaDataForHour.first[3].toString()) {
+                                    headerIcon = surfAreaDataForHour.second[6].toString()
+                                    break
+                                }
+                            }
+                        }
+                        HeaderCard(surfArea = surfArea, icon = headerIcon)
                     LazyColumn(
                         modifier = Modifier
                             .padding(5.dp)

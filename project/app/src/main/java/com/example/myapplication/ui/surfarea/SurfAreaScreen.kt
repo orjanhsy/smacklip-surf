@@ -122,7 +122,7 @@ fun SurfAreaScreen(
                 item {
                     val surfAreaDataForDay = nextSevenDays.getOrElse(0) { emptyList() } //0 is today
                     val currentHour = LocalTime.now().hour // klokken er 10 så får ikke sjekket om det står 09 eller 9. Sto tidligere "08", "09" med .toString().padStart(2, '0')
-                    var headerIcon = "default_icon" // default icon set here
+                    var headerIcon = ""
 
                     if (surfAreaDataForDay.isNotEmpty()) {
                         for (surfAreaDataForHour in surfAreaDataForDay) {
@@ -228,12 +228,12 @@ fun InfoCard(surfArea: SurfArea) {
 @Composable
 fun HeaderCard(surfArea: SurfArea, icon : String) {
 
+    //getting the right date in the right format
     val currentDate = LocalDate.now()
     val formatter1 = DateTimeFormatter.ofPattern("E d. MMM", Locale("no", "NO"))
-
     val formattedDate1 = formatter1.format(currentDate)
-    println("$formattedDate1")
 
+    //to get icon
     val recourseUtils : RecourseUtils = RecourseUtils()
 
 
