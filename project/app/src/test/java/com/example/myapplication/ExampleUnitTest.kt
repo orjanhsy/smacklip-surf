@@ -252,10 +252,19 @@ class ExampleUnitTest {
 
     @Test
     fun testGetOFLFdataNext7Days(): Unit = runBlocking {
-        SurfArea.entries.map {
-            println(smackLipRepository.getOFLFDataNext7Days(it))
+
+        val data: List<Map<List<Int>, List<Any>>> = smackLipRepository.getOFLFDataNext7Days(SurfArea.HODDEVIK)
+
+        assert(data.size == 7){
+            data.size
+        }
+
+        data.forEach{
+            println(it.size)
         }
     }
+
+
 
     @Test
     fun waveHeightsAreParsedCorrectly() = runBlocking {
