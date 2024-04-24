@@ -231,6 +231,16 @@ class ExampleUnitTest {
     }
 
     @Test
+    fun testGetTimeSeriesOFLF(): Unit = runBlocking {
+
+        SurfArea.entries.map {
+            println(smackLipRepository.getTimeSeriesOFLF(it))
+        }
+
+
+    }
+
+    @Test
     fun waveHeightsAreParsedCorrectly() = runBlocking {
         val dataNext7 = smackLipRepository.getDataForTheNext7Days(SurfArea.HODDEVIK)
         val waveHeights = dataNext7.map{ dayForecast -> dayForecast.map { dayData -> dayData.first to dayData.second[0]}}
