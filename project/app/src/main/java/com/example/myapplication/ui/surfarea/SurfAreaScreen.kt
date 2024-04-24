@@ -156,6 +156,9 @@ fun SurfAreaScreen(
                             }
                             HeaderCard(surfArea = surfArea, icon = headerIcon)
                         }
+                        else{
+                            HeaderCard(surfArea = surfArea, icon = "else" )
+                        }
                     }
                     item {
                         LazyRow(
@@ -223,6 +226,17 @@ fun SurfAreaScreen(
                 CustomAlert(
                     title = surfArea.name,
                     message = alertMessage,
+                    actionText = "OK",
+                    data = null,
+                    showAlert = remember { mutableStateOf(true) },
+                    actionWithValue = null,
+                    action = null,
+                )
+            }
+            else{
+                CustomAlert(
+                    title = "Farevarsel",
+                    message = "STORM SØK DEKNING!!!!",
                     actionText = "OK",
                     data = null,
                     showAlert = remember { mutableStateOf(true) },
