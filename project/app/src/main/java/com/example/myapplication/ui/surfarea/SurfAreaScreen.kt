@@ -52,6 +52,7 @@ import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.ui.theme.SchemesSurface
 import com.example.myapplication.utils.RecourseUtils
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -118,9 +119,21 @@ fun SurfAreaScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            item {
-                HeaderCard(surfArea = surfArea)
-            }
+                item {
+                    val surfAreaDataForDay = nextSevenDays.getOrElse(0) { emptyList() } //0 is today
+                    val currentHour = LocalTime.now().hour // klokken er 10 så får ikke sjekket om det står 09 eller 9. Sto tidligere "08", "09" med .toString().padStart(2, '0')
+                    var headerIcon = "default_icon" // default icon set here
+
+                    if (surfAreaDataForDay.isNotEmpty()) {
+                        for (surfAreaDataForHour in surfAreaDataForDay) {
+                            if (currentHour.toString() == surfAreaDataForHour.first[3].toString()) {
+                                headerIcon = surfAreaDataForHour.second[6].toString()
+                                break
+                            }
+                        }
+                        HeaderCard(surfArea = surfArea, icon = headerIcon)
+                    }
+                }
             item {
                 LazyRow(
                     modifier = Modifier.padding(5.dp)
@@ -213,7 +226,7 @@ fun InfoCard(surfArea: SurfArea) {
 
 
 @Composable
-fun HeaderCard(surfArea: SurfArea) {
+fun HeaderCard(surfArea: SurfArea, icon : String) {
 
     val currentDate = LocalDate.now()
     val formatter1 = DateTimeFormatter.ofPattern("E d. MMM", Locale("no", "NO"))
@@ -286,7 +299,7 @@ fun HeaderCard(surfArea: SurfArea) {
                         .padding(1.24752.dp)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.cludy),
+                        painter = painterResource(id = recourseUtils.findWeatherSymbol(icon)),
                         contentDescription = "image description",
                         modifier = Modifier
                             .width(126.dp)

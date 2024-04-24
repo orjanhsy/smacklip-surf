@@ -43,7 +43,6 @@ import com.example.myapplication.NavigationManager
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.commonComponents.BottomBar
 import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
-import com.example.myapplication.ui.surfarea.HeaderCard
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.utils.RecourseUtils
 
@@ -112,7 +111,7 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-                    HeaderCard(surfArea = surfArea) //fikse når det funker i surfareascreen
+                    //HeaderCard(surfArea = surfArea) //fikse når det funker i surfareascreen
                     LazyColumn(
                         modifier = Modifier
                             .padding(5.dp)
