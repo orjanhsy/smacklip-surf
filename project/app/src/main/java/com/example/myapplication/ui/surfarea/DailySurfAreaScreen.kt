@@ -30,9 +30,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -42,13 +40,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.NavigationManager
-import com.example.myapplication.R
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.commonComponents.BottomBar
 import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
 import com.example.myapplication.ui.surfarea.HeaderCard
 import com.example.myapplication.ui.theme.MyApplicationTheme
-
+import com.example.myapplication.utils.RecourseUtils
+import java.time.LocalTime
 
 @SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,10 +58,13 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
     }!!
 
     val dailySurfAreaScreenUiState by dailySurfAreaScreenViewModel.dailySurfAreaScreenUiState.collectAsState()
+
     val nextSevenDays = dailySurfAreaScreenUiState.forecast7Days
     val wavePeriods = dailySurfAreaScreenUiState.wavePeriod
+
     dailySurfAreaScreenViewModel.updateForecastNext7Days(surfArea = surfArea)
     dailySurfAreaScreenViewModel.updateWavePeriod(surfArea=surfArea)
+
     val navController = NavigationManager.navController
 
 
@@ -74,7 +75,7 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                             IconButton(onClick = { navController?.popBackStack() }) {
                                 Column(
                                     modifier = Modifier
-                                        .padding(top = 6.dp)
+                                        .height(50.dp)
                                 ) {
                                     Icon(
                                         Icons.Default.ArrowBack,
@@ -108,12 +109,22 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(innerPadding)
-                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                        .padding(innerPadding),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                        val currentHour = LocalTime.now().hour.toString().padStart(2, '0')
+                        var headerIcon = "default_icon"
+                        val surfAreaDataForDay = nextSevenDays.getOrElse(0) { emptyList() }
 
-                    HeaderCard(surfArea = surfArea)
+                        if (surfAreaDataForDay.isNotEmpty()) {
+                            for (surfAreaDataForHour in surfAreaDataForDay) {
+                                if (currentHour == surfAreaDataForHour.first[3].toString()) {
+                                    headerIcon = surfAreaDataForHour.second[6].toString()
+                                    break
+                                }
+                            }
+                        }
+                        HeaderCard(surfArea = surfArea, icon = headerIcon)
                     LazyColumn(
                         modifier = Modifier
                             .padding(5.dp)
@@ -188,11 +199,11 @@ fun AllInfoCard(
     icon: Any,
     wavePeriod: Double?
 ) {
+    val recourseUtils : RecourseUtils = RecourseUtils()
     Card(
         modifier = Modifier
             .padding(3.dp)
             .fillMaxWidth()
-            //.width(340.dp)
             .height(49.dp)
     ) {
         Row(
@@ -317,18 +328,12 @@ fun AllInfoCard(
             )
 
             Image(
-                painter = painterResource(id = R.drawable.ellipse14),
+                painter = painterResource(id = recourseUtils.findWeatherSymbol(icon.toString())),
                 contentDescription = "image description",
-                contentScale = ContentScale.None,
                 modifier = Modifier
                     .padding(4.dp)
                     .size(24.dp)
                     .aspectRatio(1f)
-                    .shadow(
-                        elevation = 2.5.dp,
-                        spotColor = Color(0x33FBCA1C),
-                        ambientColor = Color(0x33FBCA1C)
-                    )
             )
         }
     }
