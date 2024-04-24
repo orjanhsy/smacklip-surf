@@ -167,7 +167,7 @@ class SmackLipRepositoryImpl (
             val timeStamp = getTimeListFromTimeString(it.first)
             try {timeSeriesMapOF[timeStamp[2]]!!.add(it)}
             catch(e: Exception) {
-                timeSeriesMapOF[timeStamp[2]] = mutableListOf()
+                timeSeriesMapOF[timeStamp[2]] = mutableListOf(it)
             }
         }
 
@@ -176,7 +176,7 @@ class SmackLipRepositoryImpl (
             try {timeSeriesMapLF[timeStamp[2]]!!.add(it)}
             catch(e: Exception) {
 
-                timeSeriesMapLF[timeStamp[2]] = mutableListOf()
+                timeSeriesMapLF[timeStamp[2]] = mutableListOf(it)
             }
         }
 
@@ -199,6 +199,12 @@ class SmackLipRepositoryImpl (
                 map[time]!!.add(it.second.instant.details.wind_speed_of_gust)
                 map[time]!!.add(it.second.instant.details.wind_from_direction)
                 map[time]!!.add(it.second.instant.details.air_temperature)
+                try {
+                    map[time]!!.add(it.second.next_1_hours.summary.symbol_code)
+                } catch (e: NullPointerException){
+                    map[time]!!.add(it.second.next_6_hours.summary.symbol_code)
+                }
+
                 //symbol_code
 
             }catch (e: Exception){
@@ -207,6 +213,12 @@ class SmackLipRepositoryImpl (
                 map[time]!!.add(it.second.instant.details.wind_speed_of_gust)
                 map[time]!!.add(it.second.instant.details.wind_from_direction)
                 map[time]!!.add(it.second.instant.details.air_temperature)
+                try {
+                    map[time]!!.add(it.second.next_1_hours.summary.symbol_code)
+                } catch (e: NullPointerException){
+                    map[time]!!.add(it.second.next_6_hours.summary.symbol_code)
+                }
+
             }
         }
 
@@ -222,12 +234,15 @@ class SmackLipRepositoryImpl (
 
             }
         }
-
+/*
         map.filter {
-            it.value.size == 6
+            it.value.size == 7
         }
 
+ */
+
         return map
+
     }
 
     /*
