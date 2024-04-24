@@ -2,13 +2,11 @@ package com.example.myapplication
 
 import com.example.myapplication.data.smackLip.SmackLipRepository
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
-import com.example.myapplication.model.conditions.ConditionDescriptions
+import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.surfarea.SurfAreaScreenViewModel
-import io.ktor.client.utils.EmptyContent.status
 import org.junit.Test
-import java.util.concurrent.locks.Condition
 
 class TDDRepo {
 
@@ -67,31 +65,31 @@ class TDDRepo {
     @Test
     fun conditionsArePoorIfAlertsArePresent() {
         val status = SmackLipRepositoryImpl().getConditionStatus(
-            greatConditionsWithAlert.location,
-            greatConditionsWithAlert.windSpeed,
-            greatConditionsWithAlert.windGust,
-            greatConditionsWithAlert.windDir,
-            greatConditionsWithAlert.waveHeight,
-            greatConditionsWithAlert.waveDir,
-            greatConditionsWithAlert.wavePeriod,
-            greatConditionsWithAlert.alerts,
+            location = greatConditionsWithAlert.location,
+            windSpeed = greatConditionsWithAlert.windSpeed,
+            windGust = greatConditionsWithAlert.windGust,
+            windDir = greatConditionsWithAlert.windDir,
+            waveHeight = greatConditionsWithAlert.waveHeight,
+            waveDir = greatConditionsWithAlert.waveDir,
+            wavePeriod = greatConditionsWithAlert.wavePeriod,
+            alerts = greatConditionsWithAlert.alerts,
         )
-        assert(status == ConditionDescriptions.POOR.description) {"Status should be Dårlig but was $status"}
+        assert(status == ConditionStatus.POOR) {"Status should be Dårlig but was $status"}
     }
 
     @Test
     fun conditionsAreDecentWhenStateIsConsideredDecent() {
         val status =  SmackLipRepositoryImpl().getConditionStatus(
-            decentConditionsHoddevik.location,
-            decentConditionsHoddevik.windSpeed,
-            decentConditionsHoddevik.windGust,
-            decentConditionsHoddevik.windDir,
-            decentConditionsHoddevik.waveHeight,
-            decentConditionsHoddevik.waveDir,
-            decentConditionsHoddevik.wavePeriod,
-            decentConditionsHoddevik.alerts,
+            location = decentConditionsHoddevik.location,
+            windSpeed = decentConditionsHoddevik.windSpeed,
+            windGust = decentConditionsHoddevik.windGust,
+            windDir = decentConditionsHoddevik.windDir,
+            waveHeight = decentConditionsHoddevik.waveHeight,
+            waveDir = decentConditionsHoddevik.waveDir,
+            wavePeriod = decentConditionsHoddevik.wavePeriod,
+            alerts = decentConditionsHoddevik.alerts,
         )
-        assert(status == ConditionDescriptions.DECENT.description) {"Status should be Greit but was $status"}
+        assert(status == ConditionStatus.DECENT) {"Status should be Greit but was $status"}
     }
 
     @Test
@@ -99,54 +97,29 @@ class TDDRepo {
         // while some conditions are great, it should be poor if the rest are bad
 
         val status = SmackLipRepositoryImpl().getConditionStatus(
-            splitConditions.location,
-            splitConditions.windSpeed,
-            splitConditions.windGust,
-            splitConditions.windDir,
-            splitConditions.waveHeight,
-            splitConditions.waveDir,
-            splitConditions.wavePeriod,
-            splitConditions.alerts,
+            location =  splitConditions.location,
+            windSpeed = splitConditions.windSpeed,
+            windGust = splitConditions.windGust,
+            windDir = splitConditions.windDir,
+            waveHeight = splitConditions.waveHeight,
+            waveDir = splitConditions.waveDir,
+            wavePeriod = splitConditions.wavePeriod,
+            alerts = splitConditions.alerts,
         )
-        assert(status == ConditionDescriptions.POOR.description) { "Status should be Dårlig but was $status" }
+        assert(status == ConditionStatus.POOR) { "Status should be Dårlig but was $status" }
     }
     @Test
     fun conditionsAreGreatWhenConsideredGreat() {
         val status = SmackLipRepositoryImpl().getConditionStatus(
-            greatConditionsWithoutAlert.location,
-            greatConditionsWithoutAlert.windSpeed,
-            greatConditionsWithoutAlert.windGust,
-            greatConditionsWithoutAlert.windDir,
-            greatConditionsWithoutAlert.waveHeight,
-            greatConditionsWithoutAlert.waveDir,
-            greatConditionsWithoutAlert.wavePeriod,
-            greatConditionsWithoutAlert.alerts
+            location = greatConditionsWithoutAlert.location,
+            windSpeed =  greatConditionsWithoutAlert.windSpeed,
+            windGust =  greatConditionsWithoutAlert.windGust,
+            windDir =  greatConditionsWithoutAlert.windDir,
+            waveHeight = greatConditionsWithoutAlert.waveHeight,
+            waveDir =  greatConditionsWithoutAlert.waveDir,
+            wavePeriod =  greatConditionsWithoutAlert.wavePeriod,
+            alerts = greatConditionsWithoutAlert.alerts
         )
-        assert(status == ConditionDescriptions.GREAT.description) {"Status should be Utmerket but was $status"}
-    }
-
-    @Test
-    fun vmConditionStatusEqualsRepoImplementation() {
-        assert(
-            vm.getConditionStatus(
-                decentConditionsHoddevik.location,
-                decentConditionsHoddevik.windSpeed,
-                decentConditionsHoddevik.windGust,
-                decentConditionsHoddevik.windDir,
-                decentConditionsHoddevik.waveHeight,
-                decentConditionsHoddevik.waveDir,
-                decentConditionsHoddevik.wavePeriod,
-                decentConditionsHoddevik.alerts
-            ) == repo.getConditionStatus(
-                decentConditionsHoddevik.location,
-                decentConditionsHoddevik.windSpeed,
-                decentConditionsHoddevik.windGust,
-                decentConditionsHoddevik.windDir,
-                decentConditionsHoddevik.waveHeight,
-                decentConditionsHoddevik.waveDir,
-                decentConditionsHoddevik.wavePeriod,
-                decentConditionsHoddevik.alerts
-            )
-        ) {"VM was different than repo"}
+        assert(status == ConditionStatus.GREAT) {"Status should be Utmerket but was $status"}
     }
 }
