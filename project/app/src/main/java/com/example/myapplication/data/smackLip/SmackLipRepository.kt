@@ -1,5 +1,6 @@
 package com.example.myapplication.data.smackLip
 
+import android.util.Log
 import com.example.myapplication.data.locationForecast.LocationForecastRepository
 import com.example.myapplication.data.locationForecast.LocationForecastRepositoryImpl
 import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
@@ -200,10 +201,12 @@ class SmackLipRepositoryImpl (
                 val dataAtTime : List<Any> = listOf(it.second, waveDirectionAtTime, windDirectionAtTime, windSpeedAtTime, windSpeedOfGustAtTime, airTemperatureAtTime, symbolCodeAtTime)
                 Pair(time, dataAtTime)
 
+
             }catch (_: NoSuchElementException){
                 //fortsetter - må fortsette i tilfelle det er flere tidspunkt som matcher
             }
         }
+        Log.d("SmackLipDataOneDay", "Getting data for one day")
         return dataList.filterIsInstance<Pair<List<Int>, List<Any>>>() //fjerner elementer som blir Kotlin.Unit pga manglende time-match
     }
 
@@ -222,6 +225,7 @@ class SmackLipRepositoryImpl (
         val resList = mutableListOf<List<Pair<List<Int>, List<Any>>>>()
         for (i in today until today+7){
             resList.add(getDataForOneDay(i, surfArea))
+            Log.d("GetDataSmackLip", "Updating data for 7 days ")
         }
         return resList
     }
