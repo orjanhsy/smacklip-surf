@@ -13,11 +13,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.lang.IndexOutOfBoundsException
 
 data class SurfAreaScreenUiState(
     val location: SurfArea? = null,
     val alerts: List<Features> = emptyList(),
+    val alertsSurfArea: List<Features> = emptyList(),
     // .size=7 for the following:
     val waveHeights: List<List<Pair<List<Int>, Double>>> = emptyList(),
     val waveDirections: List<List<Pair<List<Int>, Double>>> = emptyList(),
@@ -58,6 +58,18 @@ class SurfAreaScreenViewModel: ViewModel() {
             }
         }
     }
+
+    fun updateAlertsSurfArea(surfArea: SurfArea) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _surfAreaScreenUiState.update {
+                val newAlerts = if (surfArea != null) smackLipRepository.getRelevantAlertsFor(surfArea) else listOf()
+                it.copy(alertsSurfArea = newAlerts)
+            }
+        }
+    }
+
+
+
 
     fun updateMaxWaveHeights() {
         viewModelScope.launch {
