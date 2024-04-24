@@ -238,6 +238,7 @@ class ExampleUnitTest {
         }
     }
 
+    /*
     @Test
     fun testOneDay(): Unit = runBlocking{
         val timeSeries = smackLipRepository.getTimeSeriesOFLF(SurfArea.HODDEVIK)
@@ -246,6 +247,13 @@ class ExampleUnitTest {
 
         oneDay.map {
             println("${it.key}->${it.value}")
+        }
+    }*/
+
+    @Test
+    fun testGetOFLFdataNext7Days(): Unit = runBlocking {
+        SurfArea.entries.map {
+            println(smackLipRepository.getOFLFDataNext7Days(it))
         }
     }
 
