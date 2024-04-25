@@ -52,7 +52,7 @@ interface SmackLipRepository {
     suspend fun getAllWavePeriodsNext3Days(): Map<SurfArea, List<Double?>>
     suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): List<Double?>
 
-    suspend fun asyncCalls (): Map<SurfArea, List<Map<List<Int>, List<Any>>>>
+    suspend fun asyncCalls (): Map<SurfArea, Deferred<List<Map<List<Int>, List<Any>>>>>
 
     fun getConditionStatus(
         location: SurfArea,
@@ -466,7 +466,7 @@ class SmackLipRepositoryImpl (
 
     // testing
     @OptIn(DelicateCoroutinesApi::class)
-    override suspend fun asyncCalls (): Map<SurfArea, List<Map<List<Int>, List<Any>>>> {
+    override suspend fun asyncCalls (): Map<SurfArea, Deferred<List<Map<List<Int>, List<Any>>>>> {
 
         return coroutineScope {
 

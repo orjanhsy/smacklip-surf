@@ -378,7 +378,7 @@ class ExampleUnitTest {
     fun  testAsyncCalls(): Unit = runBlocking{
 
        val time = measureTimeMillis { smackLipRepository.asyncCalls().forEach{
-           println(it.value)}}
+           println(it.value.await().size)}}
         println(time)
 
     }
