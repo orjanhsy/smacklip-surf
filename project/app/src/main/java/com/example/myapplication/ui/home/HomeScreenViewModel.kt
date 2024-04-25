@@ -8,6 +8,7 @@ import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
 import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.model.surfareas.SurfArea
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -170,4 +171,6 @@ class HomeScreenViewModel : ViewModel() {
             R.drawable.empty_star_icon
         }
     }
+
+
 }
