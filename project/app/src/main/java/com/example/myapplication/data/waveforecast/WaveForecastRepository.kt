@@ -22,6 +22,9 @@ interface WaveForecastRepository {
 
     suspend fun wavePeriodsNext3DaysForArea(modelName: String, pointId: Int): List<Double?>
     suspend fun allRelevantWavePeriodsNext3DaysHardCoded(): Map<SurfArea, List<Double?>>
+
+    suspend fun wavePeriods(modelName: String, pointId: Int, time: String): Double? // for tests
+    suspend fun pointForecast(modelName: String, pointId: Int, time: String): PointForecast // for tests
     fun distanceTo(lat: Double, lon: Double, surfArea: SurfArea): Double // for tests
     }
 
@@ -29,8 +32,13 @@ class WaveForecastRepositoryImpl(
     private val waveForecastDataSource: WaveForecastDataSource = WaveForecastDataSource()
 ): WaveForecastRepository {
 
-    //Pair<direction, wavePeriod>
-    private suspend fun wavePeriods(modelName: String, pointId: Int, time: String): Double? {
+
+
+    override suspend fun pointForecast(modelName: String, pointId: Int, time: String): PointForecast {
+        return waveForecastDataSource.fetchPointForecast(modelName, pointId, time)
+    }
+
+    override suspend fun wavePeriods(modelName: String, pointId: Int, time: String): Double? {
         val forecast = waveForecastDataSource.fetchPointForecast(modelName, pointId, time)
         return forecast.tpLocal
     }
