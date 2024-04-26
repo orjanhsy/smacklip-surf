@@ -1,6 +1,7 @@
 package com.example.myapplication.data.smackLip
 
 import android.util.Log
+import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.locationForecast.LocationForecastRepository
 import com.example.myapplication.data.locationForecast.LocationForecastRepositoryImpl
 import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
@@ -14,6 +15,12 @@ import com.example.myapplication.model.locationforecast.DataLF
 import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.model.oceanforecast.DataOF
 import com.example.myapplication.model.surfareas.SurfArea
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import kotlin.math.abs
 
 
@@ -44,6 +51,8 @@ interface SmackLipRepository {
     suspend fun getWaveForecastsNext3DaysForArea(surfArea: SurfArea): List<Pair<Double?, Double?>>
     suspend fun getAllWavePeriodsNext3Days(): Map<SurfArea, List<Double?>>
     suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): List<Double?>
+
+    suspend fun asyncCalls (): Map<SurfArea, List<Map<List<Int>, List<Any>>>>
 
     fun getConditionStatus(
         location: SurfArea,
@@ -453,6 +462,25 @@ class SmackLipRepositoryImpl (
             else -> ConditionStatus.POOR
         }
         return conditionStatus
+    }
+
+    // testing
+    @OptIn(DelicateCoroutinesApi::class)
+    override suspend fun asyncCalls (): Map<SurfArea, List<Map<List<Int>, List<Any>>>> {
+
+        return coroutineScope {
+
+            val res = SurfArea.entries.associateWith {
+                async { getOFLFDataNext7Days(it) }
+            }
+
+            val newRes = res.entries.associate{
+                it.key to it.value.await()
+            }
+
+            newRes
+        }
+
     }
 
 }
