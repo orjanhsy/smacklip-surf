@@ -47,8 +47,8 @@ interface SmackLipRepository {
 
 
     // waveforecast
-    suspend fun getAllWaveForecastsNext3Days(): Map<SurfArea, List<Pair<Double?, Double?>>>
-    suspend fun getWaveForecastsNext3DaysForArea(surfArea: SurfArea): List<Pair<Double?, Double?>>
+    suspend fun getAllWaveForecastsNext3Days(): Map<SurfArea, List<Double?>>
+    suspend fun getWaveForecastsNext3DaysForArea(surfArea: SurfArea): List<Double?>
     suspend fun getAllWavePeriodsNext3Days(): Map<SurfArea, List<Double?>>
     suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): List<Double?>
 
@@ -355,17 +355,13 @@ class SmackLipRepositoryImpl (
     }
 
     // mapper hvert enkelt surfarea til en liste med (bølgeretning, bølgeperiode) lik de i 'getWaveForecastNext3DaysForArea()' under.
-    override suspend fun getAllWaveForecastsNext3Days(): Map<SurfArea, List<Pair<Double?, Double?>>> {
-        return try {
-            waveForecastRepository.allRelevantWavePeriodAndDirNext3DaysHardCoded()
-        } catch (e: Exception) {
-            waveForecastRepository.allRelevantWavePeriodAndDirNext3Days()
-        }
+    override suspend fun getAllWaveForecastsNext3Days(): Map<SurfArea, List<Double?>> {
+        return waveForecastRepository.allRelevantWavePeriodsNext3DaysHardCoded()
     }
 
     // liste med pair(bølgeretning, bølgeperiode), .size in 18..20 (3timers intervaller, totalt 60 timer). Vet ikke hvorfor den av og til er 19 lang, da er det i så fall bare 57 timer forecast.
-    override suspend fun getWaveForecastsNext3DaysForArea(surfArea: SurfArea): List<Pair<Double?, Double?>> {
-        return waveForecastRepository.waveDirAndPeriodNext3DaysForArea(
+    override suspend fun getWaveForecastsNext3DaysForArea(surfArea: SurfArea): List<Double?> {
+        return waveForecastRepository.wavePeriodsNext3DaysForArea(
             surfArea.modelName,
             surfArea.pointId
         )
@@ -375,7 +371,7 @@ class SmackLipRepositoryImpl (
     // wf men bare med waveperiods, i motsetning (wavedir, waveperiod) over.
     override suspend fun getAllWavePeriodsNext3Days(): Map<SurfArea, List<Double?>> {
 
-        val wavePeriods = getAllWaveForecastsNext3Days().entries.associate{it.key to it.value.map{ data -> data.second}}
+        val wavePeriods = getAllWaveForecastsNext3Days()
         val formattedWavePeriods: MutableMap<SurfArea, List<Double?>> = mutableMapOf()
         SurfArea.entries.forEach { surfArea ->
             formattedWavePeriods[surfArea] = wavePeriods[surfArea]!!.flatMap { listOf(it, it, it) }
@@ -384,7 +380,7 @@ class SmackLipRepositoryImpl (
     }
 
     override suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): List<Double?> {
-        val wavePeriods = getWaveForecastsNext3DaysForArea(surfArea).map{it.second}
+        val wavePeriods = getWaveForecastsNext3DaysForArea(surfArea)
 
         // format to hour-by-hour
         val reformattedWavePeriods = mutableListOf<Double?>()
