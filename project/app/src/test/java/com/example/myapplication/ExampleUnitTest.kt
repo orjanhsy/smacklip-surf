@@ -23,6 +23,7 @@ import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import java.io.File
+import kotlin.system.measureTimeMillis
 
 //import org.junit.Assert.*
 
@@ -371,5 +372,15 @@ class ExampleUnitTest {
     }
 
 
+    //Async calls
+
+    @Test
+    fun  testAsyncCalls(): Unit = runBlocking{
+
+       val time = measureTimeMillis { smackLipRepository.asyncCalls().forEach{
+           println(it.value.size)}}
+        println(time)
+
+    }
 
 }
