@@ -18,7 +18,6 @@ import kotlin.math.acos
 
 
 interface WaveForecastRepository {
-    suspend fun allRelevantWavePeriodAndDirNext3Days(): Map<SurfArea, List<Pair<Double?, Double?>>>
     suspend fun retrieveRelevantModelNamesAndPointIds(): Map<SurfArea, Pair<String?, Int?>> // for tests
 
     suspend fun wavePeriodsNext3DaysForArea(modelName: String, pointId: Int): List<Double?>
@@ -29,7 +28,6 @@ interface WaveForecastRepository {
 class WaveForecastRepositoryImpl(
     private val waveForecastDataSource: WaveForecastDataSource = WaveForecastDataSource()
 ): WaveForecastRepository {
-
 
     //Pair<direction, wavePeriod>
     private suspend fun wavePeriods(modelName: String, pointId: Int, time: String): Double? {
