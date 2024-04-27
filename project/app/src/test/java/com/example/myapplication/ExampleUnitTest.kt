@@ -23,6 +23,7 @@ import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import java.io.File
+import java.time.LocalDate
 import kotlin.system.measureTimeMillis
 
 //import org.junit.Assert.*
@@ -373,6 +374,30 @@ class ExampleUnitTest {
        val time = measureTimeMillis { smackLipRepository.asyncCalls().forEach{
            println(it.value.size)}}
         println(time)
+
+    }
+
+    @Test
+    fun speedOfGetTimeseries()  = runBlocking {
+        val time2 = measureTimeMillis {
+
+            SurfArea.entries.forEach {
+                val timeseries = smackLipRepository.getTimeSeriesOFLF(it)
+                val date = LocalDate.now()
+                val xd = smackLipRepository.getOFLFOneDay(date.dayOfMonth, date.monthValue, timeseries)
+
+            }
+        }
+        val time1 = measureTimeMillis {
+            SurfArea.entries.forEach {
+                val he = smackLipRepository.getTimeSeriesOFLF(it)
+
+            }
+        }
+
+
+        println("Time1: $time1 ")
+        println("Time2: $time2 ")
 
     }
 
