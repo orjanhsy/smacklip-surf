@@ -59,11 +59,9 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
 
     val dailySurfAreaScreenUiState by dailySurfAreaScreenViewModel.dailySurfAreaScreenUiState.collectAsState()
 
-    val nextSevenDays = dailySurfAreaScreenUiState.forecast7Days
-    val wavePeriods = dailySurfAreaScreenUiState.wavePeriod
 
-    //dailySurfAreaScreenViewModel.asyncNext7Days (surfArea = surfArea)
-    //dailySurfAreaScreenViewModel.updateWavePeriod(surfArea=surfArea)
+    dailySurfAreaScreenViewModel.updateOFLFNext7Days(surfArea = surfArea)
+    dailySurfAreaScreenViewModel.updateWavePeriod(surfArea=surfArea)
 
     val navController = NavigationManager.navController
 
@@ -112,14 +110,17 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                         .padding(innerPadding),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                        val currentHour = LocalTime.now().hour.toString().padStart(2, '0')
+                        val currentHour = LocalTime.now().hour
                         var headerIcon = "default_icon"
-                        val surfAreaDataForDay = nextSevenDays.getOrElse(0) { emptyList() }
+                        val surfAreaDataForDay : Map<List<Int>, List<Any>> = dailySurfAreaScreenUiState.forecast7Days.getOrElse(0) { emptyMap() }
+                        val times = surfAreaDataForDay.keys.sortedBy { it[3] }
 
                         if (surfAreaDataForDay.isNotEmpty()) {
-                            for (surfAreaDataForHour in surfAreaDataForDay) {
-                                if (currentHour == surfAreaDataForHour.first[3].toString()) {
-                                    headerIcon = surfAreaDataForHour.second[6].toString()
+                            // siden mappet ikke er sortert henter vi ut alle aktuelle tidspunketer og sorterer dem
+                            for (time in times) {
+                                val hour = time[3]
+                                if (hour == currentHour) {
+                                    headerIcon = surfAreaDataForDay[time]!![4].toString()
                                     break
                                 }
                             }
@@ -130,21 +131,22 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                             .padding(5.dp)
                     ) {//vent dette er feil, dette er jo bare for i dag, må fikses med onclick
 
-                        val surfAreaDataForDay = nextSevenDays.getOrElse(0) { emptyList() } //0 er altså i dag
+                        // [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]
                         if (surfAreaDataForDay.isNotEmpty()) {
-                            items(surfAreaDataForDay.size) { hourIndex ->
-                                Log.d("hourindex","$hourIndex")
-                                val surfAreaDataForHour = surfAreaDataForDay[hourIndex]
+                            items(times.size) { time ->
+                                Log.d("hourindex","$time")
+                                val hourIndex = times[time]
+                                val surfAreaDataForHour :  List<Any>? = surfAreaDataForDay[hourIndex]
                                 //henter objektet for timen som er en liste med Pair<List<Int>, Double>
-                                val timestamp = surfAreaDataForHour.first[3] //3??
-                                val waveHeight = surfAreaDataForHour.second[0]
-                                val waveDir = surfAreaDataForHour.second[1]
-                                val windDir = surfAreaDataForHour.second[2]
-                                val windSpeed = surfAreaDataForHour.second[3]
-                                val windGust = surfAreaDataForHour.second[4]
-                                val temp = surfAreaDataForHour.second[5]
-                                val icon = surfAreaDataForHour.second[6]
-                                val waveperiod = wavePeriods[hourIndex]
+                                val timestamp = hourIndex[3]
+                                val windSpeed = surfAreaDataForHour?.get(0) ?: 0.0
+                                val windGust = surfAreaDataForHour?.get(1)  ?: 0.0
+                                val windDir = surfAreaDataForHour?.get(2)   ?: 0.0
+                                val temp = surfAreaDataForHour?.get(3)      ?: 0.0
+                                val icon = surfAreaDataForHour?.get(4)      ?: 0.0
+                                val waveHeight = surfAreaDataForHour?.get(5)?: 0.0
+                                val waveDir = surfAreaDataForHour?.get(6)   ?: 0.0
+                                val waveperiod = try {dailySurfAreaScreenUiState.wavePeriods[hourIndex[3]]} catch (e: IndexOutOfBoundsException) {0.0}
                                 Log.d("period","$waveperiod")
 
                                 Log.d("timestamp", "$timestamp")
