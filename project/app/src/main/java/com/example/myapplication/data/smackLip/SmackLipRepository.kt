@@ -1,7 +1,5 @@
 package com.example.myapplication.data.smackLip
 
-import android.util.Log
-import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.locationForecast.LocationForecastRepository
 import com.example.myapplication.data.locationForecast.LocationForecastRepositoryImpl
 import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
@@ -15,12 +13,8 @@ import com.example.myapplication.model.locationforecast.DataLF
 import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.model.oceanforecast.DataOF
 import com.example.myapplication.model.surfareas.SurfArea
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import kotlin.math.abs
 
 
@@ -31,8 +25,9 @@ interface SmackLipRepository {
     suspend fun getWaveDirections(surfArea: SurfArea): List<Pair<List<Int>, Double>>
 
     suspend fun getTimeSeriesOFLF(surfArea: SurfArea): Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>>
+
     suspend fun getOFLFOneDay(day: Int, month: Int, timeseries: Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>> ): Map<List<Int>, List<Any>>
-    suspend fun getOFLFDataNext7Days(surfArea: SurfArea): List<Map<List<Int>, List<Any>>>
+    suspend fun getSurfAreaOFLFNext7Days(surfArea: SurfArea): List<Map<List<Int>, List<Any>>>
     suspend fun getWindDirection(surfArea: SurfArea): List<Pair<List<Int>, Double>>
     suspend fun getWindSpeed(surfArea: SurfArea): List<Pair<List<Int>, Double>>
     suspend fun getWindSpeedOfGust(surfArea: SurfArea): List<Pair<List<Int>, Double>>
@@ -40,9 +35,9 @@ interface SmackLipRepository {
     suspend fun getSymbolCode(surfArea: SurfArea): List<Pair<List<Int>, String>>
     abstract fun getTimeListFromTimeString(timeString : String): List<Int>
     //suspend fun getForecastNext24Hours() : MutableList<MutableList<Pair<List<Int>, Pair<Int, List<Double>>>>>
-    suspend fun getDataForOneDay(day : Int, surfArea: SurfArea): List<Pair<List<Int>, List<Any>>>
+    //suspend fun getDataForOneDay(day : Int, surfArea: SurfArea): List<Pair<List<Int>, List<Any>>>
     //suspend fun getSymbolCodeForOneDay(day : Int, surfArea: SurfArea): List<Pair<List<Int>, List<String>>>
-    suspend fun getDataForTheNext7Days(surfArea: SurfArea): MutableList<List<Pair<List<Int>, List<Any>>>>
+    //suspend fun getDataForTheNext7Days(surfArea: SurfArea): MutableList<List<Pair<List<Int>, List<Any>>>>
     suspend fun getTimeSeriesDayByDay(surfArea: SurfArea): List<List<Pair<String, DataOF>>>
 
 
@@ -52,7 +47,7 @@ interface SmackLipRepository {
     suspend fun getAllWavePeriodsNext3Days(): Map<SurfArea, List<Double?>>
     suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): List<Double?>
 
-    suspend fun asyncCalls (): Map<SurfArea, List<Map<List<Int>, List<Any>>>>
+    suspend fun getAllOFLF7Days (): Map<SurfArea, List<Map<List<Int>, List<Any>>>>
 
     fun getConditionStatus(
         location: SurfArea,
@@ -106,6 +101,8 @@ class SmackLipRepositoryImpl (
             timeString.substring(8, 10).toInt(),
             timeString.substring(11, 13).toInt())
     }
+
+
 
 
     //LF
@@ -264,7 +261,7 @@ class SmackLipRepositoryImpl (
         }
     }
 
-    override suspend fun getOFLFDataNext7Days(surfArea: SurfArea): List<Map<List<Int>, List<Any>>> {
+    override suspend fun getSurfAreaOFLFNext7Days(surfArea: SurfArea): List<Map<List<Int>, List<Any>>> {
         val timeseries:  Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>> = getTimeSeriesOFLF(surfArea = surfArea)
         val time = getTimeListFromTimeString(oceanForecastRepository.getTimeSeries(surfArea)[0].first)
         val day = time[2]
@@ -300,6 +297,7 @@ class SmackLipRepositoryImpl (
     //metoden fungerer uavhengig av hvor mange tidspunkt det er data for
 
     //List<Pair<Time, DataAtTime>>>  .size= 0..24 ('i dag' vil vise så mange timer det er igjen av døgnet, resten vil vise 24 timer.)
+    /*
     override suspend fun getDataForOneDay(day : Int, surfArea: SurfArea): List<Pair<List<Int>, List<Any>>> {
         val waveHeight :  List<Pair<List<Int>, Double>> = getWaveHeights(surfArea).filter { waveHeight -> waveHeight.first[2] == day }
         val waveDirection: List<Pair<List<Int>, Double>> = getWaveDirections(surfArea).filter {waveDir -> waveDir.first[2] == day}
@@ -329,6 +327,8 @@ class SmackLipRepositoryImpl (
         Log.d("SmackLipDataOneDay", "Getting data for one day")
         return dataList.filterIsInstance<Pair<List<Int>, List<Any>>>() //fjerner elementer som blir Kotlin.Unit pga manglende time-match
     }
+    */
+
 
     /*
     override suspend fun getSymbolCodeForOneDay(day : Int, surfArea: SurfArea): List<Pair<List<Int>, List<String>>>{
@@ -340,6 +340,7 @@ class SmackLipRepositoryImpl (
     //metoden kaller getDataForOneDay 7 ganger fra og med i dag, og legger til listen med data for hver dag
     //inn i resListe som til slutt består av data med tidspunkt og data for alle 7 dager
     //Days<Hours<Pair<Time, DataAtTime>>>>    .size=7
+    /*
     override suspend fun getDataForTheNext7Days(surfArea: SurfArea): MutableList<List<Pair<List<Int>, List<Any>>>> {
         val today = getWaveHeights(surfArea)[0].first[2] //regner med at det er dumt med et helt api-kall bare for å hente dagens dato
         val resList = mutableListOf<List<Pair<List<Int>, List<Any>>>>()
@@ -349,6 +350,7 @@ class SmackLipRepositoryImpl (
         }
         return resList
     }
+    */
 
     override suspend fun getTimeSeriesDayByDay(surfArea: SurfArea): List<List<Pair<String, DataOF>>> {
         return oceanForecastRepository.getTimeSeriesDayByDay(surfArea)
@@ -461,13 +463,12 @@ class SmackLipRepositoryImpl (
     }
 
     // testing
-    @OptIn(DelicateCoroutinesApi::class)
-    override suspend fun asyncCalls (): Map<SurfArea, List<Map<List<Int>, List<Any>>>> {
+    override suspend fun getAllOFLF7Days (): Map<SurfArea, List<Map<List<Int>, List<Any>>>> {
 
         return coroutineScope {
 
             val res = SurfArea.entries.associateWith {
-                async { getOFLFDataNext7Days(it) }
+                async { getSurfAreaOFLFNext7Days(it) }
             }
 
             val newRes = res.entries.associate{
