@@ -77,6 +77,7 @@ class DailySurfAreaScreenViewModel: ViewModel() {
     }
 
 
+    /*
     fun updateForecastNext7Days(surfArea: SurfArea)  {
         viewModelScope.launch(Dispatchers.IO) {
             _dailySurfAreaScreenUiState.update {
@@ -86,6 +87,8 @@ class DailySurfAreaScreenViewModel: ViewModel() {
             }
         }
     }
+    */
+
     fun updateWavePeriod(surfArea: SurfArea){
         viewModelScope.launch(Dispatchers.IO) {
             _dailySurfAreaScreenUiState.update {
