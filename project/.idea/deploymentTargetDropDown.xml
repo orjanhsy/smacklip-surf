@@ -5,7 +5,10 @@
       <entry key="MainActivity">
         <State />
       </entry>
-      <entry key="PreviewDailyScreen">
+      <entry key="PreviewHomeScreen">
+        <State />
+      </entry>
+      <entry key="PreviewSurfAreaScreen">
         <State />
       </entry>
     </value>
