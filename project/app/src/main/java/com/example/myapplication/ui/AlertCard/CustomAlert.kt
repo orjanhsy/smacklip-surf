@@ -20,7 +20,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -45,12 +44,11 @@ fun <T> CustomAlert(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp), // Outer padding to ensure Card shadow is visible
+                .padding(10.dp), // Outer padding to ensure Card shadow is visible
             contentAlignment = Alignment.Center
         ) {
             Card(
                 modifier = modifier
-                    .shadow(elevation = 4.dp, shape = RoundedCornerShape(35.dp))
                     .padding(16.dp), // Inner padding for content inside the card
                 shape = RoundedCornerShape(35.dp)
             ) {

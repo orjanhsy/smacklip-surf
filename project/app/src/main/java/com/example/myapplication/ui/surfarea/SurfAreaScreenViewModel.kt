@@ -94,6 +94,7 @@ class SurfAreaScreenViewModel: ViewModel() {
         }
     }
 
+
     fun updateForecastNext7Days(surfArea: SurfArea){
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update {state ->
@@ -176,5 +177,7 @@ class SurfAreaScreenViewModel: ViewModel() {
         }
     }
 
+
 }
+
 
