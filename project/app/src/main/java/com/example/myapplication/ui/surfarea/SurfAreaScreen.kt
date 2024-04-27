@@ -147,11 +147,11 @@ fun SurfAreaScreen(
                 LazyRow(
                     modifier = Modifier.padding(5.dp)
                 ) {
-                    if (surfAreaScreenUiState.forecast7Days.isNotEmpty()) {
+                    if (surfAreaScreenUiState.forecastNext7Days.isNotEmpty()) {
                         val today = LocalDate.now()
-                        surfAreaScreenViewModel.updateConditionStatuses(surfArea, surfAreaScreenUiState.forecast7Days)
+//                        surfAreaScreenViewModel.updateConditionStatuses(surfArea, surfAreaScreenUiState.forecastNext7Days)
 
-                        items(surfAreaScreenUiState.forecast7Days.size) { dayIndex ->
+                        items(surfAreaScreenUiState.forecastNext7Days.size) { dayIndex ->
                             val date = today.plusDays(dayIndex.toLong())
                             val formattedDate = formatter.format(date)
 
@@ -170,7 +170,7 @@ fun SurfAreaScreen(
                                 surfArea,
                                 formattedDate,
                                 Pair(surfAreaScreenUiState.minWaveHeights[dayIndex].toString(),surfAreaScreenUiState.maxWaveHeights[dayIndex].toString()),
-                                conditionStatus,
+                                ConditionStatus.BLANK,
                                 onNavigateToDailySurfAreaScreen
                             )
                         }

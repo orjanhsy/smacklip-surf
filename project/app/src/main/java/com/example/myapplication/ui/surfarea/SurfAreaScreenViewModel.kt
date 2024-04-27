@@ -48,8 +48,14 @@ class SurfAreaScreenViewModel: ViewModel() {
     fun asyncNext7Days(surfArea: SurfArea){
         viewModelScope.launch(Dispatchers.IO) {
             val newNext7Days = smackLipRepository.getSurfAreaOFLFNext7Days(surfArea)
+            val newMaxWaveHeights = newNext7Days.map {it.maxBy { entry -> entry.value[5] as Double }.value[5] as Double}
+            val newMinWaveHeights = newNext7Days.map {it.minBy { entry -> entry.value[5] as Double }.value[5] as Double}
             _surfAreaScreenUiState.update {
-                it.copy (forecastNext7Days = newNext7Days)
+                it.copy (
+                    forecastNext7Days = newNext7Days,
+                    maxWaveHeights = newMaxWaveHeights,
+                    minWaveHeights = newMinWaveHeights
+                )
             }
         }
     }
