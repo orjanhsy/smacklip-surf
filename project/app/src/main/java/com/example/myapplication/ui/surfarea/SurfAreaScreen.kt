@@ -77,8 +77,6 @@ fun SurfAreaScreen(
     surfAreaScreenViewModel.asyncNext7Days(surfArea)
     surfAreaScreenViewModel.updateWavePeriods(surfArea)
 
-    val nextSevenDays = surfAreaScreenUiState.forecastNext7Days
-
 
     val formatter = DateTimeFormatter.ofPattern("EEE", Locale("no", "NO"))
     val navController = NavigationManager.navController
@@ -127,7 +125,7 @@ fun SurfAreaScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
                 item {
-                    val surfAreaDataForDay : Map<List<Int>, List<Any>> = nextSevenDays.getOrElse(0) { emptyMap() } //0 is today
+                    val surfAreaDataForDay : Map<List<Int>, List<Any>> = surfAreaScreenUiState.forecastNext7Days.getOrElse(0) { emptyMap() } //0 is today
                     val currentHour = LocalTime.now().hour // klokken er 10 så får ikke sjekket om det står 09 eller 9. Sto tidligere "08", "09" med .toString().padStart(2, '0')
                     var headerIcon = ""
 
