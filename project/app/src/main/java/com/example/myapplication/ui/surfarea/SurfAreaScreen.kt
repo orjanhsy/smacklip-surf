@@ -74,10 +74,8 @@ fun SurfAreaScreen(
 
 
     val surfAreaScreenUiState: SurfAreaScreenUiState by surfAreaScreenViewModel.surfAreaScreenUiState.collectAsState()
-    surfAreaScreenViewModel.updateForecastNext7Days(surfArea)
+    surfAreaScreenViewModel.asyncNext7Days(surfArea)
     surfAreaScreenViewModel.updateWavePeriods(surfArea)
-
-    val nextSevenDays = surfAreaScreenUiState.forecast7Days
 
 
     val formatter = DateTimeFormatter.ofPattern("EEE", Locale("no", "NO"))
@@ -127,15 +125,17 @@ fun SurfAreaScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
                 item {
-                    val surfAreaDataForDay = nextSevenDays.getOrElse(0) { emptyList() } //0 is today
+                    val surfAreaDataForDay : Map<List<Int>, List<Any>> = surfAreaScreenUiState.forecastNext7Days.getOrElse(0) { emptyMap() } //0 is today
                     val currentHour = LocalTime.now().hour // klokken er 10 så får ikke sjekket om det står 09 eller 9. Sto tidligere "08", "09" med .toString().padStart(2, '0')
                     var headerIcon = ""
 
                     if (surfAreaDataForDay.isNotEmpty()) {
-                        for (surfAreaDataForHour in surfAreaDataForDay) {
-                            if (currentHour.toString() == surfAreaDataForHour.first[3].toString()) {
-                                headerIcon = surfAreaDataForHour.second[6].toString()
-                                break
+                        // siden mappet ikke er sortert henter vi ut alle aktuelle tidspunketer og sorterer dem
+                        val times = surfAreaDataForDay.keys.sortedBy { it[3] }
+                        for (time in times) {
+                            val hour = time[3]
+                            if (hour == currentHour) {
+                                headerIcon = surfAreaDataForDay[time]!![4].toString()
                             }
                         }
                         HeaderCard(surfArea = surfArea, icon = headerIcon)
@@ -145,11 +145,11 @@ fun SurfAreaScreen(
                 LazyRow(
                     modifier = Modifier.padding(5.dp)
                 ) {
-                    if (surfAreaScreenUiState.forecast7Days.isNotEmpty()) {
+                    if (surfAreaScreenUiState.forecastNext7Days.isNotEmpty()) {
                         val today = LocalDate.now()
-                        surfAreaScreenViewModel.updateConditionStatuses(surfArea, surfAreaScreenUiState.forecast7Days)
+//                        surfAreaScreenViewModel.updateConditionStatuses(surfArea, surfAreaScreenUiState.forecastNext7Days)
 
-                        items(surfAreaScreenUiState.forecast7Days.size) { dayIndex ->
+                        items(surfAreaScreenUiState.forecastNext7Days.size) { dayIndex ->
                             val date = today.plusDays(dayIndex.toLong())
                             val formattedDate = formatter.format(date)
 
@@ -168,7 +168,7 @@ fun SurfAreaScreen(
                                 surfArea,
                                 formattedDate,
                                 Pair(surfAreaScreenUiState.minWaveHeights[dayIndex].toString(),surfAreaScreenUiState.maxWaveHeights[dayIndex].toString()),
-                                conditionStatus,
+                                ConditionStatus.BLANK,
                                 onNavigateToDailySurfAreaScreen
                             )
                         }

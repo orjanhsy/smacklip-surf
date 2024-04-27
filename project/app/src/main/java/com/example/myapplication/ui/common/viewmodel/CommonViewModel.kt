@@ -27,7 +27,7 @@ class CommonViewModel : ViewModel(){
 
     fun getData7Days(){
         viewModelScope.launch(Dispatchers.IO) {
-            val updated7Days :Map<SurfArea, List<Map<List<Int>, List<Any>>>> = smackLipRepository.asyncCalls()
+            val updated7Days :Map<SurfArea, List<Map<List<Int>, List<Any>>>> = smackLipRepository.getAllOFLF7Days()
             _oflfState.update {
                 it.copy(dataFor7Days = updated7Days)
             }
