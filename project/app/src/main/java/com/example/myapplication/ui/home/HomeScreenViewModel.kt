@@ -9,6 +9,7 @@ import com.example.myapplication.model.locationforecast.DataLF
 import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.model.oceanforecast.DataOF
 import com.example.myapplication.model.surfareas.SurfArea
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -51,11 +52,16 @@ class HomeScreenViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val date = LocalDate.now()
 
-            val allSurfAreasToday : Map<SurfArea, Map<List<Int>, List<Any>>> = SurfArea.entries.associateWith {
-                val timeSeries:  Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>> = smackLipRepository.getTimeSeriesOFLF(it)
-                val data = smackLipRepository.getOFLFOneDay(date.dayOfMonth, date.monthValue, timeSeries)
-                data
+            val allSurfAreas : Map<SurfArea, Deferred<Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>>>> = SurfArea.entries.associateWith {
+                val timeSeries: Deferred<Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>>> = async { smackLipRepository.getTimeSeriesOFLF(it) }
+                timeSeries
             }
+
+            val allSurfAreasToday = SurfArea.entries.associateWith {
+                val timeseries = allSurfAreas[it]!!.await()
+                smackLipRepository.getOFLFOneDay(date.dayOfMonth, date.monthValue, timeseries)
+            }
+
             // returnerer map<tidspunkt-> [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]>
             val newWindSpeed = allSurfAreasToday.keys.associateWith {
                 val dataToday:  Map<List<Int>, List<Any>> = allSurfAreasToday[it]!!
