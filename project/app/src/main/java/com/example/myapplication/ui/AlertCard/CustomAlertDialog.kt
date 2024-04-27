@@ -11,6 +11,7 @@ fun <T> CustomAlertDialog(
     title: String,
     message: String,
     actionText: String,
+    warningIcon: Int,
     data: T?,
     showAlert: MutableState<Boolean>,
     action: (T) -> Unit
@@ -20,8 +21,12 @@ fun <T> CustomAlertDialog(
         properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
         CustomAlert(
-            title = title, message = message, actionText = actionText,
-            data = data, showAlert = showAlert,
+            title = title,
+            message = message,
+            actionText = actionText,
+            warningIcon = warningIcon,
+            data = data,
+            showAlert = showAlert,
             //actionWithValue = action, action = null
         )
     }
@@ -32,6 +37,7 @@ fun CustomAlertDialog(
     title: String,
     message: String,
     actionText: String,
+    warningIcon: Int,
     showAlert: MutableState<Boolean>,
     action: () -> Unit
 ) {
@@ -40,8 +46,12 @@ fun CustomAlertDialog(
         properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
         CustomAlert(
-            title = title, message = message, actionText = actionText,
-            data = null, showAlert = showAlert,
+            title = title,
+            message = message,
+            actionText = actionText,
+            warningIcon = warningIcon,
+            data = null,
+            showAlert = showAlert,
            // actionWithValue = null, action = action
         )
     }

@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.NavigationManager
+import com.example.myapplication.R
 import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.AlertCard.CustomAlert
@@ -221,13 +222,17 @@ fun SurfAreaScreen(
                 }
             }
             if (alerts.isNotEmpty()) {
-                val alertMessage = alerts[0].toString()
+                val alert = alerts.first()
+                val alertMessage = alert.properties?.description ?: "No description available"
+                val awarenessLevel = alert.properties?.awarenessLevel
+                val icon = awarenessLevel?.let { getIconBasedOnAwarenessLevel(it) } ?: R.drawable.icon_awareness_default
+
 
                 CustomAlert(
                     title = surfArea.name,
-                    message = alertMessage,
+                    message = alertMessage.toString(),
                     actionText = "OK",
-                    warningIcon = 1,
+                    warningIcon = icon,
                     data = null,
                     showAlert = remember { mutableStateOf(true) },
                     //actionWithValue = null,
@@ -239,7 +244,7 @@ fun SurfAreaScreen(
                     title = "Farevarsel",
                     message = "STORM SØK DEKNING!!!!",
                     actionText = "OK",
-                    warningIcon = 1,
+                    warningIcon = R.drawable.icon_awareness_yellow_outlined,
                     data = null,
                     showAlert = remember { mutableStateOf(true) },
                     //actionWithValue = null,
@@ -250,6 +255,24 @@ fun SurfAreaScreen(
     }
 }
 
+fun getIconBasedOnAwarenessLevel(awarenessLevel: String): Int {
+    return try {
+        if (awarenessLevel.isNotEmpty()) {
+            val firstChar = awarenessLevel.firstOrNull()?.toString()
+
+            when (firstChar) {
+                "2" -> R.drawable.icon_awareness_yellow_outlined
+                "3" -> R.drawable.icon_awareness_orange
+                "4" -> R.drawable.icon_awareness_red
+                else -> R.drawable.icon_awareness_default // If awarenessLevel is not 2, 3, or 4
+            }
+        } else {
+            R.drawable.icon_awareness_default // If awarenessLevel is an empty string
+        }
+    } catch (e: Exception) {
+        R.drawable.icon_awareness_default
+    }
+}
 
 
 @Composable
