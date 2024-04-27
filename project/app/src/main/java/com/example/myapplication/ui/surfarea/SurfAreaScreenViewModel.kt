@@ -27,9 +27,11 @@ data class SurfAreaScreenUiState(
     val windDirections: List<List<Pair<List<Int>, Double>>> = emptyList(),
     val windSpeeds: List<List<Pair<List<Int>, Double>>> = emptyList(),
     val windSpeedOfGusts: List<List<Pair<List<Int>, Double>>> = emptyList(),
-    val forecast7Days: MutableList<List<Pair<List<Int>, List<Any>>>> = mutableListOf(),
+    //val forecast7Days: MutableList<List<Pair<List<Int>, List<Any>>>> = mutableListOf(),
     val conditionStatuses: Map<Int, List<ConditionStatus>> = mutableMapOf(),
-    val bestConditionStatuses: Map<Int, ConditionStatus> = mutableMapOf()
+    val bestConditionStatuses: Map<Int, ConditionStatus> = mutableMapOf(),
+
+    val forecastNext7Days: List<Map<List<Int>, List<Any>>> = mutableListOf() //hører til den nye metoden med async
 
 )
 
@@ -41,6 +43,21 @@ class SurfAreaScreenViewModel: ViewModel() {
     val surfAreaScreenUiState: StateFlow<SurfAreaScreenUiState> = _surfAreaScreenUiState.asStateFlow()
 
     init {
+    }
+
+    fun asyncNext7Days(surfArea: SurfArea){
+        viewModelScope.launch(Dispatchers.IO) {
+            val newNext7Days = smackLipRepository.getSurfAreaOFLFNext7Days(surfArea)
+            val newMaxWaveHeights = newNext7Days.map {it.maxBy { entry -> entry.value[5] as Double }.value[5] as Double}
+            val newMinWaveHeights = newNext7Days.map {it.minBy { entry -> entry.value[5] as Double }.value[5] as Double}
+            _surfAreaScreenUiState.update {
+                it.copy (
+                    forecastNext7Days = newNext7Days,
+                    maxWaveHeights = newMaxWaveHeights,
+                    minWaveHeights = newMinWaveHeights
+                )
+            }
+        }
     }
 
     fun updateLocation(surfArea: SurfArea) {
@@ -82,6 +99,7 @@ class SurfAreaScreenViewModel: ViewModel() {
         }
     }
 
+    /*
     fun updateForecastNext7Days(surfArea: SurfArea){
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update {state ->
@@ -116,7 +134,7 @@ class SurfAreaScreenViewModel: ViewModel() {
             }
         }
     }
-
+*/
     fun updateConditionStatuses(surfArea: SurfArea, forecast7Days: MutableList<List<Pair<List<Int>, List<Any>>>>) {
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update { state ->

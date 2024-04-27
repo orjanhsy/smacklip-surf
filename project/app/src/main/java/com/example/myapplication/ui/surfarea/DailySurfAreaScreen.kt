@@ -62,8 +62,8 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
     val nextSevenDays = dailySurfAreaScreenUiState.forecast7Days
     val wavePeriods = dailySurfAreaScreenUiState.wavePeriod
 
-    dailySurfAreaScreenViewModel.updateForecastNext7Days(surfArea = surfArea)
-    dailySurfAreaScreenViewModel.updateWavePeriod(surfArea=surfArea)
+    //dailySurfAreaScreenViewModel.asyncNext7Days (surfArea = surfArea)
+    //dailySurfAreaScreenViewModel.updateWavePeriod(surfArea=surfArea)
 
     val navController = NavigationManager.navController
 
