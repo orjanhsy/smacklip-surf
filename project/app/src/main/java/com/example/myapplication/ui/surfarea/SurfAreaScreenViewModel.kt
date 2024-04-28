@@ -76,17 +76,17 @@ class SurfAreaScreenViewModel: ViewModel() {
         }
     }
 
-    fun updateMaxWaveHeights() {
-        viewModelScope.launch {
-            _surfAreaScreenUiState.update {state ->
-                state.copy(
-                    maxWaveHeights = state.waveHeights.map {
-                        day -> day.maxBy {hour -> hour.second as Double}
-                    }.map {it.second}
-                )
-            }
-        }
-    }
+//    fun updateMaxWaveHeights() {
+//        viewModelScope.launch {
+//            _surfAreaScreenUiState.update {state ->
+//                state.copy(
+//                    maxWaveHeights = state.waveHeights.map {
+//                        day -> day.maxBy {hour -> hour.second as Double}
+//                    }.map {it.second}
+//                )
+//            }
+//        }
+//    }
 
     fun updateWavePeriods(surfArea: SurfArea) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -99,42 +99,6 @@ class SurfAreaScreenViewModel: ViewModel() {
         }
     }
 
-    /*
-    fun updateForecastNext7Days(surfArea: SurfArea){
-        viewModelScope.launch(Dispatchers.IO) {
-            _surfAreaScreenUiState.update {state ->
-                val newForecast7Days = smackLipRepository.getDataForTheNext7Days(surfArea)
-                Log.d("SAVM", "Updating forcast of vm by dat containing ${newForecast7Days.size} elements")
-                val newWaveHeights = newForecast7Days.map { dayForecast ->  dayForecast.map { dayData -> dayData.first to dayData.second[0] as Double}}
-                val newMaxWaveHeights = newWaveHeights.map {day -> day.maxBy {hour -> hour.second}}.map {it.second}
-                val newMinWaveHeights = newWaveHeights.map {day -> day.minBy {hour -> hour.second}}.map {it.second}
-                val newWaveDirections = newForecast7Days.map { dayForecast ->  dayForecast.map { dayData -> dayData.first to dayData.second[1] as Double}}
-                val newWindDirections = newForecast7Days.map { dayForecast ->  dayForecast.map { dayData -> dayData.first to dayData.second[2] as Double}}
-                val newWindSpeeds = newForecast7Days.map { dayForecast ->  dayForecast.map { dayData -> dayData.first to dayData.second[3] as Double}}
-                val newWindSpeedOfGusts = newForecast7Days.map { dayForecast ->  dayForecast.map { dayData -> dayData.first to dayData.second[4] as Double}}
-
-
-                assert(newForecast7Days.isNotEmpty())
-                Log.d("SAVM", "Updating waveheight with ${newMaxWaveHeights.size} elements")
-                Log.d("SAVM", "Updating maxwaveheight with ${newMaxWaveHeights.size} elements")
-                Log.d("SAVM", "Updating winddir with ${newMaxWaveHeights.size} elements")
-                Log.d("SAVM", "Updating windspeed with ${newMaxWaveHeights.size} elements")
-                Log.d("SAVM", "Updating windgust with ${newMaxWaveHeights.size} elements")
-                state.copy(
-                    location = surfArea,
-                    forecast7Days = newForecast7Days,
-                    waveHeights = newWaveHeights,
-                    waveDirections = newWaveDirections,
-                    maxWaveHeights = newMaxWaveHeights,
-                    minWaveHeights =  newMinWaveHeights,
-                    windDirections = newWindDirections,
-                    windSpeeds = newWindSpeeds,
-                    windSpeedOfGusts = newWindSpeedOfGusts
-                )
-            }
-        }
-    }
-*/
     fun updateConditionStatuses(surfArea: SurfArea, forecast7Days: MutableList<List<Pair<List<Int>, List<Any>>>>) {
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update { state ->

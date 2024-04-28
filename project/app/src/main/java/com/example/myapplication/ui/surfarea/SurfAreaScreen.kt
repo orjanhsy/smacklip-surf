@@ -147,7 +147,7 @@ fun SurfAreaScreen(
                 ) {
                     if (surfAreaScreenUiState.forecastNext7Days.isNotEmpty()) {
                         val today = LocalDate.now()
-//                        surfAreaScreenViewModel.updateConditionStatuses(surfArea, surfAreaScreenUiState.forecastNext7Days)
+                        surfAreaScreenViewModel.updateConditionStatuses(surfArea, surfAreaScreenUiState.forecastNext7Days)
 
                         items(surfAreaScreenUiState.forecastNext7Days.size) { dayIndex ->
                             val date = today.plusDays(dayIndex.toLong())
@@ -168,7 +168,7 @@ fun SurfAreaScreen(
                                 surfArea,
                                 formattedDate,
                                 Pair(surfAreaScreenUiState.minWaveHeights[dayIndex].toString(),surfAreaScreenUiState.maxWaveHeights[dayIndex].toString()),
-                                ConditionStatus.BLANK,
+                                conditionStatus,
                                 onNavigateToDailySurfAreaScreen
                             )
                         }
