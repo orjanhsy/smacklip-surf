@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.AlertCard
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -50,7 +51,9 @@ fun <T> CustomAlert(
             Card(
                 modifier = modifier
                     .padding(16.dp), // Inner padding for content inside the card
-                shape = RoundedCornerShape(35.dp)
+                shape = RoundedCornerShape(35.dp),
+                border = BorderStroke(1.dp, Color.LightGray) // Border with 1dp width and LightGray color
+
             ) {
                 Column(
                     modifier = Modifier
@@ -62,7 +65,8 @@ fun <T> CustomAlert(
                         contentDescription = "Image",
                         modifier = Modifier
                             .size(86.dp)
-                            .align(Alignment.CenterHorizontally) // Centering the image horizontally
+                            .align(Alignment.CenterHorizontally)
+                            .padding(12.dp, top = 16.dp)
                     )
                     Text(
                         message,
@@ -77,7 +81,7 @@ fun <T> CustomAlert(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth(0.75f) // Increased width to make the button larger
-                            .padding(16.dp)
+                            //.padding(16.dp)
                             .clickable {
                                 showAlert.value = false
                                 action?.invoke()
@@ -92,7 +96,6 @@ fun <T> CustomAlert(
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier
                                 .align(Alignment.Center)
-                                .padding(12.dp) // Increased padding for a bigger button feel
                         )
                     }
                 }
