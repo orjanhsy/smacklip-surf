@@ -2,7 +2,7 @@ package com.example.myapplication.model.conditions
 
 enum class Conditions(val value: Double) {
     // always poor if:
-    WAVE_HEIGHT_LOWER_BOUND(0.5),
+    WAVE_HEIGHT_LOWER_BOUND(0.3),
     WAVE_HEIGHT_UPPER_BOUND(6.0),
     WIND_SPEED_UPPER_BOUND(15.0),
     WAVE_PERIOD_LOWER_BOUND(6.0),
