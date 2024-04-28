@@ -61,7 +61,7 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
 
 
     dailySurfAreaScreenViewModel.updateOFLFNext7Days(surfArea = surfArea)
-    dailySurfAreaScreenViewModel.updateWavePeriod(surfArea=surfArea)
+    dailySurfAreaScreenViewModel.updateWavePeriods(surfArea=surfArea)
 
     val navController = NavigationManager.navController
 
@@ -148,7 +148,7 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                                 val waveHeight = surfAreaDataForHour?.get(5) ?: 0.0
                                 val waveDir    = surfAreaDataForHour?.get(6) ?: 0.0
                                 val waveperiod = try {dailySurfAreaScreenUiState.wavePeriods[hourIndex[3]]} catch (e: IndexOutOfBoundsException) {
-                                    Log.d("DSAscreen", "Waveperiods out of bounds")
+                                    Log.d("DSAscreen", "Waveperiods${hourIndex[3]} out of bounds for waveperiods of size ${dailySurfAreaScreenUiState.wavePeriods.size}")
                                     0.0
                                 }
 
