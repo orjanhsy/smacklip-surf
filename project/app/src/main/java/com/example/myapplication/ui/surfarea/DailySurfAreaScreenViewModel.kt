@@ -1,6 +1,5 @@
 package com.example.myapplication.ui.surfarea
 
-import androidx.compose.ui.tooling.data.EmptyGroup.location
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
@@ -14,7 +13,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.concurrent.ThreadPoolExecutor.DiscardOldestPolicy
-import kotlin.collections.EmptyMap.keys
 
 data class DailySurfAreaScreenUiState(
     val location: SurfArea? = null,
@@ -90,21 +88,20 @@ class DailySurfAreaScreenViewModel: ViewModel() {
 
 
     // TODO: test usage
-    fun updateStatusConditions(surfArea: SurfArea) {
+    fun updateStatusConditions(surfArea: SurfArea, forecast: List<Map<List<Int>, List<Any>>>) {
         viewModelScope.launch(Dispatchers.IO) {
             _dailySurfAreaScreenUiState.update {state ->
-                val newConditionStatuses: List<Map<List<Int>, ConditionStatus>> = mutableListOf()
-                val forecast: List<Map<List<Int>, List<Any>>> = state.forecast7Days
-                if (state.forecast7Days.isEmpty()) {
+                val newConditionStatuses: MutableList<Map<List<Int>, ConditionStatus>> = mutableListOf()
+                if (forecast.isEmpty()) {
                     return@launch
                 }
 
                 forecast.map {dayMap ->
-                    val todaysStatuses: Map<List<Int>, ConditionStatus> = mutableMapOf()
+                    val todaysStatuses: MutableMap<List<Int>, ConditionStatus> = mutableMapOf()
                     dayMap.entries.map {(time, data) ->
                         val conditionStatus = smackLipRepository.getConditionStatus(
                             location = surfArea,
-                            wavePeriod = state.wavePeriods[0], // TODO: change to logical waveperiod
+                            wavePeriod = state.wavePeriods[0], // TODO: change to logical wavePeriod
                             windSpeed = data[0] as Double,
                             windGust = data[1] as Double,
                             windDir = data[2] as Double,
@@ -114,11 +111,11 @@ class DailySurfAreaScreenViewModel: ViewModel() {
                         )
                         todaysStatuses[time] = conditionStatus
                     }
-                    newConditionStatuses.add(todaysStatuses)
+                    newConditionStatuses.add(todaysStatuses.toMap())
                 }
 
                 state.copy(
-                    conditionStatuses = newConditionStatuses
+                    conditionStatuses = newConditionStatuses.toList()
                 )
             }
         }

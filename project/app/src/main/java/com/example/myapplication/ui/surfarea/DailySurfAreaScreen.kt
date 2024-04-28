@@ -63,6 +63,7 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
 
     dailySurfAreaScreenViewModel.updateOFLFNext7Days(surfArea = surfArea)
     dailySurfAreaScreenViewModel.updateWavePeriods(surfArea=surfArea)
+    dailySurfAreaScreenViewModel.updateStatusConditions(surfArea, dailySurfAreaScreenUiState.forecast7Days)
 
     val navController = NavigationManager.navController
 
@@ -113,7 +114,7 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                 ) {
                         val currentHour = LocalTime.now().hour
                         var headerIcon = "default_icon"
-                        val surfAreaDataForDay : Map<List<Int>, List<Any>> = dailySurfAreaScreenUiState.forecast7Days.getOrElse(0) { emptyMap() }
+                        val surfAreaDataForDay : Map<List<Int>, List<Any>> = dailySurfAreaScreenUiState.forecast7Days.getOrElse(0) { emptyMap() } // TODO: more days
                         val times = surfAreaDataForDay.keys.sortedBy { it[3] }
 
                         if (surfAreaDataForDay.isNotEmpty()) {
@@ -152,6 +153,8 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                                     Log.d("DSAscreen", "Waveperiods${hourIndex[3]} out of bounds for waveperiods of size ${dailySurfAreaScreenUiState.wavePeriods.size}")
                                     0.0
                                 }
+                                val conditionStatus: ConditionStatus? = try {dailySurfAreaScreenUiState.conditionStatuses[0][times[time]]}
+                                catch (e: IndexOutOfBoundsException) {null}
 
                                 AllInfoCard(
                                     timestamp = timestamp.toString(),
@@ -164,7 +167,7 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                                     temp = temp,
                                     icon = icon,
                                     wavePeriod = wavePeriod,
-                                    conditionStatus = null
+                                    conditionStatus = conditionStatus
                                 )
                             }
                         } else {
