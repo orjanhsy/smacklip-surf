@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.NavigationManager
+import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
@@ -162,8 +163,8 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                                     waveDir = waveDir,
                                     temp = temp,
                                     icon = icon,
-                                    wavePeriod = wavePeriod
-
+                                    wavePeriod = wavePeriod,
+                                    conditionStatus = null
                                 )
                             }
                         } else {
@@ -178,7 +179,8 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                                     waveDir = 0.0,
                                     temp = 0,
                                     icon = 0,
-                                    wavePeriod = 0.0
+                                    wavePeriod = 0.0,
+                                    conditionStatus = null
                                 )
                             }
                         }
@@ -201,7 +203,8 @@ fun AllInfoCard(
     waveDir: Any,
     temp : Any,
     icon: Any,
-    wavePeriod: Double?
+    wavePeriod: Double?,
+    conditionStatus: ConditionStatus?
 ) {
     val recourseUtils : RecourseUtils = RecourseUtils()
     Card(
@@ -210,6 +213,11 @@ fun AllInfoCard(
             .fillMaxWidth()
             .height(49.dp)
     ) {
+        Row () {
+            Text(
+                text = conditionStatus?.description ?: ""
+            )
+        }
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(0.dp, Alignment.CenterHorizontally),
