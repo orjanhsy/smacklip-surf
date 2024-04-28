@@ -147,7 +147,7 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                                 val icon       = surfAreaDataForHour?.get(4) ?: 0.0
                                 val waveHeight = surfAreaDataForHour?.get(5) ?: 0.0
                                 val waveDir    = surfAreaDataForHour?.get(6) ?: 0.0
-                                val waveperiod = try {dailySurfAreaScreenUiState.wavePeriods[hourIndex[3]]} catch (e: IndexOutOfBoundsException) {
+                                val wavePeriod = try {dailySurfAreaScreenUiState.wavePeriods[hourIndex[3]]} catch (e: IndexOutOfBoundsException) {
                                     Log.d("DSAscreen", "Waveperiods${hourIndex[3]} out of bounds for waveperiods of size ${dailySurfAreaScreenUiState.wavePeriods.size}")
                                     0.0
                                 }
@@ -162,7 +162,7 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                                     waveDir = waveDir,
                                     temp = temp,
                                     icon = icon,
-                                    wavePeriod = waveperiod
+                                    wavePeriod = wavePeriod
 
                                 )
                             }
