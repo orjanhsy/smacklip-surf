@@ -1,7 +1,8 @@
 package com.example.myapplication.model.conditions
 
-enum class ConditionDescriptions(val description: String) {
+enum class ConditionStatus(val description: String) {
     GREAT("Utmerket"),
     DECENT("Greit"),
-    POOR("Dårlig")
+    POOR("Dårlig"),
+    BLANK("")
 }

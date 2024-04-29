@@ -21,8 +21,8 @@ data class DailySurfAreaScreenUiState(
     val windDirections: List<Pair<List<Int>, Double>> = emptyList(),
     val windSpeeds: List<Pair<List<Int>, Double>> = emptyList(),
     val windSpeedOfGusts: List<Pair<List<Int>, Double>> = emptyList(),
-    val forecast7Days: MutableList<List<Pair<List<Int>, List<Any>>>> = mutableListOf(),
-    val wavePeriod: List<Double?> = mutableListOf(),
+
+    val forecast7Days: List<Map<List<Int>, List<Any>>> = mutableListOf(),
 )
 
 class DailySurfAreaScreenViewModel: ViewModel() {
@@ -31,6 +31,7 @@ class DailySurfAreaScreenViewModel: ViewModel() {
     val dailySurfAreaScreenUiState: StateFlow<DailySurfAreaScreenUiState> = _dailySurfAreaScreenUiState.asStateFlow()
 
 
+    /*
 
     fun updateWaveHeights(surfArea: SurfArea) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -40,6 +41,8 @@ class DailySurfAreaScreenViewModel: ViewModel() {
             }
         }
     }
+    */
+    /*
     fun updateWaveDirections(surfArea: SurfArea) {
         viewModelScope.launch(Dispatchers.IO) {
             _dailySurfAreaScreenUiState.update {
@@ -47,8 +50,9 @@ class DailySurfAreaScreenViewModel: ViewModel() {
                 it.copy(waveDirections = newWaveDirections)
             }
         }
-    }
+    }*/
 
+    /*
     fun updateWindDirection(surfArea: SurfArea) {
         viewModelScope.launch(Dispatchers.IO) {
             _dailySurfAreaScreenUiState.update {
@@ -56,8 +60,9 @@ class DailySurfAreaScreenViewModel: ViewModel() {
                 it.copy(windDirections = newWindDirection)
             }
         }
-    }
+    }*/
 
+    /*
     fun updateWindSpeed(surfArea: SurfArea) {
         viewModelScope.launch(Dispatchers.IO) {
             _dailySurfAreaScreenUiState.update {
@@ -65,8 +70,9 @@ class DailySurfAreaScreenViewModel: ViewModel() {
                 it.copy(windSpeeds = newWindSpeed)
             }
         }
-    }
+    }*/
 
+    /*
     fun updateWindSpeedOfGust(surfArea: SurfArea) {
         viewModelScope.launch(Dispatchers.IO) {
             _dailySurfAreaScreenUiState.update {
@@ -75,22 +81,26 @@ class DailySurfAreaScreenViewModel: ViewModel() {
             }
         }
     }
+    */
 
 
-    fun updateForecastNext7Days(surfArea: SurfArea)  {
+    fun updateOFLFNext7Days(surfArea: SurfArea)  {
         viewModelScope.launch(Dispatchers.IO) {
             _dailySurfAreaScreenUiState.update {
-                val newForecast7Days = smackLipRepository.getDataForTheNext7Days(surfArea)
+                val newForecast7Days = smackLipRepository.getSurfAreaOFLFNext7Days(surfArea)
                 it.copy(forecast7Days = newForecast7Days)
-
             }
         }
     }
-    fun updateWavePeriod(surfArea: SurfArea){
+
+
+
+
+    fun updateWavePeriods(surfArea: SurfArea){
         viewModelScope.launch(Dispatchers.IO) {
             _dailySurfAreaScreenUiState.update {
-                val newWavePeriod = smackLipRepository.getWavePeriodsNext3DaysForArea(surfArea)
-                it.copy(wavePeriod = newWavePeriod)
+                val newWavePeriods = smackLipRepository.getWavePeriodsNext3DaysForArea(surfArea)
+                it.copy(wavePeriods = newWavePeriods)
             }
         }
     }

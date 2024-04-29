@@ -5,9 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.R
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
+import com.example.myapplication.model.locationforecast.DataLF
 import com.example.myapplication.model.metalerts.Features
+import com.example.myapplication.model.oceanforecast.DataOF
 import com.example.myapplication.model.surfareas.SurfArea
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,6 +19,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.LocalTime
 
 data class HomeScreenUiState(
     val locationName: String = "",
@@ -38,12 +44,76 @@ class HomeScreenViewModel : ViewModel() {
     val favoriteSurfAreas: StateFlow<List<SurfArea>> = _favoriteSurfAreas
 
     init {
-        updateWindSpeed()
-        updateWindGust()
-        updateWindDirection()
-        updateWaveHeight()
+        updateOFLF()
         updateAlerts()
     }
+
+    fun updateOFLF() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val date = LocalDate.now()
+
+            val allSurfAreas : Map<SurfArea, Deferred<Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>>>> = SurfArea.entries.associateWith {
+                val timeSeries: Deferred<Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>>> = async { smackLipRepository.getTimeSeriesOFLF(it) }
+                timeSeries
+            }
+
+            val allSurfAreasToday = SurfArea.entries.associateWith {
+                val timeseries = allSurfAreas[it]!!.await()
+                smackLipRepository.getOFLFOneDay(date.dayOfMonth, date.monthValue, timeseries)
+            }
+
+            // returnerer map<tidspunkt-> [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]>
+            val newWindSpeed = allSurfAreasToday.keys.associateWith {
+                val dataToday:  Map<List<Int>, List<Any>> = allSurfAreasToday[it]!!
+                val windSpeed = dataToday.map { entry ->
+                    Pair(entry.key, entry.value[0] as Double)
+                }
+                windSpeed
+            }
+            val newWindGust = allSurfAreasToday.keys.associateWith {
+                val dataToday:  Map<List<Int>, List<Any>> = allSurfAreasToday[it]!!
+                val windGust = dataToday.map { entry ->
+                    Pair(entry.key, entry.value[1] as Double)
+                }
+                windGust
+            }
+            val newWindDir = allSurfAreasToday.keys.associateWith {
+                val dataToday:  Map<List<Int>, List<Any>> = allSurfAreasToday[it]!!
+                val windSpeed = dataToday.map { entry ->
+                    Pair(entry.key, entry.value[2] as Double)
+                }
+                windSpeed
+            }
+
+            val newWaveHeights = allSurfAreasToday.keys.associateWith {
+                val dataToday:  Map<List<Int>, List<Any>> = allSurfAreasToday[it]!!
+                val windSpeed = dataToday.map { entry ->
+                    Pair(entry.key, entry.value[5] as Double)
+                }
+                windSpeed
+            }
+            val newWaveDirs = allSurfAreasToday.keys.associateWith {
+                val dataToday:  Map<List<Int>, List<Any>> = allSurfAreasToday[it]!!
+                val windSpeed = dataToday.map { entry ->
+                    Pair(entry.key, entry.value[6] as Double)
+                }
+                windSpeed
+            }
+
+            _homeScreenUiState.update {
+                it.copy(
+                    windSpeed = newWindSpeed,
+                    windGust = newWindGust,
+                    windDirection = newWindDir,
+                    waveHeight = newWaveHeights,
+                    waveDirections = newWaveDirs
+                )
+            }
+
+        }
+    }
+
+
 
     fun updateWindSpeed() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -170,4 +240,8 @@ class HomeScreenViewModel : ViewModel() {
             R.drawable.empty_star_icon
         }
     }
+
+
+
+
 }
