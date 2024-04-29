@@ -68,6 +68,7 @@ import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.model.metalerts.Properties
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.common.composables.BottomBar
+import com.example.myapplication.ui.common.composables.ProgressIndicator
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -106,46 +107,52 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNaviga
                 .padding(innerPadding)
                     //.verticalScroll(rememberScrollState())
         ) {
-            FavoritesList(
-                favorites = favoriteSurfAreas,
-                windSpeedMap = homeScreenUiState.windSpeed,
-                windGustMap = homeScreenUiState.windGust,
-                windDirectionMap = homeScreenUiState.windDirection,
-                waveHeightMap = homeScreenUiState.waveHeight,
-                alerts = homeScreenUiState.allRelevantAlerts,
-                onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
-            )
-            Column {
-
-                Text(
-                    text = "Alle lokasjoner",
-                    style = TextStyle(
-                        fontSize = 13.sp,
-                        //fontFamily = FontFamily(Font(R.font.inter))
-                        fontWeight = FontWeight(400),
-                        color = Color(0xFF9A938C)
-                    )
-                )
-            }
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalArrangement = Arrangement.Center)
-            {
-                items(SurfArea.entries) { location ->
-                    SurfAreaCard(
-                        location,
+            Box(modifier = Modifier.fillMaxSize()){
+                Column (modifier = Modifier.fillMaxSize()){
+                    FavoritesList(
+                        favorites = favoriteSurfAreas,
                         windSpeedMap = homeScreenUiState.windSpeed,
                         windGustMap = homeScreenUiState.windGust,
                         windDirectionMap = homeScreenUiState.windDirection,
                         waveHeightMap = homeScreenUiState.waveHeight,
-                        alerts = homeScreenUiState.allRelevantAlerts[location],
-                        homeScreenViewModel = homeScreenViewModel,
+                        alerts = homeScreenUiState.allRelevantAlerts,
                         onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
                     )
+                    Column {
+
+                        Text(
+                            text = "Alle lokasjoner",
+                            style = TextStyle(
+                                fontSize = 13.sp,
+                                //fontFamily = FontFamily(Font(R.font.inter))
+                                fontWeight = FontWeight(400),
+                                color = Color(0xFF9A938C)
+                            )
+                        )
+                    }
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalArrangement = Arrangement.Center)
+                    {
+                        items(SurfArea.entries) { location ->
+                            SurfAreaCard(
+                                location,
+                                windSpeedMap = homeScreenUiState.windSpeed,
+                                windGustMap = homeScreenUiState.windGust,
+                                windDirectionMap = homeScreenUiState.windDirection,
+                                waveHeightMap = homeScreenUiState.waveHeight,
+                                alerts = homeScreenUiState.allRelevantAlerts[location],
+                                homeScreenViewModel = homeScreenViewModel,
+                                onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
+                            )
+                        }
+                    }
                 }
+                ProgressIndicator(isDisplayed = homeScreenUiState.loading)
+
             }
         }
     }
@@ -385,8 +392,6 @@ fun SurfAreaCard(
     val windGust = windGustMap[surfArea] ?: listOf()
     val windDirection = windDirectionMap[surfArea] ?: listOf()
     val waveHeight = waveHeightMap[surfArea] ?: listOf()
-
-
 
     Card(
         modifier = Modifier
