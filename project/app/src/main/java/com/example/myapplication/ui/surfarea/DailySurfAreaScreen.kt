@@ -235,7 +235,7 @@ fun AllInfoCard(
             )
 
             Text(
-                text = "$windSpeed (${windGust})",
+                text = "${(windSpeed as Double).toInt()} (${(windGust as Double).toInt()})",
                 style = TextStyle(
                     fontSize = 13.sp,
                     lineHeight = 15.sp,
@@ -256,7 +256,7 @@ fun AllInfoCard(
             )
 
             Text(
-                text = "$windDir",
+                text = "${(windDir as Double).toInt()}",
                 style = TextStyle(
                     fontSize = 13.sp,
                     lineHeight = 15.sp,
@@ -289,7 +289,7 @@ fun AllInfoCard(
             )
 
             Text(
-                text = "$wavePeriod sek",
+                text = "${wavePeriod?.toInt()} sek",
                 style = TextStyle(
                     fontSize = 13.sp,
                     lineHeight = 15.sp,
@@ -309,7 +309,7 @@ fun AllInfoCard(
                     .height(17.dp)
             )
             Text(
-                text = "$waveDir",
+                text = "${(waveDir as Double).toInt()}",
                 style = TextStyle(
                     fontSize = 13.sp,
                     lineHeight = 15.sp,
@@ -321,7 +321,11 @@ fun AllInfoCard(
             )
 
             Text(
-                text = "$temp",
+                text = if (temp is Double) {
+                    temp.toInt().toString()
+                } else {
+                    temp.toString()
+                },
                 style = TextStyle(
                     fontSize = 15.sp,
                     fontWeight = FontWeight(400),
