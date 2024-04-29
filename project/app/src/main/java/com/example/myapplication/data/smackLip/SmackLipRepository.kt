@@ -395,6 +395,8 @@ class SmackLipRepositoryImpl (
         return reformattedWavePeriods
     }
 
+
+
     private fun withinDir(optimalDir: Double, actualDir: Double, acceptedOffset: Double): Boolean {
 
         return abs(optimalDir - actualDir) !in acceptedOffset .. 360 - acceptedOffset
