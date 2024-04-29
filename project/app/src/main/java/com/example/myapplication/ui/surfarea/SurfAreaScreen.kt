@@ -52,7 +52,7 @@ import com.example.myapplication.R
 import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.AlertCard.CustomAlert
-import com.example.myapplication.ui.commonComponents.BottomBar
+import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.ui.theme.SchemesSurface
 import com.example.myapplication.utils.RecourseUtils
@@ -77,12 +77,12 @@ fun SurfAreaScreen(
 
 
     val surfAreaScreenUiState: SurfAreaScreenUiState by surfAreaScreenViewModel.surfAreaScreenUiState.collectAsState()
-    surfAreaScreenViewModel.updateForecastNext7Days(surfArea)
+    surfAreaScreenViewModel.asyncNext7Days(surfArea)
     surfAreaScreenViewModel.updateWavePeriods(surfArea)
     surfAreaScreenViewModel.updateAlertsSurfArea(surfArea)
 
-    val nextSevenDays = surfAreaScreenUiState.forecast7Days
     val alerts = surfAreaScreenUiState.alertsSurfArea
+
 
     val formatter = DateTimeFormatter.ofPattern("EEE", Locale("no", "NO"))
     val navController = NavigationManager.navController
@@ -122,16 +122,6 @@ fun SurfAreaScreen(
             )
         }
     ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                //.padding(innerPadding)
-               // .padding(horizontal = 16.dp)
-        ) {
-            // Background surface representing SurfAreaScreen
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-            ) {
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -142,57 +132,43 @@ fun SurfAreaScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     item {
-                        val surfAreaDataForDay =
-                            nextSevenDays.getOrElse(0) { emptyList() } //0 is today
-                        val currentHour =
-                            LocalTime.now().hour // klokken er 10 så får ikke sjekket om det står 09 eller 9. Sto tidligere "08", "09" med .toString().padStart(2, '0')
-                        var headerIcon = ""
+                    val surfAreaDataForDay : Map<List<Int>, List<Any>> = surfAreaScreenUiState.forecastNext7Days.getOrElse(0) { emptyMap() } //0 is today
+                    val currentHour = LocalTime.now().hour // klokken er 10 så får ikke sjekket om det står 09 eller 9. Sto tidligere "08", "09" med .toString().padStart(2, '0')
+                    var headerIcon = ""
 
-                        if (surfAreaDataForDay.isNotEmpty()) {
-                            for (surfAreaDataForHour in surfAreaDataForDay) {
-                                if (currentHour.toString() == surfAreaDataForHour.first[3].toString()) {
-                                    headerIcon = surfAreaDataForHour.second[6].toString()
-                                    break
-                                }
+                    if (surfAreaDataForDay.isNotEmpty()) {
+                        // siden mappet ikke er sortert henter vi ut alle aktuelle tidspunketer og sorterer dem
+                        val times = surfAreaDataForDay.keys.sortedBy { it[3] }
+                        for (time in times) {
+                            val hour = time[3]
+                            if (hour == currentHour) {
+                                headerIcon = surfAreaDataForDay[time]!![4].toString()
                             }
-                            HeaderCard(surfArea = surfArea, icon = headerIcon)
                         }
-                        else{
-                            HeaderCard(surfArea = surfArea, icon = "else" )
-                        }
+                        HeaderCard(surfArea = surfArea, icon = headerIcon)
                     }
-                    item {
-                        LazyRow(
-                            modifier = Modifier.padding(5.dp)
-                        ) {
-                            if (surfAreaScreenUiState.forecast7Days.isNotEmpty()) {
-                                val today = LocalDate.now()
-                                surfAreaScreenViewModel.updateConditionStatuses(
-                                    surfArea,
-                                    surfAreaScreenUiState.forecast7Days
-                                )
+                }
+            item {
+                LazyRow(
+                    modifier = Modifier.padding(5.dp)
+                ) {
+                    if (surfAreaScreenUiState.forecastNext7Days.isNotEmpty()) {
+                        val today = LocalDate.now()
+                        surfAreaScreenViewModel.updateBestConditionStatuses(surfArea, surfAreaScreenUiState.forecastNext7Days)
 
-                                items(surfAreaScreenUiState.forecast7Days.size) { dayIndex ->
-                                    val date = today.plusDays(dayIndex.toLong())
-                                    val formattedDate = formatter.format(date)
+                        items(surfAreaScreenUiState.forecastNext7Days.size) { dayIndex ->
+                            val date = today.plusDays(dayIndex.toLong())
+                            val formattedDate = formatter.format(date)
 
-                                    val conditionStatus: ConditionStatus = try {
-                                        surfAreaScreenUiState.bestConditionStatuses[dayIndex]!!
-                                    } catch (e: IndexOutOfBoundsException) {
-                                        Log.d(
-                                            "SAscreen",
-                                            "ConditionStatus at day $dayIndex was out of bounds"
-                                        )
-                                        ConditionStatus.BLANK
-                                    } catch (e: NullPointerException) {
-                                        Log.d(
-                                            "SAscreen",
-                                            "ConditionStatus at day $dayIndex was null"
-                                        )
-                                        ConditionStatus.BLANK
-                                    }
-
-
+                            val conditionStatus: ConditionStatus = try {
+                                surfAreaScreenUiState.bestConditionStatuses[dayIndex]!!
+                            } catch (e: IndexOutOfBoundsException) {
+                                Log.d("SAscreen", "ConditionStatus at day $dayIndex was out of bounds" )
+                                ConditionStatus.BLANK
+                            } catch (e: NullPointerException) {
+                                Log.d("SAscreen", "ConditionStatus at day $dayIndex was null" )
+                                ConditionStatus.BLANK
+                            }
                                     DayPreviewCard(
                                         surfArea,
                                         formattedDate,
@@ -252,8 +228,7 @@ fun SurfAreaScreen(
                 )
             }
         }
-    }
-}
+
 
 fun getIconBasedOnAwarenessLevel(awarenessLevel: String): Int {
     return try {

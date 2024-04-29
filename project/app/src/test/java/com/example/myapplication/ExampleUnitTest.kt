@@ -23,6 +23,8 @@ import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import java.io.File
+import java.time.LocalDate
+import kotlin.system.measureTimeMillis
 
 //import org.junit.Assert.*
 
@@ -61,7 +63,7 @@ class ExampleUnitTest {
     //fast ver.
     @Test
     fun allRelevantWavePeriodAndDirsGet60HrsOfData() = runBlocking {
-        val relevantForecasts = waveForecastRepository.allRelevantWavePeriodAndDirNext3Days()
+        val relevantForecasts = waveForecastRepository.allRelevantWavePeriodsNext3DaysHardCoded()
         relevantForecasts.forEach {
             println(it)
         }
@@ -71,15 +73,8 @@ class ExampleUnitTest {
 
     @Test
     fun waveDirAndPeriodNext3DaysForHoddevikIs3DaysLong() = runBlocking{
-        val result = waveForecastRepository.waveDirAndPeriodNext3DaysForArea(SurfArea.HODDEVIK.modelName, SurfArea.HODDEVIK.pointId)
+        val result = waveForecastRepository.wavePeriodsNext3DaysForArea(SurfArea.HODDEVIK.modelName, SurfArea.HODDEVIK.pointId)
         assert(result.size in 19 .. 21) {"Forecast for hoddevik should be of size 21, was ${result.size}"}
-    }
-
-    @Test
-    fun hardcodedWaveForecastIsSameAsNonHardcoded() = runBlocking{
-        val hardcoded = waveForecastRepository.allRelevantWavePeriodAndDirNext3DaysHardCoded()
-        val nonHardcoded = waveForecastRepository.allRelevantWavePeriodAndDirNext3Days()
-        assert(hardcoded==nonHardcoded)
     }
 
     @Test
@@ -93,6 +88,7 @@ class ExampleUnitTest {
     @Test
     fun smackLipAllWavePeriodsAreSize60() = runBlocking{
         val wavePeriods = smackLipRepository.getAllWavePeriodsNext3Days()
+        assert(wavePeriods.isNotEmpty())
         wavePeriods.forEach{(sa, tps) ->
             assert(tps.size in 57..63) {"Size of $sa was ${tps.size}"}
             assert(tps[0] == tps[1] && tps[1] == tps[2]) {"${tps[0]}, ${tps[1]}, ${tps[2]} differ"}
@@ -231,12 +227,11 @@ class ExampleUnitTest {
     }
 
     @Test
-    fun waveHeightsAreParsedCorrectly() = runBlocking {
-        val dataNext7 = smackLipRepository.getDataForTheNext7Days(SurfArea.HODDEVIK)
-        val waveHeights = dataNext7.map{ dayForecast -> dayForecast.map { dayData -> dayData.first to dayData.second[0]}}
-        println("Size of all wave heights ${waveHeights.size}")
-        println("Size of waveheighs one step in ${waveHeights[1]}")
+    fun testGetTimeSeriesOFLF(): Unit = runBlocking {
 
+        SurfArea.entries.map {
+            println(smackLipRepository.getTimeSeriesOFLF(it))
+        }
     }
 
 
@@ -319,21 +314,55 @@ class ExampleUnitTest {
         println(smackLipRepository.getSymbolCode(surfArea = SurfArea.HODDEVIK))
     }
 
-    @Test
-    fun testGetDataForOneDay() = runBlocking {
+//    @Test
+//    fun testGetDataForOneDay() = runBlocking {
+//
+//        println(smackLipRepository.getDataForOneDay(20, SurfArea.HODDEVIK))
+//        println(smackLipRepository.getDataForOneDay(21, SurfArea.HODDEVIK))
+//        println(smackLipRepository.getDataForOneDay(22, SurfArea.HODDEVIK))
+//        println(smackLipRepository.getDataForOneDay(23, SurfArea.HODDEVIK))
+//    }
 
-        println(smackLipRepository.getDataForOneDay(20, SurfArea.HODDEVIK))
-        println(smackLipRepository.getDataForOneDay(21, SurfArea.HODDEVIK))
-        println(smackLipRepository.getDataForOneDay(22, SurfArea.HODDEVIK))
-        println(smackLipRepository.getDataForOneDay(23, SurfArea.HODDEVIK))
+
+//    @Test
+//    fun testGetDataFor7Days() = runBlocking {
+//        println(smackLipRepository.getDataForTheNext7Days(SurfArea.HODDEVIK))
+//    }
+
+
+    //Async calls
+
+    @Test
+    fun  testAsyncCalls(): Unit = runBlocking{
+
+       val time = measureTimeMillis { smackLipRepository.getAllOFLF7Days().forEach{
+           println(it.value.size)}}
+        println(time)
+
     }
 
-
     @Test
-    fun testGetDataFor7Days() = runBlocking {
-        println(smackLipRepository.getDataForTheNext7Days(SurfArea.HODDEVIK))
+    fun speedOfGetTimeseries()  = runBlocking {
+        val time2 = measureTimeMillis {
+
+            SurfArea.entries.forEach {
+                val timeseries = smackLipRepository.getTimeSeriesOFLF(it)
+                val date = LocalDate.now()
+                val xd = smackLipRepository.getOFLFOneDay(date.dayOfMonth, date.monthValue, timeseries)
+
+            }
+        }
+        val time1 = measureTimeMillis {
+            SurfArea.entries.forEach {
+                val he = smackLipRepository.getTimeSeriesOFLF(it)
+
+            }
+        }
+
+
+        println("Time1: $time1 ")
+        println("Time2: $time2 ")
+
     }
-
-
 
 }

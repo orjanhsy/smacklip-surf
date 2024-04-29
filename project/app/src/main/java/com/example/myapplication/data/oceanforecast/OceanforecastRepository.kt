@@ -67,7 +67,6 @@ class OceanforecastRepositoryImpl(
 
 
     override suspend fun getWaveHeights(surfArea: SurfArea): List<Pair<String, Double>> {
-        // Hent alle timeSeries for alle surfArea-områder
         // Hent timeSeries for det spesifikke surfArea-området
         val timeSeriesForArea = getTimeSeries(surfArea)
         // Map og konverter timeSeries-dataene til bølgehøyder
