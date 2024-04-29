@@ -26,6 +26,7 @@ data class DailySurfAreaScreenUiState(
 
     val conditionStatuses: List<Map<List<Int>, ConditionStatus>> = emptyList(),
     val forecast7Days: List<Map<List<Int>, List<Any>>> = emptyList(),
+    val loading: Boolean = false
 )
 
 class DailySurfAreaScreenViewModel: ViewModel() {
@@ -90,6 +91,7 @@ class DailySurfAreaScreenViewModel: ViewModel() {
     // TODO: test usage
     fun updateStatusConditions(surfArea: SurfArea, forecast: List<Map<List<Int>, List<Any>>>) {
         viewModelScope.launch(Dispatchers.IO) {
+
             _dailySurfAreaScreenUiState.update {state ->
                 val newConditionStatuses: MutableList<Map<List<Int>, ConditionStatus>> = mutableListOf()
                 if (forecast.isEmpty()) {
@@ -118,16 +120,24 @@ class DailySurfAreaScreenViewModel: ViewModel() {
                     conditionStatuses = newConditionStatuses.toList()
                 )
             }
+            _dailySurfAreaScreenUiState.update {
+                it.copy(loading = false) //avslutte loading screen - det siste som kalles fra DailySurfScreen
+            }
         }
     }
 
 
     fun updateOFLFNext7Days(surfArea: SurfArea)  {
         viewModelScope.launch(Dispatchers.IO) {
+            //starte loading screen - det første som kalles fra DailySurfScreen
+            _dailySurfAreaScreenUiState.update {
+                it.copy(loading = true)
+            }
             _dailySurfAreaScreenUiState.update {state ->
                 val newForecast7Days: List<Map<List<Int>, List<Any>>> = smackLipRepository.getSurfAreaOFLFNext7Days(surfArea)
                 state.copy(forecast7Days = newForecast7Days)
             }
+
         }
     }
 
@@ -136,10 +146,12 @@ class DailySurfAreaScreenViewModel: ViewModel() {
 
     fun updateWavePeriods(surfArea: SurfArea){
         viewModelScope.launch(Dispatchers.IO) {
+
             _dailySurfAreaScreenUiState.update {
                 val newWavePeriods = smackLipRepository.getWavePeriodsNext3DaysForArea(surfArea)
                 it.copy(wavePeriods = newWavePeriods)
             }
+
         }
     }
 
