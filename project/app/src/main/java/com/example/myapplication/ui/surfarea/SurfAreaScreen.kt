@@ -77,9 +77,11 @@ fun SurfAreaScreen(
 
 
     val surfAreaScreenUiState: SurfAreaScreenUiState by surfAreaScreenViewModel.surfAreaScreenUiState.collectAsState()
+    //starter loadingscreen i VM her
     surfAreaScreenViewModel.asyncNext7Days(surfArea)
     surfAreaScreenViewModel.updateWavePeriods(surfArea)
     surfAreaScreenViewModel.updateAlertsSurfArea(surfArea)
+    //avslutter loadingscreen i VM her
 
     val alerts = surfAreaScreenUiState.alertsSurfArea
 
@@ -158,7 +160,7 @@ fun SurfAreaScreen(
                     ) {
                         if (surfAreaScreenUiState.forecastNext7Days.isNotEmpty()) {
                             val today = LocalDate.now()
-                            surfAreaScreenViewModel.updateBestConditionStatuses(
+                            surfAreaScreenViewModel.updateBestConditionStatuses( //loading screen vises
                                 surfArea,
                                 surfAreaScreenUiState.forecastNext7Days
                             )
@@ -225,7 +227,7 @@ fun SurfAreaScreen(
                     action = null,
                 )
             }
-            //ProgressIndicator(isDisplayed = surfAreaScreenUiState.loading)
+            ProgressIndicator(isDisplayed = surfAreaScreenUiState.loading)
         }
     }
 }
