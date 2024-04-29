@@ -29,7 +29,8 @@ data class SurfAreaScreenUiState(
     val windSpeedOfGusts: List<List<Pair<List<Int>, Double>>> = emptyList(),
     val bestConditionStatuses: Map<Int, ConditionStatus> = mutableMapOf(),
 
-    val forecastNext7Days: List<Map<List<Int>, List<Any>>> = mutableListOf() //hører til den nye metoden med async
+    val forecastNext7Days: List<Map<List<Int>, List<Any>>> = mutableListOf(), //hører til den nye metoden med async
+    val loading: Boolean = false
 
 )
 
@@ -45,6 +46,9 @@ class SurfAreaScreenViewModel: ViewModel() {
 
     fun asyncNext7Days(surfArea: SurfArea){
         viewModelScope.launch(Dispatchers.IO) {
+            _surfAreaScreenUiState.update {
+                it.copy(loading = true)
+            }
             val newNext7Days = smackLipRepository.getSurfAreaOFLFNext7Days(surfArea)
             val newMaxWaveHeights = newNext7Days.map {it.maxBy { entry -> entry.value[5] as Double }.value[5] as Double}
             val newMinWaveHeights = newNext7Days.map {it.minBy { entry -> entry.value[5] as Double }.value[5] as Double}
@@ -54,6 +58,9 @@ class SurfAreaScreenViewModel: ViewModel() {
                     maxWaveHeights = newMaxWaveHeights,
                     minWaveHeights = newMinWaveHeights
                 )
+            }
+            _surfAreaScreenUiState.update {
+                it.copy(loading = false)
             }
         }
     }
@@ -80,6 +87,7 @@ class SurfAreaScreenViewModel: ViewModel() {
                 val newAlerts = if (surfArea != null) smackLipRepository.getRelevantAlertsFor(surfArea) else listOf()
                 it.copy(alertsSurfArea = newAlerts)
             }
+
         }
     }
 
@@ -125,6 +133,9 @@ class SurfAreaScreenViewModel: ViewModel() {
     // map<tidspunkt -> [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]>
     fun updateBestConditionStatuses(surfArea: SurfArea, forecast7Days: List<Map<List<Int>, List<Any>>>) {
         viewModelScope.launch(Dispatchers.IO) {
+            _surfAreaScreenUiState.update {
+                it.copy(loading = true) //starter loading screen
+            }
             _surfAreaScreenUiState.update { state ->
                 val newBestConditionStatuses: MutableMap<Int, ConditionStatus> = mutableMapOf()
 
@@ -171,6 +182,9 @@ class SurfAreaScreenViewModel: ViewModel() {
                 state.copy(
                     bestConditionStatuses =  newBestConditionStatuses
                 )
+            }
+            _surfAreaScreenUiState.update {
+                it.copy(loading = false) //avslutter visning av loading screen
             }
         }
     }

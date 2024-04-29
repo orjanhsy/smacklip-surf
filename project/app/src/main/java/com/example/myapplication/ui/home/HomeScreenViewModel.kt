@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.home
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
@@ -64,11 +65,13 @@ class HomeScreenViewModel : ViewModel() {
                 val timeSeries: Deferred<Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>>> = async { smackLipRepository.getTimeSeriesOFLF(it) }
                 timeSeries
             }
+            Log.d("allSurfAreas ", allSurfAreas.toString())
 
             val allSurfAreasToday = SurfArea.entries.associateWith {
                 val timeseries = allSurfAreas[it]!!.await()
                 smackLipRepository.getOFLFOneDay(date.dayOfMonth, date.monthValue, timeseries)
             }
+            Log.d("allSurfAreasToday ", allSurfAreasToday.toString())
 
             // returnerer map<tidspunkt-> [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]>
             val newWindSpeed = allSurfAreasToday.keys.associateWith {
@@ -76,6 +79,7 @@ class HomeScreenViewModel : ViewModel() {
                 val windSpeed = dataToday.map { entry ->
                     Pair(entry.key, entry.value[0] as Double)
                 }
+                Log.d("newWindSpeed ", windSpeed.toString())
                 windSpeed
             }
             val newWindGust = allSurfAreasToday.keys.associateWith {
