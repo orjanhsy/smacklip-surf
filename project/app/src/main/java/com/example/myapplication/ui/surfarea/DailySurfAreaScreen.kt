@@ -30,6 +30,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -318,7 +319,9 @@ fun AllInfoCard(
                     //.fillMaxSize()
                     .width(17.dp)
                     .height(17.dp)
+                    .rotate((waveDir as Double).toFloat()) // Rotate the arrow icon based on the wave direction
             )
+
             Text(
                 text = "${(waveDir as Double).toInt()}",
                 style = TextStyle(
