@@ -1,5 +1,6 @@
 package com.example.myapplication.data.smackLip
 
+import android.util.Log
 import com.example.myapplication.data.locationForecast.LocationForecastRepository
 import com.example.myapplication.data.locationForecast.LocationForecastRepositoryImpl
 import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
@@ -199,7 +200,7 @@ class SmackLipRepositoryImpl (
 
         val map : MutableMap<List<Int>, MutableList<Any>> = mutableMapOf()
 
-        LFmap?.map {
+        LFmap!!.map {
             val time = getTimeListFromTimeString(it.first)
             try {
                 map[time]!!.add(it.second.instant.details.wind_speed)
@@ -229,26 +230,23 @@ class SmackLipRepositoryImpl (
             }
         }
 
-        OFmap?.map {
+        OFmap!!.map {
             val time = getTimeListFromTimeString(it.first)
             try {
                 map[time]!!.add(it.second.instant.details.sea_surface_wave_height)
                 map[time]!!.add(it.second.instant.details.sea_water_to_direction)
-
                 //symbol_code
 
             }catch (_: Exception){
-
             }
         }
-/*
-        map.filter {
+
+        val filteredMap = map.filter {
             it.value.size == 7
         }
 
- */
 
-        return map
+        return filteredMap
 
     }
 
