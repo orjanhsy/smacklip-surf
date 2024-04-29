@@ -216,11 +216,11 @@ fun AllInfoCard(
             .fillMaxWidth()
             .height(49.dp)
     ) {
-        Row () {
-            Text(
-                text = conditionStatus?.description ?: ""
-            )
-        }
+//        Row () {
+//            Text(
+//                text = conditionStatus?.description ?: ""
+//            )
+//        }
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(0.dp, Alignment.CenterHorizontally),

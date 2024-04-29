@@ -277,6 +277,7 @@ class SmackLipRepositoryImpl (
             }
             forecastNext7Days.add(getOFLFOneDay(actualDay, month, Pair(timeseries.first, timeseries.second)))
         }
+
         return forecastNext7Days
     }
 
