@@ -469,8 +469,8 @@ fun SurfAreaCard(
                             .height(13.6348.dp)
                     )
                     Text(
-                        text = " ${if (windSpeed.isNotEmpty()) windSpeed[0].second else ""}" +
-                                if(windGust.isNotEmpty() && windSpeed.isNotEmpty() && windGust[0].second != windSpeed[0].second) "(${windGust[0].second})" else ""
+                        text = " ${if (windSpeed.isNotEmpty()) (windSpeed[0].second).toInt() else ""}" +
+                                if(windGust.isNotEmpty() && windSpeed.isNotEmpty() && windGust[0].second != windSpeed[0].second) "(${windGust[0].second.toInt()})" else ""
                     )
                     Text(
                         text = " ${if (windDirection.isNotEmpty()) "${windDirection[0].second}°" else ""}"
