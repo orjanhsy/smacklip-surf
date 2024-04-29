@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.home
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,6 +13,7 @@ import com.example.myapplication.model.surfareas.SurfArea
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,7 +33,8 @@ data class HomeScreenUiState(
     val waveDirections: Map<SurfArea, List<Pair<List<Int>, Double>>> = emptyMap(),
     val wavePeriods: Map<SurfArea, List<Double?>> = emptyMap(),
     val windPeriods: Map<SurfArea, List<Double?>> = emptyMap(),
-    val allRelevantAlerts: Map<SurfArea, List<Features>> = emptyMap()
+    val allRelevantAlerts: Map<SurfArea, List<Features>> = emptyMap(),
+    val loading: Boolean = false
 )
 
 class HomeScreenViewModel : ViewModel() {
@@ -42,6 +45,7 @@ class HomeScreenViewModel : ViewModel() {
     val homeScreenUiState: StateFlow<HomeScreenUiState> = _homeScreenUiState.asStateFlow()
     val searchQuery = _searchQuery.asStateFlow()
     val favoriteSurfAreas: StateFlow<List<SurfArea>> = _favoriteSurfAreas
+    //val loading = mutableStateOf(false)
 
     init {
         updateOFLF()
@@ -49,7 +53,11 @@ class HomeScreenViewModel : ViewModel() {
     }
 
     fun updateOFLF() {
+
         viewModelScope.launch(Dispatchers.IO) {
+            _homeScreenUiState.update {
+                it.copy(loading = true)
+            }
             val date = LocalDate.now()
 
             val allSurfAreas : Map<SurfArea, Deferred<Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>>>> = SurfArea.entries.associateWith {
@@ -106,11 +114,13 @@ class HomeScreenViewModel : ViewModel() {
                     windGust = newWindGust,
                     windDirection = newWindDir,
                     waveHeight = newWaveHeights,
-                    waveDirections = newWaveDirs
+                    waveDirections = newWaveDirs,
+                    loading = false
                 )
             }
 
         }
+
     }
 
 
