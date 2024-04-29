@@ -122,8 +122,8 @@ fun DailySurfAreaScreen(
             ) {
                 val currentHour = LocalTime.now().hour
                 var headerIcon = "default_icon"
-                val surfAreaDataForDay: Map<List<Int>, List<Any>> =
-                    dailySurfAreaScreenUiState.forecast7Days.getOrElse(daysFromToday) { emptyMap() }
+                val surfAreaDataForDay: Map<List<Int>, List<Any>> = dailySurfAreaScreenUiState.forecast7Days.getOrElse(daysFromToday) { emptyMap() }
+                Log.d("DSscreen", "Getting data for $daysFromToday")
                 val times = surfAreaDataForDay.keys.sortedBy { it[3] }
 
                 if (surfAreaDataForDay.isNotEmpty()) {

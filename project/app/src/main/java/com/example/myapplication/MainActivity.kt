@@ -55,7 +55,7 @@ fun SmackLipNavigation(){
         }
         composable("DailySurfAreaScreen/{surfArea}/{dayIndex}") { backStackEntry ->
             val surfArea = backStackEntry.arguments?.getString("surfArea") ?: ""
-            val dayIndex = backStackEntry.arguments?.getInt("dayIndex") ?: 0 // TODO: Handle differently
+            val dayIndex = backStackEntry.arguments?.getString("dayIndex")?.toInt() ?: 0 // TODO: Handle differently
             DailySurfAreaScreen(surfAreaName = surfArea, daysFromToday = dayIndex)
 
         }
