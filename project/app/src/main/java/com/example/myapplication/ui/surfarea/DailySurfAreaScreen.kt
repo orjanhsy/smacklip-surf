@@ -54,7 +54,11 @@ import java.time.LocalTime
 @SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: DailySurfAreaScreenViewModel = viewModel()) {
+fun DailySurfAreaScreen(
+    surfAreaName: String,
+    daysFromToday: Int,
+    dailySurfAreaScreenViewModel: DailySurfAreaScreenViewModel = viewModel()
+) {
 
     val surfArea: SurfArea = SurfArea.entries.find {
         it.locationName == surfAreaName
@@ -119,7 +123,7 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                 val currentHour = LocalTime.now().hour
                 var headerIcon = "default_icon"
                 val surfAreaDataForDay: Map<List<Int>, List<Any>> =
-                    dailySurfAreaScreenUiState.forecast7Days.getOrElse(0) { emptyMap() } // TODO: more days
+                    dailySurfAreaScreenUiState.forecast7Days.getOrElse(daysFromToday) { emptyMap() }
                 val times = surfAreaDataForDay.keys.sortedBy { it[3] }
 
                 if (surfAreaDataForDay.isNotEmpty()) {
@@ -377,6 +381,6 @@ fun AllInfoCard(
 @Composable
 private fun PreviewDailyScreen() {
     MyApplicationTheme {
-        DailySurfAreaScreen("Hoddevik")
+        DailySurfAreaScreen("Hoddevik", 0)
     }
 }
