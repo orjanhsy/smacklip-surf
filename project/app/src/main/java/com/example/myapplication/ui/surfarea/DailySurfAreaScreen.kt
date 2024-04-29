@@ -3,6 +3,7 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
@@ -43,6 +44,7 @@ import com.example.myapplication.NavigationManager
 import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.common.composables.BottomBar
+import com.example.myapplication.ui.common.composables.ProgressIndicator
 import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
 import com.example.myapplication.ui.surfarea.HeaderCard
 import com.example.myapplication.ui.theme.MyApplicationTheme
@@ -60,10 +62,11 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
 
     val dailySurfAreaScreenUiState by dailySurfAreaScreenViewModel.dailySurfAreaScreenUiState.collectAsState()
 
-
+    //starter loading screen i dailySurfAreaScreenUiState her:
     dailySurfAreaScreenViewModel.updateOFLFNext7Days(surfArea = surfArea)
     dailySurfAreaScreenViewModel.updateWavePeriods(surfArea=surfArea)
     dailySurfAreaScreenViewModel.updateStatusConditions(surfArea, dailySurfAreaScreenUiState.forecast7Days)
+    //avslutter loading screen i dailySurfAreaScreenUiState her:
 
     val navController = NavigationManager.navController
 
@@ -105,93 +108,105 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                     )
                 }
             )
-            { innerPadding ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                        val currentHour = LocalTime.now().hour
-                        var headerIcon = "default_icon"
-                        val surfAreaDataForDay : Map<List<Int>, List<Any>> = dailySurfAreaScreenUiState.forecast7Days.getOrElse(0) { emptyMap() } // TODO: more days
-                        val times = surfAreaDataForDay.keys.sortedBy { it[3] }
+    { innerPadding ->
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                val currentHour = LocalTime.now().hour
+                var headerIcon = "default_icon"
+                val surfAreaDataForDay: Map<List<Int>, List<Any>> =
+                    dailySurfAreaScreenUiState.forecast7Days.getOrElse(0) { emptyMap() } // TODO: more days
+                val times = surfAreaDataForDay.keys.sortedBy { it[3] }
 
-                        if (surfAreaDataForDay.isNotEmpty()) {
-                            // siden mappet ikke er sortert henter vi ut alle aktuelle tidspunketer og sorterer dem
-                            for (time in times) {
-                                val hour = time[3]
-                                if (hour == currentHour) {
-                                    headerIcon = surfAreaDataForDay[time]!![4].toString()
-                                    break
-                                }
-                            }
-                        }
-                        HeaderCard(surfArea = surfArea, icon = headerIcon)
-                    LazyColumn(
-                        modifier = Modifier
-                            .padding(5.dp)
-                    ) {//vent dette er feil, dette er jo bare for i dag, må fikses med onclick
-
-                        // [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]
-                        if (surfAreaDataForDay.isNotEmpty()) {
-                            items(times.size) { time ->
-                                val hourIndex = times[time]
-                                Log.d("hourindex","${times[time][3]}")
-
-                                val surfAreaDataForHour :  List<Any>? = surfAreaDataForDay[hourIndex]
-                                //henter objektet for timen som er en liste med Pair<List<Int>, Double>
-                                val timestamp  = hourIndex[3]
-                                val windSpeed  = surfAreaDataForHour?.get(0) ?: 0.0
-                                val windGust   = surfAreaDataForHour?.get(1) ?: 0.0
-                                val windDir    = surfAreaDataForHour?.get(2) ?: 0.0
-                                val temp       = surfAreaDataForHour?.get(3) ?: 0.0
-                                val icon       = surfAreaDataForHour?.get(4) ?: 0.0
-                                val waveHeight = surfAreaDataForHour?.get(5) ?: 0.0
-                                val waveDir    = surfAreaDataForHour?.get(6) ?: 0.0
-                                val wavePeriod = try {dailySurfAreaScreenUiState.wavePeriods[hourIndex[3]]} catch (e: IndexOutOfBoundsException) {
-                                    Log.d("DSAscreen", "Waveperiods${hourIndex[3]} out of bounds for waveperiods of size ${dailySurfAreaScreenUiState.wavePeriods.size}")
-                                    0.0
-                                }
-                                val conditionStatus: ConditionStatus? = try {dailySurfAreaScreenUiState.conditionStatuses[0][times[time]]}
-                                catch (e: IndexOutOfBoundsException) {null}
-
-                                AllInfoCard(
-                                    timestamp = timestamp.toString(),
-                                    surfArea = surfArea,
-                                    waveHeight = waveHeight,
-                                    windSpeed = windSpeed,
-                                    windGust = windGust,
-                                    windDir = windDir,
-                                    waveDir = waveDir,
-                                    temp = temp,
-                                    icon = icon,
-                                    wavePeriod = wavePeriod,
-                                    conditionStatus = conditionStatus
-                                )
-                            }
-                        } else {
-                            item(7) {
-                                AllInfoCard(
-                                    timestamp = "00",
-                                    surfArea = surfArea,
-                                    waveHeight = 0.0,
-                                    windSpeed = 0.0,
-                                    windGust = 0.0,
-                                    windDir = 0.0,
-                                    waveDir = 0.0,
-                                    temp = 0,
-                                    icon = 0,
-                                    wavePeriod = 0.0,
-                                    conditionStatus = null
-                                )
-                            }
+                if (surfAreaDataForDay.isNotEmpty()) {
+                    // siden mappet ikke er sortert henter vi ut alle aktuelle tidspunketer og sorterer dem
+                    for (time in times) {
+                        val hour = time[3]
+                        if (hour == currentHour) {
+                            headerIcon = surfAreaDataForDay[time]!![4].toString()
+                            break
                         }
                     }
-
                 }
+                HeaderCard(surfArea = surfArea, icon = headerIcon)
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(5.dp)
+                ) {//vent dette er feil, dette er jo bare for i dag, må fikses med onclick
+
+                    // [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]
+                    if (surfAreaDataForDay.isNotEmpty()) {
+                        items(times.size) { time ->
+                            val hourIndex = times[time]
+                            Log.d("hourindex", "${times[time][3]}")
+
+                            val surfAreaDataForHour: List<Any>? = surfAreaDataForDay[hourIndex]
+                            //henter objektet for timen som er en liste med Pair<List<Int>, Double>
+                            val timestamp = hourIndex[3]
+                            val windSpeed = surfAreaDataForHour?.get(0) ?: 0.0
+                            val windGust = surfAreaDataForHour?.get(1) ?: 0.0
+                            val windDir = surfAreaDataForHour?.get(2) ?: 0.0
+                            val temp = surfAreaDataForHour?.get(3) ?: 0.0
+                            val icon = surfAreaDataForHour?.get(4) ?: 0.0
+                            val waveHeight = surfAreaDataForHour?.get(5) ?: 0.0
+                            val waveDir = surfAreaDataForHour?.get(6) ?: 0.0
+                            val wavePeriod = try {
+                                dailySurfAreaScreenUiState.wavePeriods[hourIndex[3]]
+                            } catch (e: IndexOutOfBoundsException) {
+                                Log.d(
+                                    "DSAscreen",
+                                    "Waveperiods${hourIndex[3]} out of bounds for waveperiods of size ${dailySurfAreaScreenUiState.wavePeriods.size}"
+                                )
+                                0.0
+                            }
+                            val conditionStatus: ConditionStatus? = try {
+                                dailySurfAreaScreenUiState.conditionStatuses[0][times[time]]
+                            } catch (e: IndexOutOfBoundsException) {
+                                null
+                            }
+
+                            AllInfoCard(
+                                timestamp = timestamp.toString(),
+                                surfArea = surfArea,
+                                waveHeight = waveHeight,
+                                windSpeed = windSpeed,
+                                windGust = windGust,
+                                windDir = windDir,
+                                waveDir = waveDir,
+                                temp = temp,
+                                icon = icon,
+                                wavePeriod = wavePeriod,
+                                conditionStatus = conditionStatus
+                            )
+                        }
+                    } else {
+                        item(7) {
+                            AllInfoCard(
+                                timestamp = "00",
+                                surfArea = surfArea,
+                                waveHeight = 0.0,
+                                windSpeed = 0.0,
+                                windGust = 0.0,
+                                windDir = 0.0,
+                                waveDir = 0.0,
+                                temp = 0,
+                                icon = 0,
+                                wavePeriod = 0.0,
+                                conditionStatus = null
+                            )
+                        }
+                    }
+                }
+
             }
+            ProgressIndicator(isDisplayed = dailySurfAreaScreenUiState.loading)
         }
+    }
+}
 
 
 
