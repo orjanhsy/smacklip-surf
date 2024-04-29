@@ -4,6 +4,9 @@ import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.waveforecast.PointForecast
 import com.example.myapplication.model.waveforecast.PointForecasts
 import io.ktor.http.content.NullBody
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlin.math.abs
 import kotlin.math.sin
 import kotlin.math.cos
@@ -15,13 +18,14 @@ import kotlin.math.acos
 
 
 interface WaveForecastRepository {
-    suspend fun allRelevantWavePeriodAndDirNext3Days(): Map<SurfArea, List<Pair<Double?, Double?>>>
     suspend fun retrieveRelevantModelNamesAndPointIds(): Map<SurfArea, Pair<String?, Int?>> // for tests
 
-    suspend fun waveDirAndPeriodNext3DaysForArea(modelName: String, pointId: Int): List<Pair<Double?, Double?>>
-    suspend fun allRelevantWavePeriodAndDirNext3DaysHardCoded(): Map<SurfArea, List<Pair<Double?, Double?>>>
-    fun distanceTo(lat: Double, lon: Double, surfArea: SurfArea): Double // for tests
+    suspend fun wavePeriodsNext3DaysForArea(modelName: String, pointId: Int): List<Double?>
+    suspend fun allRelevantWavePeriodsNext3DaysHardCoded(): Map<SurfArea, List<Double?>>
+
+    suspend fun wavePeriods(modelName: String, pointId: Int, time: String): Double? // for tests
     suspend fun pointForecast(modelName: String, pointId: Int, time: String): PointForecast // for tests
+    fun distanceTo(lat: Double, lon: Double, surfArea: SurfArea): Double // for tests
     }
 
 class WaveForecastRepositoryImpl(
@@ -29,48 +33,47 @@ class WaveForecastRepositoryImpl(
 ): WaveForecastRepository {
 
 
-    //hardkodet: Surfarea.modelName (område), SurfArea.pointId(punkt)
+
     override suspend fun pointForecast(modelName: String, pointId: Int, time: String): PointForecast {
         return waveForecastDataSource.fetchPointForecast(modelName, pointId, time)
     }
 
-    //Pair<direction, wavePeriod>
-    private suspend fun waveDirAndPeriod(modelName: String, pointId: Int, time: String): Pair<Double?, Double?> {
-        val forecast = pointForecast(modelName, pointId, time)
-        return Pair(forecast.dirLocal, forecast.tpLocal)
+    override suspend fun wavePeriods(modelName: String, pointId: Int, time: String): Double? {
+        val forecast = waveForecastDataSource.fetchPointForecast(modelName, pointId, time)
+        return forecast.tpLocal
     }
 
     /*
     .size=60, apiet henter de neste 60 timene, denne returnerer (ca?) 20 pair<dir, tp>
     - altså hver tredje time - for et område.
      */
-    override suspend fun waveDirAndPeriodNext3DaysForArea(modelName: String, pointId: Int): List<Pair<Double?, Double?>> {
+    override suspend fun wavePeriodsNext3DaysForArea(modelName: String, pointId: Int): List<Double?> {
         val availableForecastTimes = waveForecastDataSource.fetchAvaliableTimestamps().availableForecastTimes
-        val dirAndTp: List<Pair<Double?, Double?>> = availableForecastTimes.map {time ->
-            waveDirAndPeriod(modelName, pointId, time)
+
+        return coroutineScope {
+            val tps: List<Deferred<Double?>> = availableForecastTimes.map { time ->
+                async { wavePeriods(modelName, pointId, time) }
+            }
+
+            val newTps = tps.map { it.await() }
+            newTps
         }
-        return dirAndTp
     }
 
     // map[surfarea] -> List<Pair<Direction, period>>  .size=20
-    override suspend fun allRelevantWavePeriodAndDirNext3DaysHardCoded(): Map<SurfArea, List<Pair<Double?, Double?>>> {
-        val relevantForecasts: Map<SurfArea, List<Pair<Double?, Double?>>> = SurfArea.entries.associateWith {sa ->
-            waveDirAndPeriodNext3DaysForArea(sa.modelName, sa.pointId)
+    override suspend fun allRelevantWavePeriodsNext3DaysHardCoded(): Map<SurfArea, List<Double?>> {
+        return coroutineScope {
+            val relevantForecasts: Map<SurfArea, Deferred<List<Double?>>> =
+                SurfArea.entries.associateWith {
+                    async { wavePeriodsNext3DaysForArea(it.modelName, it.pointId) }
+                }
+            val newRelevantForecasts = relevantForecasts.entries.associate {
+                it.key to it.value.await()
+            }
+
+            newRelevantForecasts
         }
-        return relevantForecasts
     }
-
-    override suspend fun allRelevantWavePeriodAndDirNext3Days(): Map<SurfArea, List<Pair<Double?, Double?>>> {
-        val modelNamesAndPointIds: Map<SurfArea, Pair<String?, Int?>> = retrieveRelevantModelNamesAndPointIds()
-        val relevantForecasts: Map<SurfArea, List<Pair<Double?, Double?>>> = SurfArea.entries.associateWith {sa ->
-            val modelName = modelNamesAndPointIds[sa]?.first!!
-            val pointId = modelNamesAndPointIds[sa]?.second!!
-
-            waveDirAndPeriodNext3DaysForArea(modelName, pointId)
-        }
-        return relevantForecasts
-    }
-
 
 
     // Map( SurfArea -> (modelName, pointId)
