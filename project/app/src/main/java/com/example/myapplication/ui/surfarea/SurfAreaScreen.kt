@@ -147,6 +147,9 @@ fun SurfAreaScreen(
                         }
                         HeaderCard(surfArea = surfArea, icon = headerIcon)
                     }
+                        else{
+                            HeaderCard(surfArea = surfArea, icon = R.drawable.spm.toString())
+                    }
                 }
             item {
                 LazyRow(
