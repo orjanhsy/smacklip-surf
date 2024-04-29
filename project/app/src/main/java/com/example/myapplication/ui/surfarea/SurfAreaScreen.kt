@@ -215,18 +215,6 @@ fun SurfAreaScreen(
                     action = null,
                 )
             }
-            else{
-                CustomAlert(
-                    title = "Farevarsel",
-                    message = "STORM SØK DEKNING!!!!",
-                    actionText = "OK",
-                    warningIcon = R.drawable.icon_awareness_yellow_outlined,
-                    data = null,
-                    showAlert = remember { mutableStateOf(true) },
-                    //actionWithValue = null,
-                    action = null,
-                )
-            }
         }
 
 
