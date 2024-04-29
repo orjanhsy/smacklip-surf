@@ -52,11 +52,11 @@ interface SmackLipRepository {
     fun getConditionStatus(
         location: SurfArea,
         wavePeriod: Double?,
-        waveHeight: Double,
-        waveDir: Double,
-        windDir: Double,
         windSpeed: Double,
         windGust: Double,
+        windDir: Double,
+        waveHeight: Double,
+        waveDir: Double,
         alerts: List<Features>
     ): ConditionStatus
 
@@ -277,6 +277,7 @@ class SmackLipRepositoryImpl (
             }
             forecastNext7Days.add(getOFLFOneDay(actualDay, month, Pair(timeseries.first, timeseries.second)))
         }
+
         return forecastNext7Days
     }
 
@@ -398,14 +399,16 @@ class SmackLipRepositoryImpl (
 
         return abs(optimalDir - actualDir) !in acceptedOffset .. 360 - acceptedOffset
     }
+
+    //map<tidspunkt-> [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]>
     override fun getConditionStatus(
         location: SurfArea,
         wavePeriod: Double?,
-        waveHeight: Double,
-        waveDir: Double,
-        windDir: Double,
         windSpeed: Double,
         windGust: Double,
+        windDir: Double,
+        waveHeight: Double,
+        waveDir: Double,
         alerts: List<Features>
     ): ConditionStatus {
         var conditionStatus: ConditionStatus = ConditionStatus.DECENT

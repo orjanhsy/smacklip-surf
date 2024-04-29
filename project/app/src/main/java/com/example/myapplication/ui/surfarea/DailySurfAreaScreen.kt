@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.NavigationManager
+import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
@@ -62,6 +63,7 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
 
     dailySurfAreaScreenViewModel.updateOFLFNext7Days(surfArea = surfArea)
     dailySurfAreaScreenViewModel.updateWavePeriods(surfArea=surfArea)
+    dailySurfAreaScreenViewModel.updateStatusConditions(surfArea, dailySurfAreaScreenUiState.forecast7Days)
 
     val navController = NavigationManager.navController
 
@@ -112,7 +114,7 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                 ) {
                         val currentHour = LocalTime.now().hour
                         var headerIcon = "default_icon"
-                        val surfAreaDataForDay : Map<List<Int>, List<Any>> = dailySurfAreaScreenUiState.forecast7Days.getOrElse(0) { emptyMap() }
+                        val surfAreaDataForDay : Map<List<Int>, List<Any>> = dailySurfAreaScreenUiState.forecast7Days.getOrElse(0) { emptyMap() } // TODO: more days
                         val times = surfAreaDataForDay.keys.sortedBy { it[3] }
 
                         if (surfAreaDataForDay.isNotEmpty()) {
@@ -147,10 +149,12 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                                 val icon       = surfAreaDataForHour?.get(4) ?: 0.0
                                 val waveHeight = surfAreaDataForHour?.get(5) ?: 0.0
                                 val waveDir    = surfAreaDataForHour?.get(6) ?: 0.0
-                                val waveperiod = try {dailySurfAreaScreenUiState.wavePeriods[hourIndex[3]]} catch (e: IndexOutOfBoundsException) {
+                                val wavePeriod = try {dailySurfAreaScreenUiState.wavePeriods[hourIndex[3]]} catch (e: IndexOutOfBoundsException) {
                                     Log.d("DSAscreen", "Waveperiods${hourIndex[3]} out of bounds for waveperiods of size ${dailySurfAreaScreenUiState.wavePeriods.size}")
                                     0.0
                                 }
+                                val conditionStatus: ConditionStatus? = try {dailySurfAreaScreenUiState.conditionStatuses[0][times[time]]}
+                                catch (e: IndexOutOfBoundsException) {null}
 
                                 AllInfoCard(
                                     timestamp = timestamp.toString(),
@@ -162,8 +166,8 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                                     waveDir = waveDir,
                                     temp = temp,
                                     icon = icon,
-                                    wavePeriod = waveperiod
-
+                                    wavePeriod = wavePeriod,
+                                    conditionStatus = conditionStatus
                                 )
                             }
                         } else {
@@ -178,7 +182,8 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                                     waveDir = 0.0,
                                     temp = 0,
                                     icon = 0,
-                                    wavePeriod = 0.0
+                                    wavePeriod = 0.0,
+                                    conditionStatus = null
                                 )
                             }
                         }
@@ -201,7 +206,8 @@ fun AllInfoCard(
     waveDir: Any,
     temp : Any,
     icon: Any,
-    wavePeriod: Double?
+    wavePeriod: Double?,
+    conditionStatus: ConditionStatus?
 ) {
     val recourseUtils : RecourseUtils = RecourseUtils()
     Card(
@@ -210,6 +216,11 @@ fun AllInfoCard(
             .fillMaxWidth()
             .height(49.dp)
     ) {
+//        Row () {
+//            Text(
+//                text = conditionStatus?.description ?: ""
+//            )
+//        }
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(0.dp, Alignment.CenterHorizontally),
