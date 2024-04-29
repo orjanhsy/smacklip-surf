@@ -32,6 +32,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -46,13 +48,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.NavigationManager
+import com.example.myapplication.R
 import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.surfareas.SurfArea
+import com.example.myapplication.ui.AlertCard.CustomAlert
 import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.ui.theme.SchemesSurface
 import com.example.myapplication.utils.RecourseUtils
-import java.lang.NullPointerException
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -76,10 +79,14 @@ fun SurfAreaScreen(
     val surfAreaScreenUiState: SurfAreaScreenUiState by surfAreaScreenViewModel.surfAreaScreenUiState.collectAsState()
     surfAreaScreenViewModel.asyncNext7Days(surfArea)
     surfAreaScreenViewModel.updateWavePeriods(surfArea)
+    surfAreaScreenViewModel.updateAlertsSurfArea(surfArea)
+
+    val alerts = surfAreaScreenUiState.alertsSurfArea
 
 
     val formatter = DateTimeFormatter.ofPattern("EEE", Locale("no", "NO"))
     val navController = NavigationManager.navController
+
 
     Scaffold(
         topBar = {
@@ -115,16 +122,16 @@ fun SurfAreaScreen(
             )
         }
     ) { innerPadding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(innerPadding)
-                .padding(horizontal = 16.dp),
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(innerPadding)
+                        .padding(horizontal = 16.dp),
 
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-                item {
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    item {
                     val surfAreaDataForDay : Map<List<Int>, List<Any>> = surfAreaScreenUiState.forecastNext7Days.getOrElse(0) { emptyMap() } //0 is today
                     val currentHour = LocalTime.now().hour // klokken er 10 så får ikke sjekket om det står 09 eller 9. Sto tidligere "08", "09" med .toString().padStart(2, '0')
                     var headerIcon = ""
@@ -162,27 +169,83 @@ fun SurfAreaScreen(
                                 Log.d("SAscreen", "ConditionStatus at day $dayIndex was null" )
                                 ConditionStatus.BLANK
                             }
-
-
-                            DayPreviewCard(
-                                surfArea,
-                                formattedDate,
-                                Pair(surfAreaScreenUiState.minWaveHeights[dayIndex].toString(),surfAreaScreenUiState.maxWaveHeights[dayIndex].toString()),
-                                conditionStatus,
-                                onNavigateToDailySurfAreaScreen
-                            )
+                                    DayPreviewCard(
+                                        surfArea,
+                                        formattedDate,
+                                        Pair(
+                                            surfAreaScreenUiState.minWaveHeights[dayIndex].toString(),
+                                            surfAreaScreenUiState.maxWaveHeights[dayIndex].toString()
+                                        ),
+                                        conditionStatus,
+                                        onNavigateToDailySurfAreaScreen
+                                    )
+                                }
+                            } else {
+                                items(6) { dayIndex ->
+                                    DayPreviewCard(
+                                        surfArea,
+                                        "no data",
+                                        Pair("", ""),
+                                        ConditionStatus.BLANK
+                                    ) {}
+                                }
+                            }
                         }
-                    } else {
-                        items(6) { dayIndex ->
-                            DayPreviewCard(surfArea, "no data", Pair("", ""),ConditionStatus.BLANK) {}
-                        }
+                    }
+                    item {
+                        InfoCard(surfArea)
                     }
                 }
             }
-            item {
-                InfoCard(surfArea)
+            if (alerts.isNotEmpty()) {
+                val alert = alerts.first()
+                val alertMessage = alert.properties?.description ?: "No description available"
+                val awarenessLevel = alert.properties?.awarenessLevel
+                val icon = awarenessLevel?.let { getIconBasedOnAwarenessLevel(it) } ?: R.drawable.icon_awareness_default
+
+
+                CustomAlert(
+                    title = surfArea.name,
+                    message = alertMessage.toString(),
+                    actionText = "OK",
+                    warningIcon = icon,
+                    data = null,
+                    showAlert = remember { mutableStateOf(true) },
+                    //actionWithValue = null,
+                    action = null,
+                )
+            }
+            else{
+                CustomAlert(
+                    title = "Farevarsel",
+                    message = "STORM SØK DEKNING!!!!",
+                    actionText = "OK",
+                    warningIcon = R.drawable.icon_awareness_yellow_outlined,
+                    data = null,
+                    showAlert = remember { mutableStateOf(true) },
+                    //actionWithValue = null,
+                    action = null,
+                )
             }
         }
+
+
+fun getIconBasedOnAwarenessLevel(awarenessLevel: String): Int {
+    return try {
+        if (awarenessLevel.isNotEmpty()) {
+            val firstChar = awarenessLevel.firstOrNull()?.toString()
+
+            when (firstChar) {
+                "2" -> R.drawable.icon_awareness_yellow_outlined
+                "3" -> R.drawable.icon_awareness_orange
+                "4" -> R.drawable.icon_awareness_red
+                else -> R.drawable.icon_awareness_default // If awarenessLevel is not 2, 3, or 4
+            }
+        } else {
+            R.drawable.icon_awareness_default // If awarenessLevel is an empty string
+        }
+    } catch (e: Exception) {
+        R.drawable.icon_awareness_default
     }
 }
 
