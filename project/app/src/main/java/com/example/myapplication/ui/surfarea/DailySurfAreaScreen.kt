@@ -61,7 +61,7 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
 
 
     dailySurfAreaScreenViewModel.updateOFLFNext7Days(surfArea = surfArea)
-    dailySurfAreaScreenViewModel.updateWavePeriod(surfArea=surfArea)
+    dailySurfAreaScreenViewModel.updateWavePeriods(surfArea=surfArea)
 
     val navController = NavigationManager.navController
 
@@ -134,22 +134,24 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                         // [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]
                         if (surfAreaDataForDay.isNotEmpty()) {
                             items(times.size) { time ->
-                                Log.d("hourindex","$time")
                                 val hourIndex = times[time]
+                                Log.d("hourindex","${times[time][3]}")
+
                                 val surfAreaDataForHour :  List<Any>? = surfAreaDataForDay[hourIndex]
                                 //henter objektet for timen som er en liste med Pair<List<Int>, Double>
-                                val timestamp = hourIndex[3]
-                                val windSpeed = surfAreaDataForHour?.get(0) ?: 0.0
-                                val windGust = surfAreaDataForHour?.get(1)  ?: 0.0
-                                val windDir = surfAreaDataForHour?.get(2)   ?: 0.0
-                                val temp = surfAreaDataForHour?.get(3)      ?: 0.0
-                                val icon = surfAreaDataForHour?.get(4)      ?: 0.0
-                                val waveHeight = surfAreaDataForHour?.get(5)?: 0.0
-                                val waveDir = surfAreaDataForHour?.get(6)   ?: 0.0
-                                val waveperiod = try {dailySurfAreaScreenUiState.wavePeriods[hourIndex[3]]} catch (e: IndexOutOfBoundsException) {0.0}
-                                Log.d("period","$waveperiod")
+                                val timestamp  = hourIndex[3]
+                                val windSpeed  = surfAreaDataForHour?.get(0) ?: 0.0
+                                val windGust   = surfAreaDataForHour?.get(1) ?: 0.0
+                                val windDir    = surfAreaDataForHour?.get(2) ?: 0.0
+                                val temp       = surfAreaDataForHour?.get(3) ?: 0.0
+                                val icon       = surfAreaDataForHour?.get(4) ?: 0.0
+                                val waveHeight = surfAreaDataForHour?.get(5) ?: 0.0
+                                val waveDir    = surfAreaDataForHour?.get(6) ?: 0.0
+                                val waveperiod = try {dailySurfAreaScreenUiState.wavePeriods[hourIndex[3]]} catch (e: IndexOutOfBoundsException) {
+                                    Log.d("DSAscreen", "Waveperiods${hourIndex[3]} out of bounds for waveperiods of size ${dailySurfAreaScreenUiState.wavePeriods.size}")
+                                    0.0
+                                }
 
-                                Log.d("timestamp", "$timestamp")
                                 AllInfoCard(
                                     timestamp = timestamp.toString(),
                                     surfArea = surfArea,
