@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.myapplication.NavigationManager
 import com.example.myapplication.R
 import com.example.myapplication.model.conditions.ConditionStatus
@@ -69,7 +70,6 @@ import java.util.Locale
 fun SurfAreaScreen(
     surfAreaName: String,
     surfAreaScreenViewModel: SurfAreaScreenViewModel = viewModel(),
-    onNavigateToDailySurfAreaScreen: (String) -> Unit = {}
 ) {
 
     val surfArea: SurfArea = SurfArea.entries.find {
@@ -193,7 +193,8 @@ fun SurfAreaScreen(
                                         surfAreaScreenUiState.maxWaveHeights[dayIndex].toString()
                                     ),
                                     conditionStatus,
-                                    onNavigateToDailySurfAreaScreen
+                                    dayIndex,
+                                    navController
                                 )
                             }
                         } else {
@@ -202,8 +203,10 @@ fun SurfAreaScreen(
                                     surfArea,
                                     "no data",
                                     Pair("", ""),
-                                    ConditionStatus.BLANK
-                                ) {}
+                                    ConditionStatus.BLANK,
+                                    0,
+                                    null
+                                )
                             }
                         }
                     }
@@ -407,7 +410,8 @@ fun DayPreviewCard(
     day: String,
     waveHeightMinMax: Pair<String, String>,
     conditionStatus: ConditionStatus?,
-    onNavigateToDailySurfAreaScreen: (String) -> Unit
+    dayIndex: Int,
+    navController: NavController?
 ) {
     Card(
         modifier = Modifier
@@ -416,7 +420,7 @@ fun DayPreviewCard(
             .height(120.dp)
             .background(color = SchemesSurface, shape = RoundedCornerShape(size = 20.dp))
             .clickable(
-                onClick = { onNavigateToDailySurfAreaScreen(surfArea.locationName) }
+                onClick = { navController?.navigate("DailySurfAreaScreen/${surfArea.locationName}/$dayIndex") ?: Unit }
             )
     ) {
         Column(
@@ -499,7 +503,7 @@ fun DayPreviewCard(
 @Composable
 private fun PreviewSurfAreaScreen() {
     MyApplicationTheme {
-        SurfAreaScreen("Solastranden"){}
+        SurfAreaScreen("Solastranden")
         //DayPreviewCard()
         //HeaderCard()
         //InfoCard()
