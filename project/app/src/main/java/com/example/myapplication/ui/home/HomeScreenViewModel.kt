@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalTime
+import kotlin.system.exitProcess
 
 data class HomeScreenUiState(
     val locationName: String = "",
@@ -100,7 +101,11 @@ class HomeScreenViewModel : ViewModel() {
             val newWaveHeights = allSurfAreasToday.keys.associateWith {
                 val dataToday:  Map<List<Int>, List<Any>> = allSurfAreasToday[it]!!
                 val windSpeed = dataToday.map { entry ->
-                    Pair(entry.key, entry.value[5] as Double)
+                    try {Pair(entry.key, entry.value[5] as Double)}
+                    catch (e: IndexOutOfBoundsException) {
+                        Log.e("HSVMERROR", "Entry at ${entry.key} was ${entry.value}")
+                        exitProcess(1)
+                    }
                 }
                 windSpeed
             }
