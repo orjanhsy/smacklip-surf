@@ -44,6 +44,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -289,12 +290,22 @@ fun InfoCard(surfArea: SurfArea) {
 }
 
 
+@Composable
+fun calculateFontSizeForText(text: String): TextUnit {
+    val maxLength = 10 // Maximum length before font size reduction
+    val defaultFontSize = 30.sp
 
+    return if (text.length > maxLength) {
+        val ratio = maxLength.toFloat() / text.length.toFloat()
+        (defaultFontSize * ratio)
+    } else {
+        defaultFontSize
+    }
+}
 
 @Composable
 fun HeaderCard(surfArea: SurfArea, icon : String) {
 
-    //getting the right date in the right format
     val currentDate = LocalDate.now()
     val formatter1 = DateTimeFormatter.ofPattern("E d. MMM", Locale("no", "NO"))
     val formattedDate1 = formatter1.format(currentDate)
@@ -325,15 +336,12 @@ fun HeaderCard(surfArea: SurfArea, icon : String) {
                         Text(
                             text = surfArea.locationName + "," + "\n " + surfArea.areaName, //+surfArea.areaName //hadde vært fint med Stadt
                             style = TextStyle(
-                                fontSize = 30.sp,
-                                //fontFamily = FontFamily(Font(R.font.inter)),
+                                fontSize = calculateFontSizeForText(surfArea.locationName),
                                 fontWeight = FontWeight(500),
                                 color = Color(0xFF313341),
                             ),
                             modifier = Modifier
                                 .padding(16.dp)
-                                .width(145.dp)
-                                .height(72.dp)
                         )
                     }
                     Row(
@@ -476,7 +484,7 @@ fun DayPreviewCard(
 @Composable
 private fun PreviewSurfAreaScreen() {
     MyApplicationTheme {
-        SurfAreaScreen("Hoddevik"){}
+        SurfAreaScreen("Solastranden"){}
         //DayPreviewCard()
         //HeaderCard()
         //InfoCard()
