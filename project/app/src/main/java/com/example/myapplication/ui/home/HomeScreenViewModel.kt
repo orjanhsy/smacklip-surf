@@ -208,11 +208,16 @@ class HomeScreenViewModel : ViewModel() {
 
     fun updateAlerts() {
         viewModelScope.launch(Dispatchers.IO) {
+            _homeScreenUiState.update {
+                it.copy(loading = true)
+            }
             val allAlerts = SurfArea.entries.associateWith {
                 smackLipRepository.getRelevantAlertsFor(it)
             }
             _homeScreenUiState.update {
-                it.copy(allRelevantAlerts = allAlerts)
+                it.copy(
+                    allRelevantAlerts = allAlerts,
+                    loading = false)
             }
         }
     }
