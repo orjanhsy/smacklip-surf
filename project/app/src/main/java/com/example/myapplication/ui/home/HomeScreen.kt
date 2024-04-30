@@ -29,6 +29,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.outlined.CallMade
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
@@ -49,6 +50,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
@@ -488,16 +490,14 @@ fun SurfAreaCard(
                         text = " ${if (windDirection.isNotEmpty()) "${windDirection[0].second}°" else ""}"
                     )
 
-
-                    /*Image(
-                        painter = painterResource(id = R.drawable.arrow),
+                    Icon(
+                        imageVector = Icons.Outlined.CallMade,
                         contentDescription = "arrow icon",
                         modifier = Modifier
-
-
+                            .width(17.dp)
+                            .height(17.dp)
+                            .rotate(rotationAngleWind)
                     )
-
-                     */
                 }
 
 
