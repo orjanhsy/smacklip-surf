@@ -383,6 +383,7 @@ fun SurfAreaCard(
     windGustMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
     windDirectionMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
     waveHeightMap: Map<SurfArea,List<Pair<List<Int>, Double>>>,
+    waveDirMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
     alerts: List<Features>?,
     homeScreenViewModel: HomeScreenViewModel,
     showFavoriteButton: Boolean = true,
