@@ -51,13 +51,12 @@ fun SmackLipNavigation(){
         }
         composable("SurfAreaScreen/{surfArea}") { backStackEntry ->
             val surfArea = backStackEntry.arguments?.getString("surfArea") ?: ""
-            SurfAreaScreen(surfAreaName = surfArea,
-                onNavigateToDailySurfAreaScreen = {navController.navigate("DailySurfAreaScreen/$it")}
-            )
+            SurfAreaScreen(surfAreaName = surfArea)
         }
-        composable("DailySurfAreaScreen/{surfArea}") { backStackEntry ->
+        composable("DailySurfAreaScreen/{surfArea}/{dayIndex}") { backStackEntry ->
             val surfArea = backStackEntry.arguments?.getString("surfArea") ?: ""
-            DailySurfAreaScreen(surfAreaName = surfArea)
+            val dayIndex = backStackEntry.arguments?.getString("dayIndex")?.toInt() ?: 0 // TODO: Handle differently
+            DailySurfAreaScreen(surfAreaName = surfArea, daysFromToday = dayIndex)
 
         }
         composable("BottomBar"){
