@@ -49,6 +49,7 @@ import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
 import com.example.myapplication.ui.surfarea.HeaderCard
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.utils.RecourseUtils
+import java.time.LocalDate
 import java.time.LocalTime
 
 @SuppressLint("SuspiciousIndentation")
@@ -136,7 +137,9 @@ fun DailySurfAreaScreen(
                         }
                     }
                 }
-                HeaderCard(surfArea = surfArea, icon = headerIcon)
+                val time = try {LocalDate.of(times[0][0], times[0][1], times[0][2])}
+                catch (e: IndexOutOfBoundsException) {LocalDate.now()}
+                HeaderCard(surfArea = surfArea, icon = headerIcon, time)
                 LazyColumn(
                     modifier = Modifier
                         .padding(5.dp)
