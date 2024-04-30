@@ -375,8 +375,16 @@ fun AllInfoCard(
 
                 Spacer(modifier = Modifier.width(10.dp))
 
+                val surfBoard = when (conditionStatus) {
+                    ConditionStatus.GREAT -> ConditionStatus.GREAT.surfBoard
+                    ConditionStatus.DECENT -> ConditionStatus.DECENT.surfBoard
+                    ConditionStatus.POOR -> ConditionStatus.POOR.surfBoard
+                    ConditionStatus.BLANK -> ConditionStatus.BLANK.surfBoard
+                    null -> R.drawable.spm
+                }
+
                 Image(
-                    painter = painterResource(id = R.drawable.yellowboard),
+                    painter = painterResource(id = surfBoard),
                     contentDescription = "Weather Icon",
                     modifier = Modifier.size(20.dp)
                 )
