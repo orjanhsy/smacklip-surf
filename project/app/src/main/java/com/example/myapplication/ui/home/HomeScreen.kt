@@ -392,6 +392,13 @@ fun SurfAreaCard(
     val windGust = windGustMap[surfArea] ?: listOf()
     val windDirection = windDirectionMap[surfArea] ?: listOf()
     val waveHeight = waveHeightMap[surfArea] ?: listOf()
+    val rotationAngleWind: Float = when {
+        windDirection.isNotEmpty() -> {
+            val angle = windDirection[0].second.toFloat()
+            angle
+        }
+        else -> 0f
+    }
 
     Card(
         modifier = Modifier
