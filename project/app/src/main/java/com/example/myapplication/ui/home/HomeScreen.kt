@@ -148,6 +148,7 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNaviga
                                 windGustMap = homeScreenUiState.windGust,
                                 windDirectionMap = homeScreenUiState.windDirection,
                                 waveHeightMap = homeScreenUiState.waveHeight,
+                                waveDirMap = homeScreenUiState.waveDirections,
                                 alerts = homeScreenUiState.allRelevantAlerts[location],
                                 homeScreenViewModel = homeScreenViewModel,
                                 onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
@@ -319,6 +320,7 @@ fun FavoritesList(
                         windGustMap = windGustMap,
                         windDirectionMap = windDirectionMap,
                         waveHeightMap = waveHeightMap,
+                        waveDirMap = waveDirMap,
                         alerts = alerts?.get(surfArea),
                         homeScreenViewModel = HomeScreenViewModel(),
                         showFavoriteButton = false,
@@ -393,12 +395,21 @@ fun SurfAreaCard(
     val windSpeed = windSpeedMap[surfArea] ?: listOf()
     val windGust = windGustMap[surfArea] ?: listOf()
     val windDirection = windDirectionMap[surfArea] ?: listOf()
+    val waveDirection = waveDirMap[surfArea] ?: listOf()
     val waveHeight = waveHeightMap[surfArea] ?: listOf()
 
     // windDirection
     val rotationAngleWind: Float = when {
         windDirection.isNotEmpty() -> {
             val angle = windDirection[0].second.toFloat()
+            angle
+        }
+        else -> 0f
+    }
+    // waveDirection
+    val rotationAngleWave: Float = when {
+        waveDirection.isNotEmpty() -> {
+            val angle = waveDirection[0].second.toFloat()
             angle
         }
         else -> 0f
@@ -459,19 +470,30 @@ fun SurfAreaCard(
                 }
 
                 Row {
-                    Image(
-                        painter = painterResource(id = R.drawable.tsunami),
-                        contentDescription = "wave icon",
-                        modifier = Modifier
-                            .padding(0.02021.dp)
-                            .width(15.3587.dp)
-                            .height(14.47855.dp)
+                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 4.dp)) {
+                        Image(
+                            painter = painterResource(id = R.drawable.tsunami),
+                            contentDescription = "wave icon",
+                            modifier = Modifier
+                                .padding(0.02021.dp)
+                                .width(15.3587.dp)
+                                .height(14.47855.dp)
 
-                    )
-
+                        )
+                    }
                     Text(
-                        text = " ${if (waveHeight.isNotEmpty()) "${waveHeight[0].second}m" else ""}"
+                        text = " ${if (waveHeight.isNotEmpty()) "${waveHeight[0].second}m" else ""} "
                     )
+                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 4.dp)) {
+                        Icon(
+                            imageVector = Icons.Outlined.CallMade,
+                            contentDescription = "arrow icon",
+                            modifier = Modifier
+                                .width(17.dp)
+                                .height(17.dp)
+                                .rotate(rotationAngleWave - 45)
+                        )
+                    }
                 }
 
                 Row {
@@ -565,6 +587,9 @@ private fun PreviewSurfAreaCard() {
     val waveHeightMap: Map<SurfArea,List<Pair<List<Int>, Double>>> = mapOf(
         SurfArea.HODDEVIK to listOf(Pair(listOf(1, 2, 3, 4), 5.0))
     )
+    val waveDirMap: Map<SurfArea,List<Pair<List<Int>, Double>>> = mapOf(
+        SurfArea.HODDEVIK to listOf(Pair(listOf(3, 5, 8, 32), 184.3))
+    )
     val viewModel = HomeScreenViewModel()
     MyApplicationTheme {
         SurfAreaCard(
@@ -573,6 +598,7 @@ private fun PreviewSurfAreaCard() {
             windGustMap,
             windDirectionMap,
             waveHeightMap,
+            waveDirMap,
             listOf((Features(properties = Properties(description = "Det ræinar")))),
             viewModel,
             true
