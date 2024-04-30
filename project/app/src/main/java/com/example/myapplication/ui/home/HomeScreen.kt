@@ -441,9 +441,7 @@ fun SurfAreaCard(
                 horizontalAlignment = Alignment.Start,
             )
             {
-
                 Row {
-
                     Text(
                         text = surfArea.locationName,
                         style = TextStyle(
@@ -456,6 +454,7 @@ fun SurfAreaCard(
 
                     )
                 }
+
                 Row {
                     Image(
                         painter = painterResource(id = R.drawable.tsunami),
@@ -470,7 +469,6 @@ fun SurfAreaCard(
                     Text(
                         text = " ${if (waveHeight.isNotEmpty()) "${waveHeight[0].second}m" else ""}"
                     )
-
                 }
 
                 Row {
@@ -499,8 +497,6 @@ fun SurfAreaCard(
                             .rotate(rotationAngleWind)
                     )
                 }
-
-
 
                 /*
                 Row {
@@ -541,8 +537,6 @@ fun SurfAreaCard(
                                 .width(162.dp)
                                 .height(100.dp)
                                 .clip(RoundedCornerShape(8.dp))
-
-
                         )
                     }
                 }
