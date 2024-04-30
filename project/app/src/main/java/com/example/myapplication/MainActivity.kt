@@ -15,6 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.home.HomeScreen
 import com.example.myapplication.ui.map.MapScreen
+import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
 import com.example.myapplication.ui.surfarea.SurfAreaScreen
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
@@ -39,6 +40,7 @@ class MainActivity : ComponentActivity() {
 fun SmackLipNavigation(){
     val navController = rememberNavController()
     NavigationManager.navController = navController
+    val dsvm = DailySurfAreaScreenViewModel()
     NavHost(
         navController = navController,
         startDestination = "HomeScreen",
@@ -56,7 +58,7 @@ fun SmackLipNavigation(){
         composable("DailySurfAreaScreen/{surfArea}/{dayIndex}") { backStackEntry ->
             val surfArea = backStackEntry.arguments?.getString("surfArea") ?: ""
             val dayIndex = backStackEntry.arguments?.getString("dayIndex")?.toInt() ?: 0 // TODO: Handle differently
-            DailySurfAreaScreen(surfAreaName = surfArea, daysFromToday = dayIndex)
+            DailySurfAreaScreen(surfAreaName = surfArea, daysFromToday = dayIndex, dsvm)
 
         }
         composable("BottomBar"){

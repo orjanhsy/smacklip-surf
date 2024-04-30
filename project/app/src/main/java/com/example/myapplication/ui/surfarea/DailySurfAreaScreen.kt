@@ -58,7 +58,7 @@ import java.time.LocalTime
 fun DailySurfAreaScreen(
     surfAreaName: String,
     daysFromToday: Int,
-    dailySurfAreaScreenViewModel: DailySurfAreaScreenViewModel = viewModel()
+    dailySurfAreaScreenViewModel: DailySurfAreaScreenViewModel
 ) {
 
     val surfArea: SurfArea = SurfArea.entries.find {
@@ -397,6 +397,6 @@ fun AllInfoCard(
 @Composable
 private fun PreviewDailyScreen() {
     MyApplicationTheme {
-        DailySurfAreaScreen("Hoddevik", 0)
+        DailySurfAreaScreen("Hoddevik", 0, DailySurfAreaScreenViewModel())
     }
 }
