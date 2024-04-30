@@ -482,7 +482,6 @@ fun SurfAreaCard(
                     )
 
 
-
                     /*Image(
                         painter = painterResource(id = R.drawable.arrow),
                         contentDescription = "arrow icon",
