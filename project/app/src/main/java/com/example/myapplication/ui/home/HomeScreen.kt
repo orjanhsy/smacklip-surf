@@ -472,30 +472,31 @@ fun SurfAreaCard(
                 }
 
                 Row {
-                    Image(
-                        painter = painterResource(id = R.drawable.air),
-                        contentDescription = "Air icon",
-                        modifier = Modifier
-                            .padding(0.02021.dp)
-                            .width(15.3587.dp)
-                            .height(13.6348.dp)
-                    )
+                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 4.dp)) {
+                        Image(
+                            painter = painterResource(id = R.drawable.air),
+                            contentDescription = "Air icon",
+                            modifier = Modifier
+                                .padding(0.02021.dp)
+                                .width(15.3587.dp)
+                                .height(13.6348.dp)
+                        )
+                    }
                     Text(
-                        text = " ${if (windSpeed.isNotEmpty()) (windSpeed[0].second).toInt() else ""}" +
-                                if(windGust.isNotEmpty() && windSpeed.isNotEmpty() && windGust[0].second != windSpeed[0].second) "(${windGust[0].second.toInt()})" else ""
+                        text = " ${if (windSpeed.isNotEmpty()) (windSpeed[0].second).toInt()  else ""} " +
+                                if(windGust.isNotEmpty() && windSpeed.isNotEmpty() && windGust[0].second != windSpeed[0].second) "(${windGust[0].second.toInt()}) " else ""
                     )
-                    /*Text(
-                        text = " ${if (windDirection.isNotEmpty()) "${windDirection[0].second}°" else ""}"
-                    )*/
 
-                    Icon(
-                        imageVector = Icons.Outlined.CallMade,
-                        contentDescription = "arrow icon",
-                        modifier = Modifier
-                            .width(17.dp)
-                            .height(17.dp)
-                            .rotate(rotationAngleWind - 45)
-                    )
+                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 4.dp)) {
+                        Icon(
+                            imageVector = Icons.Outlined.CallMade,
+                            contentDescription = "arrow icon",
+                            modifier = Modifier
+                                .width(17.dp)
+                                .height(17.dp)
+                                .rotate(rotationAngleWind - 45)
+                        )
+                    }
                 }
 
                 /*
