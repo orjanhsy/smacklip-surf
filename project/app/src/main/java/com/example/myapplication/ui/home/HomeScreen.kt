@@ -51,6 +51,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
@@ -117,6 +118,7 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNaviga
                         windGustMap = homeScreenUiState.windGust,
                         windDirectionMap = homeScreenUiState.windDirection,
                         waveHeightMap = homeScreenUiState.waveHeight,
+                        waveDirMap = homeScreenUiState.waveDirections,
                         alerts = homeScreenUiState.allRelevantAlerts,
                         onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
                     )
@@ -146,6 +148,7 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNaviga
                                 windGustMap = homeScreenUiState.windGust,
                                 windDirectionMap = homeScreenUiState.windDirection,
                                 waveHeightMap = homeScreenUiState.waveHeight,
+                                waveDirMap = homeScreenUiState.waveDirections,
                                 alerts = homeScreenUiState.allRelevantAlerts[location],
                                 homeScreenViewModel = homeScreenViewModel,
                                 onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
@@ -287,6 +290,7 @@ fun FavoritesList(
     windGustMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
     windDirectionMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
     waveHeightMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
+    waveDirMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
     alerts: Map<SurfArea, List<Features>>?,
     onNavigateToSurfAreaScreen: (String) -> Unit
 ) {
@@ -316,6 +320,7 @@ fun FavoritesList(
                         windGustMap = windGustMap,
                         windDirectionMap = windDirectionMap,
                         waveHeightMap = waveHeightMap,
+                        waveDirMap = waveDirMap,
                         alerts = alerts?.get(surfArea),
                         homeScreenViewModel = HomeScreenViewModel(),
                         showFavoriteButton = false,
@@ -380,6 +385,7 @@ fun SurfAreaCard(
     windGustMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
     windDirectionMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
     waveHeightMap: Map<SurfArea,List<Pair<List<Int>, Double>>>,
+    waveDirMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
     alerts: List<Features>?,
     homeScreenViewModel: HomeScreenViewModel,
     showFavoriteButton: Boolean = true,
@@ -389,6 +395,7 @@ fun SurfAreaCard(
     val windSpeed = windSpeedMap[surfArea] ?: listOf()
     val windGust = windGustMap[surfArea] ?: listOf()
     val windDirection = windDirectionMap[surfArea] ?: listOf()
+    val waveDirection = waveDirMap[surfArea] ?: listOf()
     val waveHeight = waveHeightMap[surfArea] ?: listOf()
 
     // windDirection
@@ -399,11 +406,20 @@ fun SurfAreaCard(
         }
         else -> 0f
     }
+    // waveDirection
+    val rotationAngleWave: Float = when {
+        waveDirection.isNotEmpty() -> {
+            val angle = waveDirection[0].second.toFloat()
+            angle
+        }
+        else -> 0f
+    }
 
     Card(
         modifier = Modifier
             .wrapContentSize()
             .padding(start = 8.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)
+            .shadow(4.dp, shape = RoundedCornerShape(10.dp))
             .clickable(
                 onClick = { onNavigateToSurfAreaScreen(surfArea.locationName) })
     ) {
@@ -454,46 +470,58 @@ fun SurfAreaCard(
                 }
 
                 Row {
-                    Image(
-                        painter = painterResource(id = R.drawable.tsunami),
-                        contentDescription = "wave icon",
-                        modifier = Modifier
-                            .padding(0.02021.dp)
-                            .width(15.3587.dp)
-                            .height(14.47855.dp)
+                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 4.dp)) {
+                        Image(
+                            painter = painterResource(id = R.drawable.tsunami),
+                            contentDescription = "wave icon",
+                            modifier = Modifier
+                                .padding(0.02021.dp)
+                                .width(15.3587.dp)
+                                .height(14.47855.dp)
 
-                    )
-
+                        )
+                    }
                     Text(
-                        text = " ${if (waveHeight.isNotEmpty()) "${waveHeight[0].second}m" else ""}"
+                        text = " ${if (waveHeight.isNotEmpty()) "${waveHeight[0].second}m" else ""} "
                     )
+                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 4.dp)) {
+                        Icon(
+                            imageVector = Icons.Outlined.CallMade,
+                            contentDescription = "arrow icon",
+                            modifier = Modifier
+                                .width(17.dp)
+                                .height(17.dp)
+                                .rotate(rotationAngleWave - 45)
+                        )
+                    }
                 }
 
                 Row {
-                    Image(
-                        painter = painterResource(id = R.drawable.air),
-                        contentDescription = "Air icon",
-                        modifier = Modifier
-                            .padding(0.02021.dp)
-                            .width(15.3587.dp)
-                            .height(13.6348.dp)
-                    )
+                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 4.dp)) {
+                        Image(
+                            painter = painterResource(id = R.drawable.air),
+                            contentDescription = "Air icon",
+                            modifier = Modifier
+                                .padding(0.02021.dp)
+                                .width(15.3587.dp)
+                                .height(13.6348.dp)
+                        )
+                    }
                     Text(
-                        text = " ${if (windSpeed.isNotEmpty()) (windSpeed[0].second).toInt() else ""}" +
-                                if(windGust.isNotEmpty() && windSpeed.isNotEmpty() && windGust[0].second != windSpeed[0].second) "(${windGust[0].second.toInt()})" else ""
-                    )
-                    Text(
-                        text = " ${if (windDirection.isNotEmpty()) "${windDirection[0].second}°" else ""}"
+                        text = " ${if (windSpeed.isNotEmpty()) (windSpeed[0].second).toInt()  else ""} " +
+                                if(windGust.isNotEmpty() && windSpeed.isNotEmpty() && windGust[0].second != windSpeed[0].second) "(${windGust[0].second.toInt()}) " else ""
                     )
 
-                    Icon(
-                        imageVector = Icons.Outlined.CallMade,
-                        contentDescription = "arrow icon",
-                        modifier = Modifier
-                            .width(17.dp)
-                            .height(17.dp)
-                            .rotate(rotationAngleWind)
-                    )
+                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 4.dp)) {
+                        Icon(
+                            imageVector = Icons.Outlined.CallMade,
+                            contentDescription = "arrow icon",
+                            modifier = Modifier
+                                .width(17.dp)
+                                .height(17.dp)
+                                .rotate(rotationAngleWind - 45)
+                        )
+                    }
                 }
 
                 /*
@@ -559,6 +587,9 @@ private fun PreviewSurfAreaCard() {
     val waveHeightMap: Map<SurfArea,List<Pair<List<Int>, Double>>> = mapOf(
         SurfArea.HODDEVIK to listOf(Pair(listOf(1, 2, 3, 4), 5.0))
     )
+    val waveDirMap: Map<SurfArea,List<Pair<List<Int>, Double>>> = mapOf(
+        SurfArea.HODDEVIK to listOf(Pair(listOf(3, 5, 8, 32), 184.3))
+    )
     val viewModel = HomeScreenViewModel()
     MyApplicationTheme {
         SurfAreaCard(
@@ -567,6 +598,7 @@ private fun PreviewSurfAreaCard() {
             windGustMap,
             windDirectionMap,
             waveHeightMap,
+            waveDirMap,
             listOf((Features(properties = Properties(description = "Det ræinar")))),
             viewModel,
             true
