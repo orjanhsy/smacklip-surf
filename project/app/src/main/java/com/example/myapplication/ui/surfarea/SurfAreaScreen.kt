@@ -40,6 +40,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -284,7 +285,7 @@ fun InfoCard(surfArea: SurfArea) {
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             Text(
-                text = surfArea.description,
+                text = stringResource(surfArea.description),
                 style = TextStyle(
                     fontSize = 14.sp,
                     color = Color(0xFF4D5E6F),
