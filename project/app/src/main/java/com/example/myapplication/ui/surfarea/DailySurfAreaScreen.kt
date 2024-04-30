@@ -125,7 +125,10 @@ fun DailySurfAreaScreen(
                 var headerIcon = "default_icon"
                 val surfAreaDataForDay: Map<List<Int>, List<Any>> = dailySurfAreaScreenUiState.forecast7Days.getOrElse(daysFromToday) { emptyMap() }
                 Log.d("DSscreen", "Getting data for $daysFromToday")
-                val times = surfAreaDataForDay.keys.sortedBy { it[3] }
+
+                val times = surfAreaDataForDay.keys.sortedWith(
+                    compareBy<List<Int>> { it[2] }.thenBy { it[3] }
+                )
 
                 if (surfAreaDataForDay.isNotEmpty()) {
                     // siden mappet ikke er sortert henter vi ut alle aktuelle tidspunketer og sorterer dem
