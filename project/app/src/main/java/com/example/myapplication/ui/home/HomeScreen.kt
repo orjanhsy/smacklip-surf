@@ -29,6 +29,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.outlined.CallMade
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
@@ -49,6 +50,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
@@ -283,13 +285,12 @@ fun FavoritesList(
     favorites: List<SurfArea>,
     windSpeedMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
     windGustMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
-    windDirectionMap:Map<SurfArea, List<Pair<List<Int>, Double>>>,
+    windDirectionMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
     waveHeightMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
     alerts: Map<SurfArea, List<Features>>?,
     onNavigateToSurfAreaScreen: (String) -> Unit
 ) {
     Column {
-
         Text(
             text = "  Favoritter",
             style = TextStyle(
@@ -313,7 +314,7 @@ fun FavoritesList(
                         surfArea = surfArea,
                         windSpeedMap = windSpeedMap,
                         windGustMap = windGustMap,
-                        windDirectionMap = emptyMap(),
+                        windDirectionMap = windDirectionMap,
                         waveHeightMap = waveHeightMap,
                         alerts = alerts?.get(surfArea),
                         homeScreenViewModel = HomeScreenViewModel(),
@@ -333,11 +334,9 @@ fun FavoritesList(
                             painter = painterResource(id = R.drawable.icon_awareness_yellow_outlined),
                             contentDescription = "warning icon",
                             modifier = Modifier
-                                .padding(8.dp))
-
-
+                                .padding(8.dp)
+                        )
                     }
-
                 }
             }
         }
@@ -392,6 +391,15 @@ fun SurfAreaCard(
     val windDirection = windDirectionMap[surfArea] ?: listOf()
     val waveHeight = waveHeightMap[surfArea] ?: listOf()
 
+    // windDirection
+    val rotationAngleWind: Float = when {
+        windDirection.isNotEmpty() -> {
+            val angle = windDirection[0].second.toFloat()
+            angle
+        }
+        else -> 0f
+    }
+
     Card(
         modifier = Modifier
             .wrapContentSize()
@@ -431,9 +439,7 @@ fun SurfAreaCard(
                 horizontalAlignment = Alignment.Start,
             )
             {
-
                 Row {
-
                     Text(
                         text = surfArea.locationName,
                         style = TextStyle(
@@ -446,6 +452,7 @@ fun SurfAreaCard(
 
                     )
                 }
+
                 Row {
                     Image(
                         painter = painterResource(id = R.drawable.tsunami),
@@ -460,7 +467,6 @@ fun SurfAreaCard(
                     Text(
                         text = " ${if (waveHeight.isNotEmpty()) "${waveHeight[0].second}m" else ""}"
                     )
-
                 }
 
                 Row {
@@ -480,19 +486,15 @@ fun SurfAreaCard(
                         text = " ${if (windDirection.isNotEmpty()) "${windDirection[0].second}°" else ""}"
                     )
 
-
-                    /*Image(
-                        painter = painterResource(id = R.drawable.arrow),
+                    Icon(
+                        imageVector = Icons.Outlined.CallMade,
                         contentDescription = "arrow icon",
                         modifier = Modifier
-
-
+                            .width(17.dp)
+                            .height(17.dp)
+                            .rotate(rotationAngleWind)
                     )
-
-                     */
                 }
-
-
 
                 /*
                 Row {
@@ -533,8 +535,6 @@ fun SurfAreaCard(
                                 .width(162.dp)
                                 .height(100.dp)
                                 .clip(RoundedCornerShape(8.dp))
-
-
                         )
                     }
                 }
