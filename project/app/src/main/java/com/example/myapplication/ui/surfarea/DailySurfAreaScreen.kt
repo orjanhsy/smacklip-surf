@@ -2,11 +2,10 @@
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -36,12 +35,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.NavigationManager
+import com.example.myapplication.R
 import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.common.composables.BottomBar
@@ -227,174 +226,164 @@ fun AllInfoCard(
     windGust: Any,
     windDir: Any,
     waveDir: Any,
-    temp : Any,
+    temp: Any,
     icon: Any,
     wavePeriod: Double?,
     conditionStatus: ConditionStatus?
 ) {
-    val recourseUtils : RecourseUtils = RecourseUtils()
+    val recourseUtils: RecourseUtils = RecourseUtils()
+
+    // winddir
+    val rotationAngleWind = when (windDir) {
+        is Double -> windDir.toFloat()
+        is Int -> windDir.toFloat()
+        else -> 0f
+    }
+
+    // wavedir
+    val rotationAngleWaveDir = when (waveDir) {
+        is Double -> waveDir.toFloat()
+        is Int -> waveDir.toFloat()
+        else -> 0f
+    }
+
     Card(
         modifier = Modifier
             .padding(3.dp)
             .fillMaxWidth()
             .height(49.dp)
     ) {
-//        Row () {
-//            Text(
-//                text = conditionStatus?.description ?: ""
-//            )
-//        }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(0.dp, Alignment.CenterHorizontally),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = "$timestamp",
-                style = TextStyle(
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight(400),
-                    color = Color(0xFF9A938C),
-                ),
-                modifier = Modifier.padding(4.dp)
-            )
-
-            Icon(
-                imageVector = Icons.Outlined.Air,
-                contentDescription = "air",
+        Spacer(modifier = Modifier.height(8.dp))
+            Row(
                 modifier = Modifier
-                    //.fillMaxSize()
-                    .width(20.dp)
-                    .height(20.dp)
-            )
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp, vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = timestamp,
+                    style = TextStyle(
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = Color(0xFF9A938C),
+                    ),
+                    modifier = Modifier.weight(1f)
+                )
 
-            Text(
-                text = "${(windSpeed as Double).toInt()} (${(windGust as Double).toInt()})",
-                style = TextStyle(
-                    fontSize = 13.sp,
-                    lineHeight = 15.sp,
-                    fontWeight = FontWeight(400),
-                    color = Color(0xFF9C9EAA),
-                    textAlign = TextAlign.Center,
-                ),
-                modifier = Modifier.padding(4.dp)
-            )
-            val rotationAngleWind = when (windDir) { //just in case its an Int
-                is Double -> windDir.toFloat()
-                is Int -> windDir.toFloat()
-                else -> 0f
+                // Wind Group
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Air,
+                        contentDescription = "Air",
+                        modifier = Modifier.size(20.dp)
+                    )
+
+                    Spacer(modifier = Modifier.width(6.dp))
+
+                    Text(
+                        text = "${(windSpeed as Double).toInt()} (${(windGust as Double).toInt()})",
+                        style = TextStyle(
+                            fontSize = 13.sp,
+                            lineHeight = 15.sp,
+                            fontWeight = FontWeight.Normal,
+                            color = Color(0xFF9C9EAA),
+                        )
+                    )
+
+                    Spacer(modifier = Modifier.width(6.dp))
+
+                    Icon(
+                        imageVector = Icons.Outlined.CallMade,
+                        contentDescription = "Arrow",
+                        modifier = Modifier.size(17.dp).rotate(rotationAngleWind)
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(14.dp))
+
+                // Wave Group
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Tsunami,
+                        contentDescription = "Tsunami",
+                        modifier = Modifier.size(18.dp)
+                    )
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    Text(
+                        text = "$waveHeight m",
+                        style = TextStyle(
+                            fontSize = 13.sp,
+                            lineHeight = 15.sp,
+                            fontWeight = FontWeight.Normal,
+                            color = Color(0xFF9C9EAA),
+                        )
+                    )
+
+                    Spacer(modifier = Modifier.width(6.dp))
+
+                    Text(
+                        text = "${wavePeriod?.toInt()} sek",
+                        style = TextStyle(
+                            fontSize = 13.sp,
+                            lineHeight = 15.sp,
+                            fontWeight = FontWeight.Normal,
+                            color = Color(0xFF9C9EAA),
+                        )
+                    )
+
+                    Spacer(modifier = Modifier.width(6.dp))
+
+                    Icon(
+                        imageVector = Icons.Outlined.CallMade,
+                        contentDescription = "Arrow",
+                        modifier = Modifier.size(17.dp).rotate(rotationAngleWaveDir)
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(14.dp))
+
+                // Temp
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = if (temp is Double) {
+                            temp.toInt().toString()
+                        } else {
+                            temp.toString()
+                        },
+                        style = TextStyle(
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Normal,
+                            color = Color(0xFF9C9EAA),
+                        ),
+                        modifier = Modifier.padding(end = 4.dp)
+                    )
+
+                    Image(
+                        painter = painterResource(id = recourseUtils.findWeatherSymbol(icon.toString())),
+                        contentDescription = "Weather Icon",
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(10.dp))
+
+                Image(
+                    painter = painterResource(id = R.drawable.yellowboard),
+                    contentDescription = "Weather Icon",
+                    modifier = Modifier.size(20.dp)
+                )
             }
-
-            Icon(
-                imageVector = Icons.Outlined.CallMade,
-                contentDescription = "arrow",
-                modifier = Modifier
-                    //.fillMaxSize()
-                    .width(17.dp)
-                    .height(17.dp)
-                   // .rotate((windDir as Double).toFloat()) // Rotate the arrow icon based on the wave direction
-                    .rotate(rotationAngleWind)
-
-            )
-/*
-            Text(
-                text = "${(windDir as Double).toInt()}",
-                style = TextStyle(
-                    fontSize = 13.sp,
-                    lineHeight = 15.sp,
-                    fontWeight = FontWeight(400),
-                    color = Color(0xFF9C9EAA),
-                    textAlign = TextAlign.Center,
-                ),
-                modifier = Modifier.padding(4.dp)
-            ) */
-
-            Icon(
-                imageVector = Icons.Outlined.Tsunami,
-                contentDescription = "arrow",
-                modifier = Modifier
-                    //.fillMaxSize()
-                    .width(18.dp)
-                    .height(18.dp)
-            )
-
-            Text(
-                text = "$waveHeight m",
-                style = TextStyle(
-                    fontSize = 13.sp,
-                    lineHeight = 15.sp,
-                    fontWeight = FontWeight(400),
-                    color = Color(0xFF9C9EAA),
-                    textAlign = TextAlign.Center,
-                ),
-                modifier = Modifier.padding(4.dp)
-            )
-
-            Text(
-                text = "${wavePeriod?.toInt()} sek",
-                style = TextStyle(
-                    fontSize = 13.sp,
-                    lineHeight = 15.sp,
-                    fontWeight = FontWeight(400),
-                    color = Color(0xFF9C9EAA),
-                    textAlign = TextAlign.Center,
-                ),
-                modifier = Modifier.padding(4.dp)
-            )
-            val rotationAngle = when (waveDir) { //just in case its an Int
-                is Double -> waveDir.toFloat()
-                is Int -> waveDir.toFloat()
-                else -> 0f
-            }
-            Icon(
-                imageVector = Icons.Outlined.CallMade,
-                contentDescription = "arrow",
-                modifier = Modifier
-                    //.fillMaxSize()
-                    .width(17.dp)
-                    .height(17.dp)
-                    .rotate(rotationAngle)
-                    //.rotate((waveDir as Double).toFloat()) // Rotate the arrow icon based on the wave direction
-            )
-/*
-            Text(
-                text = "${(waveDir as Double).toInt()}",
-                style = TextStyle(
-                    fontSize = 13.sp,
-                    lineHeight = 15.sp,
-                    fontWeight = FontWeight(400),
-                    color = Color(0xFF9C9EAA),
-                    textAlign = TextAlign.Center,
-                ),
-                modifier = Modifier.padding(4.dp)
-            )*/
-
-            Text(
-                text = if (temp is Double) {
-                    temp.toInt().toString()
-                } else {
-                    temp.toString()
-                },
-                style = TextStyle(
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight(400),
-                    color = Color(0xFF9C9EAA),
-                    textAlign = TextAlign.Center,
-                ),
-                modifier = Modifier.padding(4.dp)
-            )
-
-            Image(
-                painter = painterResource(id = recourseUtils.findWeatherSymbol(icon.toString())),
-                contentDescription = "image description",
-                modifier = Modifier
-                    .padding(4.dp)
-                    .size(24.dp)
-                    .aspectRatio(1f)
-            )
         }
     }
-}
+
 
 @Preview(showBackground = true)
 @Composable
