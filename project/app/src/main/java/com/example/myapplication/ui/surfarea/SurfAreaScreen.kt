@@ -149,7 +149,11 @@ fun SurfAreaScreen(
 
                     if (surfAreaDataForDay.isNotEmpty()) {
                         // siden mappet ikke er sortert henter vi ut alle aktuelle tidspunketer og sorterer dem
-                        val times = surfAreaDataForDay.keys.sortedBy { it[3] }
+
+                        val times = surfAreaDataForDay.keys.sortedWith(
+                            compareBy<List<Int>> { it[2] }.thenBy { it[3] }
+                        )
+
                         for (time in times) {
                             val hour = time[3]
                             if (hour == currentHour) {
