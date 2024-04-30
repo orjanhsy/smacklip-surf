@@ -484,9 +484,9 @@ fun SurfAreaCard(
                         text = " ${if (windSpeed.isNotEmpty()) (windSpeed[0].second).toInt() else ""}" +
                                 if(windGust.isNotEmpty() && windSpeed.isNotEmpty() && windGust[0].second != windSpeed[0].second) "(${windGust[0].second.toInt()})" else ""
                     )
-                    Text(
+                    /*Text(
                         text = " ${if (windDirection.isNotEmpty()) "${windDirection[0].second}°" else ""}"
-                    )
+                    )*/
 
                     Icon(
                         imageVector = Icons.Outlined.CallMade,
@@ -494,7 +494,7 @@ fun SurfAreaCard(
                         modifier = Modifier
                             .width(17.dp)
                             .height(17.dp)
-                            .rotate(rotationAngleWind)
+                            .rotate(rotationAngleWind - 45)
                     )
                 }
 
