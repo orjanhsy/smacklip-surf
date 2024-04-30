@@ -83,6 +83,7 @@ enum class SurfArea(
         modelName = "rogaland2v",
         pointId = 36
     ),
+
     SOLA(
         locationName = "Solastranden",
         areaName = "Jæren",
@@ -122,7 +123,6 @@ enum class SurfArea(
         pointId = 25
     ),
 
-
     STAVASANDEN(
         locationName = "Stavasanden",
         areaName = "Karmøy",
@@ -149,7 +149,7 @@ enum class SurfArea(
         pointId = 34
     ),
 
-    MJØLHUSSAND(
+    MJOLHUSSAND(
         "Mjølhussand",
         "Karmøy",
         59.168651,
@@ -161,7 +161,6 @@ enum class SurfArea(
         modelName = "rogaland2v",
         pointId = 34
     ),
-
 
     //Østlandet
     SALTSTEIN(
