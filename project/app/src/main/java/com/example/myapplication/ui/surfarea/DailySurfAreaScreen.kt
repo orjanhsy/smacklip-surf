@@ -50,12 +50,17 @@ import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
 import com.example.myapplication.ui.surfarea.HeaderCard
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.utils.RecourseUtils
+import java.time.LocalDate
 import java.time.LocalTime
 
 @SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: DailySurfAreaScreenViewModel = viewModel()) {
+fun DailySurfAreaScreen(
+    surfAreaName: String,
+    daysFromToday: Int,
+    dailySurfAreaScreenViewModel: DailySurfAreaScreenViewModel = viewModel()
+) {
 
     val surfArea: SurfArea = SurfArea.entries.find {
         it.locationName == surfAreaName
@@ -119,8 +124,8 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
             ) {
                 val currentHour = LocalTime.now().hour
                 var headerIcon = "default_icon"
-                val surfAreaDataForDay: Map<List<Int>, List<Any>> =
-                    dailySurfAreaScreenUiState.forecast7Days.getOrElse(0) { emptyMap() } // TODO: more days
+                val surfAreaDataForDay: Map<List<Int>, List<Any>> = dailySurfAreaScreenUiState.forecast7Days.getOrElse(daysFromToday) { emptyMap() }
+                Log.d("DSscreen", "Getting data for $daysFromToday")
                 val times = surfAreaDataForDay.keys.sortedBy { it[3] }
 
                 if (surfAreaDataForDay.isNotEmpty()) {
@@ -133,7 +138,9 @@ fun DailySurfAreaScreen(surfAreaName: String, dailySurfAreaScreenViewModel: Dail
                         }
                     }
                 }
-                HeaderCard(surfArea = surfArea, icon = headerIcon)
+                val time = try {LocalDate.of(times[0][0], times[0][1], times[0][2])}
+                catch (e: IndexOutOfBoundsException) {LocalDate.now()}
+                HeaderCard(surfArea = surfArea, icon = headerIcon, time)
                 LazyColumn(
                     modifier = Modifier
                         .padding(5.dp)
@@ -393,6 +400,6 @@ fun AllInfoCard(
 @Composable
 private fun PreviewDailyScreen() {
     MyApplicationTheme {
-        DailySurfAreaScreen("Hoddevik")
+        DailySurfAreaScreen("Hoddevik", 0)
     }
 }

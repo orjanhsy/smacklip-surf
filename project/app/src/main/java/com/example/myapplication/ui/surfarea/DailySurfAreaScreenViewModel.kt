@@ -34,60 +34,6 @@ class DailySurfAreaScreenViewModel: ViewModel() {
     private val _dailySurfAreaScreenUiState = MutableStateFlow(DailySurfAreaScreenUiState())
     val dailySurfAreaScreenUiState: StateFlow<DailySurfAreaScreenUiState> = _dailySurfAreaScreenUiState.asStateFlow()
 
-
-    /*
-
-    fun updateWaveHeights(surfArea: SurfArea) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _dailySurfAreaScreenUiState.update {
-                val newWaveHeights = smackLipRepository.getWaveHeights(surfArea)
-                it.copy(waveHeights = newWaveHeights)
-            }
-        }
-    }
-    */
-    /*
-    fun updateWaveDirections(surfArea: SurfArea) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _dailySurfAreaScreenUiState.update {
-                val newWaveDirections = smackLipRepository.getWaveDirections(surfArea)
-                it.copy(waveDirections = newWaveDirections)
-            }
-        }
-    }*/
-
-    /*
-    fun updateWindDirection(surfArea: SurfArea) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _dailySurfAreaScreenUiState.update {
-                val newWindDirection = smackLipRepository.getWindDirection(surfArea)
-                it.copy(windDirections = newWindDirection)
-            }
-        }
-    }*/
-
-    /*
-    fun updateWindSpeed(surfArea: SurfArea) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _dailySurfAreaScreenUiState.update {
-                val newWindSpeed = smackLipRepository.getWindSpeed(surfArea)
-                it.copy(windSpeeds = newWindSpeed)
-            }
-        }
-    }*/
-
-    /*
-    fun updateWindSpeedOfGust(surfArea: SurfArea) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _dailySurfAreaScreenUiState.update {
-                val newWindSpeedOfGust = smackLipRepository.getWindSpeedOfGust(surfArea)
-                it.copy(windSpeedOfGusts = newWindSpeedOfGust)
-            }
-        }
-    }
-    */
-
-
     // TODO: test usage
     fun updateStatusConditions(surfArea: SurfArea, forecast: List<Map<List<Int>, List<Any>>>) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -101,9 +47,10 @@ class DailySurfAreaScreenViewModel: ViewModel() {
                 forecast.map {dayMap ->
                     val todaysStatuses: MutableMap<List<Int>, ConditionStatus> = mutableMapOf()
                     dayMap.entries.map {(time, data) ->
+                        val wavePeriod = try{state.wavePeriods[0]} catch (e: IndexOutOfBoundsException) {null} //TODO: change to logical wavePeriod
                         val conditionStatus = smackLipRepository.getConditionStatus(
                             location = surfArea,
-                            wavePeriod = state.wavePeriods[0], // TODO: change to logical wavePeriod
+                            wavePeriod = wavePeriod,
                             windSpeed = data[0] as Double,
                             windGust = data[1] as Double,
                             windDir = data[2] as Double,

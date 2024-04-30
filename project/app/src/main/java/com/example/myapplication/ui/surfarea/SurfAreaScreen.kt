@@ -49,6 +49,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.myapplication.NavigationManager
 import com.example.myapplication.R
 import com.example.myapplication.model.conditions.ConditionStatus
@@ -63,6 +64,7 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities.Local
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -70,7 +72,6 @@ import java.util.Locale
 fun SurfAreaScreen(
     surfAreaName: String,
     surfAreaScreenViewModel: SurfAreaScreenViewModel = viewModel(),
-    onNavigateToDailySurfAreaScreen: (String) -> Unit = {}
 ) {
 
     val surfArea: SurfArea = SurfArea.entries.find {
@@ -153,10 +154,10 @@ fun SurfAreaScreen(
                                 headerIcon = surfAreaDataForDay[time]!![4].toString()
                             }
                         }
-                        HeaderCard(surfArea = surfArea, icon = headerIcon)
+                        HeaderCard(surfArea = surfArea, icon = headerIcon, LocalDate.now())
                     }
                         else{
-                            HeaderCard(surfArea = surfArea, icon = R.drawable.spm.toString())
+                            HeaderCard(surfArea = surfArea, icon = R.drawable.spm.toString(), LocalDate.now())
                     }
                 }
                 item {
@@ -194,7 +195,8 @@ fun SurfAreaScreen(
                                         surfAreaScreenUiState.maxWaveHeights[dayIndex].toString()
                                     ),
                                     conditionStatus,
-                                    onNavigateToDailySurfAreaScreen
+                                    dayIndex,
+                                    navController
                                 )
                             }
                         } else {
@@ -203,8 +205,10 @@ fun SurfAreaScreen(
                                     surfArea,
                                     "no data",
                                     Pair("", ""),
-                                    ConditionStatus.BLANK
-                                ) {}
+                                    ConditionStatus.BLANK,
+                                    0,
+                                    null
+                                )
                             }
                         }
                     }
@@ -320,11 +324,9 @@ fun calculateFontSizeForText(text: String): TextUnit {
 }
 
 @Composable
-fun HeaderCard(surfArea: SurfArea, icon : String) {
-
-    val currentDate = LocalDate.now()
+fun HeaderCard(surfArea: SurfArea, icon : String, date: LocalDate) {
     val formatter1 = DateTimeFormatter.ofPattern("E d. MMM", Locale("no", "NO"))
-    val formattedDate1 = formatter1.format(currentDate)
+    val formattedDate1 = formatter1.format(date)
 
     //to get icon
     val recourseUtils : RecourseUtils = RecourseUtils()
@@ -408,7 +410,8 @@ fun DayPreviewCard(
     day: String,
     waveHeightMinMax: Pair<String, String>,
     conditionStatus: ConditionStatus?,
-    onNavigateToDailySurfAreaScreen: (String) -> Unit
+    dayIndex: Int,
+    navController: NavController?
 ) {
     Card(
         modifier = Modifier
@@ -417,7 +420,7 @@ fun DayPreviewCard(
             .height(120.dp)
             .background(color = SchemesSurface, shape = RoundedCornerShape(size = 20.dp))
             .clickable(
-                onClick = { onNavigateToDailySurfAreaScreen(surfArea.locationName) }
+                onClick = { navController?.navigate("DailySurfAreaScreen/${surfArea.locationName}/$dayIndex") ?: Unit }
             )
     ) {
         Column(
@@ -500,7 +503,7 @@ fun DayPreviewCard(
 @Composable
 private fun PreviewSurfAreaScreen() {
     MyApplicationTheme {
-        SurfAreaScreen("Solastranden"){}
+        SurfAreaScreen("Solastranden")
         //DayPreviewCard()
         //HeaderCard()
         //InfoCard()
