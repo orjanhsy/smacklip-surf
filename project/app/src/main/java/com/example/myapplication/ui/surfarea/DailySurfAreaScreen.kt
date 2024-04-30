@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.NavigationManager
+import com.example.myapplication.R
 import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.common.composables.BottomBar
@@ -272,7 +273,7 @@ fun AllInfoCard(
                         modifier = Modifier.size(20.dp)
                     )
 
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(6.dp))
 
                     Text(
                         text = "${(windSpeed as Double).toInt()} (${(windGust as Double).toInt()})",
@@ -284,7 +285,7 @@ fun AllInfoCard(
                         )
                     )
 
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(6.dp))
 
                     Icon(
                         imageVector = Icons.Outlined.CallMade,
@@ -293,7 +294,7 @@ fun AllInfoCard(
                     )
                 }
 
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(14.dp))
 
                 // Wave Group
                 Row(
@@ -317,7 +318,7 @@ fun AllInfoCard(
                         )
                     )
 
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(6.dp))
 
                     Text(
                         text = "${wavePeriod?.toInt()} sek",
@@ -329,7 +330,7 @@ fun AllInfoCard(
                         )
                     )
 
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(6.dp))
 
                     Icon(
                         imageVector = Icons.Outlined.CallMade,
@@ -338,7 +339,7 @@ fun AllInfoCard(
                     )
                 }
 
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(14.dp))
 
                 // Temp
                 Row(
@@ -365,10 +366,13 @@ fun AllInfoCard(
                     )
                 }
 
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(10.dp))
 
-                // Additional Icon
-                // Add your additional icon here
+                Image(
+                    painter = painterResource(id = R.drawable.yellowboard),
+                    contentDescription = "Weather Icon",
+                    modifier = Modifier.size(20.dp)
+                )
             }
         }
     }
