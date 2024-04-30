@@ -118,6 +118,7 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNaviga
                         windGustMap = homeScreenUiState.windGust,
                         windDirectionMap = homeScreenUiState.windDirection,
                         waveHeightMap = homeScreenUiState.waveHeight,
+                        waveDirMap = homeScreenUiState.waveDirections,
                         alerts = homeScreenUiState.allRelevantAlerts,
                         onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
                     )
@@ -288,6 +289,7 @@ fun FavoritesList(
     windGustMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
     windDirectionMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
     waveHeightMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
+    waveDirMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
     alerts: Map<SurfArea, List<Features>>?,
     onNavigateToSurfAreaScreen: (String) -> Unit
 ) {
