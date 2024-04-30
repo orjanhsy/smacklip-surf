@@ -272,6 +272,11 @@ fun AllInfoCard(
                 ),
                 modifier = Modifier.padding(4.dp)
             )
+            val rotationAngleWind = when (windDir) { //just in case its an Int
+                is Double -> windDir.toFloat()
+                is Int -> windDir.toFloat()
+                else -> 0f
+            }
 
             Icon(
                 imageVector = Icons.Outlined.CallMade,
@@ -280,7 +285,8 @@ fun AllInfoCard(
                     //.fillMaxSize()
                     .width(17.dp)
                     .height(17.dp)
-                    .rotate((windDir as Double).toFloat()) // Rotate the arrow icon based on the wave direction
+                   // .rotate((windDir as Double).toFloat()) // Rotate the arrow icon based on the wave direction
+                    .rotate(rotationAngleWind)
 
             )
 /*
@@ -328,7 +334,11 @@ fun AllInfoCard(
                 ),
                 modifier = Modifier.padding(4.dp)
             )
-
+            val rotationAngle = when (waveDir) { //just in case its an Int
+                is Double -> waveDir.toFloat()
+                is Int -> waveDir.toFloat()
+                else -> 0f
+            }
             Icon(
                 imageVector = Icons.Outlined.CallMade,
                 contentDescription = "arrow",
@@ -336,7 +346,8 @@ fun AllInfoCard(
                     //.fillMaxSize()
                     .width(17.dp)
                     .height(17.dp)
-                    .rotate((waveDir as Double).toFloat()) // Rotate the arrow icon based on the wave direction
+                    .rotate(rotationAngle)
+                    //.rotate((waveDir as Double).toFloat()) // Rotate the arrow icon based on the wave direction
             )
 /*
             Text(
