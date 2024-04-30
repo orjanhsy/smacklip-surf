@@ -11,38 +11,169 @@ enum class SurfArea(
     val image: Int,
     val optimalWaveDir: Double,
     val optimalWindDir: Double,
-    val description: String,
+    val description: Int,
     val modelName: String,
     val pointId: Int
 
     //nye = Sola, hellestø, Brusand, Sandvesand, Mjølhussand
 ) {
-    HODDEVIK("Hoddevik", "Stadt",62.1237, 5.1615833, R.drawable.cover___hoddevik, (300.0 + 180.0) % 360.0, 300.0, "Det kommer surfere fra hele verden for å oppleve bølgene i Hoddevik. Mye på grunn av det praktfulle landskapet med hvite sandstrender omkranset av høye fjellsider, men også fordi det ekstra godt egnet å surfe under ekstreme vindforhold fordi de høye fjellene skjermer stranden for den verste vinden. ", modelName = "stad20143x2v", pointId = 2),
-    ERVIKA("Ervika", "Stadt", 62.166674, 5.115609,R.drawable.cover__ervika , (310.0 + 180.0) % 360.0, 310.0, "Ervikstranda er en av de beste surfestrendene i Norge. Det er alltid mye bølger her som gjør det perfekt for avanserte surfere, men vær oppmerksom og ta forhåndsregler for det kan være en del undervannsstrømmer og vrakrester her. Her blir surfinga en fantastisk naturopplevelse med krystallklart vann og majestetiske fjell på alle kanter. På Ervikstranda har du nesten bølgegaranti, med bølger som slår inn både fra sørvest og nordvest.  ", modelName = "stad20143x2v", pointId = 2),
+    HODDEVIK(
+        locationName = "Hoddevik",
+        areaName = "Stadt",
+        lat = 62.1237,
+        lon = 5.1615833,
+        image = R.drawable.cover___hoddevik,
+        optimalWaveDir = (300.0 + 180.0) % 360.0,
+        optimalWindDir = 300.0,
+        description = R.string.description_hoddevik,
+        modelName = "stad20143x2v",
+        pointId = 2
+    ),
+
+    ERVIKA(
+        locationName = "Ervika",
+        areaName = "Stadt",
+        lat = 62.166674,
+        lon = 5.115609,
+        image = R.drawable.cover__ervika ,
+        optimalWaveDir = (310.0 + 180.0) % 360.0,
+        optimalWindDir = 310.0,
+        description = R.string.description_ervika,
+        modelName = "stad20143x2v",
+        pointId = 2
+    ),
 
     //Lofoten
-    SKAGSANDEN("Skagsanden", "Lofoten",68.107052, 13.295348, R.drawable.cover__skagsanden, (300.0 + 180.0) % 360.0, 300.0, "Lofoten har noen av Norges og kanskje verdens vakreste strender. Omkranset av fjell og fjorder ligger kritthvite sandstrender og azurblått hav, de perfekte plassene for late sommerdager. Hvit sand og turkisblått vann. Små bølger av turkisblått vann vaskes forsiktig over den hvite sanden mens fjelltoppene stiger opp i den blå himmelen over. Ordene arktisk og strand er vanligvis ikke nevnt sammen i samme setning, men i Lofoten er det kanskje noen av de mest spektakulære strendene du noensinne vil se.", modelName = "lofoten2v", pointId = 9),
-    UNSTAD("Unstad", "Lofoten",68.268527, 13.580834,R.drawable.cover__unstad , (320.0 + 180.0) % 360.0, 320.0,"Surfing i Lofoten foregår i all hovedsak ved Unstad på Vestvågøy. Her kan du boltre deg på en 200 meter lang hvit sandstrand og i viltre, arktiske bølger. Her ligger Unstad Arctic Surf, en campingplass hvor erfarne og tøffe surfere camper, surfer, spiser og koser seg. Her møter du både lokale og internasjonale surfere, profesjonelle så vel som uerfarne drømmere. Venstrebølgen i havet ved Unstad er en av de beste i verden. Proffene kommer på høsten og vinteren til Lofoten, mens de snille sommerbølgene passer for nybegynnere.", modelName = "lofoten2v", pointId = 10),
+    SKAGSANDEN(
+        locationName = "Skagsanden",
+        areaName = "Lofoten",
+        lat = 68.107052,
+        lon = 13.295348,
+        image = R.drawable.cover__skagsanden,
+        optimalWaveDir = (300.0 + 180.0) % 360.0,
+        optimalWindDir = 300.0,
+        description = R.string.description_skagsanden,
+        modelName = "lofoten2v",
+        pointId = 9
+    ),
+
+    UNSTAD(
+        locationName = "Unstad",
+        areaName = "Lofoten",
+        lat = 68.268527,
+        lon = 13.580834,
+        image = R.drawable.cover__unstad ,
+        optimalWaveDir = (320.0 + 180.0) % 360.0,
+        optimalWindDir = .0, //TODO: fIx
+        description = R.string.description_unstad,
+        modelName = "lofoten2v",
+        pointId = 10
+    ),
 
     //Sør-vest
-    JAEREN("Boresanden", "Jæren",58.800230, 5.548844, R.drawable.cover__jeren, (270.0 + 180.0) % 360.0, 270.0,"Den lange og flotte Borestranden er et yndet turmål blant de lokale. På fine sommerdager er stranden ofte full av bade- og soleglade gjester. Vær imidlertid klar over at understrømningene ved stranden kan være utrolig sterke, så her må du være forsiktig når du svømmer, og du må passe godt på barn som leker i vannet. Strandlivet er ellers fint hele året, en tur på stranden om vinteren kan være riktig så forfriskende. ", modelName = "rogaland2v", pointId = 36),
-    SOLA("Solastranden", "Jæren",58.884963, 5.596460, R.drawable.cover_sola, (270 + 180.0) % 360.0, 270.0, "Solastranden er langgrunn, derfor er den et populært sted for brettseilere og surfere på vindfulle dager. I nordenden finner du Sola Strand Hotel og Solastranden golfbane. I nærhet til stranden finner du også krigsminner, som bunkere og rester av kanonstillinger. Med Solastranden som utgangspunkt, kan du også ta turen langs stranden og kysten fem kilometer sørover til Vigdel for en flott gåtur med bademuligheter, både på strand og langs svaberg og klipper.", modelName = "rogaland2v", pointId = 35),
-    HELLESTO("Hellestø", "Jæren",58.841397, 5.556923, R.drawable.cover_hellesto, (285.0 + 180.0) % 360.0,  285.0,"På Jæren er strendene hvite, naturen vakker, himmelen høy og horisonten vid. Kysten langs Jæren ligger åpen mot havet og er et mekka for surfere. Jæren ligger like utenfor Stavanger og er et flatt og vidstrakt område med mildt klima hele året. Her finner du milevis med hvite sandstrender, sanddyner, og flere lakseelver. Jæren har trolig Norges beste surfeforhold, også for nybegynnere, og flere surfeskoler som villig lærer deg surfekunstens regler.", modelName = "rogaland2v", pointId = 35),
-    BRUSAND("Brusandstranden", "Jæren",58.533791, 5.743437, R.drawable.cover_brusand, (215.0 + 180.0) % 360.0, 215.0, "Skal du prøve brett for først gang, kan det lønne seg å starte bølgesurfingen på strendene på Sola, Bore, Brusand og Hellestø. Her er vannet varmt og bølgestørrelsen liten. Jæren ligger like utenfor Stavanger og er et flatt og vidstrakt område med mildt klima hele året. Her finner du milevis med hvite sandstrender, sanddyner, og flere lakseelver. Jæren har trolig Norges beste surfeforhold, også for nybegynnere, og flere surfeskoler som villig lærer deg surfekunstens regler.", modelName = "jaren2v", pointId = 25),
+    JAEREN(
+        locationName = "Boresanden",
+        areaName = "Jæren",
+        lat = 58.800230,
+        lon = 5.548844,
+        image = R.drawable.cover__jeren,
+        optimalWaveDir = (270.0 + 180.0) % 360.0,
+        optimalWindDir = 270.0,
+        description = R.string.description_jaeren,
+        modelName = "rogaland2v",
+        pointId = 36
+    ),
 
+    SOLA(
+        locationName = "Solastranden",
+        areaName = "Jæren",
+        lat = 58.884963,
+        lon = 5.596460,
+        image = R.drawable.cover_sola,
+        optimalWaveDir = (270 + 180.0) % 360.0,
+        optimalWindDir = 270.0,
+        description = R.string.description_sola,
+        modelName = "rogaland2v",
+        pointId = 35
+    ),
 
-    STAVASANDEN("Stavasanden", "Karmøy",59.233526, 5.183540, R.drawable.cover_stavasanden, (320.0 + 180.0) % 360.0, 320.0, "For nybegynnere innen bølgesurfing er Stavasand ett godt alternativ. Flotte strender og nærhet til storhavet gjør Karmøy til en ideell plass å drive surfing, kiting og vindsurfing. Det er gode forhold for surfing sommer og tidlig høst, spesielt for nybegynnere, med relativt liten bølgestørrelse. Kraftig vind og åpent hav gjør vinteren til høysesong for de mer erfarne. Havbunnens topografi sørger for god surf break og surfere valfartes fra hele regionen om somrene for å ”catche” den perfekte bølgen.\n", modelName = "rogaland2v", pointId = 55),
-    SANDVESAND("Sandvesand", "Karmøy",59.170507, 5.194763, R.drawable.cover_sandvesanden, (230.0 + 180.0) % 360.0, 230.0,  "Flotte strender og nærhet til storhavet gjør Karmøy til en ideell plass å drive surfing, kiting og vindsurfing. Det er gode forhold for surfing sommer og tidlig høst, spesielt for nybegynnere, med varmt vann og relativt liten bølgestørrelse.Havbunnens topografi sørger for god surf break og surfere valfartes fra hele regionen om somrene for å \"catche\" den perfekte bølgen. Sandvesand anbefales for mer erfarne surfere. ", modelName = "rogaland2v", pointId = 34),
-    MJØLHUSSAND("Mjølhussand", "Karmøy", 59.168651, 5.196098, R.drawable.cover_mjolhussanden, (275.0 + 180.0) % 360.0, 275.0, "Flotte strender og nærhet til storhavet gjør Karmøy til en ideell plass å drive surfing, kiting og vindsurfing. Det er gode forhold for surfing sommer og tidlig høst, spesielt for nybegynnere, med varmt vann og relativt liten bølgestørrelse.Havbunnens topografi sørger for god surf break og surfere valfartes fra hele regionen om somrene for å \"catche\" den perfekte bølgen. Sandvesand anbefales for mer erfarne surfere. ", modelName = "rogaland2v", pointId = 34),
+    HELLESTO(
+        locationName = "Hellestø",
+        areaName = "Jæren",
+        lat = 58.841397,
+        lon = 5.556923,
+        image = R.drawable.cover_hellesto,
+        optimalWaveDir = (285.0 + 180.0) % 360.0,
+        optimalWindDir = 285.0,
+        description = R.string.description_hellesto,
+        modelName = "rogaland2v",
+        pointId = 35
+    ),
 
+    BRUSAND(
+        locationName = "Brusandstranden",
+        areaName = "Jæren",
+        lat = 58.533791,
+        lon = 5.743437,
+        image = R.drawable.cover_brusand,
+        optimalWaveDir = (215.0 + 180.0) % 360.0,
+        optimalWindDir = 215.0,
+        description = R.string.description_brusand,
+        modelName = "jaren2v",
+        pointId = 25
+    ),
+
+    STAVASANDEN(
+        locationName = "Stavasanden",
+        areaName = "Karmøy",
+        lat = 59.233526,
+        lon = 5.183540,
+        image = R.drawable.cover_stavasanden,
+        optimalWaveDir = (320.0 + 180.0) % 360.0,
+        optimalWindDir = 320.0,
+        description = R.string.description_stavasanden,
+        modelName = "rogaland2v",
+        pointId = 55
+    ),
+
+    SANDVESAND(
+        locationName = "Sandvesand",
+        areaName = "Karmøy",
+        lat = 59.170507,
+        lon = 5.194763,
+        image = R.drawable.cover_sandvesanden,
+        optimalWaveDir = (230.0 + 180.0) % 360.0,
+        optimalWindDir = 230.0,
+        description = R.string.description_sandvesand,
+        modelName = "rogaland2v",
+        pointId = 34
+    ),
+
+    MJOLHUSSAND(
+        "Mjølhussand",
+        "Karmøy",
+        59.168651,
+        5.196098,
+        R.drawable.cover_mjolhussanden,
+        (275.0 + 180.0) % 360.0,
+        275.0,
+        R.string.description_mjolhussand,
+        modelName = "rogaland2v",
+        pointId = 34
+    ),
 
     //Østlandet
-    SALTSTEIN("Saltstein", "Mølen", 58.969619, 9.832590, R.drawable.cover_saltstein, (190.0 + 180.0) % 360.0, 190.0, "Saltstein er hele østlandets lokale surfespot. Oppdaget og surfet for første gang på 80-tallet. Saltsteins historie er rik, surferne her er mange. Bli kjent med Saltstein og østlandets perle her. Saltstein ligger like ved Oddanesand Camping, helt presist på Mølen. Parkering skjer i sørskauen, og det er ikke lov å kjøre helt ned til spotten. Det er ikke lenger lov å parkere på Oddanesand Camping, og om du tar beina fatt gjennom campingplassen:", modelName = "ytre_oslofjord2v", pointId = 1),
-
-
-    //for tests (wrong optimal directions)
-    NORDKAPP("Nordkapp", "",71.1655,  25.7992, R.drawable.cover_waves, (360.0 + 180.0) % 360.0, 360.0,"description", modelName = "nordkapp2v", pointId = 5),
-    FEDJE("Fedje", "",60.7789, 4.71486, R.drawable.cover_waves, (360.0 + 180.0) % 360.0, 360.0, "description", modelName = "bremanger2v", pointId = 127),
-
+    SALTSTEIN(
+        locationName = "Saltstein",
+        areaName = "Mølen",
+        lat = 58.969619,
+        lon = 9.832590,
+        image = R.drawable.cover_saltstein,
+        optimalWaveDir = (190.0 + 180.0) % 360.0,
+        optimalWindDir = 190.0,
+        description = R.string.description_saltstein,
+        modelName = "ytre_oslofjord2v",
+        pointId = 1
+    )
 }
 
