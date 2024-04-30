@@ -285,7 +285,7 @@ fun FavoritesList(
     favorites: List<SurfArea>,
     windSpeedMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
     windGustMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
-    windDirectionMap:Map<SurfArea, List<Pair<List<Int>, Double>>>,
+    windDirectionMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
     waveHeightMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
     alerts: Map<SurfArea, List<Features>>?,
     onNavigateToSurfAreaScreen: (String) -> Unit
@@ -315,7 +315,7 @@ fun FavoritesList(
                         surfArea = surfArea,
                         windSpeedMap = windSpeedMap,
                         windGustMap = windGustMap,
-                        windDirectionMap = emptyMap(),
+                        windDirectionMap = windDirectionMap,
                         waveHeightMap = waveHeightMap,
                         alerts = alerts?.get(surfArea),
                         homeScreenViewModel = HomeScreenViewModel(),
