@@ -2,27 +2,41 @@ package com.example.myapplication.ui.map
 
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,9 +47,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -62,27 +79,19 @@ import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun MapScreen( mapScreenViewModel : MapScreenViewModel = viewModel(), onNavigateToSurfAreaScreen: (String) -> Unit = {}) {
 
     val mapScreenUiState : MapScreenUiState by mapScreenViewModel.mapScreenUiState.collectAsState()
     val mapRepository : MapRepositoryImpl = MapRepositoryImpl() //bruker direkte maprepository fordi mapbox har sin egen viewmodel? -
     val navController = NavigationManager.navController
+    val isSearchActive = remember { mutableStateOf(false) }
+    val searchPoint : MutableState<Point?> = remember{ mutableStateOf(null)}
     // TODO: sjekke (maprepository) ut at dette er ok.
     
 
     Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
-                ),
-                title = {
-                    Text(text = "Explore")
-                })
-        },
         bottomBar = {
             BottomBar(
                 onNavigateToHomeScreen = {
@@ -97,12 +106,21 @@ fun MapScreen( mapScreenViewModel : MapScreenViewModel = viewModel(), onNavigate
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
+            SearchBar(onQueryChange = {},
+                isSearchActive = isSearchActive.value,
+                onActiveChanged = { isActive ->
+                    isSearchActive.value = isActive
+                },
+                surfAreas = SurfArea.entries.toList(),
+                onZoomToLocation = {point -> searchPoint.value = point}
+                )
             MapBoxMap(
                 modifier = Modifier
                     .fillMaxSize(),
                 locations = mapRepository.locationToPoint(),
                 uiState = mapScreenUiState,
-                onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
+                onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen,
+                searchPoint = searchPoint
 
             )
         }
@@ -116,7 +134,8 @@ fun MapBoxMap(
     modifier: Modifier = Modifier,
     locations: List<Pair<SurfArea, Point>>,
     uiState: MapScreenUiState,
-    onNavigateToSurfAreaScreen: (String) -> Unit = {}
+    onNavigateToSurfAreaScreen: (String) -> Unit = {},
+    searchPoint: MutableState<Point?>
 ) {
     val startPosition = Point.fromLngLat(13.0, 65.1) //trondheim kommer i senter av skjermen, kan endre koordinater så hele norge synes?
     val context = LocalContext.current
@@ -137,6 +156,8 @@ fun MapBoxMap(
     ){
         AndroidView(
             factory = {
+
+
                 MapView(it).also { mapView ->
                     //avgjør hvordan kartet skal vises når de først lastes inn:
                     mapView.mapboxMap.flyTo(CameraOptions.Builder().zoom(3.9).center(startPosition).build())
@@ -147,15 +168,15 @@ fun MapBoxMap(
                 }
             },
             update = { mapView ->
-                mapView.mapboxMap.flyTo(CameraOptions.Builder().zoom(3.8).center(startPosition).build())
+                if (searchPoint.value == null){
+                    mapView.mapboxMap.flyTo(CameraOptions.Builder().zoom(3.8).center(startPosition).build())
+                }else{
+                    mapView.mapboxMap.flyTo(CameraOptions.Builder().zoom(10.0).center(searchPoint.value).build())
+                }
+
                 pointAnnotationManager?.let {
-
-
-
-                    //it.deleteAll() //fjerner alle tidligere markører hvis kartet oppdateres for å forhindre duplikater/uønskede markører
-
                     it.addClickListener { pointAnnotation ->
-                        // Handle the click event, e.g., showing a Toast or navigating to another screen
+                        // Handle the click event:
                         val clickedPoint = pointAnnotation.point
                         Log.d(
                             "pointAnnotation point: ",
@@ -202,7 +223,6 @@ fun MapBoxMap(
                 )
         }
     }
-
 }
 
 //TODO: må hoistes
@@ -340,6 +360,124 @@ fun SurfAreaCard(
         }
     }
 }
+
+@Composable
+fun SearchBar(
+    surfAreas: List<SurfArea>,
+    onQueryChange: (String) -> Unit,
+    isSearchActive: Boolean,
+    onActiveChanged: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+    onSearch: ((String) -> Unit)? = null,
+    onZoomToLocation: (Point) -> Unit
+) {
+    var searchQuery by remember { mutableStateOf("") }
+    var expanded by remember { mutableStateOf(false) }
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
+
+    val activeChanged: (Boolean) -> Unit = { active ->
+        if (!active) {
+            searchQuery = ""
+            onQueryChange("")
+        }
+        onActiveChanged(active)
+    }
+
+    Column(modifier = modifier) {
+        OutlinedTextField(
+            modifier = modifier
+                .padding(12.dp)
+                .fillMaxWidth(),
+            shape = CircleShape,
+            value = searchQuery,
+            onValueChange = { query ->
+                searchQuery = query
+                onQueryChange(query)
+                activeChanged(true)
+                expanded = true
+            },
+            placeholder = { Text("Søk etter surfeområde") },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Rounded.Search,
+                    contentDescription = "Search icon",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            },
+            trailingIcon = {
+                if (isSearchActive) {
+                    IconButton(
+                        onClick = {
+                            searchQuery = ""
+                            onQueryChange("")
+                            onActiveChanged(false)
+                            focusManager.clearFocus()
+                            keyboardController?.hide()
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = "Clear searchbar"
+                        )
+                    }
+                }
+            },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Search
+            ),
+            keyboardActions = KeyboardActions(
+                onSearch = {
+                    onSearch?.invoke(searchQuery)
+                    activeChanged(false)
+                    keyboardController?.hide()
+                    focusManager.clearFocus()
+                }
+            )
+        )
+        if (expanded && searchQuery.isNotEmpty()) {
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
+            ) {
+                val filteredSurfAreas =
+                    surfAreas.filter { it.locationName.startsWith(searchQuery, ignoreCase = true) }
+                items(filteredSurfAreas) { surfArea ->
+                    Column(modifier = Modifier.clickable {
+                        searchQuery = ""
+                        onQueryChange("")
+                        onActiveChanged(false)
+                        focusManager.clearFocus()
+                        keyboardController?.hide()
+                        onZoomToLocation(Point.fromLngLat(surfArea.lon, surfArea.lat))
+                    }) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .padding(vertical = 8.dp)
+                        ) {
+                            Text(
+                                text = surfArea.locationName,
+                                modifier = Modifier.weight(1f)
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Image(
+                                painter = painterResource(id = surfArea.image),
+                                contentDescription = "SurfArea image",
+                                modifier = Modifier.size(48.dp),
+                                contentScale = ContentScale.Crop,
+                                alignment = Alignment.CenterEnd
+                            )
+                        }
+                        Divider(modifier = Modifier.padding(horizontal = 12.dp))
+                    }
+                }
+            }
+        }
+    }
+}
+
 
 
 
