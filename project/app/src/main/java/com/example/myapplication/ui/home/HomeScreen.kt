@@ -121,9 +121,9 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNaviga
                     Column {
 
                         Text(
-                            text = "Alle lokasjoner",
+                            text = "  Alle lokasjoner",
                             style = TextStyle(
-                                fontSize = 13.sp,
+                                fontSize = 15.sp,
                                 //fontFamily = FontFamily(Font(R.font.inter))
                                 fontWeight = FontWeight(400),
                                 color = Color(0xFF9A938C)
@@ -291,9 +291,9 @@ fun FavoritesList(
     Column {
 
         Text(
-            text = "Favoritter",
+            text = "  Favoritter",
             style = TextStyle(
-                fontSize = 13.sp,
+                fontSize = 15.sp,
                 //fontFamily = FontFamily(Font(R.font.inter))
                 fontWeight = FontWeight(400),
                 color = Color(0xFF9A938C)
@@ -306,7 +306,7 @@ fun FavoritesList(
                 Card(
                     modifier = Modifier
                         .padding(horizontal = 8.dp, vertical = 8.dp)
-                        .size(width = 135.89417.dp, height = 251.48856.dp)
+                        .size(width = 150.0.dp, height = 200.00.dp)
                         .clip(RoundedCornerShape(10.dp))
                 ) {
                     SurfAreaCard(
@@ -352,10 +352,9 @@ fun EmptyFavoriteCard() {
         modifier =
         Modifier
             .wrapContentSize()
-            .padding(start = 8.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)
+            .padding(start = 8.dp, top = 10.dp, end = 8.dp, bottom = 8.dp)
             //.border(width = 0.80835.dp, color = Color(0xFFBEC8CA), shape = RoundedCornerShape(size = 6.70023.dp ))
-            .padding(horizontal = 8.dp, vertical = 8.dp)
-            .size(width = 135.89417.dp, height = 251.48856.dp)
+            .size(width = 150.dp, height = 200.dp)
             .background(color = Color(0xFFF5FAFB))
             .clip(RoundedCornerShape(10.dp))
 
