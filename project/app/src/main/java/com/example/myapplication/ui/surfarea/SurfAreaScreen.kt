@@ -2,6 +2,7 @@ package com.example.myapplication.ui.surfarea
 
 //import androidx.compose.material.icons.outlined.Tsunami
 import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,6 +26,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -264,13 +266,14 @@ fun getIconBasedOnAwarenessLevel(awarenessLevel: String): Int {
 
 @Composable
 fun InfoCard(surfArea: SurfArea) {
-    Card(
+    OutlinedCard(
         modifier = Modifier
             .fillMaxWidth()
             .width(300.dp)
             .height(350.dp)
             .padding(8.dp),
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(16.dp),
+        border = BorderStroke(2.dp, Color(0xFFBEC8CA)) // Define the border color and width
     ) {
         Column(
             modifier = Modifier

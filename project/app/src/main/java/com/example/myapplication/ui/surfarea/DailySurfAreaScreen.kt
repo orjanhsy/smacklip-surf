@@ -297,7 +297,7 @@ fun AllInfoCard(
                     Icon(
                         imageVector = Icons.Outlined.CallMade,
                         contentDescription = "Arrow",
-                        modifier = Modifier.size(17.dp).rotate(rotationAngleWind)
+                        modifier = Modifier.size(17.dp).rotate(rotationAngleWind - 45)
                     )
                 }
 
@@ -342,7 +342,7 @@ fun AllInfoCard(
                     Icon(
                         imageVector = Icons.Outlined.CallMade,
                         contentDescription = "Arrow",
-                        modifier = Modifier.size(17.dp).rotate(rotationAngleWaveDir)
+                        modifier = Modifier.size(17.dp).rotate(rotationAngleWaveDir - 45)
                     )
                 }
 
