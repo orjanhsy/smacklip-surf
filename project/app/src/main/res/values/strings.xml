@@ -1,4 +1,40 @@
 <resources>
     <string name="app_name">My Application</string>
     <string name="mapbox_access_token">pk.eyJ1IjoiYWduZXNoYiIsImEiOiJjbHU3MzRrbTUwMXV4Mmpuc2c5ZTl2YWNvIn0.ImXVX9Kg_XbGvb-ZPR9y3Q</string>
+    <string name="description_hoddevik">
+        Det kommer surfere fra hele verden for å oppleve bølgene i Hoddevik. Mye på grunn av det praktfulle landskapet med hvite sandstrender omkranset av høye fjellsider, men også fordi det ekstra godt egnet å surfe under ekstreme vindforhold fordi de høye fjellene skjermer stranden for den verste vinden.
+    </string>
+    <string name="description_ervika">
+        Ervikstranda er en av de beste surfestrendene i Norge. Det er alltid mye bølger her som gjør det perfekt for avanserte surfere, men vær oppmerksom og ta forhåndsregler for det kan være en del undervannsstrømmer og vrakrester her. Her blir surfinga en fantastisk naturopplevelse med krystallklart vann og majestetiske fjell på alle kanter. På Ervikstranda har du nesten bølgegaranti, med bølger som slår inn både fra sørvest og nordvest.
+    </string>
+    <string name="description_skagsanden">
+        Lofoten har noen av Norges og kanskje verdens vakreste strender. Omkranset av fjell og fjorder ligger kritthvite sandstrender og azurblått hav, de perfekte plassene for late sommerdager. Hvit sand og turkisblått vann. Små bølger av turkisblått vann vaskes forsiktig over den hvite sanden mens fjelltoppene stiger opp i den blå himmelen over. Ordene arktisk og strand er vanligvis ikke nevnt sammen i samme setning, men i Lofoten er det kanskje noen av de mest spektakulære strendene du noensinne vil se.
+    </string>
+    <string name="description_unstad">
+        Surfing i Lofoten foregår i all hovedsak ved Unstad på Vestvågøy. Her kan du boltre deg på en 200 meter lang hvit sandstrand og i viltre, arktiske bølger. Her ligger Unstad Arctic Surf, en campingplass hvor erfarne og tøffe surfere camper, surfer, spiser og koser seg. Her møter du både lokale og internasjonale surfere, profesjonelle så vel som uerfarne drømmere. Venstrebølgen i havet ved Unstad er en av de beste i verden. Proffene kommer på høsten og vinteren til Lofoten, mens de snille sommerbølgene passer for nybegynnere.
+    </string>
+    <string name="description_jaeren">
+        Den lange og flotte Borestranden er et yndet turmål blant de lokale. På fine sommerdager er stranden ofte full av bade- og soleglade gjester. Vær imidlertid klar over at understrømningene ved stranden kan være utrolig sterke, så her må du være forsiktig når du svømmer, og du må passe godt på barn som leker i vannet. Strandlivet er ellers fint hele året, en tur på stranden om vinteren kan være riktig så forfriskende.
+    </string>
+    <string name="description_sola">
+        Solastranden er langgrunn, derfor er den et populært sted for brettseilere og surfere på vindfulle dager. I nordenden finner du Sola Strand Hotel og Solastranden golfbane. I nærhet til stranden finner du også krigsminner, som bunkere og rester av kanonstillinger. Med Solastranden som utgangspunkt, kan du også ta turen langs stranden og kysten fem kilometer sørover til Vigdel for en flott gåtur med bademuligheter, både på strand og langs svaberg og klipper.
+    </string>
+    <string name="description_hellesto">
+        På Jæren er strendene hvite, naturen vakker, himmelen høy og horisonten vid. Kysten langs Jæren ligger åpen mot havet og er et mekka for surfere. Jæren ligger like utenfor Stavanger og er et flatt og vidstrakt område med mildt klima hele året. Her finner du milevis med hvite sandstrender, sanddyner, og flere lakseelver. Jæren har trolig Norges beste surfeforhold, også for nybegynnere, og flere surfeskoler som villig lærer deg surfekunstens regler.
+    </string>
+    <string name="description_brusand">
+        Skal du prøve brett for først gang, kan det lønne seg å starte bølgesurfingen på strendene på Sola, Bore, Brusand og Hellestø. Her er vannet varmt og bølgestørrelsen liten. Jæren ligger like utenfor Stavanger og er et flatt og vidstrakt område med mildt klima hele året. Her finner du milevis med hvite sandstrender, sanddyner, og flere lakseelver. Jæren har trolig Norges beste surfeforhold, også for nybegynnere, og flere surfeskoler som villig lærer deg surfekunstens regler.
+    </string>
+    <string name="description_stavasanden">
+        For nybegynnere innen bølgesurfing er Stavasand ett godt alternativ. Flotte strender og nærhet til storhavet gjør Karmøy til en ideell plass å drive surfing, kiting og vindsurfing. Det er gode forhold for surfing sommer og tidlig høst, spesielt for nybegynnere, med relativt liten bølgestørrelse. Kraftig vind og åpent hav gjør vinteren til høysesong for de mer erfarne. Havbunnens topografi sørger for god surf break og surfere valfartes fra hele regionen om somrene for å ”catche” den perfekte bølgen.
+    </string>
+    <string name="description_sandvesand">
+        Flotte strender og nærhet til storhavet gjør Karmøy til en ideell plass å drive surfing, kiting og vindsurfing. Det er gode forhold for surfing sommer og tidlig høst, spesielt for nybegynnere, med varmt vann og relativt liten bølgestørrelse.Havbunnens topografi sørger for god surf break og surfere valfartes fra hele regionen om somrene for å \"catche\" den perfekte bølgen. Sandvesand anbefales for mer erfarne surfere.
+    </string>
+    <string name="description_mjolhussand">
+        Flotte strender og nærhet til storhavet gjør Karmøy til en ideell plass å drive surfing, kiting og vindsurfing. Det er gode forhold for surfing sommer og tidlig høst, spesielt for nybegynnere, med varmt vann og relativt liten bølgestørrelse.Havbunnens topografi sørger for god surf break og surfere valfartes fra hele regionen om somrene for å \"catche\" den perfekte bølgen. Sandvesand anbefales for mer erfarne surfere.
+    </string>
+    <string name="description_saltstein">
+        Saltstein er hele østlandets lokale surfespot. Oppdaget og surfet for første gang på 80-tallet. Saltsteins historie er rik, surferne her er mange. Bli kjent med Saltstein og østlandets perle her. Saltstein ligger like ved Oddanesand Camping, helt presist på Mølen. Parkering skjer i sørskauen, og det er ikke lov å kjøre helt ned til spotten. Det er ikke lenger lov å parkere på Oddanesand Camping, og om du tar beina fatt gjennom campingplassen:
+    </string>
 </resources>
