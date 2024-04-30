@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.concurrent.ThreadPoolExecutor.DiscardOldestPolicy
+import kotlin.text.Typography.times
 
 data class DailySurfAreaScreenUiState(
     val location: SurfArea? = null,
@@ -48,8 +49,10 @@ class DailySurfAreaScreenViewModel: ViewModel() {
 
                 forecast.map {dayMap ->
                     val todaysStatuses: MutableMap<List<Int>, ConditionStatus> = mutableMapOf()
+
                     dayMap.entries.map {(time, data) ->
-                        val wavePeriod = try{state.wavePeriods[0]} catch (e: IndexOutOfBoundsException) {null} //TODO: change to logical wavePeriod
+                        val wavePeriod = try{state.wavePeriods[forecast.indexOf(dayMap) * time[3]]}
+                        catch (e: IndexOutOfBoundsException) {null}
                         val conditionStatus = smackLipRepository.getConditionStatus(
                             location = surfArea,
                             wavePeriod = wavePeriod,
