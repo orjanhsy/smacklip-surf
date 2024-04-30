@@ -331,7 +331,7 @@ fun SurfAreaCard(
                         .fillMaxWidth()
                         .padding(16.dp)
                 ) {
-                    Text("Gå til" + surfArea.locationName)
+                    Text("Gå til" + " " +  surfArea.locationName)
                 }
             }
 
