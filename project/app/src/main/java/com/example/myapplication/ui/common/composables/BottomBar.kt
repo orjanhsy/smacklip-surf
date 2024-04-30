@@ -52,11 +52,11 @@ fun BottomBar(onNavigateToHomeScreen: () -> Unit = {}, onNavigateToMapScreen: ()
             unselectedIcon = Icons.Default.Settings
         ),
     )
-    NavigationBar() {
+    NavigationBar {
         items.forEachIndexed{index, item->
             val isSelected = selectedItemIndex == index
             NavigationBarItem(
-                selected = selectedItemIndex == index,
+                selected = isSelected,
                 onClick = {
                     selectedItemIndex = index
                     // her man bruker navController
