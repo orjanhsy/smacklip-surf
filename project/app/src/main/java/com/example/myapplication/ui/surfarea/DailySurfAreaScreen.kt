@@ -31,6 +31,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -271,6 +272,11 @@ fun AllInfoCard(
                 ),
                 modifier = Modifier.padding(4.dp)
             )
+            val rotationAngleWind = when (windDir) { //just in case its an Int
+                is Double -> windDir.toFloat()
+                is Int -> windDir.toFloat()
+                else -> 0f
+            }
 
             Icon(
                 imageVector = Icons.Outlined.CallMade,
@@ -279,8 +285,11 @@ fun AllInfoCard(
                     //.fillMaxSize()
                     .width(17.dp)
                     .height(17.dp)
-            )
+                   // .rotate((windDir as Double).toFloat()) // Rotate the arrow icon based on the wave direction
+                    .rotate(rotationAngleWind)
 
+            )
+/*
             Text(
                 text = "${(windDir as Double).toInt()}",
                 style = TextStyle(
@@ -291,7 +300,7 @@ fun AllInfoCard(
                     textAlign = TextAlign.Center,
                 ),
                 modifier = Modifier.padding(4.dp)
-            )
+            ) */
 
             Icon(
                 imageVector = Icons.Outlined.Tsunami,
@@ -325,7 +334,11 @@ fun AllInfoCard(
                 ),
                 modifier = Modifier.padding(4.dp)
             )
-
+            val rotationAngle = when (waveDir) { //just in case its an Int
+                is Double -> waveDir.toFloat()
+                is Int -> waveDir.toFloat()
+                else -> 0f
+            }
             Icon(
                 imageVector = Icons.Outlined.CallMade,
                 contentDescription = "arrow",
@@ -333,7 +346,10 @@ fun AllInfoCard(
                     //.fillMaxSize()
                     .width(17.dp)
                     .height(17.dp)
+                    .rotate(rotationAngle)
+                    //.rotate((waveDir as Double).toFloat()) // Rotate the arrow icon based on the wave direction
             )
+/*
             Text(
                 text = "${(waveDir as Double).toInt()}",
                 style = TextStyle(
@@ -344,7 +360,7 @@ fun AllInfoCard(
                     textAlign = TextAlign.Center,
                 ),
                 modifier = Modifier.padding(4.dp)
-            )
+            )*/
 
             Text(
                 text = if (temp is Double) {
