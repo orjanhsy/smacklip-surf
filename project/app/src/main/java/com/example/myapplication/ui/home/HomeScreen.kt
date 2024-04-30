@@ -291,7 +291,6 @@ fun FavoritesList(
     onNavigateToSurfAreaScreen: (String) -> Unit
 ) {
     Column {
-
         Text(
             text = "Favoritter",
             style = TextStyle(
@@ -335,11 +334,9 @@ fun FavoritesList(
                             painter = painterResource(id = R.drawable.icon_awareness_yellow_outlined),
                             contentDescription = "warning icon",
                             modifier = Modifier
-                                .padding(8.dp))
-
-
+                                .padding(8.dp)
+                        )
                     }
-
                 }
             }
         }
