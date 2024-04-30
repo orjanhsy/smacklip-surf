@@ -182,34 +182,34 @@ class ExampleUnitTest {
         val locationForecast: LocationForecast = gson.fromJson(locationJson, LocationForecast::class.java)
         val timeseriesListLF: List<TimeserieLF> = locationForecast.properties.timeseries
         val timeSeriesLF = timeseriesListLF.map { it.time to it.data }
-        val windDirectionForecast = locationForecastRepository.getWindDirection(SurfArea.FEDJE)
+        val windDirectionForecast = locationForecastRepository.getWindDirection(SurfArea.HODDEVIK)
         assert(timeSeriesLF[0].second.instant.details.wind_from_direction == windDirectionForecast[0].second)
         assert(timeSeriesLF[10].second.instant.details.wind_from_direction == windDirectionForecast[10].second)
     }
 
     @Test
     fun locationForecastTimeSeriesExists() = runBlocking {
-        val timeSeries: List<Pair<String, DataLF>> = locationForecastRepository.getTimeSeries(SurfArea.FEDJE)
+        val timeSeries: List<Pair<String, DataLF>> = locationForecastRepository.getTimeSeries(SurfArea.HODDEVIK)
         assertTrue("Time series should not be empty", timeSeries.isNotEmpty())
     }
 
     @Test
     fun testGetWindDirection() = runBlocking {
-        val windDirectionList: List<Pair<String, Double>> = locationForecastRepository.getWindDirection(SurfArea.FEDJE)
+        val windDirectionList: List<Pair<String, Double>> = locationForecastRepository.getWindDirection(SurfArea.HODDEVIK)
         assertNotNull("Wind direction list should not be null", windDirectionList)
         assertFalse("Wind direction list should not be empty", windDirectionList.isEmpty())
     }
 
     @Test
     fun testGetWindSpeed() = runBlocking {
-        val windSpeedList: List<Pair<String, Double>> = locationForecastRepository.getWindSpeed(SurfArea.FEDJE)
+        val windSpeedList: List<Pair<String, Double>> = locationForecastRepository.getWindSpeed(SurfArea.HODDEVIK)
         assertNotNull("Wind speed should not be null", windSpeedList)
         assertFalse("Wind speed should not be empty", windSpeedList.isEmpty())
     }
 
     @Test
     fun testGetWindSpeedOfGust() = runBlocking {
-        val windSpeedOfGust: List<Pair<String, Double>> = locationForecastRepository.getWindSpeedOfGust(SurfArea.FEDJE)
+        val windSpeedOfGust: List<Pair<String, Double>> = locationForecastRepository.getWindSpeedOfGust(SurfArea.HODDEVIK)
         assertNotNull("Wind speed of gust should not be null", windSpeedOfGust)
         assertFalse("Wind speed of gust should not be empty", windSpeedOfGust.isEmpty())
     }
@@ -234,14 +234,6 @@ class ExampleUnitTest {
         }
     }
 
-
-    @Test
-    fun testGetWaveHeightsSmackLipNordkapp() = runBlocking {
-        //henter data fra API, må sjekke i API om det stemmer
-        println(smackLipRepository.getWaveHeights(SurfArea.NORDKAPP)[0].first.toString())
-        println(smackLipRepository.getWaveHeights(SurfArea.NORDKAPP)[0].second)
-
-    }
     @Test
     fun testGetWaveHeightsSmackLipErvika() = runBlocking {
         println("Ervika:")
@@ -275,39 +267,6 @@ class ExampleUnitTest {
         println(locationForecastRepository.getWindSpeed(SurfArea.HODDEVIK)[0].second)
     }
 
-
-    @Test
-    fun testGetWindDirectionSmackLip() = runBlocking {
-        println(smackLipRepository.getWindDirection(SurfArea.FEDJE)[0].first.toString())
-        println(smackLipRepository.getWindDirection(SurfArea.FEDJE)[0].second)
-    }
-
-    @Test
-    fun testGetWindSpeedSmackLip() = runBlocking {
-        println(smackLipRepository.getWindSpeed(SurfArea.FEDJE)[0].first.toString())
-        println(smackLipRepository.getWindSpeed(SurfArea.FEDJE)[0].second)
-    }
-
-
-
-    @Test
-    fun testGetWindSpeedOfGustSmackLip() = runBlocking {
-        println(smackLipRepository.getWindSpeedOfGust(SurfArea.FEDJE)[0].first.toString())
-        println(smackLipRepository.getWindSpeedOfGust(SurfArea.FEDJE)[0].second)
-    }
-
-
-
-
-    /*
-    @Test
-    fun testGetForecastNext24Hours() = runBlocking {
-        val tmp : MutableList<MutableList<Pair<List<Int>, Pair<Int, List<Double>>>>> = smackLipRepository.getForecastNext24Hours()
-
-        println(smackLipRepository.getForecastNext24Hours().toString())
-    }
-
-     */
 
     @Test
     fun testGetSymbolCode() = runBlocking{

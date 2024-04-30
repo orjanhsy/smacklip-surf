@@ -176,11 +176,5 @@ enum class SurfArea(
         modelName = "ytre_oslofjord2v",
         pointId = 1
     ),
-
-
-    //for tests (wrong optimal directions)
-    NORDKAPP("Nordkapp", "",71.1655,  25.7992, R.drawable.cover_waves, (360.0 + 180.0) % 360.0, 360.0,"description", modelName = "nordkapp2v", pointId = 5),
-    FEDJE("Fedje", "",60.7789, 4.71486, R.drawable.cover_waves, (360.0 + 180.0) % 360.0, 360.0, "description", modelName = "bremanger2v", pointId = 127),
-
 }
 
