@@ -51,6 +51,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
@@ -404,6 +405,7 @@ fun SurfAreaCard(
         modifier = Modifier
             .wrapContentSize()
             .padding(start = 8.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)
+            .shadow(4.dp, shape = RoundedCornerShape(10.dp))
             .clickable(
                 onClick = { onNavigateToSurfAreaScreen(surfArea.locationName) })
     ) {
