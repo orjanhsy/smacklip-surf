@@ -137,7 +137,7 @@ fun MapBoxMap(
     onNavigateToSurfAreaScreen: (String) -> Unit = {},
     searchPoint: MutableState<Point?>
 ) {
-    val startPosition = Point.fromLngLat(13.0, 65.1) //trondheim kommer i senter av skjermen, kan endre koordinater så hele norge synes?
+    val startPosition = Point.fromLngLat(13.0, 65.1)
     val context = LocalContext.current
     val marker = remember(context) {
         context.getDrawable(R.drawable.marker )!!.toBitmap()
@@ -217,7 +217,7 @@ fun MapBoxMap(
         if (selectedMarker.value != null) {
             SurfAreaCard(
                 surfArea = selectedMarker.value!!,
-                onCloseClick = {selectedMarker.value = null},
+                onCloseClick = { selectedMarker.value = null },
                 uiState = uiState,
                 onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
                 )
@@ -228,7 +228,7 @@ fun MapBoxMap(
 //TODO: må hoistes
 //hjelpemetode for å sjekke at to koordinater er tilnærmet like ved bruk av verdien threshold
 fun isMatchingCoordinates(point1: Point, point2: Point): Boolean {
-    val threshold = 0.1
+    val threshold = 0.001
     return kotlin.math.abs(point1.latitude() - point2.latitude()) <= threshold &&
             kotlin.math.abs(point1.longitude() - point2.longitude()) <= threshold
 }
@@ -246,7 +246,6 @@ fun SurfAreaCard(
     //current data for surfArea som sendes inn:
     val windSpeed: Double = uiState.windSpeed[surfArea]?.get(0)?.second ?: 0.0
     val windGust: Double = uiState.windGust[surfArea]?.get(0)?.second ?: 0.0
-    val windDirection: Double = uiState.windDirection[surfArea]?.get(0)?.second ?: 0.0
     val airTemperature: Double = uiState.airTemperature[surfArea]?.get(0)?.second ?: 0.0
     val symbolCode: String = uiState.symbolCode[surfArea]?.get(0)?.second ?: ""
     val waveHeight: Double = uiState.waveHeight[surfArea]?.get(0)?.second ?: 0.0
