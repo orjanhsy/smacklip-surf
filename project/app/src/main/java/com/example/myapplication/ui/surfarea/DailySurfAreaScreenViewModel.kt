@@ -47,9 +47,10 @@ class DailySurfAreaScreenViewModel: ViewModel() {
                 forecast.map {dayMap ->
                     val todaysStatuses: MutableMap<List<Int>, ConditionStatus> = mutableMapOf()
                     dayMap.entries.map {(time, data) ->
+                        val wavePeriod = try{state.wavePeriods[0]} catch (e: IndexOutOfBoundsException) {null} //TODO: change to logical wavePeriod
                         val conditionStatus = smackLipRepository.getConditionStatus(
                             location = surfArea,
-                            wavePeriod = state.wavePeriods[0], // TODO: change to logical wavePeriod
+                            wavePeriod = wavePeriod,
                             windSpeed = data[0] as Double,
                             windGust = data[1] as Double,
                             windDir = data[2] as Double,

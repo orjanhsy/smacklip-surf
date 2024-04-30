@@ -63,6 +63,7 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities.Local
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -152,10 +153,10 @@ fun SurfAreaScreen(
                                 headerIcon = surfAreaDataForDay[time]!![4].toString()
                             }
                         }
-                        HeaderCard(surfArea = surfArea, icon = headerIcon)
+                        HeaderCard(surfArea = surfArea, icon = headerIcon, LocalDate.now())
                     }
                         else{
-                            HeaderCard(surfArea = surfArea, icon = R.drawable.spm.toString())
+                            HeaderCard(surfArea = surfArea, icon = R.drawable.spm.toString(), LocalDate.now())
                     }
                 }
                 item {
@@ -322,11 +323,9 @@ fun calculateFontSizeForText(text: String): TextUnit {
 }
 
 @Composable
-fun HeaderCard(surfArea: SurfArea, icon : String) {
-
-    val currentDate = LocalDate.now()
+fun HeaderCard(surfArea: SurfArea, icon : String, date: LocalDate) {
     val formatter1 = DateTimeFormatter.ofPattern("E d. MMM", Locale("no", "NO"))
-    val formattedDate1 = formatter1.format(currentDate)
+    val formattedDate1 = formatter1.format(date)
 
     //to get icon
     val recourseUtils : RecourseUtils = RecourseUtils()
