@@ -422,6 +422,7 @@ fun DayPreviewCard(
             .clickable(
                 onClick = { navController?.navigate("DailySurfAreaScreen/${surfArea.locationName}/$dayIndex") ?: Unit }
             )
+            .shadow(4.dp, shape = RoundedCornerShape(10.dp))
     ) {
         Column(
             modifier = Modifier
