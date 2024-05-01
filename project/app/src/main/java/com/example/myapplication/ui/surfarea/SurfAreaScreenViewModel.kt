@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
 import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.metalerts.Features
+import com.example.myapplication.model.smacklip.DayData
+import com.example.myapplication.model.smacklip.Forecast7DaysOFLF
 import com.example.myapplication.model.surfareas.SurfArea
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,10 +22,9 @@ data class SurfAreaScreenUiState(
     val wavePeriods: List<Double?> = emptyList(),
     val maxWaveHeights: List<Double> = emptyList(),
     val minWaveHeights: List<Double> = emptyList(),
-    val windDirections: List<List<Pair<List<Int>, Double>>> = emptyList(),
     val bestConditionStatuses: Map<Int, ConditionStatus> = mutableMapOf(),
 
-    val forecastNext7Days: List<Map<List<Int>, List<Any>>> = mutableListOf(), //hører til den nye metoden med async
+    val forecastNext7Days: Forecast7DaysOFLF = Forecast7DaysOFLF(), //hører til den nye metoden med async
     val loading: Boolean = false
 
 )
@@ -41,9 +42,18 @@ class SurfAreaScreenViewModel: ViewModel() {
             _surfAreaScreenUiState.update {
                 it.copy(loading = true)
             }
-            val newNext7Days = smackLipRepository.getSurfAreaOFLFNext7Days(surfArea)
-            val newMaxWaveHeights = newNext7Days.map {it.maxBy { entry -> entry.value[5] as Double }.value[5] as Double}
-            val newMinWaveHeights = newNext7Days.map {it.minBy { entry -> entry.value[5] as Double }.value[5] as Double}
+            val newNext7Days: Forecast7DaysOFLF = smackLipRepository.getSurfAreaOFLFNext7Days(surfArea)
+            val newMaxWaveHeights: List<Double> = newNext7Days.forecast7Days.map{dayData ->
+                dayData.dayData.maxBy {
+                    it.value.waveHeight
+                }.value.waveHeight
+            }
+
+            val newMinWaveHeights: List<Double> = newNext7Days.forecast7Days.map{dayData ->
+                dayData.dayData.minBy {
+                    it.value.waveHeight
+                }.value.waveHeight
+            }
             _surfAreaScreenUiState.update {
                 it.copy (
                     forecastNext7Days = newNext7Days,
