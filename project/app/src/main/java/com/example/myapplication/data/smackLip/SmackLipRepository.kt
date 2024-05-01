@@ -301,13 +301,7 @@ class SmackLipRepositoryImpl (
     }
 
     override suspend fun getAllWavePeriodsNext3Days(): AllWavePeriods {
-
-        val wavePeriods = getAllWaveForecastsNext3Days()
-        val formattedWavePeriods: MutableMap<SurfArea, List<Double?>> = mutableMapOf()
-        SurfArea.entries.forEach { surfArea ->
-            formattedWavePeriods[surfArea] = wavePeriods[surfArea]!!.flatMap { listOf(it, it, it) }
-        }
-        return AllWavePeriods(formattedWavePeriods)
+        return waveForecastRepository.allRelevantWavePeriodsNext3DaysHardCoded()
     }
 
     override suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): List<Double?> {
