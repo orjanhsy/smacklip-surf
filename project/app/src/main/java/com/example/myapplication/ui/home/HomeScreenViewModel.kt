@@ -11,6 +11,7 @@ import com.example.myapplication.model.locationforecast.DataLF
 import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.model.oceanforecast.DataOF
 import com.example.myapplication.model.smacklip.AllSurfAreasOFLF
+import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.smacklip.DayData
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.waveforecast.AllWavePeriods
@@ -31,7 +32,7 @@ import kotlin.system.exitProcess
 
 data class HomeScreenUiState(
     val wavePeriods: AllWavePeriods = AllWavePeriods(),
-    val ofLfToday: Map<SurfArea, DayData> = mapOf(),
+    val ofLfNow: Map<SurfArea, DataAtTime> = mapOf(),
     val allRelevantAlerts: Map<SurfArea, List<Features>> = emptyMap(),
     val loading: Boolean = false
 )
@@ -51,14 +52,18 @@ class HomeScreenViewModel : ViewModel() {
     fun updateOFLF() {
 
         viewModelScope.launch(Dispatchers.IO) {
-            _homeScreenUiState.update {
+            _homeScreenUiState.update {state ->
                 val allNext7Days: AllSurfAreasOFLF = smackLipRepository.getAllOFLF7Days()
 
-                val newOfLfToday: Map<SurfArea, DayData> = allNext7Days.next7Days.entries.associate {(sa, forecast7Days) ->
-                    sa to forecast7Days.forecast7Days[0]
+                val newOfLfNow: Map<SurfArea, DataAtTime> = allNext7Days.next7Days.entries.associate {(sa, forecast7Days) ->
+                    val times = forecast7Days.forecast7Days[0].dayData.keys.sortedWith(
+                        compareBy<List<Int>> { it[2] }.thenBy { it[3] }
+                    )
+                    sa to forecast7Days.forecast7Days[0].dayData[times[0]]!!// TODO: !!
                 }
-                it.copy(
-                    ofLfToday = newOfLfToday,
+
+                state.copy(
+                    ofLfNow = newOfLfNow,
                     loading = false
                 )
             }
