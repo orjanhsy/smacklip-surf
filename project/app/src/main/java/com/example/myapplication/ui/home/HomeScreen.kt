@@ -143,11 +143,11 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNaviga
                             // TODO: !!
                             SurfAreaCard(
                                 location,
-                                windSpeed = homeScreenUiState.ofLfNow[location]!!.windSpeed,
-                                windGust = homeScreenUiState.ofLfNow[location]!!.windGust,
-                                windDir = homeScreenUiState.ofLfNow[location]!!.windDir,
-                                waveHeight = homeScreenUiState.ofLfNow[location]!!.waveHeight,
-                                waveDir = homeScreenUiState.ofLfNow[location]!!.waveDir,
+                                windSpeed = homeScreenUiState.ofLfNow[location]?.windSpeed ?: 0.0,
+                                windGust = homeScreenUiState.ofLfNow[location]?.windGust ?: 0.0,
+                                windDir = homeScreenUiState.ofLfNow[location]?.windDir ?: 0.0,
+                                waveHeight = homeScreenUiState.ofLfNow[location]?.waveHeight ?: 0.0,
+                                waveDir = homeScreenUiState.ofLfNow[location]?.waveDir ?: 0.0,
                                 alerts = homeScreenUiState.allRelevantAlerts[location],
                                 homeScreenViewModel = homeScreenViewModel,
                                 onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
@@ -485,7 +485,7 @@ fun SurfAreaCard(
                         )
                     }
                     Text(
-                        text = windSpeed.toString() + if (windGust > windSpeed) windGust.toString() else ""
+                        text = windSpeed.toString() + if (windGust > windSpeed) " ($windGust)" else ""
                     )
 
                     Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 4.dp)) {
