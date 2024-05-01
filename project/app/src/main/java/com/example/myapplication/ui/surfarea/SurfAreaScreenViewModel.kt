@@ -41,8 +41,6 @@ class SurfAreaScreenViewModel: ViewModel() {
     private val _surfAreaScreenUiState = MutableStateFlow(SurfAreaScreenUiState())
     val surfAreaScreenUiState: StateFlow<SurfAreaScreenUiState> = _surfAreaScreenUiState.asStateFlow()
 
-    init {
-    }
 
     fun asyncNext7Days(surfArea: SurfArea){
         viewModelScope.launch(Dispatchers.IO) {
@@ -65,22 +63,6 @@ class SurfAreaScreenViewModel: ViewModel() {
         }
     }
 
-    fun updateLocation(surfArea: SurfArea) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _surfAreaScreenUiState.update {
-                it.copy (location = surfArea)
-            }
-        }
-    }
-    fun updateAlerts() {
-        viewModelScope.launch(Dispatchers.IO) {
-            _surfAreaScreenUiState.update {
-                val newAlerts = if (it.location != null) smackLipRepository.getRelevantAlertsFor(it.location) else listOf()
-                it.copy(alerts = newAlerts)
-            }
-        }
-    }
-
     fun updateAlertsSurfArea(surfArea: SurfArea) {
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update {
@@ -90,33 +72,6 @@ class SurfAreaScreenViewModel: ViewModel() {
 
         }
     }
-
-
-
-
-    fun updateMaxWaveHeights() {
-        viewModelScope.launch {
-            _surfAreaScreenUiState.update {state ->
-                state.copy(
-                    maxWaveHeights = state.waveHeights.map {
-                        day -> day.maxBy {hour -> hour.second as Double}
-                    }.map {it.second}
-                )
-            }
-        }
-    }
-
-//    fun updateMaxWaveHeights() {
-//        viewModelScope.launch {
-//            _surfAreaScreenUiState.update {state ->
-//                state.copy(
-//                    maxWaveHeights = state.waveHeights.map {
-//                        day -> day.maxBy {hour -> hour.second as Double}
-//                    }.map {it.second}
-//                )
-//            }
-//        }
-//    }
 
     fun updateWavePeriods(surfArea: SurfArea) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -188,8 +143,6 @@ class SurfAreaScreenViewModel: ViewModel() {
             }
         }
     }
-
-
 }
 
 
