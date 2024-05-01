@@ -66,7 +66,7 @@ import com.example.myapplication.R
 import com.example.myapplication.data.map.MapRepositoryImpl
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.common.composables.BottomBar
-import com.example.myapplication.ui.theme.MyApplicationTheme
+import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.utils.RecourseUtils
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
@@ -483,7 +483,7 @@ fun SearchBar(
 @Preview
 @Composable
 fun SurfAreaPreview(){
-    MyApplicationTheme {
+    AppTheme {
         SurfAreaCard(surfArea = SurfArea.HODDEVIK, {}, MapScreenUiState())
     }
 }
@@ -492,7 +492,7 @@ fun SurfAreaPreview(){
 @Preview
 @Composable
 fun MapScreenPreview(){
-    MyApplicationTheme {
+    AppTheme {
         MapScreen()
     }
 

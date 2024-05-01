@@ -4,7 +4,6 @@ package com.example.myapplication.ui.surfarea
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -59,14 +58,12 @@ import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.AlertCard.CustomAlert
 import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.common.composables.ProgressIndicator
-import com.example.myapplication.ui.theme.MyApplicationTheme
-import com.example.myapplication.ui.theme.SchemesSurface
+import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.utils.RecourseUtils
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities.Local
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -425,7 +422,7 @@ fun DayPreviewCard(
             .padding(6.dp)
             .width(93.dp)
             .height(120.dp)
-            .background(color = SchemesSurface, shape = RoundedCornerShape(size = 20.dp))
+            //.background(color = SchemesSurface, shape = RoundedCornerShape(size = 20.dp))
             .clickable(
                 onClick = { navController?.navigate("DailySurfAreaScreen/${surfArea.locationName}/$dayIndex") ?: Unit }
             )
@@ -510,7 +507,7 @@ fun DayPreviewCard(
 @Preview(showBackground = true)
 @Composable
 private fun PreviewSurfAreaScreen() {
-    MyApplicationTheme {
+    AppTheme {
         SurfAreaScreen("Solastranden")
         //DayPreviewCard()
         //HeaderCard()

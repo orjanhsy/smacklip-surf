@@ -72,7 +72,7 @@ import com.example.myapplication.model.metalerts.Properties
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.common.composables.ProgressIndicator
-import com.example.myapplication.ui.theme.MyApplicationTheme
+import com.example.myapplication.ui.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -591,7 +591,7 @@ private fun PreviewSurfAreaCard() {
         SurfArea.HODDEVIK to listOf(Pair(listOf(3, 5, 8, 32), 184.3))
     )
     val viewModel = HomeScreenViewModel()
-    MyApplicationTheme {
+    AppTheme {
         SurfAreaCard(
             SurfArea.HODDEVIK,
             windSpeedMap,
@@ -609,7 +609,7 @@ private fun PreviewSurfAreaCard() {
 @Preview(showBackground = true)
 @Composable
 private fun PreviewHomeScreen() {
-    MyApplicationTheme {
+    AppTheme {
         HomeScreen(){}
     }
 }
