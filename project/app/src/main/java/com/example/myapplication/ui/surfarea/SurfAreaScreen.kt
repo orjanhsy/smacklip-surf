@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -376,7 +377,7 @@ fun HeaderCard(surfArea: SurfArea, icon : String, date: LocalDate) {
                         Text(
                             text = formattedDate1,
                             style = TextStyle(
-                                fontSize = 13.sp,
+                                fontSize = 14.sp,
                                 //  fontFamily = FontFamily(Font(R.font.inter)),
                                 fontWeight = FontWeight(400),
                                 color = Color(0xFF9A938C),
@@ -410,7 +411,6 @@ fun HeaderCard(surfArea: SurfArea, icon : String, date: LocalDate) {
     }
 }
 
-
 @Composable
 fun DayPreviewCard(
     surfArea: SurfArea,
@@ -422,12 +422,15 @@ fun DayPreviewCard(
 ) {
     Card(
         modifier = Modifier
-            .padding(6.dp)
-            .width(93.dp)
+            .padding(5.dp)
+            .width(98.dp)
             .height(120.dp)
             .background(color = SchemesSurface, shape = RoundedCornerShape(size = 20.dp))
             .clickable(
-                onClick = { navController?.navigate("DailySurfAreaScreen/${surfArea.locationName}/$dayIndex") ?: Unit }
+                onClick = {
+                    navController?.navigate("DailySurfAreaScreen/${surfArea.locationName}/$dayIndex")
+                        ?: Unit
+                }
             )
             .shadow(4.dp, shape = RoundedCornerShape(10.dp))
     ) {
@@ -442,7 +445,7 @@ fun DayPreviewCard(
                 Text(
                     text = day,
                     style = TextStyle(
-                        fontSize = 12.sp,
+                        fontSize = 14.sp,
                         fontWeight = FontWeight(400),
                         color = Color(0xFF9A938C),
 
@@ -457,19 +460,31 @@ fun DayPreviewCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
-                Text (
-                    text = conditionStatus?.description ?: ""
-                )
-//                Image(
-//                    painter = painterResource(id = R.drawable.surfboard_5525217),
-//                    contentDescription = "image description",
-//                    contentScale = ContentScale.FillBounds,
-//                    modifier = Modifier
-//                        .width(40.dp)
-//                        .height(40.dp)
-//                    //.padding(5.dp)
-//                )
+
+                //conditions -> copy from dailyScreen
+                val surfBoard = when (conditionStatus) {
+                    ConditionStatus.GREAT -> ConditionStatus.GREAT.surfBoard
+                    ConditionStatus.DECENT -> ConditionStatus.DECENT.surfBoard
+                    ConditionStatus.POOR -> ConditionStatus.POOR.surfBoard
+                    ConditionStatus.BLANK -> ConditionStatus.BLANK.surfBoard
+                    null -> R.drawable.spm
+                }
+                //surfboard icon
+                Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 15.dp)) {
+                    Image(
+                        painter = painterResource(id = surfBoard),
+                        contentDescription = "Weather Icon",
+                        modifier = Modifier.size(20.dp),
+                    )
+
+                }
             }
+            Text(
+                text = conditionStatus?.description ?: "",
+                fontSize = 10.sp, // Adjust the font size as needed
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
