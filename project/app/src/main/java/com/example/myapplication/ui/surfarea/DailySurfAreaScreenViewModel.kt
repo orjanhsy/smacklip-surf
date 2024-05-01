@@ -61,7 +61,6 @@ class DailySurfAreaScreenViewModel: ViewModel() {
                             windDir = data[2] as Double,
                             waveHeight = data[5] as Double,
                             waveDir = data[6] as Double,
-                            alerts = state.alerts
                         )
                         todaysStatuses[time] = conditionStatus
                     }
