@@ -55,6 +55,7 @@ import androidx.navigation.NavController
 import com.example.myapplication.NavigationManager
 import com.example.myapplication.R
 import com.example.myapplication.model.conditions.ConditionStatus
+import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.AlertCard.CustomAlert
 import com.example.myapplication.ui.common.composables.BottomBar
@@ -66,7 +67,6 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities.Local
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -141,8 +141,7 @@ fun SurfAreaScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 item {
-                    val surfAreaDataForDay: Map<List<Int>, List<Any>> =
-                        surfAreaScreenUiState.forecastNext7Days.getOrElse(0) { emptyMap() } //0 is today
+                    val surfAreaDataForDay: Map<List<Int>, DataAtTime> = surfAreaScreenUiState.forecastNext7Days.forecast.getOrElse(0) { emptyMap<>()}
                     val currentHour =
                         LocalTime.now().hour // klokken er 10 så får ikke sjekket om det står 09 eller 9. Sto tidligere "08", "09" med .toString().padStart(2, '0')
                     var headerIcon = ""

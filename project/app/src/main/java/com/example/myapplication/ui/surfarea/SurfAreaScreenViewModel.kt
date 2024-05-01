@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
 import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.metalerts.Features
-import com.example.myapplication.model.smacklip.DayData
 import com.example.myapplication.model.smacklip.Forecast7DaysOFLF
 import com.example.myapplication.model.surfareas.SurfArea
 import kotlinx.coroutines.Dispatchers
@@ -43,14 +42,14 @@ class SurfAreaScreenViewModel: ViewModel() {
                 it.copy(loading = true)
             }
             val newNext7Days: Forecast7DaysOFLF = smackLipRepository.getSurfAreaOFLFNext7Days(surfArea)
-            val newMaxWaveHeights: List<Double> = newNext7Days.forecast7Days.map{dayData ->
-                dayData.dayData.maxBy {
+            val newMaxWaveHeights: List<Double> = newNext7Days.forecast.map{ dayData ->
+                dayData.data.maxBy {
                     it.value.waveHeight
                 }.value.waveHeight
             }
 
-            val newMinWaveHeights: List<Double> = newNext7Days.forecast7Days.map{dayData ->
-                dayData.dayData.minBy {
+            val newMinWaveHeights: List<Double> = newNext7Days.forecast.map{ dayData ->
+                dayData.data.minBy {
                     it.value.waveHeight
                 }.value.waveHeight
             }
