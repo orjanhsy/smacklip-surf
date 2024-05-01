@@ -56,7 +56,6 @@ interface SmackLipRepository {
         windDir: Double,
         waveHeight: Double,
         waveDir: Double,
-        alerts: List<Features>
     ): ConditionStatus
 
 }
@@ -323,7 +322,6 @@ class SmackLipRepositoryImpl (
         windDir: Double,
         waveHeight: Double,
         waveDir: Double,
-        alerts: List<Features>
     ): ConditionStatus {
         var conditionStatus: ConditionStatus = ConditionStatus.DECENT
 
@@ -336,7 +334,6 @@ class SmackLipRepositoryImpl (
             || waveHeight <= Conditions.WAVE_HEIGHT_LOWER_BOUND.value
             || waveHeight >= Conditions.WAVE_HEIGHT_UPPER_BOUND.value
             || wavePeriod <= Conditions.WAVE_PERIOD_LOWER_BOUND.value
-            || alerts.isNotEmpty()
         ) {
             conditionStatus = ConditionStatus.POOR
             return conditionStatus
