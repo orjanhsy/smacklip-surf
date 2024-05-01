@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
 import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.metalerts.Features
+import com.example.myapplication.model.smacklip.DayForecast
 import com.example.myapplication.model.smacklip.Forecast7DaysOFLF
 import com.example.myapplication.model.surfareas.SurfArea
 import kotlinx.coroutines.Dispatchers
@@ -76,6 +77,8 @@ class SurfAreaScreenViewModel: ViewModel() {
         }
     }
 
+
+    // TODO: Get waveperiods from repo stateflow
     fun updateWavePeriods(surfArea: SurfArea) {
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update {state ->
@@ -89,7 +92,7 @@ class SurfAreaScreenViewModel: ViewModel() {
 
 
     // map<tidspunkt -> [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]>
-    fun updateBestConditionStatuses(surfArea: SurfArea, forecast7Days: List<Map<List<Int>, List<Any>>>) {
+    fun updateBestConditionStatuses(surfArea: SurfArea, forecast7Days: List<DayForecast>) {
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update {
                 it.copy(loading = true) //starter loading screen
@@ -102,8 +105,8 @@ class SurfAreaScreenViewModel: ViewModel() {
                         Log.e("SAVM", "Attempted to update condition status on empty forecast7Days")
                         return@launch
                     }
-                    val dayForecast: Map<List<Int>, List<Any>> = forecast7Days[dayIndex]
-                    val times = dayForecast.keys.sortedBy { it[3] }
+                    val dayForecast: DayForecast = forecast7Days[dayIndex]
+                    val times = dayForecast.data.keys.sortedBy { it[3] }
                     var bestToday = ConditionStatus.BLANK
 
                     for (time in times) {
@@ -116,11 +119,11 @@ class SurfAreaScreenViewModel: ViewModel() {
                         val statusToday = smackLipRepository.getConditionStatus(
                             location = surfArea,
                             wavePeriod = wavePeriod,
-                            windSpeed  = dayForecast[time]!![0] as Double,
-                            windGust   = dayForecast[time]!![1] as Double,
-                            windDir    = dayForecast[time]!![2] as Double,
-                            waveHeight = dayForecast[time]!![5] as Double,
-                            waveDir    = dayForecast[time]!![6] as Double,
+                            windSpeed  = dayForecast.data[time]!!.windSpeed,
+                            windGust   = dayForecast.data[time]!!.windGust,
+                            windDir    = dayForecast.data[time]!!.windDir,
+                            waveHeight = dayForecast.data[time]!!.waveHeight,
+                            waveDir    = dayForecast.data[time]!!.waveDir,
                         )
 
                         if (statusToday == ConditionStatus.GREAT) {
