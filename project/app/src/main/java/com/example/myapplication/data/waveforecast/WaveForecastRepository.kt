@@ -1,26 +1,14 @@
 package com.example.myapplication.data.waveforecast
 
 import com.example.myapplication.model.surfareas.SurfArea
-import com.example.myapplication.model.waveforecast.AllWaveForecasts
-import com.example.myapplication.model.waveforecast.PointForecast
-import com.example.myapplication.model.waveforecast.PointForecasts
-import io.ktor.http.content.NullBody
+import com.example.myapplication.model.waveforecast.AllWavePeriods
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import kotlin.math.abs
-import kotlin.math.sin
-import kotlin.math.cos
-import kotlin.math.sqrt
-import kotlin.math.atan2
-import kotlin.math.pow
-import kotlin.math.PI
-import kotlin.math.acos
-import kotlin.reflect.jvm.internal.impl.descriptors.deserialization.PlatformDependentDeclarationFilter.All
 
 
 interface WaveForecastRepository {
-    suspend fun allRelevantWavePeriodsNext3DaysHardCoded(): AllWaveForecasts
+    suspend fun allRelevantWavePeriodsNext3DaysHardCoded(): AllWavePeriods
 
 }
 
@@ -51,7 +39,7 @@ class WaveForecastRepositoryImpl(
     }
 
     // map[surfarea] -> List<Pair<Direction, period>>  .size=20
-    override suspend fun allRelevantWavePeriodsNext3DaysHardCoded(): AllWaveForecasts {
+    override suspend fun allRelevantWavePeriodsNext3DaysHardCoded(): AllWavePeriods {
         return coroutineScope {
             val relevantForecasts: Map<SurfArea, Deferred<List<Double?>>> =
                 SurfArea.entries.associateWith {
@@ -60,7 +48,7 @@ class WaveForecastRepositoryImpl(
             val newRelevantForecasts = relevantForecasts.entries.associate {
                 it.key to it.value.await()
             }
-            val allWaveForecasts = AllWaveForecasts(newRelevantForecasts)
+            val allWaveForecasts = AllWavePeriods(newRelevantForecasts)
             allWaveForecasts
         }
     }
