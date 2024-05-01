@@ -73,6 +73,7 @@ import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.common.composables.ProgressIndicator
+import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -557,7 +558,7 @@ private fun PreviewSurfAreaCard() {
     val waveDir =  184.3
 
     val viewModel = HomeScreenViewModel()
-    MyApplicationTheme {
+    AppTheme {
         SurfAreaCard(
             SurfArea.HODDEVIK,
             windSpeed,
@@ -575,7 +576,7 @@ private fun PreviewSurfAreaCard() {
 @Preview(showBackground = true)
 @Composable
 private fun PreviewHomeScreen() {
-    MyApplicationTheme {
+    AppTheme {
         HomeScreen(){}
     }
 }
