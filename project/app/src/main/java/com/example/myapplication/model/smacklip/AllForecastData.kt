@@ -1,7 +1,7 @@
 package com.example.myapplication.model.smacklip
 import com.example.myapplication.model.surfareas.SurfArea
 
-data class AllSurfAreas (
+data class AllSurfAreasOFLF (
     val next7Days: Map<SurfArea, Forecast7DaysOFLF> = mapOf()
 )
 

@@ -12,7 +12,7 @@ import com.example.myapplication.model.conditions.Conditions
 import com.example.myapplication.model.locationforecast.DataLF
 import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.model.oceanforecast.DataOF
-import com.example.myapplication.model.smacklip.AllSurfAreas
+import com.example.myapplication.model.smacklip.AllSurfAreasOFLF
 import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.smacklip.DayData
 import com.example.myapplication.model.smacklip.Forecast7DaysOFLF
@@ -52,7 +52,7 @@ interface SmackLipRepository {
     suspend fun getAllWavePeriodsNext3Days(): AllWavePeriods
     suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): List<Double?>
 
-    suspend fun getAllOFLF7Days (): Map<SurfArea, List<Map<List<Int>, List<Any>>>>
+    suspend fun getAllOFLF7Days (): AllSurfAreasOFLF
 
     fun getConditionStatus(
         location: SurfArea,
@@ -395,10 +395,9 @@ class SmackLipRepositoryImpl (
     }
 
     // testing
-    override suspend fun getAllOFLF7Days (): Map<SurfArea, List<Map<List<Int>, List<Any>>>> {
+    override suspend fun getAllOFLF7Days (): AllSurfAreasOFLF {
 
         return coroutineScope {
-
             val res = SurfArea.entries.associateWith {
                 async { getSurfAreaOFLFNext7Days(it) }
             }
@@ -407,7 +406,9 @@ class SmackLipRepositoryImpl (
                 it.key to it.value.await()
             }
 
-            newRes
+            AllSurfAreasOFLF(
+                next7Days = newRes
+            )
         }
 
     }
