@@ -32,7 +32,7 @@ class DailySurfAreaScreenViewModel: ViewModel() {
     private val _dailySurfAreaScreenUiState = MutableStateFlow(DailySurfAreaScreenUiState())
     val dailySurfAreaScreenUiState: StateFlow<DailySurfAreaScreenUiState> = _dailySurfAreaScreenUiState.asStateFlow()
 
-    fun updateStatusConditions(surfArea: SurfArea, forecast: List<Map<List<Int>, List<Any>>>) {
+    fun updateStatusConditions(surfArea: SurfArea, forecast: List<DayForecast>) {
         viewModelScope.launch(Dispatchers.IO) {
 
             _dailySurfAreaScreenUiState.update {state ->
@@ -43,20 +43,21 @@ class DailySurfAreaScreenViewModel: ViewModel() {
                     return@launch
                 }
 
-                forecast.map {dayMap ->
+                forecast.map {dayForecast ->
                     val todaysStatuses: MutableMap<List<Int>, ConditionStatus> = mutableMapOf()
 
-                    dayMap.entries.map {(time, data) ->
-                        val wavePeriod = try{state.wavePeriods[forecast.indexOf(dayMap) * time[3]]}
+                    dayForecast.data.entries.map {(time, dataAtTime) ->
+                        val wavePeriod = try{state.wavePeriods[forecast.indexOf(dayForecast) * time[3]]}
                         catch (e: IndexOutOfBoundsException) {null}
+
                         val conditionStatus = smackLipRepository.getConditionStatus(
                             location = surfArea,
                             wavePeriod = wavePeriod,
-                            windSpeed = data[0] as Double,
-                            windGust = data[1] as Double,
-                            windDir = data[2] as Double,
-                            waveHeight = data[5] as Double,
-                            waveDir = data[6] as Double,
+                            windSpeed = dataAtTime.windSpeed,
+                            windGust = dataAtTime.windGust,
+                            windDir = dataAtTime.windDir,
+                            waveHeight = dataAtTime.waveHeight,
+                            waveDir = dataAtTime.waveDir,
                         )
                         todaysStatuses[time] = conditionStatus
                     }
