@@ -1,6 +1,5 @@
 package com.example.myapplication.data.smackLip
 
-import android.util.Log
 import com.example.myapplication.data.locationForecast.LocationForecastRepository
 import com.example.myapplication.data.locationForecast.LocationForecastRepositoryImpl
 import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
@@ -14,6 +13,7 @@ import com.example.myapplication.model.locationforecast.DataLF
 import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.model.oceanforecast.DataOF
 import com.example.myapplication.model.surfareas.SurfArea
+import com.example.myapplication.model.waveforecast.AllWavePeriods
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlin.math.abs
@@ -45,7 +45,7 @@ interface SmackLipRepository {
     // waveforecast
     suspend fun getAllWaveForecastsNext3Days(): Map<SurfArea, List<Double?>>
     suspend fun getWaveForecastsNext3DaysForArea(surfArea: SurfArea): List<Double?>
-    suspend fun getAllWavePeriodsNext3Days(): Map<SurfArea, List<Double?>>
+    suspend fun getAllWavePeriodsNext3Days(): AllWavePeriods
     suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): List<Double?>
 
     suspend fun getAllOFLF7Days (): Map<SurfArea, List<Map<List<Int>, List<Any>>>>
@@ -284,29 +284,14 @@ class SmackLipRepositoryImpl (
         return oceanForecastRepository.getTimeSeriesDayByDay(surfArea)
     }
 
-    // mapper hvert enkelt surfarea til en liste med (bølgeretning, bølgeperiode) lik de i 'getWaveForecastNext3DaysForArea()' under.
-    override suspend fun getAllWaveForecastsNext3Days(): Map<SurfArea, List<Double?>> {
-        return waveForecastRepository.allRelevantWavePeriodsNext3DaysHardCoded()
-    }
-
-    // liste med pair(bølgeretning, bølgeperiode), .size in 18..20 (3timers intervaller, totalt 60 timer). Vet ikke hvorfor den av og til er 19 lang, da er det i så fall bare 57 timer forecast.
-    override suspend fun getWaveForecastsNext3DaysForArea(surfArea: SurfArea): List<Double?> {
-        return waveForecastRepository.wavePeriodsNext3DaysForArea(
-            surfArea.modelName,
-            surfArea.pointId
-        )
-    }
-
-
-    // wf men bare med waveperiods, i motsetning (wavedir, waveperiod) over.
-    override suspend fun getAllWavePeriodsNext3Days(): Map<SurfArea, List<Double?>> {
+    override suspend fun getAllWavePeriodsNext3Days(): AllWavePeriods {
 
         val wavePeriods = getAllWaveForecastsNext3Days()
         val formattedWavePeriods: MutableMap<SurfArea, List<Double?>> = mutableMapOf()
         SurfArea.entries.forEach { surfArea ->
             formattedWavePeriods[surfArea] = wavePeriods[surfArea]!!.flatMap { listOf(it, it, it) }
         }
-        return formattedWavePeriods
+        return AllWavePeriods(formattedWavePeriods)
     }
 
     override suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): List<Double?> {
@@ -329,7 +314,6 @@ class SmackLipRepositoryImpl (
         return abs(optimalDir - actualDir) !in acceptedOffset .. 360 - acceptedOffset
     }
 
-    //map<tidspunkt-> [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]>
     override fun getConditionStatus(
         location: SurfArea,
         wavePeriod: Double?,
