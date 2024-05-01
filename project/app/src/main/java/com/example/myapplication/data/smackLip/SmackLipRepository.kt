@@ -12,6 +12,8 @@ import com.example.myapplication.model.conditions.Conditions
 import com.example.myapplication.model.locationforecast.DataLF
 import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.model.oceanforecast.DataOF
+import com.example.myapplication.model.smacklip.DataAtTime
+import com.example.myapplication.model.smacklip.DayData
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.waveforecast.AllWavePeriods
 import kotlinx.coroutines.async
@@ -27,7 +29,7 @@ interface SmackLipRepository {
 
     suspend fun getTimeSeriesOFLF(surfArea: SurfArea): Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>>
 
-    suspend fun getOFLFOneDay(day: Int, month: Int, timeseries: Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>> ): Map<List<Int>, List<Any>>
+    suspend fun getOFLFOneDay(day: Int, month: Int, timeseries: Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>> ): DayData
     suspend fun getSurfAreaOFLFNext7Days(surfArea: SurfArea): List<Map<List<Int>, List<Any>>>
     suspend fun getWindDirection(surfArea: SurfArea): List<Pair<List<Int>, Double>>
     suspend fun getWindSpeed(surfArea: SurfArea): List<Pair<List<Int>, Double>>
@@ -189,11 +191,11 @@ class SmackLipRepositoryImpl (
         }
 
         return Pair(timeSeriesMapOF, timeSeriesMapLF)
-
     }
+
     // returnerer map<tidspunkt-> [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]>
     override suspend fun getOFLFOneDay(day: Int, month: Int, timeseries: Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>> )
-    : Map<List<Int>, List<Any>>{
+    : DayData {
         //henter data for den spesifikke dagen fra OF og LF
         val OFmap: List<Pair<String, DataOF>>? = timeseries.first[day]
         val LFmap: List<Pair<String, DataLF>>? = timeseries.second[day]
@@ -245,12 +247,24 @@ class SmackLipRepositoryImpl (
             it.value.size == 7
         }
 
-
-        return filteredMap
-
+        // [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]
+        val dayData= DayData(
+            filteredMap.entries.associate { (time, data) ->
+                time to DataAtTime(
+                    windSpeed = data[0] as Double,
+                    windGust = data[1] as Double,
+                    windDir = data[2] as Double,
+                    airTemp = data[3] as Double,
+                    symbolCode = data[4] as String,
+                    waveHeight = data[5] as Double,
+                    waveDir = data[6] as Double
+                )
+            }
+        )
+        return dayData
     }
 
-    suspend fun nDaysInMonth(month: Int): Int {
+    fun nDaysInMonth(month: Int): Int {
         return when (month) {
             1, 3, 5, 7, 8, 10, 12 -> 31
             4, 6, 9, 11 -> 30
