@@ -11,7 +11,9 @@ import com.example.myapplication.model.locationforecast.DataLF
 import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.model.oceanforecast.DataOF
 import com.example.myapplication.model.smacklip.AllSurfAreasOFLF
+import com.example.myapplication.model.smacklip.DayData
 import com.example.myapplication.model.surfareas.SurfArea
+import com.example.myapplication.model.waveforecast.AllWavePeriods
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -28,7 +30,8 @@ import java.time.LocalTime
 import kotlin.system.exitProcess
 
 data class HomeScreenUiState(
-    val wavePeriods: Map<SurfArea, List<Double?>> = emptyMap(),
+    val wavePeriods: AllWavePeriods = AllWavePeriods(),
+    val ofLfToday: Map<SurfArea, DayData> = mapOf(),
     val allRelevantAlerts: Map<SurfArea, List<Features>> = emptyMap(),
     val loading: Boolean = false
 )
@@ -49,18 +52,16 @@ class HomeScreenViewModel : ViewModel() {
 
         viewModelScope.launch(Dispatchers.IO) {
             _homeScreenUiState.update {
-                it.copy(loading = true)
-            }
-            val allNext7Days: AllSurfAreasOFLF = smackLipRepository.getAllOFLF7Days()
+                val allNext7Days: AllSurfAreasOFLF = smackLipRepository.getAllOFLF7Days()
 
-
-            _homeScreenUiState.update {
+                val newOfLfToday: Map<SurfArea, DayData> = allNext7Days.next7Days.entries.associate {(sa, forecast7Days) ->
+                    sa to forecast7Days.forecast7Days[0]
+                }
                 it.copy(
-
+                    ofLfToday = newOfLfToday,
                     loading = false
                 )
             }
-
         }
 
     }
