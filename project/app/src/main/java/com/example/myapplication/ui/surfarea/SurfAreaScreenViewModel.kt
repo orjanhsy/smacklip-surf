@@ -16,17 +16,11 @@ import kotlinx.coroutines.launch
 
 data class SurfAreaScreenUiState(
     val location: SurfArea? = null,
-    val alerts: List<Features> = emptyList(),
     val alertsSurfArea: List<Features> = emptyList(),
-    // .size=7 for the following:
-    val waveHeights: List<List<Pair<List<Int>, Double>>> = emptyList(),
-    val waveDirections: List<List<Pair<List<Int>, Double>>> = emptyList(),
     val wavePeriods: List<Double?> = emptyList(),
     val maxWaveHeights: List<Double> = emptyList(),
     val minWaveHeights: List<Double> = emptyList(),
     val windDirections: List<List<Pair<List<Int>, Double>>> = emptyList(),
-    val windSpeeds: List<List<Pair<List<Int>, Double>>> = emptyList(),
-    val windSpeedOfGusts: List<List<Pair<List<Int>, Double>>> = emptyList(),
     val bestConditionStatuses: Map<Int, ConditionStatus> = mutableMapOf(),
 
     val forecastNext7Days: List<Map<List<Int>, List<Any>>> = mutableListOf(), //hører til den nye metoden med async
