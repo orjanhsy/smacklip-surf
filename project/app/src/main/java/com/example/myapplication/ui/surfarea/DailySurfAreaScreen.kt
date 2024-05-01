@@ -38,16 +38,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.NavigationManager
 import com.example.myapplication.R
 import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.common.composables.BottomBar
-import com.example.myapplication.ui.common.composables.ProgressIndicator
 import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
 import com.example.myapplication.ui.surfarea.HeaderCard
-import com.example.myapplication.ui.theme.MyApplicationTheme
+import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.utils.RecourseUtils
 import java.time.LocalDate
 import java.time.LocalTime
@@ -213,7 +211,7 @@ fun DailySurfAreaScreen(
                 }
 
             }
-            ProgressIndicator(isDisplayed = dailySurfAreaScreenUiState.loading)
+           // ProgressIndicator(isDisplayed = dailySurfAreaScreenUiState.loading)
         }
     }
 }
@@ -300,7 +298,9 @@ fun AllInfoCard(
                     Icon(
                         imageVector = Icons.Outlined.CallMade,
                         contentDescription = "Arrow",
-                        modifier = Modifier.size(17.dp).rotate(rotationAngleWind - 45)
+                        modifier = Modifier
+                            .size(17.dp)
+                            .rotate(rotationAngleWind - 45)
                     )
                 }
 
@@ -345,7 +345,9 @@ fun AllInfoCard(
                     Icon(
                         imageVector = Icons.Outlined.CallMade,
                         contentDescription = "Arrow",
-                        modifier = Modifier.size(17.dp).rotate(rotationAngleWaveDir - 45)
+                        modifier = Modifier
+                            .size(17.dp)
+                            .rotate(rotationAngleWaveDir - 45)
                     )
                 }
 
@@ -394,12 +396,11 @@ fun AllInfoCard(
             }
         }
     }
-
-
-@Preview(showBackground = true)
+//@Preview(showBackground = true, name = "Dark Mode")
+@Preview(showBackground = true, name = "Light Mode")
 @Composable
 private fun PreviewDailyScreen() {
-    MyApplicationTheme {
+    AppTheme (darkTheme = false){
         DailySurfAreaScreen("Hoddevik", 0, DailySurfAreaScreenViewModel())
     }
 }
