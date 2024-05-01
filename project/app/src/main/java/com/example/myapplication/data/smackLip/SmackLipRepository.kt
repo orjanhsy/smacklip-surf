@@ -12,8 +12,10 @@ import com.example.myapplication.model.conditions.Conditions
 import com.example.myapplication.model.locationforecast.DataLF
 import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.model.oceanforecast.DataOF
+import com.example.myapplication.model.smacklip.AllSurfAreas
 import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.smacklip.DayData
+import com.example.myapplication.model.smacklip.Forecast7DaysOFLF
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.waveforecast.AllWavePeriods
 import kotlinx.coroutines.async
@@ -30,7 +32,7 @@ interface SmackLipRepository {
     suspend fun getTimeSeriesOFLF(surfArea: SurfArea): Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>>
 
     suspend fun getOFLFOneDay(day: Int, month: Int, timeseries: Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>> ): DayData
-    suspend fun getSurfAreaOFLFNext7Days(surfArea: SurfArea): List<Map<List<Int>, List<Any>>>
+    suspend fun getSurfAreaOFLFNext7Days(surfArea: SurfArea): Forecast7DaysOFLF
     suspend fun getWindDirection(surfArea: SurfArea): List<Pair<List<Int>, Double>>
     suspend fun getWindSpeed(surfArea: SurfArea): List<Pair<List<Int>, Double>>
     suspend fun getWindSpeedOfGust(surfArea: SurfArea): List<Pair<List<Int>, Double>>
@@ -273,13 +275,13 @@ class SmackLipRepositoryImpl (
         }
     }
 
-    override suspend fun getSurfAreaOFLFNext7Days(surfArea: SurfArea): List<Map<List<Int>, List<Any>>> {
+    override suspend fun getSurfAreaOFLFNext7Days(surfArea: SurfArea): Forecast7DaysOFLF {
         val timeseries:  Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>> = getTimeSeriesOFLF(surfArea = surfArea)
         val time = getTimeListFromTimeString(oceanForecastRepository.getTimeSeries(surfArea)[0].first)
         val day = time[2]
         val month = time[1]
 
-        val forecastNext7Days: MutableList<Map<List<Int>, List<Any>>> = mutableListOf()
+        val forecastNext7Days: MutableList<DayData> = mutableListOf()
 
         for (i in day .. (day + 6)) {
             val daysInMonth = nDaysInMonth(month)
@@ -290,7 +292,7 @@ class SmackLipRepositoryImpl (
             forecastNext7Days.add(getOFLFOneDay(actualDay, month, Pair(timeseries.first, timeseries.second)))
         }
 
-        return forecastNext7Days
+        return Forecast7DaysOFLF(forecastNext7Days)
     }
 
 
