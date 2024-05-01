@@ -25,6 +25,13 @@ val AppTypography = Typography(
                     letterSpacing = 0.sp,
                     hyphens = Hyphens.Auto,
                 ),
+    //daily
+                bodySmall = TextStyle(
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = onSurfaceVariantLight,
+                    lineHeight = 15.sp,
+                    ),
 
 
 )
