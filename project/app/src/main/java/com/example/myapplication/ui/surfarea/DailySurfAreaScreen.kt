@@ -33,22 +33,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.NavigationManager
 import com.example.myapplication.R
 import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.common.composables.BottomBar
-import com.example.myapplication.ui.common.composables.ProgressIndicator
 import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
 import com.example.myapplication.ui.surfarea.HeaderCard
-import com.example.myapplication.ui.theme.MyApplicationTheme
+import com.example.myapplication.ui.theme.AppTheme
+import com.example.myapplication.ui.theme.AppTypography
 import com.example.myapplication.utils.RecourseUtils
 import java.time.LocalDate
 import java.time.LocalTime
@@ -221,12 +217,10 @@ fun DailySurfAreaScreen(
                 }
 
             }
-            ProgressIndicator(isDisplayed = dailySurfAreaScreenUiState.loading)
+           // ProgressIndicator(isDisplayed = dailySurfAreaScreenUiState.loading)
         }
     }
 }
-
-
 
 @Composable
 fun AllInfoCard(
@@ -265,149 +259,129 @@ fun AllInfoCard(
             .height(49.dp)
     ) {
         Spacer(modifier = Modifier.height(8.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = timestamp,
+                style = AppTypography.bodySmall,
+                modifier = Modifier.weight(1f)
+            )
+
+            // Wind Group
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Air,
+                    contentDescription = "Air",
+                    modifier = Modifier.size(20.dp)
+                )
+
+                Spacer(modifier = Modifier.width(6.dp))
+
+                Text(
+                    text = "${(windSpeed as Double).toInt()} (${(windGust as Double).toInt()})",
+                    style = AppTypography.bodySmall,
+                )
+
+                Spacer(modifier = Modifier.width(6.dp))
+
+                Icon(
+                    imageVector = Icons.Outlined.CallMade,
+                    contentDescription = "Arrow",
+                    modifier = Modifier
+                        .size(17.dp)
+                        .rotate(rotationAngleWind - 45)
+                )
+            }
+
+            Spacer(modifier = Modifier.width(14.dp))
+
+            // Wave Group
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Tsunami,
+                    contentDescription = "Tsunami",
+                    modifier = Modifier.size(18.dp)
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Text(
+                    text = "$waveHeight m",
+                    style = AppTypography.bodySmall,
+                )
+
+                Spacer(modifier = Modifier.width(6.dp))
+
+                Text(
+                    text = "${wavePeriod?.toInt()} sek",
+                    style = AppTypography.bodySmall,
+                )
+
+                Spacer(modifier = Modifier.width(6.dp))
+
+                Icon(
+                    imageVector = Icons.Outlined.CallMade,
+                    contentDescription = "Arrow",
+                    modifier = Modifier
+                        .size(17.dp)
+                        .rotate(rotationAngleWaveDir - 45)
+                )
+            }
+
+            Spacer(modifier = Modifier.width(14.dp))
+
+            // Temp
+            Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = timestamp,
-                    style = TextStyle(
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = Color(0xFF9A938C),
-                    ),
-                    modifier = Modifier.weight(1f)
+                    text = if (temp is Double) {
+                        temp.toInt().toString()
+                    } else {
+                        temp.toString()
+                    },
+                    style = AppTypography.bodySmall,
+                    modifier = Modifier.padding(end = 4.dp)
                 )
-
-                // Wind Group
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Air,
-                        contentDescription = "Air",
-                        modifier = Modifier.size(20.dp)
-                    )
-
-                    Spacer(modifier = Modifier.width(6.dp))
-
-                    Text(
-                        text = "${(windSpeed as Double).toInt()} (${(windGust as Double).toInt()})",
-                        style = TextStyle(
-                            fontSize = 13.sp,
-                            lineHeight = 15.sp,
-                            fontWeight = FontWeight.Normal,
-                            color = Color(0xFF9C9EAA),
-                        )
-                    )
-
-                    Spacer(modifier = Modifier.width(6.dp))
-
-                    Icon(
-                        imageVector = Icons.Outlined.CallMade,
-                        contentDescription = "Arrow",
-                        modifier = Modifier.size(17.dp).rotate(rotationAngleWind - 45)
-                    )
-                }
-
-                Spacer(modifier = Modifier.width(14.dp))
-
-                // Wave Group
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Tsunami,
-                        contentDescription = "Tsunami",
-                        modifier = Modifier.size(18.dp)
-                    )
-
-                    Spacer(modifier = Modifier.width(8.dp))
-
-                    Text(
-                        text = "$waveHeight m",
-                        style = TextStyle(
-                            fontSize = 13.sp,
-                            lineHeight = 15.sp,
-                            fontWeight = FontWeight.Normal,
-                            color = Color(0xFF9C9EAA),
-                        )
-                    )
-
-                    Spacer(modifier = Modifier.width(6.dp))
-
-                    Text(
-                        text = "${wavePeriod?.toInt()} sek",
-                        style = TextStyle(
-                            fontSize = 13.sp,
-                            lineHeight = 15.sp,
-                            fontWeight = FontWeight.Normal,
-                            color = Color(0xFF9C9EAA),
-                        )
-                    )
-
-                    Spacer(modifier = Modifier.width(6.dp))
-
-                    Icon(
-                        imageVector = Icons.Outlined.CallMade,
-                        contentDescription = "Arrow",
-                        modifier = Modifier.size(17.dp).rotate(rotationAngleWaveDir - 45)
-                    )
-                }
-
-                Spacer(modifier = Modifier.width(14.dp))
-
-                // Temp
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = if (temp is Double) {
-                            temp.toInt().toString()
-                        } else {
-                            temp.toString()
-                        },
-                        style = TextStyle(
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Normal,
-                            color = Color(0xFF9C9EAA),
-                        ),
-                        modifier = Modifier.padding(end = 4.dp)
-                    )
-
-                    Image(
-                        painter = painterResource(id = recourseUtils.findWeatherSymbol(icon.toString())),
-                        contentDescription = "Weather Icon",
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
-
-                Spacer(modifier = Modifier.width(10.dp))
-
-                val surfBoard = when (conditionStatus) {
-                    ConditionStatus.GREAT -> ConditionStatus.GREAT.surfBoard
-                    ConditionStatus.DECENT -> ConditionStatus.DECENT.surfBoard
-                    ConditionStatus.POOR -> ConditionStatus.POOR.surfBoard
-                    ConditionStatus.BLANK -> ConditionStatus.BLANK.surfBoard
-                    null -> R.drawable.spm
-                }
 
                 Image(
-                    painter = painterResource(id = surfBoard),
+                    painter = painterResource(id = recourseUtils.findWeatherSymbol(icon.toString())),
                     contentDescription = "Weather Icon",
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(24.dp)
                 )
             }
+
+            Spacer(modifier = Modifier.width(10.dp))
+
+            val surfBoard = when (conditionStatus) {
+                ConditionStatus.GREAT -> ConditionStatus.GREAT.surfBoard
+                ConditionStatus.DECENT -> ConditionStatus.DECENT.surfBoard
+                ConditionStatus.POOR -> ConditionStatus.POOR.surfBoard
+                ConditionStatus.BLANK -> ConditionStatus.BLANK.surfBoard
+                null -> R.drawable.spm
+            }
+
+            Image(
+                painter = painterResource(id = surfBoard),
+                contentDescription = "Weather Icon",
+                modifier = Modifier.size(20.dp)
+            )
         }
     }
-
-
-@Preview(showBackground = true)
+}
+//@Preview(showBackground = true, name = "Dark Mode")
+@Preview(showBackground = true, name = "Light Mode")
 @Composable
 private fun PreviewDailyScreen() {
-    MyApplicationTheme {
+    AppTheme (darkTheme = false){
         DailySurfAreaScreen("Hoddevik", 0, DailySurfAreaScreenViewModel())
     }
 }

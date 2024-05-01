@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.myapplication.ui.theme.MyApplicationTheme
+import com.example.myapplication.ui.theme.AppTheme
 
 @Composable
 fun ProgressIndicator(
@@ -42,7 +42,7 @@ fun ProgressIndicator(
 @Composable
 @Preview
 fun PreviewProgressIndicator(){
-    MyApplicationTheme {
+    AppTheme {
         ProgressIndicator(true)
     }
 }
