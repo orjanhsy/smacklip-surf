@@ -1,6 +1,7 @@
 package com.example.myapplication.data.waveforecast
 
 import com.example.myapplication.model.surfareas.SurfArea
+import com.example.myapplication.model.waveforecast.AllWaveForecasts
 import com.example.myapplication.model.waveforecast.PointForecast
 import com.example.myapplication.model.waveforecast.PointForecasts
 import io.ktor.http.content.NullBody
@@ -15,30 +16,23 @@ import kotlin.math.atan2
 import kotlin.math.pow
 import kotlin.math.PI
 import kotlin.math.acos
+import kotlin.reflect.jvm.internal.impl.descriptors.deserialization.PlatformDependentDeclarationFilter.All
 
 
 interface WaveForecastRepository {
-    suspend fun retrieveRelevantModelNamesAndPointIds(): Map<SurfArea, Pair<String?, Int?>> // for tests
+    suspend fun allRelevantWavePeriodsNext3DaysHardCoded(): AllWaveForecasts
 
-    suspend fun wavePeriodsNext3DaysForArea(modelName: String, pointId: Int): List<Double?>
-    suspend fun allRelevantWavePeriodsNext3DaysHardCoded(): Map<SurfArea, List<Double?>>
-
-    suspend fun wavePeriods(modelName: String, pointId: Int, time: String): Double? // for tests
-    suspend fun pointForecast(modelName: String, pointId: Int, time: String): PointForecast // for tests
-    fun distanceTo(lat: Double, lon: Double, surfArea: SurfArea): Double // for tests
-    }
+}
 
 class WaveForecastRepositoryImpl(
     private val waveForecastDataSource: WaveForecastDataSource = WaveForecastDataSource()
 ): WaveForecastRepository {
 
-
-
-    override suspend fun pointForecast(modelName: String, pointId: Int, time: String): PointForecast {
+    private suspend fun pointForecast(modelName: String, pointId: Int, time: String): PointForecast {
         return waveForecastDataSource.fetchPointForecast(modelName, pointId, time)
     }
 
-    override suspend fun wavePeriods(modelName: String, pointId: Int, time: String): Double? {
+    private suspend fun wavePeriods(modelName: String, pointId: Int, time: String): Double? {
         val forecast = waveForecastDataSource.fetchPointForecast(modelName, pointId, time)
         return forecast.tpLocal
     }
@@ -47,7 +41,7 @@ class WaveForecastRepositoryImpl(
     .size=60, apiet henter de neste 60 timene, denne returnerer (ca?) 20 pair<dir, tp>
     - altså hver tredje time - for et område.
      */
-    override suspend fun wavePeriodsNext3DaysForArea(modelName: String, pointId: Int): List<Double?> {
+    private suspend fun wavePeriodsNext3DaysForArea(modelName: String, pointId: Int): List<Double?> {
         val availableForecastTimes = waveForecastDataSource.fetchAvaliableTimestamps().availableForecastTimes
 
         return coroutineScope {
@@ -61,7 +55,7 @@ class WaveForecastRepositoryImpl(
     }
 
     // map[surfarea] -> List<Pair<Direction, period>>  .size=20
-    override suspend fun allRelevantWavePeriodsNext3DaysHardCoded(): Map<SurfArea, List<Double?>> {
+    override suspend fun allRelevantWavePeriodsNext3DaysHardCoded(): AllWaveForecasts {
         return coroutineScope {
             val relevantForecasts: Map<SurfArea, Deferred<List<Double?>>> =
                 SurfArea.entries.associateWith {
@@ -70,14 +64,14 @@ class WaveForecastRepositoryImpl(
             val newRelevantForecasts = relevantForecasts.entries.associate {
                 it.key to it.value.await()
             }
-
-            newRelevantForecasts
+            val allWaveForecasts = AllWaveForecasts(newRelevantForecasts)
+            allWaveForecasts
         }
     }
 
 
     // Map( SurfArea -> (modelName, pointId)
-    override suspend fun retrieveRelevantModelNamesAndPointIds(): Map<SurfArea, Pair<String?, Int?>> {
+    private suspend fun retrieveRelevantModelNamesAndPointIds(): Map<SurfArea, Pair<String?, Int?>> {
         val time = waveForecastDataSource.fetchAvaliableTimestamps().availableForecastTimes[1]
         val allForecasts = waveForecastDataSource.fetchAllPointForecasts(time)
         val modelNamesAndIds = SurfArea.entries.associateWith {area ->
@@ -97,7 +91,7 @@ class WaveForecastRepositoryImpl(
         return Pair(closest.second?.modelName, closest.second?.idNumber)
     }
 
-    override fun distanceTo(lat: Double, lon: Double, surfArea: SurfArea): Double {
+    private fun distanceTo(lat: Double, lon: Double, surfArea: SurfArea): Double {
         // acos(sin(lat1)*sin(lat2)+cos(lat1)*cos(lat2)*cos(lon2-lon1))*6371 (6371 is Earth radius in km.)
         val radiusEarth = 6371
         val lat1 = surfArea.lat * PI / 180
