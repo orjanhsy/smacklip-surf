@@ -61,8 +61,7 @@ fun SmackLipNavigation(){
         }
         composable("BottomBar"){
             BottomBar(
-                onNavigateToMapScreen = { navController.navigate("MapScreen")},
-                onNavigateToHomeScreen = {navController.navigate("HomeScreen")}
+                BottomBar(navController)
             )
         }
         composable("MapScreen"){
