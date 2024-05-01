@@ -6,10 +6,10 @@ data class AllSurfAreasOFLF (
 )
 
 data class Forecast7DaysOFLF(
-    val forecast7Days: List<DayData> = listOf()
+    val forecast: List<DayForecast> = listOf()
 )
-data class DayData (
-    val dayData: Map<List<Int>, DataAtTime>
+data class DayForecast (
+    val data: Map<List<Int>, DataAtTime> = mapOf()
 )
 
 

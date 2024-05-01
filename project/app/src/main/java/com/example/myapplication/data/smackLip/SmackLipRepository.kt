@@ -14,7 +14,7 @@ import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.model.oceanforecast.DataOF
 import com.example.myapplication.model.smacklip.AllSurfAreasOFLF
 import com.example.myapplication.model.smacklip.DataAtTime
-import com.example.myapplication.model.smacklip.DayData
+import com.example.myapplication.model.smacklip.DayForecast
 import com.example.myapplication.model.smacklip.Forecast7DaysOFLF
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.waveforecast.AllWavePeriods
@@ -31,7 +31,7 @@ interface SmackLipRepository {
 
     suspend fun getTimeSeriesOFLF(surfArea: SurfArea): Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>>
 
-    suspend fun getOFLFOneDay(day: Int, month: Int, timeseries: Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>> ): DayData
+    suspend fun getOFLFOneDay(day: Int, month: Int, timeseries: Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>> ): DayForecast
     suspend fun getSurfAreaOFLFNext7Days(surfArea: SurfArea): Forecast7DaysOFLF
     suspend fun getWindDirection(surfArea: SurfArea): List<Pair<List<Int>, Double>>
     suspend fun getWindSpeed(surfArea: SurfArea): List<Pair<List<Int>, Double>>
@@ -187,7 +187,7 @@ class SmackLipRepositoryImpl (
 
     // returnerer map<tidspunkt-> [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]>
     override suspend fun getOFLFOneDay(day: Int, month: Int, timeseries: Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>> )
-    : DayData {
+    : DayForecast {
         //henter data for den spesifikke dagen fra OF og LF
         val OFmap: List<Pair<String, DataOF>>? = timeseries.first[day]
         val LFmap: List<Pair<String, DataLF>>? = timeseries.second[day]
@@ -240,7 +240,7 @@ class SmackLipRepositoryImpl (
         }
 
         // [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]
-        val dayData= DayData(
+        val dayData= DayForecast(
             filteredMap.entries.associate { (time, data) ->
                 time to DataAtTime(
                     windSpeed = data[0] as Double,
@@ -271,7 +271,7 @@ class SmackLipRepositoryImpl (
         val day = time[2]
         val month = time[1]
 
-        val forecastNext7Days: MutableList<DayData> = mutableListOf()
+        val forecastNext7Days: MutableList<DayForecast> = mutableListOf()
 
         for (i in day .. (day + 6)) {
             val daysInMonth = nDaysInMonth(month)

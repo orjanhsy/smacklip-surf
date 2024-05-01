@@ -1,34 +1,20 @@
 package com.example.myapplication.ui.home
 
-import android.util.Log
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.R
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
-import com.example.myapplication.model.locationforecast.DataLF
 import com.example.myapplication.model.metalerts.Features
-import com.example.myapplication.model.oceanforecast.DataOF
 import com.example.myapplication.model.smacklip.AllSurfAreasOFLF
 import com.example.myapplication.model.smacklip.DataAtTime
-import com.example.myapplication.model.smacklip.DayData
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.waveforecast.AllWavePeriods
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import java.time.LocalTime
-import kotlin.system.exitProcess
 
 data class HomeScreenUiState(
     val wavePeriods: AllWavePeriods = AllWavePeriods(),
@@ -56,10 +42,10 @@ class HomeScreenViewModel : ViewModel() {
                 val allNext7Days: AllSurfAreasOFLF = smackLipRepository.getAllOFLF7Days()
 
                 val newOfLfNow: Map<SurfArea, DataAtTime> = allNext7Days.next7Days.entries.associate {(sa, forecast7Days) ->
-                    val times = forecast7Days.forecast7Days[0].dayData.keys.sortedWith(
+                    val times = forecast7Days.forecast[0].data.keys.sortedWith(
                         compareBy<List<Int>> { it[2] }.thenBy { it[3] }
                     )
-                    sa to forecast7Days.forecast7Days[0].dayData[times[0]]!!// TODO: !!
+                    sa to forecast7Days.forecast[0].data[times[0]]!!// TODO: !!
                 }
 
                 state.copy(
