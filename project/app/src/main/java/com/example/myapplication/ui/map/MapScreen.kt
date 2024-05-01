@@ -313,7 +313,7 @@ fun SurfAreaCard(
                         .padding(8.dp)
                         .width(18.dp)
                         .height(18.dp))
-                Text(text = "$windSpeed($windGust)", modifier = Modifier.padding(8.dp))
+                Text(text = "${windSpeed.toInt()}(${windGust.toInt()})", modifier = Modifier.padding(8.dp))
                 Image(
                     painter = painterResource(id = R.drawable.tsunami),
                     contentDescription = "wave icon",
@@ -333,7 +333,7 @@ fun SurfAreaCard(
                         .height(30.dp)
 
                 )
-                Text(text = "$airTemperature °C", modifier = Modifier.padding(8.dp))
+                Text(text = "${airTemperature.toInt()} °C", modifier = Modifier.padding(8.dp))
             }
 
             if (surfArea.image != 0) {
