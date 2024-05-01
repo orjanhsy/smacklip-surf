@@ -240,7 +240,7 @@ class SmackLipRepositoryImpl (
         }
 
         // [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]
-        val dayData= DayForecast(
+        val dayData = DayForecast(
             filteredMap.entries.associate { (time, data) ->
                 time to DataAtTime(
                     windSpeed = data[0] as Double,

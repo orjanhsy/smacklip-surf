@@ -70,6 +70,7 @@ class MapScreenViewModel : ViewModel() {
             }
         }
     }
+
     fun updateWindDirection() {
         viewModelScope.launch(Dispatchers.IO) {
             val updatedWindDirection: MutableMap<SurfArea, List<Pair<List<Int>, Double>>> = mutableMapOf()
