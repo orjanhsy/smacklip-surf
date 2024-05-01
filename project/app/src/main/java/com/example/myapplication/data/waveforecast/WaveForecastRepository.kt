@@ -9,6 +9,7 @@ import kotlinx.coroutines.coroutineScope
 
 interface WaveForecastRepository {
     suspend fun allRelevantWavePeriodsNext3DaysHardCoded(): AllWavePeriods
+    suspend fun wavePeriodsNext3DaysForArea(modelName: String, pointId: Int): List<Double?>
 
 }
 
@@ -25,7 +26,7 @@ class WaveForecastRepositoryImpl(
     .size=60, apiet henter de neste 60 timene, denne returnerer (ca?) 20 pair<dir, tp>
     - altså hver tredje time - for et område.
      */
-    private suspend fun wavePeriodsNext3DaysForArea(modelName: String, pointId: Int): List<Double?> {
+    override suspend fun wavePeriodsNext3DaysForArea(modelName: String, pointId: Int): List<Double?> {
         val availableForecastTimes = waveForecastDataSource.fetchAvaliableTimestamps().availableForecastTimes
 
         return coroutineScope {
