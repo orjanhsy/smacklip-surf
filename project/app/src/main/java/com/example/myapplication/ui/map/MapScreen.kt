@@ -70,6 +70,7 @@ import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.utils.RecourseUtils
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
+import com.mapbox.maps.CameraState
 import com.mapbox.maps.MapView
 import com.mapbox.maps.Style
 import com.mapbox.maps.plugin.animation.flyTo
@@ -87,9 +88,9 @@ fun MapScreen( mapScreenViewModel : MapScreenViewModel = viewModel(), onNavigate
     val mapRepository : MapRepositoryImpl = MapRepositoryImpl() //bruker direkte maprepository fordi mapbox har sin egen viewmodel? -
     val navController = NavigationManager.navController
     val isSearchActive = remember { mutableStateOf(false) }
-    val searchPoint : MutableState<Point?> = remember{ mutableStateOf(null)}
+    val rememberPoint : MutableState<Point?> = remember{ mutableStateOf(null)}
     // TODO: sjekke (maprepository) ut at dette er ok.
-    
+
 
     Scaffold(
         bottomBar = {
@@ -112,7 +113,7 @@ fun MapScreen( mapScreenViewModel : MapScreenViewModel = viewModel(), onNavigate
                     isSearchActive.value = isActive
                 },
                 surfAreas = SurfArea.entries.toList(),
-                onZoomToLocation = {point -> searchPoint.value = point}
+                onZoomToLocation = {point -> rememberPoint.value = point}
                 )
             MapBoxMap(
                 modifier = Modifier
@@ -120,7 +121,7 @@ fun MapScreen( mapScreenViewModel : MapScreenViewModel = viewModel(), onNavigate
                 locations = mapRepository.locationToPoint(),
                 uiState = mapScreenUiState,
                 onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen,
-                searchPoint = searchPoint
+                rememberPoint = rememberPoint
 
             )
         }
@@ -135,7 +136,7 @@ fun MapBoxMap(
     locations: List<Pair<SurfArea, Point>>,
     uiState: MapScreenUiState,
     onNavigateToSurfAreaScreen: (String) -> Unit = {},
-    searchPoint: MutableState<Point?>
+    rememberPoint: MutableState<Point?>
 ) {
     val startPosition = Point.fromLngLat(13.0, 65.1)
     val context = LocalContext.current
@@ -145,11 +146,11 @@ fun MapBoxMap(
 
     val selectedMarker = remember { mutableStateOf<SurfArea?>(null) }
 
-
     var pointAnnotationManager: PointAnnotationManager? by remember {
         mutableStateOf(null)
     }
 
+    val rememberCameraState = remember { mutableStateOf<CameraOptions?>(null) }
     //her vises selve kartet
     Box (
         contentAlignment = Alignment.Center
@@ -157,27 +158,37 @@ fun MapBoxMap(
         AndroidView(
             factory = {
 
-
                 MapView(it).also { mapView ->
                     //avgjør hvordan kartet skal vises når de først lastes inn:
-                    mapView.mapboxMap.flyTo(CameraOptions.Builder().zoom(3.9).center(startPosition).build())
                     mapView.mapboxMap.loadStyle(Style.STANDARD)
                     val annotationApi = mapView.annotations
                     pointAnnotationManager = annotationApi.createPointAnnotationManager()
-
                 }
             },
             update = { mapView ->
-                if (searchPoint.value == null){
+                //initiell cameraoptions - altså startPosition
+                if (rememberPoint.value == null && rememberCameraState.value == null){
                     mapView.mapboxMap.flyTo(CameraOptions.Builder().zoom(3.8).center(startPosition).build())
-                }else{
-                    mapView.mapboxMap.flyTo(CameraOptions.Builder().zoom(10.0).center(searchPoint.value).build())
+                }
+                //når brukeren har klikket på et sted i searchbar
+                else if (rememberPoint.value != null){
+                    mapView.mapboxMap.flyTo(CameraOptions.Builder().zoom(10.0).center(rememberPoint.value).build())
+                    rememberCameraState.value = CameraOptions.Builder().zoom(10.0).center(rememberPoint.value).build()
+                    rememberPoint.value = null //settes til null etter mappet er flyttet hit
+                }
+                //når brukeren krysser ut et card og skal tilbake til samme sted
+                else if (rememberCameraState.value != null){
+                    mapView.mapboxMap.flyTo(CameraOptions.Builder().zoom(rememberCameraState.value!!.zoom).center(
+                        rememberCameraState.value!!.center).build())
                 }
 
                 pointAnnotationManager?.let {
                     it.addClickListener { pointAnnotation ->
                         // Handle the click event:
                         val clickedPoint = pointAnnotation.point
+                        val cameraState = mapView.mapboxMap.cameraState
+                        rememberCameraState.value = CameraOptions.Builder().zoom(cameraState.zoom).center(cameraState.center).build() //huske hvor på kartet brukeren er når marker klikkes
+
                         Log.d(
                             "pointAnnotation point: ",
                             clickedPoint.toString() + " " + clickedPoint.longitude() + " " + clickedPoint.latitude()
@@ -302,7 +313,7 @@ fun SurfAreaCard(
                         .padding(8.dp)
                         .width(18.dp)
                         .height(18.dp))
-                Text(text = "$windSpeed($windGust)", modifier = Modifier.padding(8.dp))
+                Text(text = "${windSpeed.toInt()}(${windGust.toInt()})", modifier = Modifier.padding(8.dp))
                 Image(
                     painter = painterResource(id = R.drawable.tsunami),
                     contentDescription = "wave icon",
@@ -322,7 +333,7 @@ fun SurfAreaCard(
                         .height(30.dp)
 
                 )
-                Text(text = "$airTemperature °C", modifier = Modifier.padding(8.dp))
+                Text(text = "${airTemperature.toInt()} °C", modifier = Modifier.padding(8.dp))
             }
 
             if (surfArea.image != 0) {
