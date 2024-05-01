@@ -376,7 +376,7 @@ fun HeaderCard(surfArea: SurfArea, icon : String, date: LocalDate) {
                         Text(
                             text = formattedDate1,
                             style = TextStyle(
-                                fontSize = 13.sp,
+                                fontSize = 14.sp,
                                 //  fontFamily = FontFamily(Font(R.font.inter)),
                                 fontWeight = FontWeight(400),
                                 color = Color(0xFF9A938C),
@@ -422,8 +422,8 @@ fun DayPreviewCard(
 ) {
     Card(
         modifier = Modifier
-            .padding(6.dp)
-            .width(93.dp)
+            .padding(5.dp)
+            .width(98.dp)
             .height(120.dp)
             .background(color = SchemesSurface, shape = RoundedCornerShape(size = 20.dp))
             .clickable(
@@ -442,7 +442,7 @@ fun DayPreviewCard(
                 Text(
                     text = day,
                     style = TextStyle(
-                        fontSize = 12.sp,
+                        fontSize = 14.sp,
                         fontWeight = FontWeight(400),
                         color = Color(0xFF9A938C),
 
