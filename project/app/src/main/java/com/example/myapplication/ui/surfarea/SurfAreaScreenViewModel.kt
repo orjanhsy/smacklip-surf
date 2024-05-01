@@ -122,7 +122,6 @@ class SurfAreaScreenViewModel: ViewModel() {
                             windDir    = dayForecast[time]!![2] as Double,
                             waveHeight = dayForecast[time]!![5] as Double,
                             waveDir    = dayForecast[time]!![6] as Double,
-                            alerts     = state.alerts
                         )
 
                         if (statusToday == ConditionStatus.GREAT) {
