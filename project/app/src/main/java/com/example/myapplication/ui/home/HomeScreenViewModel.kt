@@ -28,7 +28,7 @@ class HomeScreenViewModel : ViewModel() {
     private val _homeScreenUiState = MutableStateFlow(HomeScreenUiState())
     private val _favoriteSurfAreas = MutableStateFlow<List<SurfArea>>(emptyList())
     val homeScreenUiState: StateFlow<HomeScreenUiState> = _homeScreenUiState.asStateFlow()
-    val favoriteSurfAreas: StateFlow<List<SurfArea>> = _favoriteSurfAreas
+    val favoriteSurfAreas: StateFlow<List<SurfArea>> = _favoriteSurfAreas // TODO: asStateFlow()?
 
     init {
         updateOFLF()
