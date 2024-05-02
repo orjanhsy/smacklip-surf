@@ -74,8 +74,8 @@ import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.common.composables.ProgressIndicator
 import com.example.myapplication.ui.theme.AppTheme
-
 //import com.example.myapplication.ui.theme.MyApplicationTheme
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -123,6 +123,7 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNaviga
                         favorites = favoriteSurfAreas,
                         ofLfNow = homeScreenUiState.ofLfNow,
                         alerts = homeScreenUiState.allRelevantAlerts,
+                        homeScreenViewModel,
                         onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
                     )
                     Column {
@@ -293,6 +294,7 @@ fun FavoritesList(
     favorites: List<SurfArea>,
     ofLfNow: Map<SurfArea, DataAtTime>,
     alerts: Map<SurfArea, List<Features>>?,
+    homeScreenViewModel: HomeScreenViewModel,
     onNavigateToSurfAreaScreen: (String) -> Unit
 ) {
     Column {
@@ -324,7 +326,7 @@ fun FavoritesList(
                         waveHeight = ofLfNow[surfArea]!!.waveHeight,
                         waveDir = ofLfNow[surfArea]!!.waveDir,
                         alerts = alerts?.get(surfArea),
-                        homeScreenViewModel = HomeScreenViewModel(),
+                        homeScreenViewModel = homeScreenViewModel,
                         showFavoriteButton = false,
                         onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
                     )

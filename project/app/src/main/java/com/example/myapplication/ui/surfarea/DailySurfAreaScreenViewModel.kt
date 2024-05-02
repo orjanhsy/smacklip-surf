@@ -79,6 +79,10 @@ class DailySurfAreaScreenViewModel: ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             //starte loading screen - det første som kalles fra DailySurfScreen
             _dailySurfAreaScreenUiState.update {
+                if (it.forecast7Days.isNotEmpty()) {
+                    Log.d("DSVM", "Quiiting update of OFLF, data already loaded")
+                    return@launch
+                }
                 if (surfArea == it.location) {
                     Log.d("DSVM", "Data already updated for $surfArea")
                     return@launch
