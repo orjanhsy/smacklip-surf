@@ -1,6 +1,5 @@
 package com.example.myapplication.data.smackLip
 
-import android.util.Log
 import com.example.myapplication.data.locationForecast.LocationForecastRepository
 import com.example.myapplication.data.locationForecast.LocationForecastRepositoryImpl
 import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
@@ -13,7 +12,12 @@ import com.example.myapplication.model.conditions.Conditions
 import com.example.myapplication.model.locationforecast.DataLF
 import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.model.oceanforecast.DataOF
+import com.example.myapplication.model.smacklip.AllSurfAreasOFLF
+import com.example.myapplication.model.smacklip.DataAtTime
+import com.example.myapplication.model.smacklip.DayForecast
+import com.example.myapplication.model.smacklip.Forecast7DaysOFLF
 import com.example.myapplication.model.surfareas.SurfArea
+import com.example.myapplication.model.waveforecast.AllWavePeriods
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlin.math.abs
@@ -27,28 +31,22 @@ interface SmackLipRepository {
 
     suspend fun getTimeSeriesOFLF(surfArea: SurfArea): Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>>
 
-    suspend fun getOFLFOneDay(day: Int, month: Int, timeseries: Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>> ): Map<List<Int>, List<Any>>
-    suspend fun getSurfAreaOFLFNext7Days(surfArea: SurfArea): List<Map<List<Int>, List<Any>>>
+    suspend fun getOFLFOneDay(day: Int, month: Int, timeseries: Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>> ): DayForecast
+    suspend fun getSurfAreaOFLFNext7Days(surfArea: SurfArea): Forecast7DaysOFLF
     suspend fun getWindDirection(surfArea: SurfArea): List<Pair<List<Int>, Double>>
     suspend fun getWindSpeed(surfArea: SurfArea): List<Pair<List<Int>, Double>>
     suspend fun getWindSpeedOfGust(surfArea: SurfArea): List<Pair<List<Int>, Double>>
     suspend fun getAirTemperature(surfArea: SurfArea): List<Pair<List<Int>, Double>>
     suspend fun getSymbolCode(surfArea: SurfArea): List<Pair<List<Int>, String>>
-    abstract fun getTimeListFromTimeString(timeString : String): List<Int>
-    //suspend fun getForecastNext24Hours() : MutableList<MutableList<Pair<List<Int>, Pair<Int, List<Double>>>>>
-    //suspend fun getDataForOneDay(day : Int, surfArea: SurfArea): List<Pair<List<Int>, List<Any>>>
-    //suspend fun getSymbolCodeForOneDay(day : Int, surfArea: SurfArea): List<Pair<List<Int>, List<String>>>
-    //suspend fun getDataForTheNext7Days(surfArea: SurfArea): MutableList<List<Pair<List<Int>, List<Any>>>>
+    fun getTimeListFromTimeString(timeString : String): List<Int>
     suspend fun getTimeSeriesDayByDay(surfArea: SurfArea): List<List<Pair<String, DataOF>>>
 
 
     // waveforecast
-    suspend fun getAllWaveForecastsNext3Days(): Map<SurfArea, List<Double?>>
-    suspend fun getWaveForecastsNext3DaysForArea(surfArea: SurfArea): List<Double?>
-    suspend fun getAllWavePeriodsNext3Days(): Map<SurfArea, List<Double?>>
-    suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): List<Double?>
+    suspend fun getAllWavePeriodsNext3Days(): AllWavePeriods
+    suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): List<Double?> // skal fjernes til fordel for AllWavePeriods.wavePeriods[surfArea]
 
-    suspend fun getAllOFLF7Days (): Map<SurfArea, List<Map<List<Int>, List<Any>>>>
+    suspend fun getAllOFLF7Days (): AllSurfAreasOFLF
 
     fun getConditionStatus(
         location: SurfArea,
@@ -58,7 +56,6 @@ interface SmackLipRepository {
         windDir: Double,
         waveHeight: Double,
         waveDir: Double,
-        alerts: List<Features>
     ): ConditionStatus
 
 }
@@ -84,14 +81,13 @@ class SmackLipRepositoryImpl (
         }
 
     }
+
     override suspend fun getWaveDirections(surfArea: SurfArea): List<Pair<List<Int>, Double>> {
         val tempWaveDir = oceanForecastRepository.getWaveDirections(surfArea)
         return tempWaveDir.map { waveDir ->
             Pair(getTimeListFromTimeString(waveDir.first), waveDir.second)
         }
     }
-
-
 
     //tar inn hele time-strengen på følgende format "time": "2024-03-13T18:00:00Z"
     //returnerer en liste slik: [år, måned, dag, time]
@@ -102,8 +98,6 @@ class SmackLipRepositoryImpl (
             timeString.substring(8, 10).toInt(),
             timeString.substring(11, 13).toInt())
     }
-
-
 
 
     //LF
@@ -189,11 +183,11 @@ class SmackLipRepositoryImpl (
         }
 
         return Pair(timeSeriesMapOF, timeSeriesMapLF)
-
     }
+
     // returnerer map<tidspunkt-> [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]>
     override suspend fun getOFLFOneDay(day: Int, month: Int, timeseries: Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>> )
-    : Map<List<Int>, List<Any>>{
+    : DayForecast {
         //henter data for den spesifikke dagen fra OF og LF
         val OFmap: List<Pair<String, DataOF>>? = timeseries.first[day]
         val LFmap: List<Pair<String, DataLF>>? = timeseries.second[day]
@@ -245,12 +239,24 @@ class SmackLipRepositoryImpl (
             it.value.size == 7
         }
 
-
-        return filteredMap
-
+        // [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]
+        val dayData = DayForecast(
+            filteredMap.entries.associate { (time, data) ->
+                time to DataAtTime(
+                    windSpeed = data[0] as Double,
+                    windGust = data[1] as Double,
+                    windDir = data[2] as Double,
+                    airTemp = data[3] as Double,
+                    symbolCode = data[4] as String,
+                    waveHeight = data[5] as Double,
+                    waveDir = data[6] as Double
+                )
+            }
+        )
+        return dayData
     }
 
-    suspend fun nDaysInMonth(month: Int): Int {
+    fun nDaysInMonth(month: Int): Int {
         return when (month) {
             1, 3, 5, 7, 8, 10, 12 -> 31
             4, 6, 9, 11 -> 30
@@ -259,13 +265,13 @@ class SmackLipRepositoryImpl (
         }
     }
 
-    override suspend fun getSurfAreaOFLFNext7Days(surfArea: SurfArea): List<Map<List<Int>, List<Any>>> {
+    override suspend fun getSurfAreaOFLFNext7Days(surfArea: SurfArea): Forecast7DaysOFLF {
         val timeseries:  Pair<Map<Int, List<Pair<String, DataOF>>>, Map<Int, List<Pair<String, DataLF>>>> = getTimeSeriesOFLF(surfArea = surfArea)
         val time = getTimeListFromTimeString(oceanForecastRepository.getTimeSeries(surfArea)[0].first)
         val day = time[2]
         val month = time[1]
 
-        val forecastNext7Days: MutableList<Map<List<Int>, List<Any>>> = mutableListOf()
+        val forecastNext7Days: MutableList<DayForecast> = mutableListOf()
 
         for (i in day .. (day + 6)) {
             val daysInMonth = nDaysInMonth(month)
@@ -276,112 +282,20 @@ class SmackLipRepositoryImpl (
             forecastNext7Days.add(getOFLFOneDay(actualDay, month, Pair(timeseries.first, timeseries.second)))
         }
 
-        return forecastNext7Days
+        return Forecast7DaysOFLF(forecastNext7Days)
     }
 
-
-    //en funksjon som returnerer en liste med par av
-    // 1. dato og
-    // 2. dataene for de 24 timene den dagen, som består av en liste med par av
-    // 1. timen og
-    // 2. en liste med de fire dataene for den timen
-    // [waveHeight, windDirection, windSpeed, windSpeedOfGust, temperature, symbolCode]
-
-    //totalt: List<Pair<List<Int>, List<Pair<Int, List<Double>>>>
-
-    //sender med dato (dag)
-    //metoden finner felles tider for alle dataenelistene og lager et par av denne tiden og en liste md de 4 dataene
-    //setter sammen alle parene til en liste
-    //sitter til slutt igjen med en liste bestående av par med tid og tilhørende data for den tiden
-    //metoden fungerer uavhengig av hvor mange tidspunkt det er data for
-
-    //List<Pair<Time, DataAtTime>>>  .size= 0..24 ('i dag' vil vise så mange timer det er igjen av døgnet, resten vil vise 24 timer.)
-    /*
-    override suspend fun getDataForOneDay(day : Int, surfArea: SurfArea): List<Pair<List<Int>, List<Any>>> {
-        val waveHeight :  List<Pair<List<Int>, Double>> = getWaveHeights(surfArea).filter { waveHeight -> waveHeight.first[2] == day }
-        val waveDirection: List<Pair<List<Int>, Double>> = getWaveDirections(surfArea).filter {waveDir -> waveDir.first[2] == day}
-        val windDirection :  List<Pair<List<Int>, Double>> = getWindDirection(surfArea).filter { windDirection -> windDirection.first[2] == day }
-        val windSpeed :  List<Pair<List<Int>, Double>> = getWindSpeed(surfArea).filter { windSpeed -> windSpeed.first[2] == day }
-        val windSpeedOfGust :  List<Pair<List<Int>, Double>> = getWindSpeedOfGust(surfArea).filter { gust -> gust.first[2] == day }
-        val airTemperature :  List<Pair<List<Int>, Double>> = getAirTemperature(surfArea).filter { temp -> temp.first[2] == day}
-        val symbolCode = getSymbolCode(surfArea).filter { symbol -> symbol.first[2] == day }
-
-        val dataList = waveHeight.map {
-            val time : List<Int> = it.first
-            try {
-                val waveDirectionAtTime = waveDirection.first {data -> data.first.equals(time)}.second
-                val windDirectionAtTime = windDirection.first {data -> data.first.equals(time)}.second
-                val windSpeedAtTime = windSpeed.first() {data -> data.first.equals(time)}.second
-                val windSpeedOfGustAtTime = windSpeedOfGust.first() {data -> data.first.equals(time)}.second
-                val airTemperatureAtTime = airTemperature.first() {data -> data.first.equals(time)}.second
-                val symbolCodeAtTime = symbolCode.first() {data -> data.first.equals(time)}.second
-                val dataAtTime : List<Any> = listOf(it.second, waveDirectionAtTime, windDirectionAtTime, windSpeedAtTime, windSpeedOfGustAtTime, airTemperatureAtTime, symbolCodeAtTime)
-                Pair(time, dataAtTime)
-
-
-            }catch (_: NoSuchElementException){
-                //fortsetter - må fortsette i tilfelle det er flere tidspunkt som matcher
-            }
-        }
-        Log.d("SmackLipDataOneDay", "Getting data for one day")
-        return dataList.filterIsInstance<Pair<List<Int>, List<Any>>>() //fjerner elementer som blir Kotlin.Unit pga manglende time-match
-    }
-    */
-
-
-    /*
-    override suspend fun getSymbolCodeForOneDay(day : Int, surfArea: SurfArea): List<Pair<List<Int>, List<String>>>{
-        val symbolCode = getSymbolCode(surfArea).filter { symbol -> symbol.first[2] == day }
-
-    }*/
-
-
-    //metoden kaller getDataForOneDay 7 ganger fra og med i dag, og legger til listen med data for hver dag
-    //inn i resListe som til slutt består av data med tidspunkt og data for alle 7 dager
-    //Days<Hours<Pair<Time, DataAtTime>>>>    .size=7
-    /*
-    override suspend fun getDataForTheNext7Days(surfArea: SurfArea): MutableList<List<Pair<List<Int>, List<Any>>>> {
-        val today = getWaveHeights(surfArea)[0].first[2] //regner med at det er dumt med et helt api-kall bare for å hente dagens dato
-        val resList = mutableListOf<List<Pair<List<Int>, List<Any>>>>()
-        for (i in today until today+7){
-            resList.add(getDataForOneDay(i, surfArea))
-            Log.d("GetDataSmackLip", "Updating data for 7 days ")
-        }
-        return resList
-    }
-    */
 
     override suspend fun getTimeSeriesDayByDay(surfArea: SurfArea): List<List<Pair<String, DataOF>>> {
         return oceanForecastRepository.getTimeSeriesDayByDay(surfArea)
     }
 
-    // mapper hvert enkelt surfarea til en liste med (bølgeretning, bølgeperiode) lik de i 'getWaveForecastNext3DaysForArea()' under.
-    override suspend fun getAllWaveForecastsNext3Days(): Map<SurfArea, List<Double?>> {
+    override suspend fun getAllWavePeriodsNext3Days(): AllWavePeriods {
         return waveForecastRepository.allRelevantWavePeriodsNext3DaysHardCoded()
     }
 
-    // liste med pair(bølgeretning, bølgeperiode), .size in 18..20 (3timers intervaller, totalt 60 timer). Vet ikke hvorfor den av og til er 19 lang, da er det i så fall bare 57 timer forecast.
-    override suspend fun getWaveForecastsNext3DaysForArea(surfArea: SurfArea): List<Double?> {
-        return waveForecastRepository.wavePeriodsNext3DaysForArea(
-            surfArea.modelName,
-            surfArea.pointId
-        )
-    }
-
-
-    // wf men bare med waveperiods, i motsetning (wavedir, waveperiod) over.
-    override suspend fun getAllWavePeriodsNext3Days(): Map<SurfArea, List<Double?>> {
-
-        val wavePeriods = getAllWaveForecastsNext3Days()
-        val formattedWavePeriods: MutableMap<SurfArea, List<Double?>> = mutableMapOf()
-        SurfArea.entries.forEach { surfArea ->
-            formattedWavePeriods[surfArea] = wavePeriods[surfArea]!!.flatMap { listOf(it, it, it) }
-        }
-        return formattedWavePeriods
-    }
-
     override suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): List<Double?> {
-        val wavePeriods = getWaveForecastsNext3DaysForArea(surfArea)
+        val wavePeriods = waveForecastRepository.wavePeriodsNext3DaysForArea(surfArea.modelName, surfArea.pointId)
 
         // format to hour-by-hour
         val reformattedWavePeriods = mutableListOf<Double?>()
@@ -400,7 +314,6 @@ class SmackLipRepositoryImpl (
         return abs(optimalDir - actualDir) !in acceptedOffset .. 360 - acceptedOffset
     }
 
-    //map<tidspunkt-> [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]>
     override fun getConditionStatus(
         location: SurfArea,
         wavePeriod: Double?,
@@ -409,7 +322,6 @@ class SmackLipRepositoryImpl (
         windDir: Double,
         waveHeight: Double,
         waveDir: Double,
-        alerts: List<Features>
     ): ConditionStatus {
         var conditionStatus: ConditionStatus = ConditionStatus.DECENT
 
@@ -422,7 +334,6 @@ class SmackLipRepositoryImpl (
             || waveHeight <= Conditions.WAVE_HEIGHT_LOWER_BOUND.value
             || waveHeight >= Conditions.WAVE_HEIGHT_UPPER_BOUND.value
             || wavePeriod <= Conditions.WAVE_PERIOD_LOWER_BOUND.value
-            || alerts.isNotEmpty()
         ) {
             conditionStatus = ConditionStatus.POOR
             return conditionStatus
@@ -466,10 +377,9 @@ class SmackLipRepositoryImpl (
     }
 
     // testing
-    override suspend fun getAllOFLF7Days (): Map<SurfArea, List<Map<List<Int>, List<Any>>>> {
+    override suspend fun getAllOFLF7Days (): AllSurfAreasOFLF {
 
         return coroutineScope {
-
             val res = SurfArea.entries.associateWith {
                 async { getSurfAreaOFLFNext7Days(it) }
             }
@@ -478,7 +388,9 @@ class SmackLipRepositoryImpl (
                 it.key to it.value.await()
             }
 
-            newRes
+            AllSurfAreasOFLF(
+                next7Days = newRes
+            )
         }
 
     }
