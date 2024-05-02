@@ -57,13 +57,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.NavigationManager
 import com.example.myapplication.R
@@ -72,9 +68,10 @@ import com.example.myapplication.model.metalerts.Properties
 import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.common.composables.BottomBar
-import com.example.myapplication.ui.common.composables.ProgressIndicator
 import com.example.myapplication.ui.theme.AppTheme
-//import com.example.myapplication.ui.theme.MyApplicationTheme
+
+import com.example.myapplication.ui.theme.AppTypography
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -100,16 +97,7 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNaviga
             }
         },
         bottomBar = {
-            BottomBar(
-                onNavigateToMapScreen = {
-                    navController?.navigate("MapScreen")
-                    // Navigerer til MapScreen
-                },
-                onNavigateToSettingsScreen = {
-                    navController?.navigate("SettingsScreen")
-                    // Navigerer til SettingsScreen
-                }
-            )
+            BottomBar(navController = navController)
         }
     ) { innerPadding ->
         Column(
@@ -127,16 +115,10 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNaviga
                         onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
                     )
                     Column {
-
                         Text(
                             text = "  Alle lokasjoner",
-                            style = TextStyle(
-                                fontSize = 15.sp,
-                                //fontFamily = FontFamily(Font(R.font.inter))
-                                fontWeight = FontWeight(400),
-                                color = Color(0xFF9A938C)
+                            style = AppTypography.bodySmall,
                             )
-                        )
                     }
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(2),
@@ -162,7 +144,7 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNaviga
                         }
                     }
                 }
-                ProgressIndicator(isDisplayed = homeScreenUiState.loading)
+               // ProgressIndicator(isDisplayed = homeScreenUiState.loading)
 
             }
         }
@@ -206,7 +188,8 @@ fun SearchBar(
                 activeChanged(true)
                 expanded = true
             },
-            placeholder = { Text("Søk etter surfeområde") },
+            placeholder = { Text(text="Søk etter surfeområde", style = AppTypography.titleMedium,
+            ) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Rounded.Search,
@@ -262,6 +245,7 @@ fun SearchBar(
                         ) {
                             Text(
                                 text = surfArea.locationName,
+                                style = AppTypography.bodySmall,
                                 modifier = Modifier.weight(1f)
                             )
                             Spacer(modifier = Modifier.width(12.dp))
@@ -300,13 +284,8 @@ fun FavoritesList(
     Column {
         Text(
             text = "  Favoritter",
-            style = TextStyle(
-                fontSize = 15.sp,
-                //fontFamily = FontFamily(Font(R.font.inter))
-                fontWeight = FontWeight(400),
-                color = Color(0xFF9A938C)
+            style = AppTypography.bodySmall,
             )
-        )
     }
     if (favorites.isNotEmpty()) {
         LazyRow {
@@ -372,12 +351,9 @@ fun EmptyFavoriteCard() {
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "Ingen favoritter lagt til",
-                fontSize = 20.sp,
-                textAlign = TextAlign.Center,
-                color = Color.Gray,
-                modifier = Modifier.padding(16.dp)
-            )
+                text = "Ingen favoritter lagt til", //tar denne til slutt
+                style = AppTypography.titleMedium,
+                )
         }
     }
 }
@@ -443,19 +419,12 @@ fun SurfAreaCard(
                 Row {
                     Text(
                         text = surfArea.locationName,
-                        style = TextStyle(
-                            fontSize = 12.93.sp,
-                            lineHeight = 19.4.sp,
-                            fontWeight = FontWeight(700),
-                            letterSpacing = 0.12.sp
-
+                        style = AppTypography.bodyMedium,
                         )
-
-                    )
                 }
 
                 Row {
-                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 4.dp)) {
+                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 2.dp)) {
                         Image(
                             painter = painterResource(id = R.drawable.tsunami),
                             contentDescription = "wave icon",
@@ -466,10 +435,13 @@ fun SurfAreaCard(
 
                         )
                     }
+                    Spacer(modifier = Modifier.width(5.dp))
                     Text(
-                        text = waveHeight.toString()
-                    )
-                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 4.dp)) {
+                        text = waveHeight.toString(),
+                        style = AppTypography.bodySmall,
+                        )
+                    Spacer(modifier = Modifier.width(5.dp))
+                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 0.dp)) {
                         Icon(
                             imageVector = Icons.Outlined.CallMade,
                             contentDescription = "arrow icon",
@@ -482,7 +454,7 @@ fun SurfAreaCard(
                 }
 
                 Row {
-                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 4.dp)) {
+                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 2.dp)) {
                         Image(
                             painter = painterResource(id = R.drawable.air),
                             contentDescription = "Air icon",
@@ -492,11 +464,14 @@ fun SurfAreaCard(
                                 .height(13.6348.dp)
                         )
                     }
+                    Spacer(modifier = Modifier.width(5.dp))
                     Text(
-                        text = windSpeed.toString() + if (windGust > windSpeed) " ($windGust)" else ""
-                    )
+                       text = "${windSpeed.toInt()}${if (windGust > windSpeed) " (${windGust.toInt()})" else ""}",
+                      style = AppTypography.bodySmall,
+                        )
 
-                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 4.dp)) {
+                    Spacer(modifier = Modifier.width(5.dp))
+                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 0.dp)) {
                         Icon(
                             imageVector = Icons.Outlined.CallMade,
                             contentDescription = "arrow icon",
