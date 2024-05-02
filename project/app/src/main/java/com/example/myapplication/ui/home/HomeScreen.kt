@@ -117,6 +117,7 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNaviga
                         favorites = favoriteSurfAreas,
                         ofLfNow = homeScreenUiState.ofLfNow,
                         alerts = homeScreenUiState.allRelevantAlerts,
+                        homeScreenViewModel,
                         onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
                     )
                     Column {
@@ -287,6 +288,7 @@ fun FavoritesList(
     favorites: List<SurfArea>,
     ofLfNow: Map<SurfArea, DataAtTime>,
     alerts: Map<SurfArea, List<Features>>?,
+    homeScreenViewModel: HomeScreenViewModel,
     onNavigateToSurfAreaScreen: (String) -> Unit
 ) {
     Column {
@@ -318,7 +320,7 @@ fun FavoritesList(
                         waveHeight = ofLfNow[surfArea]!!.waveHeight,
                         waveDir = ofLfNow[surfArea]!!.waveDir,
                         alerts = alerts?.get(surfArea),
-                        homeScreenViewModel = HomeScreenViewModel(),
+                        homeScreenViewModel = homeScreenViewModel,
                         showFavoriteButton = false,
                         onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
                     )
