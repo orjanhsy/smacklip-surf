@@ -5,20 +5,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.R
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
-import com.example.myapplication.model.metalerts.Features
+import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.smacklip.AllSurfAreasOFLF
 import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.waveforecast.AllWavePeriods
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import kotlin.system.exitProcess
+import java.time.LocalDateTime
 
 data class HomeScreenUiState(
     val wavePeriods: AllWavePeriods = AllWavePeriods(),
@@ -50,7 +48,7 @@ class HomeScreenViewModel() : ViewModel() {
 
                 val newOfLfNow: Map<SurfArea, DataAtTime> = allNext7Days.next7Days.entries.associate {(sa, forecast7Days) ->
                     val times = forecast7Days.forecast[0].data.keys.sortedWith(
-                        compareBy<List<Int>> { it[2] }.thenBy { it[3] }
+                        compareBy<LocalDateTime> { it.month }.thenBy { it.dayOfMonth }
                     )
                     sa to forecast7Days.forecast[0].data[times[0]]!!// TODO: !!
                 }

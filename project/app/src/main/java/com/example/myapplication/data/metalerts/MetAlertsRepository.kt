@@ -2,8 +2,7 @@ package com.example.myapplication.data.metalerts
 
 
 import com.example.myapplication.model.surfareas.SurfArea
-import com.example.myapplication.model.metalerts.Features
-import com.mapbox.maps.extension.style.expressions.dsl.generated.distance
+import com.example.myapplication.model.metalerts.Alert
 import kotlin.math.PI
 import kotlin.math.acos
 import kotlin.math.cos
@@ -11,8 +10,9 @@ import kotlin.math.sin
 
 
 interface MetAlertsRepository{
-    suspend fun getFeatures(): List<Features>
-    suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Features>
+    suspend fun getAlerts(): List<Alert>
+    suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Alert>
+    suspend fun getAllRelevantAlerts(): Map<SurfArea, List<Alert>>
 
 }
 class MetAlertsRepositoryImpl (
@@ -21,8 +21,8 @@ class MetAlertsRepositoryImpl (
 
 ) : MetAlertsRepository {
 
-    private var allFeatures: List<Features> = listOf()
-    override suspend fun getFeatures(): List<Features> {
+    private var allFeatures: List<Alert> = listOf()
+    override suspend fun getAlerts(): List<Alert> {
         allFeatures = metAlertsDataSource.fetchMetAlertsData().features
         return allFeatures
     }
@@ -38,10 +38,14 @@ class MetAlertsRepositoryImpl (
         return acos(sin(lat1) * sin(lat2) + cos(lat1) * cos(lat2) * cos(lon2-lon1)) * radiusEarth
     }
 
-    override suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Features> {
-        val relevantAlerts: MutableList<Features> = mutableListOf()
+    override suspend fun getAllRelevantAlerts(): Map<SurfArea, List<Alert>> {
+        return SurfArea.entries.associateWith { getRelevantAlertsFor(it) }
+    }
+
+    override suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Alert> {
+        val relevantAlerts: MutableList<Alert> = mutableListOf()
         if (allFeatures.isEmpty()) {
-            getFeatures()
+            getAlerts()
         }
         allFeatures.forEach() {feature ->
             val coordinates = feature.geometry?.coordinates

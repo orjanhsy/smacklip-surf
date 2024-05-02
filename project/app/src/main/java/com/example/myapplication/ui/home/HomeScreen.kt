@@ -63,7 +63,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.NavigationManager
 import com.example.myapplication.R
-import com.example.myapplication.model.metalerts.Features
+import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.metalerts.Properties
 import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
@@ -277,7 +277,7 @@ to receive accurate values in favorite surfareacards
 fun FavoritesList(
     favorites: List<SurfArea>,
     ofLfNow: Map<SurfArea, DataAtTime>,
-    alerts: Map<SurfArea, List<Features>>?,
+    alerts: Map<SurfArea, List<Alert>>?,
     homeScreenViewModel: HomeScreenViewModel,
     onNavigateToSurfAreaScreen: (String) -> Unit
 ) {
@@ -366,7 +366,7 @@ fun SurfAreaCard(
     windDir: Double,
     waveHeight: Double,
     waveDir: Double,
-    alerts: List<Features>?,
+    alerts: List<Alert>?,
     homeScreenViewModel: HomeScreenViewModel,
     showFavoriteButton: Boolean = true,
     onNavigateToSurfAreaScreen: (String) -> Unit
@@ -548,7 +548,7 @@ private fun PreviewSurfAreaCard() {
             windDirection,
             waveHeight,
             waveDir,
-            listOf((Features(properties = Properties(description = "Det ræinar")))),
+            listOf((Alert(properties = Properties(description = "Det ræinar")))),
             viewModel,
             true
         ) {}
