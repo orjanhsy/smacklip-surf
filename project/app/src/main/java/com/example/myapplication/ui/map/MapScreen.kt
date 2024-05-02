@@ -24,8 +24,11 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.outlined.Air
 import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Tsunami
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -71,6 +74,7 @@ import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.ui.theme.AppTypography
+import com.example.myapplication.ui.theme.onSurfaceVariantLight
 import com.example.myapplication.utils.RecourseUtils
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
@@ -234,7 +238,9 @@ fun MapBoxMap(
                 uiState = uiState,
                 onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
                 )
+            Modifier.padding(16.dp)
         }
+            //Modifier.padding(horizontal = 16.dp)
     }
 }
 
@@ -266,51 +272,54 @@ fun SurfAreaCard(
     Card (
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
     ){
         Column (
             modifier = Modifier
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
-                .padding(16.dp),
+               .padding(horizontal = 16.dp, vertical = 5.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-
-            ) {
-                Spacer(modifier = Modifier.weight(1f))
-
-                Text(
-                    text = surfArea.locationName,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 25.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .padding(end = 47.dp) // Adjust the end padding as needed
-                        .align(Alignment.CenterVertically)
-                )
+                horizontalArrangement = Arrangement.End
+            ){
                 Button(
                     onClick = onCloseClick,
-                    colors = ButtonDefaults.buttonColors(Color.Transparent), // Set the background color to transparent
+                    colors = ButtonDefaults.buttonColors(Color.Transparent),
+                    modifier = Modifier
+                        .height(40.dp)
 
-                ) {
+                    ) {
                     Icon(
                         imageVector = Icons.Outlined.Close,
                         contentDescription = "x",
-                        tint = Color.DarkGray,
+                        tint = onSurfaceVariantLight,
                         modifier = Modifier
                             .width(24.dp)
                             .height(24.dp)
                     )
                 }
             }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.Top
+            ) {
+                Text(
+                    text = surfArea.locationName,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 25.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.weight(1f)
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
             //tekstlig beskrivelse av stedet
             Text(
                 text = stringResource(surfArea.description),
                 style = AppTypography.titleSmall,
-                )
+                textAlign = TextAlign.Center
+            )
 
             //info om vind, bølger og temperatur
             Row (
@@ -319,23 +328,18 @@ fun SurfAreaCard(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ){
-                Image(painter = painterResource(id = R.drawable.air),
-                    contentDescription = "Air icon",
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .width(18.dp)
-                        .height(18.dp))
+                Icon(
+                    imageVector = Icons.Outlined.Air,
+                    contentDescription = "Tsunami",
+                    modifier = Modifier.size(18.dp)
+                )
                 Text(text = "${windSpeed.toInt()}(${windGust.toInt()})",
                     style = AppTypography.bodySmall,
                     modifier = Modifier.padding(8.dp))
-                Image(
-                    painter = painterResource(id = R.drawable.tsunami),
-                    contentDescription = "wave icon",
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .width(18.dp)
-                        .height(18.dp),
-
+                Icon(
+                    imageVector = Icons.Outlined.Tsunami,
+                    contentDescription = "Tsunami",
+                    modifier = Modifier.size(18.dp)
                 )
                 Text(text = "$waveHeight",
                     style = AppTypography.bodySmall,
@@ -376,22 +380,30 @@ fun SurfAreaCard(
                 Button(
                     onClick = {
                         onNavigateToSurfAreaScreen(surfArea.locationName)
-                },
-
+                    },
+                    colors = ButtonDefaults.buttonColors(Color.Transparent),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
-
-                ) {
-                    Text(text ="Gå til" + " " +  surfArea.locationName,
-                        style = AppTypography.bodySmall, //bytte farge, men funket ikke?
-                    )
+               ) {
+                        Text(
+                            text = "Gå til ${surfArea.locationName}",
+                            style = AppTypography.bodySmall,
+                            //modifier = Modifier.weight(1f)
+                        )
+                        Icon(
+                            imageVector = Icons.Default.ArrowForward,
+                            contentDescription = "Arrow Forward",
+                            tint = onSurfaceVariantLight,
+                            modifier = Modifier
+                                .size(20.dp)
+                        )
+                    }
                 }
             }
 
         }
     }
-}
+
 
 @Composable
 fun SearchBar(
@@ -517,7 +529,7 @@ fun SearchBar(
 @Composable
 fun SurfAreaPreview(){
     AppTheme {
-        SurfAreaCard(surfArea = SurfArea.HODDEVIK, {}, MapScreenUiState())
+        SurfAreaCard(surfArea = SurfArea.STAVASANDEN, {}, MapScreenUiState())
     }
 }
 
