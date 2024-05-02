@@ -38,20 +38,5 @@ class StatefulRepoTests {
         println(state)
     }
 
-    @Test
-    fun wavePeriodsFromWavePeriodsRepoWork()= runBlocking{
-        val smacklip = SmackLipRepositoryImpl()
-        val waveForecast = WaveForecastRepositoryImpl()
-
-        val time1 = measureTimeMillis {
-            println(smacklip.getAllWavePeriodsNext3Days().wavePeriods[SurfArea.HODDEVIK]!!.size)
-        }
-        val time2 = measureTimeMillis {
-            println(waveForecast.allRelevantWavePeriodsNext3Days().wavePeriods[SurfArea.HODDEVIK]!!.size)
-        }
-
-        println("$time1, $time2")
-
-    }
 
 }
