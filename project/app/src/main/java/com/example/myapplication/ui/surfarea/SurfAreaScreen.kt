@@ -64,6 +64,7 @@ import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.ui.theme.AppTypography
 import com.example.myapplication.utils.RecourseUtils
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -134,7 +135,7 @@ fun SurfAreaScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 item {
-                    val surfAreaDataForDay: Map<List<Int>, DataAtTime> = try {
+                    val surfAreaDataForDay: Map<LocalDateTime, DataAtTime> = try {
                         surfAreaScreenUiState.forecastNext7Days.forecast[0].data
                     } catch (e: IndexOutOfBoundsException) {
                         mapOf()
@@ -148,19 +149,19 @@ fun SurfAreaScreen(
                         // siden mappet ikke er sortert henter vi ut alle aktuelle tidspunketer og sorterer dem
 
                         val times = surfAreaDataForDay.keys.sortedWith(
-                            compareBy<List<Int>> { it[2] }.thenBy { it[3] }
+                            compareBy<LocalDateTime> { it.month }.thenBy { it.dayOfMonth }
                         )
 
                         for (time in times) {
-                            val hour = time[3]
+                            val hour = time.hour
                             if (hour == currentHour) {
                                 headerIcon = surfAreaDataForDay[time]!!.symbolCode
                             }
                         }
-                        HeaderCard(surfArea = surfArea, icon = headerIcon, LocalDate.now())
+                        HeaderCard(surfArea = surfArea, icon = headerIcon, LocalDateTime.now())
                     }
                         else{
-                            HeaderCard(surfArea = surfArea, icon = R.drawable.spm.toString(), LocalDate.now())
+                            HeaderCard(surfArea = surfArea, icon = R.drawable.spm.toString(), LocalDateTime.now())
                     }
                 }
                 item {
@@ -325,7 +326,7 @@ fun calculateFontSizeForText(text: String): TextUnit {
 }
 
 @Composable
-fun HeaderCard(surfArea: SurfArea, icon : String, date: LocalDate) {
+fun HeaderCard(surfArea: SurfArea, icon : String, date: LocalDateTime) {
     val formatter1 = DateTimeFormatter.ofPattern("E d. MMM", Locale("no", "NO"))
     val formattedDate1 = formatter1.format(date)
 

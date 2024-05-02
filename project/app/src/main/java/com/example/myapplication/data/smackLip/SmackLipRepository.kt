@@ -10,7 +10,7 @@ import com.example.myapplication.data.waveforecast.WaveForecastRepositoryImpl
 import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.conditions.Conditions
 import com.example.myapplication.model.locationforecast.DataLF
-import com.example.myapplication.model.metalerts.Features
+import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.oceanforecast.DataOF
 import com.example.myapplication.model.smacklip.AllSurfAreasOFLF
 import com.example.myapplication.model.smacklip.DataAtTime
@@ -20,11 +20,13 @@ import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.waveforecast.AllWavePeriods
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import kotlin.math.abs
 
 
 interface SmackLipRepository {
-    suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Features>
+    suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Alert>
     suspend fun getWaveHeights(surfArea: SurfArea): List<Pair<List<Int>, Double>>
 
     suspend fun getWaveDirections(surfArea: SurfArea): List<Pair<List<Int>, Double>>
@@ -68,7 +70,7 @@ class SmackLipRepositoryImpl (
 ): SmackLipRepository {
 
     //MET
-    override suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Features> {
+    override suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Alert> {
         return metAlertsRepository.getRelevantAlertsFor(surfArea)
     }
 
@@ -242,7 +244,7 @@ class SmackLipRepositoryImpl (
         // [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]
         val dayData = DayForecast(
             filteredMap.entries.associate { (time, data) ->
-                time to DataAtTime(
+                LocalDateTime.of(time[0], time[1], time[2], time[3], 0) to DataAtTime(
                     windSpeed = data[0] as Double,
                     windGust = data[1] as Double,
                     windDir = data[2] as Double,
@@ -291,20 +293,11 @@ class SmackLipRepositoryImpl (
     }
 
     override suspend fun getAllWavePeriodsNext3Days(): AllWavePeriods {
-        return waveForecastRepository.allRelevantWavePeriodsNext3DaysHardCoded()
+        return waveForecastRepository.allRelevantWavePeriodsNext3Days()
     }
 
     override suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): List<Double?> {
-        val wavePeriods = waveForecastRepository.wavePeriodsNext3DaysForArea(surfArea.modelName, surfArea.pointId)
-
-        // format to hour-by-hour
-        val reformattedWavePeriods = mutableListOf<Double?>()
-        wavePeriods.forEach{
-            reformattedWavePeriods.add(it)
-            reformattedWavePeriods.add(it)
-            reformattedWavePeriods.add(it)
-        }
-        return reformattedWavePeriods
+        return waveForecastRepository.wavePeriodsNext3DaysForArea(surfArea.modelName, surfArea.pointId)
     }
 
 

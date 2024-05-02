@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
 import com.example.myapplication.model.conditions.ConditionStatus
-import com.example.myapplication.model.metalerts.Features
+import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.smacklip.DayForecast
 import com.example.myapplication.model.smacklip.Forecast7DaysOFLF
 import com.example.myapplication.model.surfareas.SurfArea
@@ -15,10 +15,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
+import kotlin.text.Typography.times
 
 data class SurfAreaScreenUiState(
     val location: SurfArea? = null,
-    val alertsSurfArea: List<Features> = emptyList(),
+    val alertsSurfArea: List<Alert> = emptyList(),
     val wavePeriods: List<Double?> = emptyList(),
     val maxWaveHeights: List<Double> = emptyList(),
     val minWaveHeights: List<Double> = emptyList(),
@@ -103,7 +105,7 @@ class SurfAreaScreenViewModel: ViewModel() {
     fun updateBestConditionStatuses(surfArea: SurfArea, forecast7Days: List<DayForecast>) {
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update {
-                if (forecast7Days.isEmpty()) {
+                if (forecast7Days.isEmpty() || it.wavePeriods.isEmpty()) {
                     Log.e("SAVM", "Attempted to update condition status on empty forecast7Days")
                     return@launch
                 }
@@ -116,12 +118,14 @@ class SurfAreaScreenViewModel: ViewModel() {
                 for (dayIndex in 0.. 2) {
 
                     val dayForecast: DayForecast = forecast7Days[dayIndex]
-                    val times = dayForecast.data.keys.sortedBy { it[3] }
+                    val times = dayForecast.data.keys.sortedWith (
+                        compareBy<LocalDateTime> { it.month }.thenBy { it.dayOfMonth }
+                    )
                     var bestToday = ConditionStatus.BLANK
 
                     for (time in times) {
                         val wavePeriod = try {
-                            state.wavePeriods[(dayIndex + 1) * time[3]]
+                            state.wavePeriods[(dayIndex + 1) * time.hour]
                         } catch (e: IndexOutOfBoundsException) {
                             Log.d("SAVM", "No status given as wavePeriods were out of bounds for ${(dayIndex + 1)}")
                             null

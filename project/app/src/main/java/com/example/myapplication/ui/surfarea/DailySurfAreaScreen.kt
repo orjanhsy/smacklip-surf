@@ -47,6 +47,7 @@ import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.ui.theme.AppTypography
 import com.example.myapplication.utils.RecourseUtils
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 
 @SuppressLint("SuspiciousIndentation")
@@ -112,7 +113,7 @@ fun DailySurfAreaScreen(
                 val currentHour = LocalTime.now().hour
                 var headerIcon = "default_icon"
 
-                val surfAreaDataForDay: Map<List<Int>, DataAtTime> = try {
+                val surfAreaDataForDay: Map<LocalDateTime, DataAtTime> = try {
                     dailySurfAreaScreenUiState.forecast7Days[daysFromToday].data
                 } catch (e: IndexOutOfBoundsException) {
                     mapOf()
@@ -121,21 +122,21 @@ fun DailySurfAreaScreen(
                 Log.d("DSscreen", "Getting data for $daysFromToday")
 
                 val times = surfAreaDataForDay.keys.sortedWith(
-                    compareBy<List<Int>> { it[2] }.thenBy { it[3] }
+                    compareBy<LocalDateTime> { it.month }.thenBy { it.dayOfMonth }
                 )
 
                 if (surfAreaDataForDay.isNotEmpty()) {
                     // siden mappet ikke er sortert henter vi ut alle aktuelle tidspunketer og sorterer dem
                     for (time in times) {
-                        val hour = time[3]
+                        val hour = time.hour
                         if (hour == currentHour) {
                             headerIcon = surfAreaDataForDay[time]!!.symbolCode
                             break
                         }
                     }
                 }
-                val time = try {LocalDate.of(times[0][0], times[0][1], times[0][2])}
-                catch (e: IndexOutOfBoundsException) {LocalDate.now()}
+                val time = try {times[0]}
+                catch (e: IndexOutOfBoundsException) {LocalDateTime.now()}
                 HeaderCard(surfArea = surfArea, icon = headerIcon, time)
                 LazyColumn(
                     modifier = Modifier
@@ -145,7 +146,7 @@ fun DailySurfAreaScreen(
                     // [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]
                     if (surfAreaDataForDay.isNotEmpty()) {
                         items(times.size) { time ->
-                            val hourIndex = times[time][3]
+                            val hourIndex = times[time].hour
                             Log.d("hourindex", "$hourIndex")
 
                             // TODO: ?
