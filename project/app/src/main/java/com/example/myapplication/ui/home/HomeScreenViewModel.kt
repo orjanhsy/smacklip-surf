@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.R
@@ -36,9 +37,12 @@ class HomeScreenViewModel : ViewModel() {
     }
 
     fun updateOFLF() {
-
         viewModelScope.launch(Dispatchers.IO) {
             _homeScreenUiState.update {state ->
+                if (state.ofLfNow.isNotEmpty()) {
+                    Log.d("HSVM", "Quitting 'updateOFLF', data already loaded")
+                    return@launch
+                }
                 val allNext7Days: AllSurfAreasOFLF = smackLipRepository.getAllOFLF7Days()
 
                 val newOfLfNow: Map<SurfArea, DataAtTime> = allNext7Days.next7Days.entries.associate {(sa, forecast7Days) ->
