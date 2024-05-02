@@ -51,27 +51,26 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.NavigationManager
 import com.example.myapplication.R
 import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.model.metalerts.Properties
+import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.common.composables.BottomBar
-import com.example.myapplication.ui.common.composables.ProgressIndicator
-import com.example.myapplication.ui.theme.MyApplicationTheme
+import com.example.myapplication.ui.theme.AppTheme
+import com.example.myapplication.ui.theme.AppTypography
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -108,24 +107,16 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNaviga
                 Column (modifier = Modifier.fillMaxSize()){
                     FavoritesList(
                         favorites = favoriteSurfAreas,
-                        windSpeedMap = homeScreenUiState.windSpeed,
-                        windGustMap = homeScreenUiState.windGust,
-                        windDirectionMap = homeScreenUiState.windDirection,
-                        waveHeightMap = homeScreenUiState.waveHeight,
+                        ofLfNow = homeScreenUiState.ofLfNow,
                         alerts = homeScreenUiState.allRelevantAlerts,
+                        homeScreenViewModel,
                         onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
                     )
                     Column {
-
                         Text(
                             text = "  Alle lokasjoner",
-                            style = TextStyle(
-                                fontSize = 15.sp,
-                                //fontFamily = FontFamily(Font(R.font.inter))
-                                fontWeight = FontWeight(400),
-                                color = Color(0xFF9A938C)
+                            style = AppTypography.bodySmall,
                             )
-                        )
                     }
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(2),
@@ -133,14 +124,17 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNaviga
                             .fillMaxWidth(),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         horizontalArrangement = Arrangement.Center)
+
                     {
                         items(SurfArea.entries) { location ->
+                            // TODO: !!
                             SurfAreaCard(
                                 location,
-                                windSpeedMap = homeScreenUiState.windSpeed,
-                                windGustMap = homeScreenUiState.windGust,
-                                windDirectionMap = homeScreenUiState.windDirection,
-                                waveHeightMap = homeScreenUiState.waveHeight,
+                                windSpeed = homeScreenUiState.ofLfNow[location]?.windSpeed ?: 0.0,
+                                windGust = homeScreenUiState.ofLfNow[location]?.windGust ?: 0.0,
+                                windDir = homeScreenUiState.ofLfNow[location]?.windDir ?: 0.0,
+                                waveHeight = homeScreenUiState.ofLfNow[location]?.waveHeight ?: 0.0,
+                                waveDir = homeScreenUiState.ofLfNow[location]?.waveDir ?: 0.0,
                                 alerts = homeScreenUiState.allRelevantAlerts[location],
                                 homeScreenViewModel = homeScreenViewModel,
                                 onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
@@ -148,7 +142,7 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNaviga
                         }
                     }
                 }
-                ProgressIndicator(isDisplayed = homeScreenUiState.loading)
+               // ProgressIndicator(isDisplayed = homeScreenUiState.loading)
 
             }
         }
@@ -192,7 +186,8 @@ fun SearchBar(
                 activeChanged(true)
                 expanded = true
             },
-            placeholder = { Text("Søk etter surfeområde") },
+            placeholder = { Text(text="Søk etter surfeområde", style = AppTypography.titleMedium,
+            ) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Rounded.Search,
@@ -248,6 +243,7 @@ fun SearchBar(
                         ) {
                             Text(
                                 text = surfArea.locationName,
+                                style = AppTypography.bodySmall,
                                 modifier = Modifier.weight(1f)
                             )
                             Spacer(modifier = Modifier.width(12.dp))
@@ -278,23 +274,16 @@ to receive accurate values in favorite surfareacards
 @Composable
 fun FavoritesList(
     favorites: List<SurfArea>,
-    windSpeedMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
-    windGustMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
-    windDirectionMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
-    waveHeightMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
+    ofLfNow: Map<SurfArea, DataAtTime>,
     alerts: Map<SurfArea, List<Features>>?,
+    homeScreenViewModel: HomeScreenViewModel,
     onNavigateToSurfAreaScreen: (String) -> Unit
 ) {
     Column {
         Text(
             text = "  Favoritter",
-            style = TextStyle(
-                fontSize = 15.sp,
-                //fontFamily = FontFamily(Font(R.font.inter))
-                fontWeight = FontWeight(400),
-                color = Color(0xFF9A938C)
+            style = AppTypography.bodySmall,
             )
-        )
     }
     if (favorites.isNotEmpty()) {
         LazyRow {
@@ -305,18 +294,20 @@ fun FavoritesList(
                         .size(width = 150.0.dp, height = 200.00.dp)
                         .clip(RoundedCornerShape(10.dp))
                 ) {
+                    // TODO: !!
                     SurfAreaCard(
                         surfArea = surfArea,
-                        windSpeedMap = windSpeedMap,
-                        windGustMap = windGustMap,
-                        windDirectionMap = windDirectionMap,
-                        waveHeightMap = waveHeightMap,
+                        windSpeed = ofLfNow[surfArea]!!.windSpeed,
+                        windGust = ofLfNow[surfArea]!!.windGust,
+                        windDir = ofLfNow[surfArea]!!.windDir,
+                        waveHeight = ofLfNow[surfArea]!!.waveHeight,
+                        waveDir = ofLfNow[surfArea]!!.waveDir,
                         alerts = alerts?.get(surfArea),
-                        homeScreenViewModel = HomeScreenViewModel(),
+                        homeScreenViewModel = homeScreenViewModel,
                         showFavoriteButton = false,
                         onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
                     )
-                    if (alerts != null && alerts.isNotEmpty()) {
+                    if (!alerts.isNullOrEmpty()) {
                         Image(
                             painter = painterResource(id = R.drawable.icon_awareness_yellow_outlined),
                             contentDescription = "warning icon",
@@ -358,12 +349,9 @@ fun EmptyFavoriteCard() {
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "Ingen favoritter lagt til",
-                fontSize = 20.sp,
-                textAlign = TextAlign.Center,
-                color = Color.Gray,
-                modifier = Modifier.padding(16.dp)
-            )
+                text = "Ingen favoritter lagt til", //tar denne til slutt
+                style = AppTypography.titleMedium,
+                )
         }
     }
 }
@@ -371,34 +359,26 @@ fun EmptyFavoriteCard() {
 @Composable
 fun SurfAreaCard(
     surfArea: SurfArea,
-    windSpeedMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
-    windGustMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
-    windDirectionMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
-    waveHeightMap: Map<SurfArea,List<Pair<List<Int>, Double>>>,
+    windSpeed: Double,
+    windGust: Double,
+    windDir: Double,
+    waveHeight: Double,
+    waveDir: Double,
     alerts: List<Features>?,
     homeScreenViewModel: HomeScreenViewModel,
     showFavoriteButton: Boolean = true,
     onNavigateToSurfAreaScreen: (String) -> Unit
 ) {
 
-    val windSpeed = windSpeedMap[surfArea] ?: listOf()
-    val windGust = windGustMap[surfArea] ?: listOf()
-    val windDirection = windDirectionMap[surfArea] ?: listOf()
-    val waveHeight = waveHeightMap[surfArea] ?: listOf()
-
     // windDirection
-    val rotationAngleWind: Float = when {
-        windDirection.isNotEmpty() -> {
-            val angle = windDirection[0].second.toFloat()
-            angle
-        }
-        else -> 0f
-    }
+    val rotationAngleWind: Float = windDir.toFloat()
+    val rotationAngleWave: Float = waveDir.toFloat()
 
     Card(
         modifier = Modifier
             .wrapContentSize()
             .padding(start = 8.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)
+            .shadow(4.dp, shape = RoundedCornerShape(10.dp))
             .clickable(
                 onClick = { onNavigateToSurfAreaScreen(surfArea.locationName) })
     ) {
@@ -437,58 +417,68 @@ fun SurfAreaCard(
                 Row {
                     Text(
                         text = surfArea.locationName,
-                        style = TextStyle(
-                            fontSize = 12.93.sp,
-                            lineHeight = 19.4.sp,
-                            fontWeight = FontWeight(700),
-                            letterSpacing = 0.12.sp
+                        style = AppTypography.bodyMedium,
+                        )
+                }
+
+                Row {
+                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 2.dp)) {
+                        Image(
+                            painter = painterResource(id = R.drawable.tsunami),
+                            contentDescription = "wave icon",
+                            modifier = Modifier
+                                .padding(0.02021.dp)
+                                .width(15.3587.dp)
+                                .height(14.47855.dp)
 
                         )
-
-                    )
+                    }
+                    Spacer(modifier = Modifier.width(5.dp))
+                    Text(
+                        text = waveHeight.toString(),
+                        style = AppTypography.bodySmall,
+                        )
+                    Spacer(modifier = Modifier.width(5.dp))
+                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 0.dp)) {
+                        Icon(
+                            imageVector = Icons.Outlined.CallMade,
+                            contentDescription = "arrow icon",
+                            modifier = Modifier
+                                .width(17.dp)
+                                .height(17.dp)
+                                .rotate(rotationAngleWave - 45)
+                        )
+                    }
                 }
 
                 Row {
-                    Image(
-                        painter = painterResource(id = R.drawable.tsunami),
-                        contentDescription = "wave icon",
-                        modifier = Modifier
-                            .padding(0.02021.dp)
-                            .width(15.3587.dp)
-                            .height(14.47855.dp)
-
-                    )
-
+                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 2.dp)) {
+                        Image(
+                            painter = painterResource(id = R.drawable.air),
+                            contentDescription = "Air icon",
+                            modifier = Modifier
+                                .padding(0.02021.dp)
+                                .width(15.3587.dp)
+                                .height(13.6348.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(5.dp))
                     Text(
-                        text = " ${if (waveHeight.isNotEmpty()) "${waveHeight[0].second}m" else ""}"
-                    )
-                }
+                       text = "${windSpeed.toInt()}${if (windGust > windSpeed) " (${windGust.toInt()})" else ""}",
+                      style = AppTypography.bodySmall,
+                        )
 
-                Row {
-                    Image(
-                        painter = painterResource(id = R.drawable.air),
-                        contentDescription = "Air icon",
-                        modifier = Modifier
-                            .padding(0.02021.dp)
-                            .width(15.3587.dp)
-                            .height(13.6348.dp)
-                    )
-                    Text(
-                        text = " ${if (windSpeed.isNotEmpty()) (windSpeed[0].second).toInt() else ""}" +
-                                if(windGust.isNotEmpty() && windSpeed.isNotEmpty() && windGust[0].second != windSpeed[0].second) "(${windGust[0].second.toInt()})" else ""
-                    )
-                    Text(
-                        text = " ${if (windDirection.isNotEmpty()) "${windDirection[0].second}°" else ""}"
-                    )
-
-                    Icon(
-                        imageVector = Icons.Outlined.CallMade,
-                        contentDescription = "arrow icon",
-                        modifier = Modifier
-                            .width(17.dp)
-                            .height(17.dp)
-                            .rotate(rotationAngleWind)
-                    )
+                    Spacer(modifier = Modifier.width(5.dp))
+                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 0.dp)) {
+                        Icon(
+                            imageVector = Icons.Outlined.CallMade,
+                            contentDescription = "arrow icon",
+                            modifier = Modifier
+                                .width(17.dp)
+                                .height(17.dp)
+                                .rotate(rotationAngleWind - 45)
+                        )
+                    }
                 }
 
                 /*
@@ -541,27 +531,21 @@ fun SurfAreaCard(
 @Preview(showBackground = true)
 @Composable
 private fun PreviewSurfAreaCard() {
-    val windSpeedMap: Map<SurfArea,List<Pair<List<Int>, Double>>> = mapOf(
-        SurfArea.HODDEVIK to listOf(Pair(listOf(2, 4, 6, 8), 1.0))
-    )
-    val windGustMap: Map<SurfArea,List<Pair<List<Int>, Double>>> = mapOf(
-        SurfArea.HODDEVIK to listOf(Pair(listOf(3, 5, 8, 32), 3.0))
+    val windSpeed = 1.0
+    val windGust = 3.0
+    val windDirection = 184.3
+    val waveHeight = 5.0
+    val waveDir =  184.3
 
-    )
-    val windDirectionMap: Map<SurfArea,List<Pair<List<Int>, Double>>> = mapOf(
-        SurfArea.HODDEVIK to listOf(Pair(listOf(3, 5, 8, 32), 184.3))
-    )
-    val waveHeightMap: Map<SurfArea,List<Pair<List<Int>, Double>>> = mapOf(
-        SurfArea.HODDEVIK to listOf(Pair(listOf(1, 2, 3, 4), 5.0))
-    )
     val viewModel = HomeScreenViewModel()
-    MyApplicationTheme {
+    AppTheme {
         SurfAreaCard(
             SurfArea.HODDEVIK,
-            windSpeedMap,
-            windGustMap,
-            windDirectionMap,
-            waveHeightMap,
+            windSpeed,
+            windGust,
+            windDirection,
+            waveHeight,
+            waveDir,
             listOf((Features(properties = Properties(description = "Det ræinar")))),
             viewModel,
             true
@@ -572,7 +556,7 @@ private fun PreviewSurfAreaCard() {
 @Preview(showBackground = true)
 @Composable
 private fun PreviewHomeScreen() {
-    MyApplicationTheme {
+    AppTheme {
         HomeScreen(){}
     }
 }

@@ -17,8 +17,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import com.example.myapplication.ui.theme.MyApplicationTheme
+import com.example.myapplication.ui.theme.AppTheme
 
 data class BottomNavigationItem(
     val title: String,
@@ -91,7 +90,7 @@ fun BottomBar(navController: NavController?) {
 @Preview(showBackground = true)
 @Composable
 private fun PreviewBottomBar() {
-    MyApplicationTheme {
-        BottomBar(navController = rememberNavController())
+    AppTheme {
+        BottomBar(navController = null)
     }
 }

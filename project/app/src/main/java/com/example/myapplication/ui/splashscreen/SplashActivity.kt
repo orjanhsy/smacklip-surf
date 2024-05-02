@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.myapplication.MainActivity
-import com.example.myapplication.ui.theme.MyApplicationTheme
+import com.example.myapplication.ui.theme.AppTheme
 import kotlinx.coroutines.delay
 
 @SuppressLint("CustomSpashScreen")
@@ -17,7 +17,7 @@ class SplashActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MyApplicationTheme{
+            AppTheme{
                 SplashScreen()
             }
         }
