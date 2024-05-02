@@ -54,6 +54,10 @@ class RepositoryImpl(
     override val wavePeriods: StateFlow<AllWavePeriods> = _wavePeriods.asStateFlow()
     override val alerts: StateFlow<Map<SurfArea, List<Alert>>> = _alerts.asStateFlow()
 
+
+    /*
+    Funksjonen henter all oflf data for hvert sted, som resulterer i en 9-dagers forecast (den tar med dager der windGust er 0.0  forelopig)
+     */
     override suspend fun loadOFlF() {
         _ofLfNext7Days.update {
             val all7DayForecasts = SurfArea.entries.associateWith {sa ->
@@ -68,7 +72,7 @@ class RepositoryImpl(
                     val dayForecasts: MutableMap<LocalDateTime, DataAtTime> = mutableMapOf()
                     // TODO: !!
                     val lfAtDay = lf[day]!!
-                    val ofAtDay = try {of[day]!!} catch(e: NullPointerException) {continue}
+                    val ofAtDay = try {of[day]!!} catch(e: NullPointerException) {continue} // skips iteration if there is not data for both lf and of
 
                     val allDataAtDay: MutableMap<LocalDateTime, MutableList<Any>> = mutableMapOf()
                     val dayForecast: MutableMap<LocalDateTime, DataAtTime> = mutableMapOf()
@@ -83,6 +87,7 @@ class RepositoryImpl(
                         val symbolCode = try {
                             it.second.next_1_hours.summary.symbol_code
                         } catch (e: NullPointerException) {
+                            // for days where there are no longer hourly forecasts
                             it.second.next_6_hours.summary.symbol_code
                         }
                         allDataAtDay[time]!!.add(symbolCode)
