@@ -55,6 +55,7 @@ import androidx.navigation.NavController
 import com.example.myapplication.NavigationManager
 import com.example.myapplication.R
 import com.example.myapplication.model.conditions.ConditionStatus
+import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.AlertCard.CustomAlert
 import com.example.myapplication.ui.common.composables.BottomBar
@@ -140,8 +141,12 @@ fun SurfAreaScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 item {
-                    val surfAreaDataForDay: Map<List<Int>, List<Any>> =
-                        surfAreaScreenUiState.forecastNext7Days.getOrElse(0) { emptyMap() } //0 is today
+                    val surfAreaDataForDay: Map<List<Int>, DataAtTime> = try {
+                        surfAreaScreenUiState.forecastNext7Days.forecast[0].data
+                    } catch (e: IndexOutOfBoundsException) {
+                        mapOf()
+                    }
+
                     val currentHour =
                         LocalTime.now().hour // klokken er 10 så får ikke sjekket om det står 09 eller 9. Sto tidligere "08", "09" med .toString().padStart(2, '0')
                     var headerIcon = ""
@@ -156,7 +161,7 @@ fun SurfAreaScreen(
                         for (time in times) {
                             val hour = time[3]
                             if (hour == currentHour) {
-                                headerIcon = surfAreaDataForDay[time]!![4].toString()
+                                headerIcon = surfAreaDataForDay[time]!!.symbolCode
                             }
                         }
                         HeaderCard(surfArea = surfArea, icon = headerIcon, LocalDate.now())
@@ -169,14 +174,14 @@ fun SurfAreaScreen(
                     LazyRow(
                         modifier = Modifier.padding(5.dp)
                     ) {
-                        if (surfAreaScreenUiState.forecastNext7Days.isNotEmpty()) {
+                        if (surfAreaScreenUiState.forecastNext7Days.forecast.isNotEmpty()) {
                             val today = LocalDate.now()
                             surfAreaScreenViewModel.updateBestConditionStatuses( //loading screen vises
                                 surfArea,
-                                surfAreaScreenUiState.forecastNext7Days
+                                surfAreaScreenUiState.forecastNext7Days.forecast
                             )
 
-                            items(surfAreaScreenUiState.forecastNext7Days.size) { dayIndex ->
+                            items(surfAreaScreenUiState.forecastNext7Days.forecast.size) { dayIndex ->
                                 val date = today.plusDays(dayIndex.toLong())
                                 val formattedDate = formatter.format(date)
 
