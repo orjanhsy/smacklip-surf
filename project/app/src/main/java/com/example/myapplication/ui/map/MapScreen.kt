@@ -274,10 +274,21 @@ fun SurfAreaCard(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
-            ){
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+
+            ) {
+                Spacer(modifier = Modifier.weight(1f))
+
+                Text(
+                    text = surfArea.locationName,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 25.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .padding(end = 47.dp) // Adjust the end padding as needed
+                        .align(Alignment.CenterVertically)
+                )
                 Button(
                     onClick = onCloseClick,
                 ) {
@@ -290,14 +301,6 @@ fun SurfAreaCard(
                     )
                 }
             }
-
-            //Overskrift: navn på stedet
-            Text(text = surfArea.locationName,
-                fontWeight = FontWeight.Bold,
-                fontSize = 25.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
             //tekstlig beskrivelse av stedet
             Text(
                 text = stringResource(surfArea.description),
