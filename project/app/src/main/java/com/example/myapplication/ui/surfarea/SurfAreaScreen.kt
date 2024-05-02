@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -59,7 +58,6 @@ import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.AlertCard.CustomAlert
 import com.example.myapplication.ui.common.composables.BottomBar
-import com.example.myapplication.ui.common.composables.ProgressIndicator
 import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.ui.theme.AppTypography
 import com.example.myapplication.utils.RecourseUtils
@@ -246,7 +244,8 @@ fun SurfAreaScreen(
                     action = null,
                 )
             }
-            ProgressIndicator(isDisplayed = surfAreaScreenUiState.loading)
+           // ProgressIndicator(isDisplayed = surfAreaScreenUiState.loading)
+           // ProgressIndicator(isDisplayed = surfAreaScreenUiState.loading)
         }
     }
 }
@@ -297,11 +296,7 @@ fun InfoCard(surfArea: SurfArea) {
             )
             Text(
                 text = stringResource(surfArea.description),
-                style = TextStyle(
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight(400),
-                    color = Color(0xFF4D5E6F),
-                    ),
+                style = AppTypography.titleSmall,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
