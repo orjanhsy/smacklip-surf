@@ -116,12 +116,12 @@ class SurfAreaScreenViewModel: ViewModel() {
                 for (dayIndex in 0.. 2) {
 
                     val dayForecast: DayForecast = forecast7Days[dayIndex]
-                    val times = dayForecast.data.keys.sortedBy { it[3] }
+                    val times = dayForecast.data.keys.sortedBy { it.dayOfMonth }
                     var bestToday = ConditionStatus.BLANK
 
                     for (time in times) {
                         val wavePeriod = try {
-                            state.wavePeriods[(dayIndex + 1) * time[3]]
+                            state.wavePeriods[(dayIndex + 1) * time.dayOfMonth]
                         } catch (e: IndexOutOfBoundsException) {
                             Log.d("SAVM", "No status given as wavePeriods were out of bounds for ${(dayIndex + 1)}")
                             null

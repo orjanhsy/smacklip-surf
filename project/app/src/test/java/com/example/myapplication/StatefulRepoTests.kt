@@ -13,7 +13,7 @@ class StatefulRepoTests {
     fun testStatefulRepoOFLF() = runBlocking{
         repo.loadOFlF()
         val state = repo.ofLfNext7Days.value
-
+        print(state)
     }
 
 }

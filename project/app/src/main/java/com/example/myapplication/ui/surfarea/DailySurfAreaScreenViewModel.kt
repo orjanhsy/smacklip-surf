@@ -14,13 +14,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 
 data class DailySurfAreaScreenUiState(
     val location: SurfArea? = null,
     val alerts: List<Alert> = emptyList(),
     val wavePeriods: List<Double?> = emptyList(), // .size == in 18..21
 
-    val conditionStatuses: List<Map<List<Int>, ConditionStatus>> = emptyList(),
+    val conditionStatuses: List<Map<LocalDateTime, ConditionStatus>> = emptyList(),
     val forecast7Days: List<DayForecast> = emptyList(),
     val loading: Boolean = false
 )
@@ -35,17 +36,17 @@ class DailySurfAreaScreenViewModel: ViewModel() {
 
             _dailySurfAreaScreenUiState.update {state ->
                 Log.d("DSVM", "Updating statuses")
-                val newConditionStatuses: MutableList<Map<List<Int>, ConditionStatus>> = mutableListOf()
+                val newConditionStatuses: MutableList<Map<LocalDateTime, ConditionStatus>> = mutableListOf()
                 if (forecast.isEmpty()) {
                     Log.d("DSVM", "Forecast empty, quitting update")
                     return@launch
                 }
 
                 forecast.map {dayForecast ->
-                    val todaysStatuses: MutableMap<List<Int>, ConditionStatus> = mutableMapOf()
+                    val todaysStatuses: MutableMap<LocalDateTime, ConditionStatus> = mutableMapOf()
 
                     dayForecast.data.entries.map {(time, dataAtTime) ->
-                        val wavePeriod = try{state.wavePeriods[forecast.indexOf(dayForecast) * time[3]]}
+                        val wavePeriod = try{state.wavePeriods[forecast.indexOf(dayForecast) * time.hour]}
                         catch (e: IndexOutOfBoundsException) {null}
 
                         val conditionStatus = smackLipRepository.getConditionStatus(

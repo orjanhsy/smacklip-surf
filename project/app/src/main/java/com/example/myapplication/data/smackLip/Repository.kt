@@ -22,9 +22,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import java.lang.NullPointerException
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities.Local
 
 interface Repository {
@@ -60,18 +60,21 @@ class RepositoryImpl(
                 val lf = getLFTimeSeries(sa)
                 val of = getOFTimeSeries(sa)
 
+                val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+
                 val allDayForecasts: MutableList<DayForecast> = mutableListOf()
 
-                for (day in 0 until lf.size) {
+                for (day in lf.keys) {
                     val dayForecasts: MutableMap<LocalDateTime, DataAtTime> = mutableMapOf()
                     // TODO: !!
                     val lfAtDay = lf[day]!!
-                    val ofAtDay = of[day]!!
+                    val ofAtDay = try {of[day]!!} catch(e: NullPointerException) {continue}
+
                     val allDataAtDay: MutableMap<LocalDateTime, MutableList<Any>> = mutableMapOf()
                     val dayForecast: MutableMap<LocalDateTime, DataAtTime> = mutableMapOf()
 
                     lfAtDay.map {
-                        val time = LocalDateTime.parse(it.first)
+                        val time = LocalDateTime.parse(it.first, dateFormatter)
                         allDataAtDay[time] = mutableListOf()
                         allDataAtDay[time]!!.add(it.second.instant.details.wind_speed)
                         allDataAtDay[time]!!.add(it.second.instant.details.wind_speed_of_gust)
@@ -86,7 +89,7 @@ class RepositoryImpl(
                     }
 
                     ofAtDay.map {
-                        val time = LocalDateTime.parse(it.first)
+                        val time = LocalDateTime.parse(it.first, dateFormatter)
                         try {
                             allDataAtDay[time]!!.add(it.second.instant.details.sea_surface_wave_height)
                             allDataAtDay[time]!!.add(it.second.instant.details.sea_water_to_direction)
@@ -102,7 +105,7 @@ class RepositoryImpl(
                             )
                             dayForecast.put(time, dataAtTime)
                         } catch(_: NullPointerException) {
-                            Log.d("REPO", "Omitting OFdata at $time as there was no LFdata")
+//                            Log.d("REPO", "Omitting OFdata at $time as there was no LFdata")
                         }
                     }
                     allDayForecasts.add(
@@ -122,14 +125,16 @@ class RepositoryImpl(
     }
 
     private suspend fun getOFTimeSeries(surfArea: SurfArea): Map<Int, List<Pair<String, DataOF>>> {
+        val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
         return oceanForecastRepository.getTimeSeries(surfArea).groupBy(
-            { LocalDateTime.parse(it.first).dayOfMonth }, { it }
+            { LocalDateTime.parse(it.first, dateFormatter).dayOfMonth }, { it }
         )
     }
 
     private suspend fun getLFTimeSeries(surfArea: SurfArea): Map<Int, List<Pair<String, DataLF>>> {
+        val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
         return locationForecastRepository.getTimeSeries(surfArea).groupBy(
-            { LocalDateTime.parse(it.first).dayOfMonth }, { it }
+            { LocalDateTime.parse(it.first, dateFormatter).dayOfMonth }, { it }
         )
     }
 
