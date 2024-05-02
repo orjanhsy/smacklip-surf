@@ -46,7 +46,8 @@ val AppTypography = Typography(
                     fontSize = 18.sp,
                     textAlign = TextAlign.Center,
                     color = onSurfaceVariantLight,
-                )
+                ),
+
 
 
 
