@@ -2,9 +2,12 @@ package com.example.myapplication
 
 import com.example.myapplication.data.smackLip.Repository
 import com.example.myapplication.data.smackLip.RepositoryImpl
+import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
+import com.example.myapplication.data.waveforecast.WaveForecastRepositoryImpl
 import com.example.myapplication.model.surfareas.SurfArea
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
+import kotlin.system.measureTimeMillis
 
 class StatefulRepoTests {
 
@@ -26,6 +29,29 @@ class StatefulRepoTests {
         state.next7Days[SurfArea.HODDEVIK]!!.forecast.map {
             println(it.data.size)
         }
+    }
+
+    @Test
+    fun wavePeriodsAreX() = runBlocking{
+        repo.loadWavePeriods()
+        val state = repo.wavePeriods.value
+        println(state)
+    }
+
+    @Test
+    fun wavePeriodsFromWavePeriodsRepoWork()= runBlocking{
+        val smacklip = SmackLipRepositoryImpl()
+        val waveForecast = WaveForecastRepositoryImpl()
+
+        val time1 = measureTimeMillis {
+            println(smacklip.getAllWavePeriodsNext3Days().wavePeriods[SurfArea.HODDEVIK]!!.size)
+        }
+        val time2 = measureTimeMillis {
+            println(waveForecast.allRelevantWavePeriodsNext3Days().wavePeriods[SurfArea.HODDEVIK]!!.size)
+        }
+
+        println("$time1, $time2")
+
     }
 
 }
