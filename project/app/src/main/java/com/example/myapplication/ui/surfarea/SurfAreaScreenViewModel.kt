@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
 import com.example.myapplication.model.conditions.ConditionStatus
-import com.example.myapplication.model.metalerts.Features
+import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.smacklip.DayForecast
 import com.example.myapplication.model.smacklip.Forecast7DaysOFLF
 import com.example.myapplication.model.surfareas.SurfArea
@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 
 data class SurfAreaScreenUiState(
     val location: SurfArea? = null,
-    val alertsSurfArea: List<Features> = emptyList(),
+    val alertsSurfArea: List<Alert> = emptyList(),
     val wavePeriods: List<Double?> = emptyList(),
     val maxWaveHeights: List<Double> = emptyList(),
     val minWaveHeights: List<Double> = emptyList(),
