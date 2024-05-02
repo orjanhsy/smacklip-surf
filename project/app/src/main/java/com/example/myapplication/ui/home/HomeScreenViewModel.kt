@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.R
@@ -10,11 +11,14 @@ import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.waveforecast.AllWavePeriods
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import kotlin.system.exitProcess
 
 data class HomeScreenUiState(
     val wavePeriods: AllWavePeriods = AllWavePeriods(),
@@ -23,7 +27,7 @@ data class HomeScreenUiState(
     val loading: Boolean = false
 )
 
-class HomeScreenViewModel : ViewModel() {
+class HomeScreenViewModel() : ViewModel() {
     private val smackLipRepository = SmackLipRepositoryImpl()
     private val _homeScreenUiState = MutableStateFlow(HomeScreenUiState())
     private val _favoriteSurfAreas = MutableStateFlow<List<SurfArea>>(emptyList())
@@ -36,9 +40,12 @@ class HomeScreenViewModel : ViewModel() {
     }
 
     fun updateOFLF() {
-
         viewModelScope.launch(Dispatchers.IO) {
             _homeScreenUiState.update {state ->
+                if (state.ofLfNow.isNotEmpty()) {
+                    Log.d("HSVM", "Quitting 'updateOFLF', data already loaded")
+                    return@launch
+                }
                 val allNext7Days: AllSurfAreasOFLF = smackLipRepository.getAllOFLF7Days()
 
                 val newOfLfNow: Map<SurfArea, DataAtTime> = allNext7Days.next7Days.entries.associate {(sa, forecast7Days) ->
@@ -96,6 +103,7 @@ class HomeScreenViewModel : ViewModel() {
     fun updateFavorites(surfArea: SurfArea) {
         if (_favoriteSurfAreas.value.contains(surfArea)) {
             _favoriteSurfAreas.value -= surfArea
+
         } else {
             _favoriteSurfAreas.value += surfArea
         }

@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     kotlin("plugin.serialization") version "1.4.21"
+    id("com.google.protobuf") version "0.9.4"
 }
 //
 
@@ -85,6 +86,8 @@ dependencies {
     testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     implementation("androidx.navigation:navigation-compose:2.7.7")
     testImplementation("junit:junit:4.13.2")
+    testImplementation ("org.mockito:mockito-core:3.12.4")
+
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
@@ -103,5 +106,28 @@ dependencies {
     //material symbols
     implementation("androidx.compose.material:material-icons-extended:1.6.6")
 
+    // proto data store
+    implementation  ("androidx.datastore:datastore:1.0.0")
+    implementation  ("com.google.protobuf:protobuf-javalite:3.21.7")
+    implementation ("androidx.datastore:datastore-preferences:1.0.0")
 
+
+
+}
+
+protobuf{
+    protoc{
+        artifact = "com.google.protobuf:protoc:3.21.7"
+    }
+    plugins{
+        generateProtoTasks{
+            all().forEach {
+                it.builtins {
+                    create("java"){
+                        option("lite")
+                    }
+                }
+            }
+        }
+    }
 }
