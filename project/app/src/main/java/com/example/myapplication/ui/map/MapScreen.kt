@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -260,7 +261,7 @@ fun SurfAreaCard(
     uiState: MapScreenUiState,
     onNavigateToSurfAreaScreen: (String) -> Unit = {},
     resourceUtils: RecourseUtils = RecourseUtils()
-    ){
+    ) {
 
     //current data for surfArea som sendes inn:
     val windSpeed: Double = uiState.windSpeed[surfArea]?.get(0)?.second ?: 0.0
@@ -269,50 +270,46 @@ fun SurfAreaCard(
     val symbolCode: String = uiState.symbolCode[surfArea]?.get(0)?.second ?: ""
     val waveHeight: Double = uiState.waveHeight[surfArea]?.get(0)?.second ?: 0.0
 
-    Card (
+    Card(
         modifier = Modifier
-            .fillMaxWidth()
-    ){
-        Column (
+            .width(350.dp)
+            .wrapContentHeight()
+    ) {
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
-               .padding(horizontal = 16.dp, vertical = 5.dp),
+                .padding(horizontal = 16.dp, vertical = 5.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
-            ){
-                Button(
-                    onClick = onCloseClick,
-                    colors = ButtonDefaults.buttonColors(Color.Transparent),
-                    modifier = Modifier
-                        .height(40.dp)
-
-                    ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Close,
-                        contentDescription = "x",
-                        tint = onSurfaceVariantLight,
-                        modifier = Modifier
-                            .width(24.dp)
-                            .height(24.dp)
-                    )
-                }
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.Top
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp, bottom = 8.dp)
             ) {
                 Text(
                     text = surfArea.locationName,
                     fontWeight = FontWeight.Bold,
                     fontSize = 25.sp,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .align(Alignment.Center)
                 )
+                Button(
+                    onClick = onCloseClick,
+                    colors = ButtonDefaults.buttonColors(Color.Transparent),
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Close,
+                        contentDescription = "Close",
+                        tint = onSurfaceVariantLight
+                    )
+                }
             }
+
+
             Spacer(modifier = Modifier.height(8.dp))
             //tekstlig beskrivelse av stedet
             Text(
@@ -322,28 +319,32 @@ fun SurfAreaCard(
             )
 
             //info om vind, bølger og temperatur
-            Row (
+            Row(
                 modifier = Modifier
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
                 Icon(
                     imageVector = Icons.Outlined.Air,
                     contentDescription = "Tsunami",
                     modifier = Modifier.size(18.dp)
                 )
-                Text(text = "${windSpeed.toInt()}(${windGust.toInt()})",
+                Text(
+                    text = "${windSpeed.toInt()}(${windGust.toInt()})",
                     style = AppTypography.bodySmall,
-                    modifier = Modifier.padding(8.dp))
+                    modifier = Modifier.padding(8.dp)
+                )
                 Icon(
                     imageVector = Icons.Outlined.Tsunami,
                     contentDescription = "Tsunami",
                     modifier = Modifier.size(18.dp)
                 )
-                Text(text = "$waveHeight",
+                Text(
+                    text = "$waveHeight",
                     style = AppTypography.bodySmall,
-                    modifier = Modifier.padding(8.dp))
+                    modifier = Modifier.padding(8.dp)
+                )
                 Image(
                     painter = painterResource(id = resourceUtils.findWeatherSymbol(symbolCode)),
                     contentDescription = "wave icon",
@@ -353,9 +354,11 @@ fun SurfAreaCard(
                         .height(30.dp)
 
                 )
-                Text(text = "${airTemperature.toInt()} °C",
+                Text(
+                    text = "${airTemperature.toInt()} °C",
                     style = AppTypography.bodySmall,
-                    modifier = Modifier.padding(8.dp))
+                    modifier = Modifier.padding(8.dp)
+                )
             }
 
             if (surfArea.image != 0) {
@@ -375,7 +378,7 @@ fun SurfAreaCard(
                 modifier = Modifier
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
-            ){
+            ) {
                 //Navigerer til SurfAreaScreen
                 Button(
                     onClick = {
@@ -384,25 +387,27 @@ fun SurfAreaCard(
                     colors = ButtonDefaults.buttonColors(Color.Transparent),
                     modifier = Modifier
                         .fillMaxWidth()
-               ) {
-                        Text(
-                            text = "Gå til ${surfArea.locationName}",
-                            style = AppTypography.bodySmall,
-                            //modifier = Modifier.weight(1f)
-                        )
-                        Icon(
-                            imageVector = Icons.Default.ArrowForward,
-                            contentDescription = "Arrow Forward",
-                            tint = onSurfaceVariantLight,
-                            modifier = Modifier
-                                .size(20.dp)
-                        )
-                    }
+                ) {
+                    Text(
+                        text = "Gå til ${surfArea.locationName}",
+                        style = AppTypography.bodySmall,
+                        //modifier = Modifier.weight(1f)
+                    )
+                    Icon(
+                        imageVector = Icons.Default.ArrowForward,
+                        contentDescription = "Arrow Forward",
+                        tint = onSurfaceVariantLight,
+                        modifier = Modifier
+                            .size(20.dp)
+                    )
                 }
             }
-
         }
     }
+}
+
+
+
 
 
 @Composable
