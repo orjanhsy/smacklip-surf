@@ -24,7 +24,7 @@ data class HomeScreenUiState(
     val wavePeriods: AllWavePeriods = AllWavePeriods(),
     val ofLfNow: Map<SurfArea, DataAtTime> = mapOf(),
     val allRelevantAlerts: Map<SurfArea, List<Features>> = emptyMap(),
-    val loading: Boolean = false
+    val loading: Boolean = true
 )
 
 class HomeScreenViewModel() : ViewModel() {
@@ -76,7 +76,8 @@ class HomeScreenViewModel() : ViewModel() {
             _homeScreenUiState.update {
                 it.copy(
                     allRelevantAlerts = allAlerts,
-                    loading = false)
+                   // loading = false
+                )
             }
         }
     }

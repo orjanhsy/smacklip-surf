@@ -12,6 +12,7 @@ import com.example.myapplication.MainActivity
 import com.example.myapplication.ui.theme.AppTheme
 import kotlinx.coroutines.delay
 
+/*
 @SuppressLint("CustomSpashScreen")
 class SplashActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,8 +28,9 @@ class SplashActivity : ComponentActivity() {
     @Composable
     private fun SplashScreen(){
         LaunchedEffect(key1 = true) {
-            delay(2000)
+            delay(5000)
             startActivity(Intent(this@SplashActivity, MainActivity::class.java))
         }
     }
 }
+*/
