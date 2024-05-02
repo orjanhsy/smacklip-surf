@@ -11,11 +11,14 @@ import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.waveforecast.AllWavePeriods
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import kotlin.system.exitProcess
 
 data class HomeScreenUiState(
     val wavePeriods: AllWavePeriods = AllWavePeriods(),
@@ -24,7 +27,7 @@ data class HomeScreenUiState(
     val loading: Boolean = false
 )
 
-class HomeScreenViewModel : ViewModel() {
+class HomeScreenViewModel() : ViewModel() {
     private val smackLipRepository = SmackLipRepositoryImpl()
     private val _homeScreenUiState = MutableStateFlow(HomeScreenUiState())
     private val _favoriteSurfAreas = MutableStateFlow<List<SurfArea>>(emptyList())
@@ -100,6 +103,7 @@ class HomeScreenViewModel : ViewModel() {
     fun updateFavorites(surfArea: SurfArea) {
         if (_favoriteSurfAreas.value.contains(surfArea)) {
             _favoriteSurfAreas.value -= surfArea
+
         } else {
             _favoriteSurfAreas.value += surfArea
         }

@@ -30,7 +30,7 @@ data class BottomNavigationItem(
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomBar(onNavigateToHomeScreen: () -> Unit = {}, onNavigateToMapScreen: () -> Unit = {}) {
+fun BottomBar(onNavigateToHomeScreen: () -> Unit = {}, onNavigateToMapScreen: () -> Unit = {}, onNavigateToSettingsScreen: () -> Unit = {}) {
     var selectedItemIndex by rememberSaveable {
         mutableStateOf(0)
     }
@@ -68,6 +68,11 @@ fun BottomBar(onNavigateToHomeScreen: () -> Unit = {}, onNavigateToMapScreen: ()
                         1 -> {
                             Log.d("Navigation", "Navigating to MapScreen")
                             onNavigateToMapScreen()
+                        }
+                        2 -> {
+                            Log.d("Navigation", "Navigating to SettingsScreen")
+                            onNavigateToSettingsScreen()
+
                         }
                     }
                 },
