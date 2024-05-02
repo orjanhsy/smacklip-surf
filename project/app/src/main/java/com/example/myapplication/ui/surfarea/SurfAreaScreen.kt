@@ -450,10 +450,10 @@ fun DayPreviewCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
-                Text (
+                /*Text (
                     text = conditionStatus?.description ?: "",
                     style = AppTypography.bodySmall,
-                    )
+                    )*/
 
                 //conditions -> copy from dailyScreen
                 val surfBoard = when (conditionStatus) {
@@ -475,10 +475,11 @@ fun DayPreviewCard(
             }
             Text(
                 text = conditionStatus?.description ?: "",
-                fontSize = 10.sp, // Adjust the font size as needed
+                fontSize = 10.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
+
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -502,11 +503,13 @@ fun DayPreviewCard(
 
                     }
                 }
-                Column {
-                    Text(
-                        text = "${waveHeightMinMax.first} - ${waveHeightMinMax.second}" ,
-                        style = AppTypography.bodySmall,
+                Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 3.dp)) {
+                    Column {
+                        Text(
+                            text = "${waveHeightMinMax.first} - ${waveHeightMinMax.second}",
+                            style = AppTypography.bodySmall,
                         )
+                    }
                 }
             }
         }
