@@ -21,7 +21,7 @@ import java.time.LocalDateTime
 data class HomeScreenUiState(
     val wavePeriods: AllWavePeriods = AllWavePeriods(),
     val ofLfNow: Map<SurfArea, DataAtTime> = mapOf(),
-    val allRelevantAlerts: Map<SurfArea, List<Features>> = emptyMap(),
+    val allRelevantAlerts: Map<SurfArea, List<Alert>> = emptyMap(),
     val loading: Boolean = true
 )
 
