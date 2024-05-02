@@ -10,7 +10,7 @@ import com.example.myapplication.data.waveforecast.WaveForecastRepositoryImpl
 import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.conditions.Conditions
 import com.example.myapplication.model.locationforecast.DataLF
-import com.example.myapplication.model.metalerts.Features
+import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.oceanforecast.DataOF
 import com.example.myapplication.model.smacklip.AllSurfAreasOFLF
 import com.example.myapplication.model.smacklip.DataAtTime
@@ -24,7 +24,7 @@ import kotlin.math.abs
 
 
 interface SmackLipRepository {
-    suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Features>
+    suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Alert>
     suspend fun getWaveHeights(surfArea: SurfArea): List<Pair<List<Int>, Double>>
 
     suspend fun getWaveDirections(surfArea: SurfArea): List<Pair<List<Int>, Double>>
@@ -68,7 +68,7 @@ class SmackLipRepositoryImpl (
 ): SmackLipRepository {
 
     //MET
-    override suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Features> {
+    override suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Alert> {
         return metAlertsRepository.getRelevantAlertsFor(surfArea)
     }
 
