@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import com.example.myapplication.NavigationManager
 import com.example.myapplication.R
 import com.example.myapplication.model.conditions.ConditionStatus
+import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
@@ -119,7 +120,13 @@ fun DailySurfAreaScreen(
             ) {
                 val currentHour = LocalTime.now().hour
                 var headerIcon = "default_icon"
-                val surfAreaDataForDay: Map<List<Int>, List<Any>> = dailySurfAreaScreenUiState.forecast7Days.getOrElse(daysFromToday) { emptyMap() }
+
+                val surfAreaDataForDay: Map<List<Int>, DataAtTime> = try {
+                    dailySurfAreaScreenUiState.forecast7Days[daysFromToday].data
+                } catch (e: IndexOutOfBoundsException) {
+                    mapOf()
+                }
+
                 Log.d("DSscreen", "Getting data for $daysFromToday")
 
                 val times = surfAreaDataForDay.keys.sortedWith(
@@ -131,7 +138,7 @@ fun DailySurfAreaScreen(
                     for (time in times) {
                         val hour = time[3]
                         if (hour == currentHour) {
-                            headerIcon = surfAreaDataForDay[time]!![4].toString()
+                            headerIcon = surfAreaDataForDay[time]!!.symbolCode
                             break
                         }
                     }
@@ -147,25 +154,26 @@ fun DailySurfAreaScreen(
                     // [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]
                     if (surfAreaDataForDay.isNotEmpty()) {
                         items(times.size) { time ->
-                            val hourIndex = times[time]
-                            Log.d("hourindex", "${times[time][3]}")
+                            val hourIndex = times[time][3]
+                            Log.d("hourindex", "$hourIndex")
 
-                            val surfAreaDataForHour: List<Any>? = surfAreaDataForDay[hourIndex]
+                            // TODO: ?
+                            val surfAreaDataForHour: DataAtTime? = surfAreaDataForDay[times[time]]
                             //henter objektet for timen som er en liste med Pair<List<Int>, Double>
-                            val timestamp = hourIndex[3]
-                            val windSpeed = surfAreaDataForHour?.get(0) ?: 0.0
-                            val windGust = surfAreaDataForHour?.get(1) ?: 0.0
-                            val windDir = surfAreaDataForHour?.get(2) ?: 0.0
-                            val temp = surfAreaDataForHour?.get(3) ?: 0.0
-                            val icon = surfAreaDataForHour?.get(4) ?: 0.0
-                            val waveHeight = surfAreaDataForHour?.get(5) ?: 0.0
-                            val waveDir = surfAreaDataForHour?.get(6) ?: 0.0
+                            val timestamp = hourIndex
+                            val windSpeed = surfAreaDataForHour?.windSpeed ?: 0.0
+                            val windGust = surfAreaDataForHour?.windGust ?: 0.0
+                            val windDir = surfAreaDataForHour?.windDir ?: 0.0
+                            val temp = surfAreaDataForHour?.airTemp ?: 0.0
+                            val icon = surfAreaDataForHour?.symbolCode ?: 0.0
+                            val waveHeight = surfAreaDataForHour?.waveHeight ?: 0.0
+                            val waveDir = surfAreaDataForHour?.waveDir ?: 0.0
                             val wavePeriod = try {
-                                dailySurfAreaScreenUiState.wavePeriods[hourIndex[3]]
+                                dailySurfAreaScreenUiState.wavePeriods[hourIndex]
                             } catch (e: IndexOutOfBoundsException) {
                                 Log.d(
                                     "DSAscreen",
-                                    "Waveperiods${hourIndex[3]} out of bounds for waveperiods of size ${dailySurfAreaScreenUiState.wavePeriods.size}"
+                                    "Waveperiods${hourIndex} out of bounds for waveperiods of size ${dailySurfAreaScreenUiState.wavePeriods.size}"
                                 )
                                 0.0
                             }

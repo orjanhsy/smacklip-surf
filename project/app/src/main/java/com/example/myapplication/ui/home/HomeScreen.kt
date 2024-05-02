@@ -69,6 +69,7 @@ import com.example.myapplication.NavigationManager
 import com.example.myapplication.R
 import com.example.myapplication.model.metalerts.Features
 import com.example.myapplication.model.metalerts.Properties
+import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.common.composables.ProgressIndicator
@@ -115,11 +116,7 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNaviga
                 Column (modifier = Modifier.fillMaxSize()){
                     FavoritesList(
                         favorites = favoriteSurfAreas,
-                        windSpeedMap = homeScreenUiState.windSpeed,
-                        windGustMap = homeScreenUiState.windGust,
-                        windDirectionMap = homeScreenUiState.windDirection,
-                        waveHeightMap = homeScreenUiState.waveHeight,
-                        waveDirMap = homeScreenUiState.waveDirections,
+                        ofLfNow = homeScreenUiState.ofLfNow,
                         alerts = homeScreenUiState.allRelevantAlerts,
                         onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
                     )
@@ -141,15 +138,17 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNaviga
                             .fillMaxWidth(),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         horizontalArrangement = Arrangement.Center)
+
                     {
                         items(SurfArea.entries) { location ->
+                            // TODO: !!
                             SurfAreaCard(
                                 location,
-                                windSpeedMap = homeScreenUiState.windSpeed,
-                                windGustMap = homeScreenUiState.windGust,
-                                windDirectionMap = homeScreenUiState.windDirection,
-                                waveHeightMap = homeScreenUiState.waveHeight,
-                                waveDirMap = homeScreenUiState.waveDirections,
+                                windSpeed = homeScreenUiState.ofLfNow[location]?.windSpeed ?: 0.0,
+                                windGust = homeScreenUiState.ofLfNow[location]?.windGust ?: 0.0,
+                                windDir = homeScreenUiState.ofLfNow[location]?.windDir ?: 0.0,
+                                waveHeight = homeScreenUiState.ofLfNow[location]?.waveHeight ?: 0.0,
+                                waveDir = homeScreenUiState.ofLfNow[location]?.waveDir ?: 0.0,
                                 alerts = homeScreenUiState.allRelevantAlerts[location],
                                 homeScreenViewModel = homeScreenViewModel,
                                 onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
@@ -287,11 +286,7 @@ to receive accurate values in favorite surfareacards
 @Composable
 fun FavoritesList(
     favorites: List<SurfArea>,
-    windSpeedMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
-    windGustMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
-    windDirectionMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
-    waveHeightMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
-    waveDirMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
+    ofLfNow: Map<SurfArea, DataAtTime>,
     alerts: Map<SurfArea, List<Features>>?,
     onNavigateToSurfAreaScreen: (String) -> Unit
 ) {
@@ -315,19 +310,20 @@ fun FavoritesList(
                         .size(width = 150.0.dp, height = 200.00.dp)
                         .clip(RoundedCornerShape(10.dp))
                 ) {
+                    // TODO: !!
                     SurfAreaCard(
                         surfArea = surfArea,
-                        windSpeedMap = windSpeedMap,
-                        windGustMap = windGustMap,
-                        windDirectionMap = windDirectionMap,
-                        waveHeightMap = waveHeightMap,
-                        waveDirMap = waveDirMap,
+                        windSpeed = ofLfNow[surfArea]!!.windSpeed,
+                        windGust = ofLfNow[surfArea]!!.windGust,
+                        windDir = ofLfNow[surfArea]!!.windDir,
+                        waveHeight = ofLfNow[surfArea]!!.waveHeight,
+                        waveDir = ofLfNow[surfArea]!!.waveDir,
                         alerts = alerts?.get(surfArea),
                         homeScreenViewModel = HomeScreenViewModel(),
                         showFavoriteButton = false,
                         onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
                     )
-                    if (alerts != null && alerts.isNotEmpty()) {
+                    if (!alerts.isNullOrEmpty()) {
                         Image(
                             painter = painterResource(id = R.drawable.icon_awareness_yellow_outlined),
                             contentDescription = "warning icon",
@@ -382,39 +378,20 @@ fun EmptyFavoriteCard() {
 @Composable
 fun SurfAreaCard(
     surfArea: SurfArea,
-    windSpeedMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
-    windGustMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
-    windDirectionMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
-    waveHeightMap: Map<SurfArea,List<Pair<List<Int>, Double>>>,
-    waveDirMap: Map<SurfArea, List<Pair<List<Int>, Double>>>,
+    windSpeed: Double,
+    windGust: Double,
+    windDir: Double,
+    waveHeight: Double,
+    waveDir: Double,
     alerts: List<Features>?,
     homeScreenViewModel: HomeScreenViewModel,
     showFavoriteButton: Boolean = true,
     onNavigateToSurfAreaScreen: (String) -> Unit
 ) {
 
-    val windSpeed = windSpeedMap[surfArea] ?: listOf()
-    val windGust = windGustMap[surfArea] ?: listOf()
-    val windDirection = windDirectionMap[surfArea] ?: listOf()
-    val waveDirection = waveDirMap[surfArea] ?: listOf()
-    val waveHeight = waveHeightMap[surfArea] ?: listOf()
-
     // windDirection
-    val rotationAngleWind: Float = when {
-        windDirection.isNotEmpty() -> {
-            val angle = windDirection[0].second.toFloat()
-            angle
-        }
-        else -> 0f
-    }
-    // waveDirection
-    val rotationAngleWave: Float = when {
-        waveDirection.isNotEmpty() -> {
-            val angle = waveDirection[0].second.toFloat()
-            angle
-        }
-        else -> 0f
-    }
+    val rotationAngleWind: Float = windDir.toFloat()
+    val rotationAngleWave: Float = waveDir.toFloat()
 
     Card(
         modifier = Modifier
@@ -483,7 +460,7 @@ fun SurfAreaCard(
                         )
                     }
                     Text(
-                        text = " ${if (waveHeight.isNotEmpty()) "${waveHeight[0].second}m" else ""} "
+                        text = waveHeight.toString()
                     )
                     Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 4.dp)) {
                         Icon(
@@ -509,8 +486,7 @@ fun SurfAreaCard(
                         )
                     }
                     Text(
-                        text = " ${if (windSpeed.isNotEmpty()) (windSpeed[0].second).toInt()  else ""} " +
-                                if(windGust.isNotEmpty() && windSpeed.isNotEmpty() && windGust[0].second != windSpeed[0].second) "(${windGust[0].second.toInt()}) " else ""
+                        text = windSpeed.toString() + if (windGust > windSpeed) " ($windGust)" else ""
                     )
 
                     Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 4.dp)) {
@@ -575,31 +551,21 @@ fun SurfAreaCard(
 @Preview(showBackground = true)
 @Composable
 private fun PreviewSurfAreaCard() {
-    val windSpeedMap: Map<SurfArea,List<Pair<List<Int>, Double>>> = mapOf(
-        SurfArea.HODDEVIK to listOf(Pair(listOf(2, 4, 6, 8), 1.0))
-    )
-    val windGustMap: Map<SurfArea,List<Pair<List<Int>, Double>>> = mapOf(
-        SurfArea.HODDEVIK to listOf(Pair(listOf(3, 5, 8, 32), 3.0))
+    val windSpeed = 1.0
+    val windGust = 3.0
+    val windDirection = 184.3
+    val waveHeight = 5.0
+    val waveDir =  184.3
 
-    )
-    val windDirectionMap: Map<SurfArea,List<Pair<List<Int>, Double>>> = mapOf(
-        SurfArea.HODDEVIK to listOf(Pair(listOf(3, 5, 8, 32), 184.3))
-    )
-    val waveHeightMap: Map<SurfArea,List<Pair<List<Int>, Double>>> = mapOf(
-        SurfArea.HODDEVIK to listOf(Pair(listOf(1, 2, 3, 4), 5.0))
-    )
-    val waveDirMap: Map<SurfArea,List<Pair<List<Int>, Double>>> = mapOf(
-        SurfArea.HODDEVIK to listOf(Pair(listOf(3, 5, 8, 32), 184.3))
-    )
     val viewModel = HomeScreenViewModel()
     AppTheme {
         SurfAreaCard(
             SurfArea.HODDEVIK,
-            windSpeedMap,
-            windGustMap,
-            windDirectionMap,
-            waveHeightMap,
-            waveDirMap,
+            windSpeed,
+            windGust,
+            windDirection,
+            waveHeight,
+            waveDir,
             listOf((Features(properties = Properties(description = "Det ræinar")))),
             viewModel,
             true
