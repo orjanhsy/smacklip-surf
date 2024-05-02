@@ -42,11 +42,6 @@ class RepositoryImpl(
 
 ): Repository {
 
-    init {
-        loadOFlF()
-        loadWavePeriods()
-        loadAlerts()
-    }
 
     private val _ofLfNext7Days: MutableStateFlow<AllSurfAreasOFLF> = MutableStateFlow(AllSurfAreasOFLF())
     private val _wavePeriods: MutableStateFlow<AllWavePeriods> = MutableStateFlow(AllWavePeriods())
