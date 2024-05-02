@@ -1,0 +1,9 @@
+syntax = "proto3";
+option java_package = "com.example.myapplication";
+option java_multiple_files = true;
+
+message Settings {
+  double test = 1;
+  bool darkMode = 2;
+  repeated string favoriteSurfAreas = 3;
+}

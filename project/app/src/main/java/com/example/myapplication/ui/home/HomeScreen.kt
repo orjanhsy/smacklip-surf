@@ -76,6 +76,8 @@ import com.example.myapplication.ui.common.composables.ProgressIndicator
 import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
+//import com.example.myapplication.ui.theme.MyApplicationTheme
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNavigateToSurfAreaScreen: (String) -> Unit = {}){
@@ -103,6 +105,10 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNaviga
                 onNavigateToMapScreen = {
                     navController?.navigate("MapScreen")
                     // Navigerer til MapScreen
+                },
+                onNavigateToSettingsScreen = {
+                    navController?.navigate("SettingsScreen")
+                    // Navigerer til SettingsScreen
                 }
             )
         }
