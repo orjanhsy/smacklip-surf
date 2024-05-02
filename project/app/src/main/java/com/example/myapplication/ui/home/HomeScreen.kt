@@ -493,7 +493,7 @@ fun SurfAreaCard(
                         )
                     }
                     Text(
-                        text = windSpeed.toString() + if (windGust > windSpeed) " ($windGust)" else ""
+                        text = "${windSpeed.toInt()}${if (windGust > windSpeed) " (${windGust.toInt()})" else ""}"
                     )
 
                     Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 4.dp)) {
