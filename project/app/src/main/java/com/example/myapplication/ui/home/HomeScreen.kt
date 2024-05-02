@@ -474,7 +474,7 @@ fun SurfAreaCard(
                        text = "${windSpeed.toInt()}${if (windGust > windSpeed) " (${windGust.toInt()})" else ""}",
                       style = AppTypography.bodySmall,
                         )
-                    )
+
 
                     Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 4.dp)) {
                         Icon(
