@@ -1,7 +1,6 @@
 package com.example.myapplication.ui.common.composables
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocationOn
@@ -14,9 +13,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
@@ -34,8 +30,8 @@ data class BottomNavigationItem(
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomBar(navController: NavController) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
+fun BottomBar(navController: NavController?) {
+    val navBackStackEntry by navController!!.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination?.route
 
     /* var selectedItemIndex by rememberSaveable {
@@ -63,13 +59,14 @@ fun BottomBar(navController: NavController) {
         ),
     )
     NavigationBar {
-        items.forEachIndexed { _, item->
+        items.forEach { item->
             val isSelected = item.route == currentDestination
             NavigationBarItem(
                 selected = isSelected,
                 onClick = {
-                    //selectedItemIndex = index
-                          navController.navigate(item.route)
+                    if (!isSelected) {
+                        navController?.navigate(item.route)
+                    }
                 },
                 label = {
                     Text(text = item.title)
