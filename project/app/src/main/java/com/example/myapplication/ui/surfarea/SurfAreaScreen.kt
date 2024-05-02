@@ -449,12 +449,8 @@ fun DayPreviewCard(
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
-            ) {
-                /*Text (
-                    text = conditionStatus?.description ?: "",
-                    style = AppTypography.bodySmall,
-                    )*/
-
+            )
+            {
                 //conditions -> copy from dailyScreen
                 val surfBoard = when (conditionStatus) {
                     ConditionStatus.GREAT -> ConditionStatus.GREAT.surfBoard
