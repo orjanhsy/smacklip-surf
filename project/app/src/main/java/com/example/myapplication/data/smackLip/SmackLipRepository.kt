@@ -21,6 +21,7 @@ import com.example.myapplication.model.waveforecast.AllWavePeriods
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import kotlin.math.abs
 
 
@@ -243,7 +244,7 @@ class SmackLipRepositoryImpl (
         // [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]
         val dayData = DayForecast(
             filteredMap.entries.associate { (time, data) ->
-                LocalDateTime.parse(time.toString()) to DataAtTime(
+                LocalDateTime.of(time[0], time[1], time[2], time[3], 0) to DataAtTime(
                     windSpeed = data[0] as Double,
                     windGust = data[1] as Double,
                     windDir = data[2] as Double,
@@ -292,7 +293,7 @@ class SmackLipRepositoryImpl (
     }
 
     override suspend fun getAllWavePeriodsNext3Days(): AllWavePeriods {
-        return waveForecastRepository.allRelevantWavePeriodsNext3DaysHardCoded()
+        return waveForecastRepository.allRelevantWavePeriodsNext3Days()
     }
 
     override suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): List<Double?> {

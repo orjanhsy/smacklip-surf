@@ -10,8 +10,9 @@ import kotlin.math.sin
 
 
 interface MetAlertsRepository{
-    suspend fun getFeatures(): List<Alert>
+    suspend fun getAlerts(): List<Alert>
     suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Alert>
+    suspend fun getAllRelevantAlerts(): Map<SurfArea, List<Alert>>
 
 }
 class MetAlertsRepositoryImpl (
@@ -21,7 +22,7 @@ class MetAlertsRepositoryImpl (
 ) : MetAlertsRepository {
 
     private var allFeatures: List<Alert> = listOf()
-    override suspend fun getFeatures(): List<Alert> {
+    override suspend fun getAlerts(): List<Alert> {
         allFeatures = metAlertsDataSource.fetchMetAlertsData().features
         return allFeatures
     }
@@ -37,10 +38,14 @@ class MetAlertsRepositoryImpl (
         return acos(sin(lat1) * sin(lat2) + cos(lat1) * cos(lat2) * cos(lon2-lon1)) * radiusEarth
     }
 
+    override suspend fun getAllRelevantAlerts(): Map<SurfArea, List<Alert>> {
+        return SurfArea.entries.associateWith { getRelevantAlertsFor(it) }
+    }
+
     override suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Alert> {
         val relevantAlerts: MutableList<Alert> = mutableListOf()
         if (allFeatures.isEmpty()) {
-            getFeatures()
+            getAlerts()
         }
         allFeatures.forEach() {feature ->
             val coordinates = feature.geometry?.coordinates
