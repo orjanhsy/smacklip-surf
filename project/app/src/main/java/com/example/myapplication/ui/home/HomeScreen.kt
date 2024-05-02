@@ -96,12 +96,7 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNaviga
             }
         },
         bottomBar = {
-            BottomBar(navController = NavigationManager.navController)
-                /*onNavigateToMapScreen = {
-                    navController?.navigate("MapScreen")
-                    // Navigerer til MapScreen
-                }
-            )*/
+            BottomBar(navController = navController)
         }
     ) { innerPadding ->
         Column(

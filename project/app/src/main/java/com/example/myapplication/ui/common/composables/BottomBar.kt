@@ -34,10 +34,6 @@ fun BottomBar(navController: NavController?) {
     val navBackStackEntry by navController!!.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination?.route
 
-    /* var selectedItemIndex by rememberSaveable {
-        mutableStateOf(0)
-    } */
-
     val items = listOf(
         BottomNavigationItem(
             title = "Home",
