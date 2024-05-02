@@ -8,7 +8,7 @@ import org.junit.Test
 
 class StatefulRepoTests {
 
-    val repo: Repository = RepositoryImpl()
+    private val repo: Repository = RepositoryImpl()
 
     @Test
     fun daysOfAvaliabelForecastIsX(): Unit = runBlocking{
@@ -20,7 +20,7 @@ class StatefulRepoTests {
     }
 
     @Test
-    fun sizeOfOneDayForecast(): Unit = runBlocking {
+    fun sizeOfOneDayForecastIsInRangeXY(): Unit = runBlocking {
         repo.loadOFlF()
         val state = repo.ofLfNext7Days.value
         state.next7Days[SurfArea.HODDEVIK]!!.forecast.map {

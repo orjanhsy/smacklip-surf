@@ -1,6 +1,5 @@
 package com.example.myapplication.data.smackLip
 
-import android.util.Log
 import com.example.myapplication.data.locationForecast.LocationForecastRepository
 import com.example.myapplication.data.locationForecast.LocationForecastRepositoryImpl
 import com.example.myapplication.data.metalerts.MetAlertsRepository
@@ -22,10 +21,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities.Local
 
 interface Repository {
     val ofLfNext7Days: StateFlow<AllSurfAreasOFLF>
@@ -144,11 +141,15 @@ class RepositoryImpl(
     }
 
     override suspend fun loadWavePeriods() {
-        TODO("Not yet implemented")
+        _wavePeriods.update {
+            waveForecastRepository.allRelevantWavePeriodsNext3Days()
+        }
     }
 
     override suspend fun loadAlerts() {
-        TODO("Not yet implemented")
+        _alerts.update {
+            metAlertsRepository.getAllRelevantAlerts()
+        }
     }
 
 
