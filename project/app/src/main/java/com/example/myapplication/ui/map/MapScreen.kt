@@ -28,6 +28,7 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
@@ -46,6 +47,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -291,13 +293,16 @@ fun SurfAreaCard(
                 )
                 Button(
                     onClick = onCloseClick,
+                    colors = ButtonDefaults.buttonColors(Color.Transparent), // Set the background color to transparent
+
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.Close,
                         contentDescription = "x",
+                        tint = Color.DarkGray,
                         modifier = Modifier
-                            .width(17.dp)
-                            .height(17.dp)
+                            .width(24.dp)
+                            .height(24.dp)
                     )
                 }
             }
