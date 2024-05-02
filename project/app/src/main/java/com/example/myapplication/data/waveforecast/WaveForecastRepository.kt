@@ -34,7 +34,7 @@ class WaveForecastRepositoryImpl(
                 async { wavePeriods(modelName, pointId, time) }
             }
 
-            val newTps = tps.map { it.await() }
+            val newTps = tps.map { it.await() }.flatMap { listOf(it, it, it) }
             newTps
         }
     }

@@ -297,16 +297,7 @@ class SmackLipRepositoryImpl (
     }
 
     override suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): List<Double?> {
-        val wavePeriods = waveForecastRepository.wavePeriodsNext3DaysForArea(surfArea.modelName, surfArea.pointId)
-
-        // format to hour-by-hour
-        val reformattedWavePeriods = mutableListOf<Double?>()
-        wavePeriods.forEach{
-            reformattedWavePeriods.add(it)
-            reformattedWavePeriods.add(it)
-            reformattedWavePeriods.add(it)
-        }
-        return reformattedWavePeriods
+        return waveForecastRepository.wavePeriodsNext3DaysForArea(surfArea.modelName, surfArea.pointId)
     }
 
 
