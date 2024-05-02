@@ -22,7 +22,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import java.lang.NullPointerException
+import java.time.LocalDate
 import java.time.LocalDateTime
+import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities.Local
 
 interface Repository {
     val ofLfNext7Days: StateFlow<AllSurfAreasOFLF>
@@ -53,98 +56,81 @@ class RepositoryImpl(
 
     override suspend fun loadOFlF() {
         _ofLfNext7Days.update {
-            //timeSeries
-            val of: Map<SurfArea, List<Pair<String, DataOF>>> = getOF()
-            val lf: Map<SurfArea, List<Pair<String, DataLF>>> = getLF()
+            val all7DayForecasts = SurfArea.entries.associateWith {sa ->
+                val lf = getLFTimeSeries(sa)
+                val of = getOFTimeSeries(sa)
 
-            val forecasts: Map<SurfArea, Forecast7DaysOFLF> = SurfArea.entries.associateWith {sa ->
-                val data: MutableMap<LocalDateTime, MutableList<Any>> = mutableMapOf()
-                val dataPerDay: MutableMap<Int, MutableMap<LocalDateTime, DataAtTime>> = mutableMapOf()
+                val allDayForecasts: MutableList<DayForecast> = mutableListOf()
 
-                lf[sa]!!.map {
-                    val time = LocalDateTime.parse(it.first)
-                    val windSpeed = it.second.instant.details.wind_speed
-                    val windGust = it.second.instant.details.wind_speed_of_gust
-                    val windDir = it.second.instant.details.wind_from_direction
-                    val airTemp = it.second.instant.details.air_temperature
-                    val symbolCode = try {
-                        it.second.next_1_hours.summary.symbol_code
-                    } catch (e: NullPointerException){
-                        it.second.next_6_hours.summary.symbol_code
+                for (day in 0 until lf.size) {
+                    val dayForecasts: MutableMap<LocalDateTime, DataAtTime> = mutableMapOf()
+                    // TODO: !!
+                    val lfAtDay = lf[day]!!
+                    val ofAtDay = of[day]!!
+                    val allDataAtDay: MutableMap<LocalDateTime, MutableList<Any>> = mutableMapOf()
+                    val dayForecast: MutableMap<LocalDateTime, DataAtTime> = mutableMapOf()
+
+                    lfAtDay.map {
+                        val time = LocalDateTime.parse(it.first)
+                        allDataAtDay[time] = mutableListOf()
+                        allDataAtDay[time]!!.add(it.second.instant.details.wind_speed)
+                        allDataAtDay[time]!!.add(it.second.instant.details.wind_speed_of_gust)
+                        allDataAtDay[time]!!.add(it.second.instant.details.wind_from_direction)
+                        allDataAtDay[time]!!.add(it.second.instant.details.air_temperature)
+                        val symbolCode = try {
+                            it.second.next_1_hours.summary.symbol_code
+                        } catch (e: NullPointerException) {
+                            it.second.next_6_hours.summary.symbol_code
+                        }
+                        allDataAtDay[time]!!.add(symbolCode)
                     }
-                    data[time] = mutableListOf(windSpeed, windGust, windDir, airTemp, symbolCode)
-                }
 
-                of[sa]!!.map{
-                    val time = LocalDateTime.parse(it.first)
-                    val waveHeight = it.second.instant.details.sea_surface_wave_height
-                    val waveDir = it.second.instant.details.sea_water_to_direction
-
-                    try {
-                        if (data[time]!!.size == 7) {
-                            /*
-                            Filtrerer ut steder hvor man ikke har all nødvendig data.
-                            Dette haandterer steder hvor lf har storre intervaller mellom data enn of.
-                             */
-
-                            data[time]!!.add(waveHeight)
-                            data[time]!!.add(waveDir)
+                    ofAtDay.map {
+                        val time = LocalDateTime.parse(it.first)
+                        try {
+                            allDataAtDay[time]!!.add(it.second.instant.details.sea_surface_wave_height)
+                            allDataAtDay[time]!!.add(it.second.instant.details.sea_water_to_direction)
 
                             val dataAtTime = DataAtTime(
-                                windSpeed   = data[time]!![0] as Double,
-                                windGust    = data[time]!![1] as Double,
-                                windDir     = data[time]!![2] as Double,
-                                airTemp     = data[time]!![3] as Double,
-                                symbolCode  = data[time]!![4] as String,
-                                waveHeight  = data[time]!![5] as Double,
-                                waveDir     = data[time]!![6] as Double,
+                                windSpeed   = allDataAtDay[time]!![0] as Double,
+                                windGust    = allDataAtDay[time]!![1] as Double,
+                                windDir     = allDataAtDay[time]!![2] as Double,
+                                airTemp     = allDataAtDay[time]!![3] as Double,
+                                symbolCode  = allDataAtDay[time]!![4] as String,
+                                waveHeight  = allDataAtDay[time]!![5] as Double,
+                                waveDir     = allDataAtDay[time]!![6] as Double,
                             )
-
-                            // created a map of day -> map<time, data>
-                            try { dataPerDay[time.dayOfMonth]!!.put(time, dataAtTime)}
-                            catch (e: NullPointerException) {
-                                dataPerDay[time.dayOfMonth] = mutableMapOf(time to dataAtTime)
-                            }
-                        } else {}
-                    }catch (_: Exception) {
-                        Log.d("REPO", "No LF data at $time")
+                            dayForecast.put(time, dataAtTime)
+                        } catch(_: NullPointerException) {
+                            Log.d("REPO", "Omitting OFdata at $time as there was no LFdata")
+                        }
                     }
-                }
-
-                // maps dataPerDay values to DayForecast objects
-                val dayForecasts: List<DayForecast> = dataPerDay.map {
-                    DayForecast(
-                        data = it.value.toMap()
+                    allDayForecasts.add(
+                        DayForecast(
+                            data = dayForecast
+                        )
                     )
                 }
+                Forecast7DaysOFLF(allDayForecasts)
 
-                val forecast7DaysOfLF = Forecast7DaysOFLF(
-                    forecast = dayForecasts
-                )
-
-                // associates a surfArea with its 7 day forecast
-                forecast7DaysOfLF
             }
 
-            val oflf = AllSurfAreasOFLF(
-                next7Days = forecasts
+            AllSurfAreasOFLF(
+                next7Days = all7DayForecasts
             )
-
-            oflf
-        }
-
-    }
-
-    private suspend fun getOF(): Map<SurfArea, List<Pair<String, DataOF>>> {
-        return SurfArea.entries.associateWith {
-            oceanForecastRepository.getTimeSeries(it)
         }
     }
 
-    private suspend fun getLF(): Map<SurfArea, List<Pair<String, DataLF>>> {
-        return SurfArea.entries.associateWith {
-            locationForecastRepository.getTimeSeries(it)
-        }
+    private suspend fun getOFTimeSeries(surfArea: SurfArea): Map<Int, List<Pair<String, DataOF>>> {
+        return oceanForecastRepository.getTimeSeries(surfArea).groupBy(
+            { LocalDateTime.parse(it.first).dayOfMonth }, { it }
+        )
+    }
+
+    private suspend fun getLFTimeSeries(surfArea: SurfArea): Map<Int, List<Pair<String, DataLF>>> {
+        return locationForecastRepository.getTimeSeries(surfArea).groupBy(
+            { LocalDateTime.parse(it.first).dayOfMonth }, { it }
+        )
     }
 
     override suspend fun loadWavePeriods() {
