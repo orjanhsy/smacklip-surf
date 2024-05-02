@@ -15,6 +15,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
+import kotlin.text.Typography.times
 
 data class SurfAreaScreenUiState(
     val location: SurfArea? = null,
@@ -116,12 +118,14 @@ class SurfAreaScreenViewModel: ViewModel() {
                 for (dayIndex in 0.. 2) {
 
                     val dayForecast: DayForecast = forecast7Days[dayIndex]
-                    val times = dayForecast.data.keys.sortedBy { it.dayOfMonth }
+                    val times = dayForecast.data.keys.sortedWith (
+                        compareBy<LocalDateTime> { it.month }.thenBy { it.dayOfMonth }
+                    )
                     var bestToday = ConditionStatus.BLANK
 
                     for (time in times) {
                         val wavePeriod = try {
-                            state.wavePeriods[(dayIndex + 1) * time.dayOfMonth]
+                            state.wavePeriods[(dayIndex + 1) * time.hour]
                         } catch (e: IndexOutOfBoundsException) {
                             Log.d("SAVM", "No status given as wavePeriods were out of bounds for ${(dayIndex + 1)}")
                             null
