@@ -42,6 +42,7 @@ val Context.settingsStore: DataStore<Settings> by dataStore (
     serializer = SettingsSerializer()
 )
 
+//TODO: vm skal ikke være sånn! Må ha en viewmodel factory, men slashscreen må ha tilgang på en viewmodel
 val homeScreenViewModel = HomeScreenViewModel()
 
 class MainActivity : ComponentActivity() {
