@@ -61,7 +61,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.viewinterop.NoOpUpdate
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.NavigationManager
 import com.example.myapplication.R
 import com.example.myapplication.data.map.MapRepositoryImpl
@@ -95,11 +94,6 @@ fun MapScreen( mapScreenViewModel : MapScreenViewModel = viewModel(), onNavigate
     Scaffold(
         bottomBar = {
             BottomBar(navController = navController)
-                /*onNavigateToHomeScreen = {
-                    navController?.navigate("HomeScreen")
-                    // Navigerer til HomeScreen
-                },
-            )*/
         }
     ) { innerPadding ->
         Column(
