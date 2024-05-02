@@ -431,7 +431,7 @@ fun SurfAreaCard(
                 }
 
                 Row {
-                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 4.dp)) {
+                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 2.dp)) {
                         Image(
                             painter = painterResource(id = R.drawable.tsunami),
                             contentDescription = "wave icon",
@@ -442,12 +442,13 @@ fun SurfAreaCard(
 
                         )
                     }
+                    Spacer(modifier = Modifier.width(5.dp))
                     Text(
                         text = waveHeight.toString(),
                         style = AppTypography.bodySmall,
-
                         )
-                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 4.dp)) {
+                    Spacer(modifier = Modifier.width(5.dp))
+                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 0.dp)) {
                         Icon(
                             imageVector = Icons.Outlined.CallMade,
                             contentDescription = "arrow icon",
@@ -460,7 +461,7 @@ fun SurfAreaCard(
                 }
 
                 Row {
-                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 4.dp)) {
+                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 2.dp)) {
                         Image(
                             painter = painterResource(id = R.drawable.air),
                             contentDescription = "Air icon",
@@ -470,13 +471,14 @@ fun SurfAreaCard(
                                 .height(13.6348.dp)
                         )
                     }
+                    Spacer(modifier = Modifier.width(5.dp))
                     Text(
                        text = "${windSpeed.toInt()}${if (windGust > windSpeed) " (${windGust.toInt()})" else ""}",
                       style = AppTypography.bodySmall,
                         )
 
-
-                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 4.dp)) {
+                    Spacer(modifier = Modifier.width(5.dp))
+                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 0.dp)) {
                         Icon(
                             imageVector = Icons.Outlined.CallMade,
                             contentDescription = "arrow icon",
