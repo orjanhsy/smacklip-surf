@@ -28,6 +28,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.data.settings.SettingsSerializer
 import com.example.myapplication.ui.home.HomeScreen
 import com.example.myapplication.ui.map.MapScreen
+import com.example.myapplication.ui.settings.SettingsScreen
+import com.example.myapplication.ui.settings.SettingsScreenViewModel
 import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
 import com.example.myapplication.ui.surfarea.SurfAreaScreen
 import com.example.myapplication.ui.theme.AppTheme
@@ -113,6 +115,9 @@ fun SmackLipNavigation(){
 
                 }
             )
+        }
+        composable("SettingsScreen") {
+            SettingsScreen(navController = navController)
         }
     }
 }
