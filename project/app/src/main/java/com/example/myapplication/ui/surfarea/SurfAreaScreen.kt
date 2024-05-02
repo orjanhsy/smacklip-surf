@@ -120,14 +120,7 @@ fun SurfAreaScreen(
             )
         },
         bottomBar = {
-            BottomBar(
-                onNavigateToMapScreen = {
-                    navController?.navigate("MapScreen")
-                },
-                onNavigateToHomeScreen = {
-                    navController?.navigate("HomeScreen")
-                }
-            )
+            BottomBar(navController = navController)
         }
     ) { innerPadding ->
         Box(modifier = Modifier.fillMaxSize()) {

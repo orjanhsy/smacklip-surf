@@ -98,16 +98,7 @@ fun DailySurfAreaScreen(
 
                 },
                 bottomBar = {
-                    BottomBar(
-                        onNavigateToMapScreen = {
-                            navController?.navigate("MapScreen")
-                            //navigerer til mapscreen
-                        },
-                        onNavigateToHomeScreen = {
-                            navController?.navigate("HomeScreen")
-                            // Navigerer til HomeScreen
-                        }
-                    )
+                    BottomBar(navController = navController)
                 }
             )
     { innerPadding ->
