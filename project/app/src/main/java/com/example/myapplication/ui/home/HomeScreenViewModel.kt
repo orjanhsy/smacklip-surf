@@ -40,9 +40,12 @@ class HomeScreenViewModel() : ViewModel() {
     }
 
     fun updateOFLF() {
-
         viewModelScope.launch(Dispatchers.IO) {
             _homeScreenUiState.update {state ->
+                if (state.ofLfNow.isNotEmpty()) {
+                    Log.d("HSVM", "Quitting 'updateOFLF', data already loaded")
+                    return@launch
+                }
                 val allNext7Days: AllSurfAreasOFLF = smackLipRepository.getAllOFLF7Days()
 
                 val newOfLfNow: Map<SurfArea, DataAtTime> = allNext7Days.next7Days.entries.associate {(sa, forecast7Days) ->
