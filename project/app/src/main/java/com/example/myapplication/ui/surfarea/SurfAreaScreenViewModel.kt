@@ -105,7 +105,7 @@ class SurfAreaScreenViewModel: ViewModel() {
     fun updateBestConditionStatuses(surfArea: SurfArea, forecast7Days: List<DayForecast>) {
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update {
-                if (forecast7Days.isEmpty()) {
+                if (forecast7Days.isEmpty() || it.wavePeriods.isEmpty()) {
                     Log.e("SAVM", "Attempted to update condition status on empty forecast7Days")
                     return@launch
                 }
