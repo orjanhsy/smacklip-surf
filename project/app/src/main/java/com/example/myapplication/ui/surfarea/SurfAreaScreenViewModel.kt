@@ -40,6 +40,10 @@ class SurfAreaScreenViewModel: ViewModel() {
     fun asyncNext7Days(surfArea: SurfArea){
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update {
+                if (it.forecastNext7Days.forecast.isNotEmpty()) {
+                    Log.d("SAVM", "quitting 'asyncNext7Days', data already loaded")
+                    return@launch
+                }
                 it.copy(loading = true)
             }
             val newNext7Days: Forecast7DaysOFLF = smackLipRepository.getSurfAreaOFLFNext7Days(surfArea)
@@ -82,6 +86,10 @@ class SurfAreaScreenViewModel: ViewModel() {
     fun updateWavePeriods(surfArea: SurfArea) {
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update {state ->
+                if (state.wavePeriods.isNotEmpty()) {
+                    Log.e("SAVM", "Quitting update of wavePeriods, data already loaded")
+                    return@launch
+                }
                 val newWavePeriods = smackLipRepository.getWavePeriodsNext3DaysForArea(surfArea)
                 state.copy(
                     wavePeriods = newWavePeriods
@@ -95,16 +103,18 @@ class SurfAreaScreenViewModel: ViewModel() {
     fun updateBestConditionStatuses(surfArea: SurfArea, forecast7Days: List<DayForecast>) {
         viewModelScope.launch(Dispatchers.IO) {
             _surfAreaScreenUiState.update {
+                if (forecast7Days.isEmpty()) {
+                    Log.e("SAVM", "Attempted to update condition status on empty forecast7Days")
+                    return@launch
+                }
                 it.copy(loading = true) //starter loading screen
             }
             _surfAreaScreenUiState.update { state ->
+
                 val newBestConditionStatuses: MutableMap<Int, ConditionStatus> = mutableMapOf()
 
                 for (dayIndex in 0.. 2) {
-                    if (forecast7Days.isEmpty()) {
-                        Log.e("SAVM", "Attempted to update condition status on empty forecast7Days")
-                        return@launch
-                    }
+
                     val dayForecast: DayForecast = forecast7Days[dayIndex]
                     val times = dayForecast.data.keys.sortedBy { it[3] }
                     var bestToday = ConditionStatus.BLANK
