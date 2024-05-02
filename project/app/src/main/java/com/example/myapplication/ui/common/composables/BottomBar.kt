@@ -1,7 +1,6 @@
 package com.example.myapplication.ui.common.composables
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocationOn
@@ -14,15 +13,15 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.myapplication.ui.theme.AppTheme
 
 data class BottomNavigationItem(
     val title: String,
+    val route: String,
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector
 )
@@ -30,50 +29,38 @@ data class BottomNavigationItem(
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomBar(onNavigateToHomeScreen: () -> Unit = {}, onNavigateToMapScreen: () -> Unit = {}, onNavigateToSettingsScreen: () -> Unit = {}) {
-    var selectedItemIndex by rememberSaveable {
-        mutableStateOf(0)
-    }
+fun BottomBar(navController: NavController?) {
+    val navBackStackEntry by navController!!.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination?.route
 
     val items = listOf(
         BottomNavigationItem(
             title = "Home",
+            route = "HomeScreen",
             selectedIcon = Icons.Filled.Home,
             unselectedIcon = Icons.Default.Home
         ),
         BottomNavigationItem(
             title = "Explore",
+            route = "MapScreen",
             selectedIcon = Icons.Filled.LocationOn,
             unselectedIcon = Icons.Default.LocationOn
         ),
         BottomNavigationItem(
             title = "Settings",
+            route = "SettingsScreen",
             selectedIcon = Icons.Filled.Settings,
             unselectedIcon = Icons.Default.Settings
         ),
     )
-    NavigationBar() {
-        items.forEachIndexed{index, item->
-            val isSelected = selectedItemIndex == index
+    NavigationBar {
+        items.forEach { item->
+            val isSelected = item.route == currentDestination
             NavigationBarItem(
-                selected = selectedItemIndex == index,
+                selected = isSelected,
                 onClick = {
-                    selectedItemIndex = index
-                    // her man bruker navController
-                    when(index) {
-                        0 -> {
-                            Log.d("Navigation", "Navigating to HomeScreen")
-                            onNavigateToHomeScreen()
-                        }
-                        1 -> {
-                            Log.d("Navigation", "Navigating to MapScreen")
-                            onNavigateToMapScreen()
-                        }
-                        2 -> {
-                            Log.d("Navigation", "Navigating to SettingsScreen")
-                            onNavigateToSettingsScreen()
-
-                        }
+                    if (!isSelected) {
+                        navController?.navigate(item.route)
                     }
                 },
                 label = {
@@ -104,6 +91,6 @@ fun BottomBar(onNavigateToHomeScreen: () -> Unit = {}, onNavigateToMapScreen: ()
 @Composable
 private fun PreviewBottomBar() {
     AppTheme {
-        BottomBar()
+        BottomBar(navController = null)
     }
 }
