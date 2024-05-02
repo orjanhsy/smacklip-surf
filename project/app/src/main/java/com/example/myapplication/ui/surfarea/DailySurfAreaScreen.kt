@@ -101,15 +101,15 @@ fun DailySurfAreaScreen(
 
                 },
                 bottomBar = {
-                    BottomBar(
-                        onNavigateToMapScreen = {
+                    BottomBar(navController = navController
+                        /*onNavigateToMapScreen = {
                             navController?.navigate("MapScreen")
                             //navigerer til mapscreen
                         },
                         onNavigateToHomeScreen = {
                             navController?.navigate("HomeScreen")
                             // Navigerer til HomeScreen
-                        }
+                        }*/
                     )
                 }
             )

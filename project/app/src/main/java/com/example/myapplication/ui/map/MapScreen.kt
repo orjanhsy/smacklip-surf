@@ -61,6 +61,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.viewinterop.NoOpUpdate
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.NavigationManager
 import com.example.myapplication.R
 import com.example.myapplication.data.map.MapRepositoryImpl
@@ -81,7 +82,7 @@ import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 
 
 @Composable
-fun MapScreen( mapScreenViewModel : MapScreenViewModel = viewModel(), onNavigateToSurfAreaScreen: (String) -> Unit = {}) {
+fun MapScreen( mapScreenViewModel : MapScreenViewModel = viewModel(), onNavigateToSurfAreaScreen: (String) -> Unit) {
 
     val mapScreenUiState : MapScreenUiState by mapScreenViewModel.mapScreenUiState.collectAsState()
     val mapRepository : MapRepositoryImpl = MapRepositoryImpl() //bruker direkte maprepository fordi mapbox har sin egen viewmodel? -
@@ -93,12 +94,12 @@ fun MapScreen( mapScreenViewModel : MapScreenViewModel = viewModel(), onNavigate
 
     Scaffold(
         bottomBar = {
-            BottomBar(
-                onNavigateToHomeScreen = {
+            BottomBar(navController = navController)
+                /*onNavigateToHomeScreen = {
                     navController?.navigate("HomeScreen")
                     // Navigerer til HomeScreen
                 },
-            )
+            )*/
         }
     ) { innerPadding ->
         Column(
@@ -493,7 +494,7 @@ fun SurfAreaPreview(){
 @Composable
 fun MapScreenPreview(){
     MyApplicationTheme {
-        MapScreen()
+        MapScreen(){}
     }
 
 }

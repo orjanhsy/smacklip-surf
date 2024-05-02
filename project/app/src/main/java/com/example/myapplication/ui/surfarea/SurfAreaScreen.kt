@@ -64,7 +64,6 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities.Local
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -118,13 +117,13 @@ fun SurfAreaScreen(
             )
         },
         bottomBar = {
-            BottomBar(
-                onNavigateToMapScreen = {
+            BottomBar(navController = navController
+                /*onNavigateToMapScreen = {
                     navController?.navigate("MapScreen")
                 },
                 onNavigateToHomeScreen = {
                     navController?.navigate("HomeScreen")
-                }
+                }*/
             )
         }
     ) { innerPadding ->
