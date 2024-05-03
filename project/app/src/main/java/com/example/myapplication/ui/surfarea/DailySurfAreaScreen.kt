@@ -136,10 +136,10 @@ fun DailySurfAreaScreen(
                         }
                     }
                 }
-                val time = try { times[0] }
+                val selectedTime = try { times[0] }
                 catch (e: IndexOutOfBoundsException) { LocalDateTime.now() }
 
-                HeaderCard(surfArea = surfArea, icon = headerIcon, time)
+                HeaderCard(surfArea = surfArea, icon = headerIcon, selectedTime)
                 LazyColumn(
                     modifier = Modifier
                         .padding(5.dp)
@@ -150,13 +150,13 @@ fun DailySurfAreaScreen(
                         items(times.size) { index ->
                             val time = times[index]
                             val hourIndex = time.hour
+                            val formattedHour = String.format("%02d", hourIndex)
                             Log.d("hourindex", "$hourIndex")
 
                             // TODO: ?
                             val surfAreaDataForHour: DataAtTime? = surfAreaDataForDay[time]
-                            val formattedHour = String.format("%02d", hourIndex)
                             //henter objektet for timen som er en liste med Pair<List<Int>, Double>
-                            val timestamp = formattedHour
+
                             val windSpeed = surfAreaDataForHour?.windSpeed ?: 0.0
                             val windGust = surfAreaDataForHour?.windGust ?: 0.0
                             val windDir = surfAreaDataForHour?.windDir ?: 0.0
