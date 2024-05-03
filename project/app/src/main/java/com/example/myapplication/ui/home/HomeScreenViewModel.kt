@@ -24,7 +24,6 @@ import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 data class HomeScreenUiState(
-    val wavePeriods: AllWavePeriods = AllWavePeriods(),
     val ofLfNow: Map<SurfArea, DataAtTime> = mapOf(),
     val allRelevantAlerts: Map<SurfArea, List<Alert>> = emptyMap(),
     val loading: Boolean = true
@@ -38,10 +37,16 @@ class HomeScreenViewModel() : ViewModel() {
 
     val homeScreenUiState: StateFlow<HomeScreenUiState> = combine(
         repo.ofLfNext7Days,
-        repo.wavePeriods,
         repo.alerts
-    ) { oflf, waveperiods, alerts ->
-        val oflfNow: Map<SurfArea, DataAtTime> =
+    ) { oflf, alerts ->
+        val oflfNow: Map<SurfArea, DataAtTime> = oflf.next7Days.entries.associate {
+            it.key to it.value.forecast[0].data.entries.sortedBy {timeToData -> timeToData.key.hour }[0].value
+        }
+        val allRelevantAlerts: Map<SurfArea, List<Alert>> = alerts
+        HomeScreenUiState(
+            ofLfNow = oflfNow,
+            allRelevantAlerts = allRelevantAlerts
+        )
 
     }.stateIn(
         viewModelScope,
