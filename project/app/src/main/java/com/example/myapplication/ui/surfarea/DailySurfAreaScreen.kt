@@ -49,7 +49,7 @@ import com.example.myapplication.utils.RecourseUtils
 import java.time.LocalDateTime
 import java.time.LocalTime
 
-@SuppressLint("SuspiciousIndentation")
+@SuppressLint("SuspiciousIndentation", "DefaultLocale")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DailySurfAreaScreen(
@@ -110,6 +110,7 @@ fun DailySurfAreaScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 val currentHour = LocalTime.now().hour
+                val formattedCurrentHour = String.format("%02d", currentHour)
                 var headerIcon = "default_icon"
 
                 val surfAreaDataForDay: Map<LocalDateTime, DataAtTime> = try {
@@ -128,15 +129,16 @@ fun DailySurfAreaScreen(
                     // siden mappet ikke er sortert henter vi ut alle aktuelle tidspunketer og sorterer dem
                     for (time in times) {
                         val hour = time.hour
-                        if (hour == currentHour) {
+                        if (hour == formattedCurrentHour.toInt()) {
                             headerIcon = surfAreaDataForDay[time]!!.symbolCode
                             break
                         }
                     }
                 }
-                val time = try {times[0]}
-                catch (e: IndexOutOfBoundsException) {LocalDateTime.now()}
-                HeaderCard(surfArea = surfArea, icon = headerIcon, time)
+                val selectedTime = try { times[0] }
+                catch (e: IndexOutOfBoundsException) { LocalDateTime.now() }
+
+                HeaderCard(surfArea = surfArea, icon = headerIcon, selectedTime)
                 LazyColumn(
                     modifier = Modifier
                         .padding(5.dp)
@@ -144,14 +146,16 @@ fun DailySurfAreaScreen(
 
                     // [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]
                     if (surfAreaDataForDay.isNotEmpty()) {
-                        items(times.size) { time ->
-                            val hourIndex = times[time].hour
+                        items(times.size) { index ->
+                            val time = times[index]
+                            val hourIndex = time.hour
+                            val formattedHour = String.format("%02d", hourIndex)
                             Log.d("hourindex", "$hourIndex")
 
                             // TODO: ?
-                            val surfAreaDataForHour: DataAtTime? = surfAreaDataForDay[times[time]]
+                            val surfAreaDataForHour: DataAtTime? = surfAreaDataForDay[time]
                             //henter objektet for timen som er en liste med Pair<List<Int>, Double>
-                            val timestamp = hourIndex
+
                             val windSpeed = surfAreaDataForHour?.windSpeed ?: 0.0
                             val windGust = surfAreaDataForHour?.windGust ?: 0.0
                             val windDir = surfAreaDataForHour?.windDir ?: 0.0
@@ -175,7 +179,7 @@ fun DailySurfAreaScreen(
                             }
 
                             AllInfoCard(
-                                timestamp = timestamp.toString(),
+                                timestamp = formattedHour,
                                 surfArea = surfArea,
                                 waveHeight = waveHeight,
                                 windSpeed = windSpeed,
