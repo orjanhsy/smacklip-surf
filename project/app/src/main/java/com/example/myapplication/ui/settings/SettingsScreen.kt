@@ -93,7 +93,7 @@ fun SettingsScreen(settingsViewmodelFactory: SettingsScreenViewModel.SettingsVie
                             }
                         )
                     }
-                    item {
+                    /*item {
                         TestValueCard(
                             testValue = currentState.settings.test,
                             onTestValueChanged = { value ->
@@ -103,6 +103,8 @@ fun SettingsScreen(settingsViewmodelFactory: SettingsScreenViewModel.SettingsVie
 
                         )
                     }
+
+                     */
                     item {
                         InfoCardSettings()
                     }
@@ -114,6 +116,8 @@ fun SettingsScreen(settingsViewmodelFactory: SettingsScreenViewModel.SettingsVie
                         )
                     }
                 }
+
+                else -> {}
             }
         }
 
