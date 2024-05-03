@@ -17,10 +17,13 @@ import com.example.myapplication.model.smacklip.DayForecast
 import com.example.myapplication.model.smacklip.Forecast7DaysOFLF
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.waveforecast.AllWavePeriods
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -52,7 +55,9 @@ class RepositoryImpl(
     override val alerts: StateFlow<Map<SurfArea, List<Alert>>> = _alerts.asStateFlow()
 
     init {
-
+        CoroutineScope(Dispatchers.IO).launch{
+            loadOFlF()
+        }
     }
 
     /*

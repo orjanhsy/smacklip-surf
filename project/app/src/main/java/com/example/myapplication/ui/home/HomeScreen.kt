@@ -63,6 +63,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.NavigationManager
 import com.example.myapplication.R
+import com.example.myapplication.data.smackLip.RepositoryImpl
 import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.metalerts.Properties
 import com.example.myapplication.model.smacklip.DataAtTime
@@ -538,7 +539,7 @@ private fun PreviewSurfAreaCard() {
     val waveHeight = 5.0
     val waveDir =  184.3
 
-    val viewModel = HomeScreenViewModel()
+    val viewModel = HomeScreenViewModel(RepositoryImpl())
     AppTheme {
         SurfAreaCard(
             SurfArea.HODDEVIK,
