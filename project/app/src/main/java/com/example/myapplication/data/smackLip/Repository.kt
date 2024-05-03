@@ -52,6 +52,7 @@ class RepositoryImpl(
     override val alerts: StateFlow<Map<SurfArea, List<Alert>>> = _alerts.asStateFlow()
 
 
+
     /*
     Funksjonen henter all oflf data for hvert sted, som resulterer i en 9-dagers forecast (den tar med dager der windGust er 0.0  forelopig)
      */

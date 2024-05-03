@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.R
+import com.example.myapplication.data.smackLip.Repository
+import com.example.myapplication.data.smackLip.RepositoryImpl
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
 import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.smacklip.AllSurfAreasOFLF
@@ -12,8 +14,11 @@ import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.waveforecast.AllWavePeriods
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -26,59 +31,25 @@ data class HomeScreenUiState(
 )
 
 class HomeScreenViewModel() : ViewModel() {
-    private val smackLipRepository = SmackLipRepositoryImpl()
-    private val _homeScreenUiState = MutableStateFlow(HomeScreenUiState())
+    private val repo = RepositoryImpl()
     private val _favoriteSurfAreas = MutableStateFlow<List<SurfArea>>(emptyList())
-    val homeScreenUiState: StateFlow<HomeScreenUiState> = _homeScreenUiState.asStateFlow()
     val favoriteSurfAreas: StateFlow<List<SurfArea>> = _favoriteSurfAreas // TODO: asStateFlow()?
 
-    init {
-        updateOFLF()
-        updateAlerts()
-    }
 
-    fun updateOFLF() {
-        viewModelScope.launch(Dispatchers.IO) {
-            _homeScreenUiState.update {state ->
-                if (state.ofLfNow.isNotEmpty()) {
-                    Log.d("HSVM", "Quitting 'updateOFLF', data already loaded")
-                    return@launch
-                }
-                val allNext7Days: AllSurfAreasOFLF = smackLipRepository.getAllOFLF7Days()
+    val homeScreenUiState: StateFlow<HomeScreenUiState> = combine(
+        repo.ofLfNext7Days,
+        repo.wavePeriods,
+        repo.alerts
+    ) { oflf, waveperiods, alerts ->
+        val oflfNow: Map<SurfArea, DataAtTime> =
 
-                val newOfLfNow: Map<SurfArea, DataAtTime> = allNext7Days.next7Days.entries.associate {(sa, forecast7Days) ->
-                    val times = forecast7Days.forecast[0].data.keys.sortedWith(
-                        compareBy<LocalDateTime> { it.month }.thenBy { it.dayOfMonth }
-                    )
-                    sa to forecast7Days.forecast[0].data[times[0]]!!// TODO: !!
-                }
-
-                state.copy(
-                    ofLfNow = newOfLfNow,
-                    loading = false
-                )
-            }
-        }
-
-    }
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5_000),
+        HomeScreenUiState()
+    )
 
 
-    fun updateAlerts() {
-        viewModelScope.launch(Dispatchers.IO) {
-            _homeScreenUiState.update {
-                it.copy(loading = true)
-            }
-            val allAlerts = SurfArea.entries.associateWith {
-                smackLipRepository.getRelevantAlertsFor(it)
-            }
-            _homeScreenUiState.update {
-                it.copy(
-                    allRelevantAlerts = allAlerts,
-                   // loading = false
-                )
-            }
-        }
-    }
 
     fun getIconBasedOnAwarenessLevel(awarenessLevel: String): Int {
         return try {

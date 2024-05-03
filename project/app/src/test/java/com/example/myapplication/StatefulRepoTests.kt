@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import androidx.compose.runtime.collectAsState
 import com.example.myapplication.data.smackLip.Repository
 import com.example.myapplication.data.smackLip.RepositoryImpl
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
