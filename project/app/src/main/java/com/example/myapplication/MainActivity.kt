@@ -113,6 +113,11 @@ fun SmackLipNavigation(){
             DailySurfAreaScreenViewModel() // send med argument
         }
     )
+    val hsvm = viewModel<HomeScreenViewModel>(
+        factory = viewModelFactory {
+            HomeScreenViewModel(App.appModule.stateFulRepo)
+        }
+    )
 
     NavHost(
         navController = navController,
@@ -120,7 +125,7 @@ fun SmackLipNavigation(){
 
         ){
         composable("HomeScreen"){
-            HomeScreen(){
+            HomeScreen(hsvm){
                 navController.navigate("SurfAreaScreen/$it")
             }
         }
