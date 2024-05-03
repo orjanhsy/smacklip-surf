@@ -1,7 +1,8 @@
 package com.example.myapplication.ui.home
 
+//import com.example.myapplication.ui.theme.MyApplicationTheme
+
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -51,13 +52,12 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -69,9 +69,7 @@ import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.theme.AppTheme
-
 import com.example.myapplication.ui.theme.AppTypography
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -84,7 +82,9 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNaviga
 
     Scaffold(
         topBar = {
-            Column {
+            Column(
+                modifier = Modifier.padding(top = 12.dp) // Adjust padding as needed
+            ) {
                 SearchBar(
                     onQueryChange = {},
                     isSearchActive = isSearchActive.value,
@@ -114,9 +114,13 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNaviga
                         homeScreenViewModel,
                         onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
                     )
-                    Column {
+                    Spacer(modifier = Modifier.height(14.dp))
+                    Column (
+                        modifier = Modifier
+                            .padding(horizontal = 10.dp)
+                    ){
                         Text(
-                            text = "  Alle lokasjoner",
+                            text = "Alle lokasjoner",
                             style = AppTypography.bodySmall,
                             )
                     }
@@ -124,7 +128,7 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNaviga
                         columns = GridCells.Fixed(2),
                         modifier = Modifier
                             .fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        //verticalArrangement = Arrangement.spacedBy(2.dp),
                         horizontalArrangement = Arrangement.Center)
 
                     {
@@ -280,11 +284,15 @@ fun FavoritesList(
     homeScreenViewModel: HomeScreenViewModel,
     onNavigateToSurfAreaScreen: (String) -> Unit
 ) {
-    Column {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 10.dp)
+    ) {
         Text(
-            text = "  Favoritter",
+            text = "Favoritter",
             style = AppTypography.bodySmall,
-            )
+        )
     }
     if (favorites.isNotEmpty()) {
         LazyRow {
@@ -338,20 +346,21 @@ fun EmptyFavoriteCard() {
         modifier =
         Modifier
             .wrapContentSize()
-            .padding(start = 8.dp, top = 10.dp, end = 8.dp, bottom = 8.dp)
-            //.border(width = 0.80835.dp, color = Color(0xFFBEC8CA), shape = RoundedCornerShape(size = 6.70023.dp ))
+            .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
             .size(width = 150.dp, height = 200.dp)
-            .background(color = Color(0xFFF5FAFB))
             .clip(RoundedCornerShape(10.dp))
 
     ) {
         Box(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(14.dp),
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "Ingen favoritter lagt til", //tar denne til slutt
-                style = AppTypography.titleMedium,
+                text = "Trykk på stjernen for å legge til favoritt",
+                style = AppTypography.bodySmall,
+                textAlign = TextAlign.Center,
                 )
         }
     }
@@ -378,8 +387,7 @@ fun SurfAreaCard(
     Card(
         modifier = Modifier
             .wrapContentSize()
-            .padding(start = 8.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)
-            .shadow(4.dp, shape = RoundedCornerShape(10.dp))
+            .padding(start = 8.dp, top=2.dp, end = 10.dp, bottom = 10.dp)
             .clickable(
                 onClick = { onNavigateToSurfAreaScreen(surfArea.locationName) })
     ) {
@@ -415,7 +423,10 @@ fun SurfAreaCard(
                 horizontalAlignment = Alignment.Start,
             )
             {
-                Row {
+                Row(
+                    modifier = Modifier
+                        .padding(bottom=6.dp, top= 2.dp)
+                ) {
                     Text(
                         text = surfArea.locationName,
                         style = AppTypography.bodyMedium,
@@ -509,6 +520,7 @@ fun SurfAreaCard(
                 }
 
                  */
+                Spacer(modifier = Modifier.height(8.dp))
                 Column(
                     horizontalAlignment = Alignment.End
                 ) {
