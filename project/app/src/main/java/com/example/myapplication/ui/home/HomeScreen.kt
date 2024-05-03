@@ -384,7 +384,7 @@ fun SurfAreaCard(
     Card(
         modifier = Modifier
             .wrapContentSize()
-            .padding(start = 8.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)
+            .padding(start = 8.dp, end = 10.dp, bottom = 10.dp)
             .clickable(
                 onClick = { onNavigateToSurfAreaScreen(surfArea.locationName) })
     ) {
