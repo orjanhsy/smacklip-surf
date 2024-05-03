@@ -51,7 +51,9 @@ class RepositoryImpl(
     override val wavePeriods: StateFlow<AllWavePeriods> = _wavePeriods.asStateFlow()
     override val alerts: StateFlow<Map<SurfArea, List<Alert>>> = _alerts.asStateFlow()
 
+    init {
 
+    }
 
     /*
     Funksjonen henter all oflf data for hvert sted, som resulterer i en 9-dagers forecast (den tar med dager der windGust er 0.0  forelopig)
