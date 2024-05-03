@@ -36,6 +36,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -55,6 +56,7 @@ import androidx.navigation.NavController
 import com.example.myapplication.NavigationManager
 import com.example.myapplication.R
 import com.example.myapplication.model.conditions.ConditionStatus
+import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.AlertCard.CustomAlert
@@ -95,6 +97,7 @@ fun SurfAreaScreen(
     val formatter = DateTimeFormatter.ofPattern("EEE", Locale("no", "NO"))
     val navController = NavigationManager.navController
 
+    var showAlert by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -118,12 +121,26 @@ fun SurfAreaScreen(
                         }
                     }
                 },
+                actions = {
+                    if (alerts.isNotEmpty()) {
+                        IconButton(onClick = { showAlert = true }) {
+                            Image(
+                                painter = painterResource(id = R.drawable.icon_awareness_yellow_outlined),
+                                contentDescription = "alert"
+                            )
+                        }
+                    }
+                }
             )
         },
         bottomBar = {
             BottomBar(navController = navController)
         }
     ) { innerPadding ->
+        if (showAlert){
+            ShowAlert(alerts = alerts, surfArea = surfArea)
+            showAlert = false
+        }
         Box(modifier = Modifier.fillMaxSize()) {
             LazyColumn(
                 modifier = Modifier
@@ -134,6 +151,7 @@ fun SurfAreaScreen(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+
                 item {
                     val surfAreaDataForDay: Map<LocalDateTime, DataAtTime> = try {
                         surfAreaScreenUiState.forecastNext7Days.forecast[0].data
@@ -222,27 +240,32 @@ fun SurfAreaScreen(
                 }
             }
             if (alerts.isNotEmpty()) {
-                val alert = alerts.first()
-                val alertMessage = alert.properties?.description ?: "No description available"
-                val awarenessLevel = alert.properties?.awarenessLevel
-                val icon = awarenessLevel?.let { getIconBasedOnAwarenessLevel(it) }
-                    ?: R.drawable.icon_awareness_default
-
-
-                CustomAlert(
-                    title = surfArea.name,
-                    message = alertMessage.toString(),
-                    actionText = "OK",
-                    warningIcon = icon,
-                    data = null,
-                    showAlert = remember { mutableStateOf(true) },
-                    //actionWithValue = null,
-                    action = null,
-                )
+                ShowAlert(alerts, surfArea)
             }
             ProgressIndicator(isDisplayed = surfAreaScreenUiState.loading)
         }
     }
+}
+
+@Composable
+fun ShowAlert(alerts : List<Alert>, surfArea: SurfArea){
+
+    val alert = alerts.first()
+    val alertMessage = alert.properties?.description ?: "No description available"
+    val awarenessLevel = alert.properties?.awarenessLevel
+    val icon = awarenessLevel?.let { getIconBasedOnAwarenessLevel(it) }
+        ?: R.drawable.icon_awareness_default
+
+    CustomAlert(
+        title = surfArea.name,
+        message = alertMessage.toString(),
+        actionText = "OK",
+        warningIcon = icon,
+        data = null,
+        showAlert = remember { mutableStateOf(true) },
+        //actionWithValue = null,
+        action = null,
+    )
 }
 
 
@@ -435,8 +458,8 @@ fun DayPreviewCard(
                     text = day,
                     style = AppTypography.titleSmall,
                   modifier = Modifier
-                        .align(Alignment.CenterVertically)
-                        .padding(5.dp)
+                      .align(Alignment.CenterVertically)
+                      .padding(5.dp)
                 )
             }
 
