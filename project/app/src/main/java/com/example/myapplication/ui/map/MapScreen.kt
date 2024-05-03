@@ -279,13 +279,13 @@ fun SurfAreaCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp, vertical = 5.dp),
+                .padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 8.dp, bottom = 8.dp)
+                    .padding(top = 4.dp)
             ) {
                 Text(
                     text = surfArea.locationName,
@@ -295,9 +295,8 @@ fun SurfAreaCard(
                     modifier = Modifier
                         .align(Alignment.Center)
                 )
-                Button(
+                IconButton(
                     onClick = onCloseClick,
-                    colors = ButtonDefaults.buttonColors(Color.Transparent),
                     modifier = Modifier
                         .align(Alignment.TopEnd)
                 ) {
@@ -333,7 +332,7 @@ fun SurfAreaCard(
                 Text(
                     text = "${windSpeed.toInt()}(${windGust.toInt()})",
                     style = AppTypography.bodySmall,
-                    modifier = Modifier.padding(8.dp)
+                    modifier = Modifier.padding(horizontal=8.dp)
                 )
                 Icon(
                     imageVector = Icons.Outlined.Tsunami,
@@ -343,13 +342,13 @@ fun SurfAreaCard(
                 Text(
                     text = "$waveHeight",
                     style = AppTypography.bodySmall,
-                    modifier = Modifier.padding(8.dp)
+                    modifier = Modifier.padding(horizontal=8.dp)
                 )
                 Image(
                     painter = painterResource(id = resourceUtils.findWeatherSymbol(symbolCode)),
                     contentDescription = "wave icon",
                     modifier = Modifier
-                        .padding(8.dp)
+                        .padding(horizontal=8.dp)
                         .width(30.dp)
                         .height(30.dp)
 
@@ -357,7 +356,7 @@ fun SurfAreaCard(
                 Text(
                     text = "${airTemperature.toInt()} °C",
                     style = AppTypography.bodySmall,
-                    modifier = Modifier.padding(8.dp)
+                    modifier = Modifier.padding(horizontal=8.dp)
                 )
             }
 
@@ -367,7 +366,7 @@ fun SurfAreaCard(
                     contentDescription = "SurfArea Image",
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier
-                        .width(162.dp)
+                        .width(240.dp)
                         .height(100.dp)
                         .clip(RoundedCornerShape(8.dp))
 
@@ -377,7 +376,8 @@ fun SurfAreaCard(
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 //Navigerer til SurfAreaScreen
                 Button(
