@@ -63,13 +63,15 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.NavigationManager
 import com.example.myapplication.R
-import com.example.myapplication.model.metalerts.Features
+import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.metalerts.Properties
 import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.theme.AppTheme
+
 import com.example.myapplication.ui.theme.AppTypography
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -95,16 +97,7 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNaviga
             }
         },
         bottomBar = {
-            BottomBar(
-                onNavigateToMapScreen = {
-                    navController?.navigate("MapScreen")
-                    // Navigerer til MapScreen
-                },
-                onNavigateToSettingsScreen = {
-                    navController?.navigate("SettingsScreen")
-                    // Navigerer til SettingsScreen
-                }
-            )
+            BottomBar(navController = navController)
         }
     ) { innerPadding ->
         Column(
@@ -283,7 +276,7 @@ to receive accurate values in favorite surfareacards
 fun FavoritesList(
     favorites: List<SurfArea>,
     ofLfNow: Map<SurfArea, DataAtTime>,
-    alerts: Map<SurfArea, List<Features>>?,
+    alerts: Map<SurfArea, List<Alert>>?,
     homeScreenViewModel: HomeScreenViewModel,
     onNavigateToSurfAreaScreen: (String) -> Unit
 ) {
@@ -372,7 +365,7 @@ fun SurfAreaCard(
     windDir: Double,
     waveHeight: Double,
     waveDir: Double,
-    alerts: List<Features>?,
+    alerts: List<Alert>?,
     homeScreenViewModel: HomeScreenViewModel,
     showFavoriteButton: Boolean = true,
     onNavigateToSurfAreaScreen: (String) -> Unit
@@ -430,7 +423,7 @@ fun SurfAreaCard(
                 }
 
                 Row {
-                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 4.dp)) {
+                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 2.dp)) {
                         Image(
                             painter = painterResource(id = R.drawable.tsunami),
                             contentDescription = "wave icon",
@@ -441,12 +434,13 @@ fun SurfAreaCard(
 
                         )
                     }
+                    Spacer(modifier = Modifier.width(5.dp))
                     Text(
                         text = waveHeight.toString(),
                         style = AppTypography.bodySmall,
-
                         )
-                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 4.dp)) {
+                    Spacer(modifier = Modifier.width(5.dp))
+                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 0.dp)) {
                         Icon(
                             imageVector = Icons.Outlined.CallMade,
                             contentDescription = "arrow icon",
@@ -459,7 +453,7 @@ fun SurfAreaCard(
                 }
 
                 Row {
-                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 4.dp)) {
+                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 2.dp)) {
                         Image(
                             painter = painterResource(id = R.drawable.air),
                             contentDescription = "Air icon",
@@ -469,13 +463,14 @@ fun SurfAreaCard(
                                 .height(13.6348.dp)
                         )
                     }
+                    Spacer(modifier = Modifier.width(5.dp))
                     Text(
                        text = "${windSpeed.toInt()}${if (windGust > windSpeed) " (${windGust.toInt()})" else ""}",
                       style = AppTypography.bodySmall,
                         )
 
-
-                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 4.dp)) {
+                    Spacer(modifier = Modifier.width(5.dp))
+                    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 0.dp)) {
                         Icon(
                             imageVector = Icons.Outlined.CallMade,
                             contentDescription = "arrow icon",
@@ -552,7 +547,7 @@ private fun PreviewSurfAreaCard() {
             windDirection,
             waveHeight,
             waveDir,
-            listOf((Features(properties = Properties(description = "Det ræinar")))),
+            listOf((Alert(properties = Properties(description = "Det ræinar")))),
             viewModel,
             true
         ) {}
