@@ -23,12 +23,17 @@ import androidx.datastore.preferences.core.Preferences
 //import androidx.datastore.preferences.createDataStore
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.data.settings.SettingsSerializer
+
 import com.example.myapplication.data.smackLip.Repository
 import com.example.myapplication.data.smackLip.RepositoryImpl
+
+import com.example.myapplication.presentation.viewModelFactory
+
 import com.example.myapplication.ui.home.HomeScreen
 import com.example.myapplication.ui.home.HomeScreenViewModel
 import com.example.myapplication.ui.map.MapScreen
@@ -102,8 +107,12 @@ fun ShowSnackBar() {
 fun SmackLipNavigation(){
     val navController = rememberNavController()
     NavigationManager.navController = navController
-    val dsvm = DailySurfAreaScreenViewModel()
 
+    val dsvm = viewModel<DailySurfAreaScreenViewModel>(
+        factory = viewModelFactory {
+            DailySurfAreaScreenViewModel() // send med argument
+        }
+    )
 
     NavHost(
         navController = navController,
