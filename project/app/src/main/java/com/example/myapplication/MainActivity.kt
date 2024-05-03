@@ -1,7 +1,7 @@
 package com.example.myapplication
 
+//import androidx.datastore.preferences.createDataStore
 import DailySurfAreaScreen
-import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -17,15 +17,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.datastore.core.DataStore
-import androidx.datastore.dataStore
-import androidx.datastore.preferences.core.Preferences
-//import androidx.datastore.preferences.createDataStore
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.myapplication.data.settings.SettingsSerializer
 import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.home.HomeScreen
 import com.example.myapplication.ui.map.MapScreen
@@ -33,11 +28,13 @@ import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
 import com.example.myapplication.ui.surfarea.SurfAreaScreen
 import com.example.myapplication.ui.theme.AppTheme
 
-
+/*
 val Context.settingsStore: DataStore<Settings> by dataStore (
     fileName = "settings",
     serializer = SettingsSerializer()
 )
+
+ */
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
