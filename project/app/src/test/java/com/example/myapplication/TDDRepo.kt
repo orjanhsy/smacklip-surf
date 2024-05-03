@@ -38,6 +38,16 @@ class TDDRepo {
         val wavePeriod = 12.0
         val alerts: List<Alert> = emptyList()
     }
+    private object greatConditionsWithoutAlertOpositWind {
+        val location = SurfArea.HODDEVIK
+        val windSpeed = 2.0
+        val windGust = 3.0
+        val windDir = (location.optimalWindDir + 180) % 360
+        val waveHeight = 2.0
+        val waveDir = location.optimalWaveDir
+        val wavePeriod = 12.0
+        val alerts: List<Alert> = emptyList()
+    }
 
     private object decentConditionsHoddevik {
         val location = SurfArea.HODDEVIK
@@ -117,5 +127,18 @@ class TDDRepo {
             wavePeriod =  greatConditionsWithoutAlert.wavePeriod,
         )
         assert(status == ConditionStatus.GREAT) {"Status should be Utmerket but was $status"}
+    }
+    @Test
+    fun conditionsAreGreatWithOppositeWind() {
+        val status = SmackLipRepositoryImpl().getConditionStatus(
+            location = greatConditionsWithoutAlertOpositWind.location,
+            windSpeed = greatConditionsWithoutAlertOpositWind.windSpeed,
+            windGust = greatConditionsWithoutAlertOpositWind.windGust,
+            windDir = greatConditionsWithoutAlertOpositWind.windDir,
+            waveHeight = greatConditionsWithoutAlertOpositWind.waveHeight,
+            waveDir = greatConditionsWithoutAlertOpositWind.waveDir,
+            wavePeriod = greatConditionsWithoutAlertOpositWind.wavePeriod,
+        )
+        assert(status == ConditionStatus.GREAT) { "Status should be Utmerket but was $status" }
     }
 }
