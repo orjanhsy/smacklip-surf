@@ -1,7 +1,7 @@
 package com.example.myapplication
 
-//import androidx.datastore.preferences.createDataStore
 import DailySurfAreaScreen
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -17,17 +17,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.datastore.core.DataStore
+import androidx.datastore.dataStore
+import androidx.datastore.preferences.core.Preferences
+//import androidx.datastore.preferences.createDataStore
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.data.settings.SettingsSerializer
-import androidx.lifecycle.SavedStateHandle
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.home.HomeScreen
 import com.example.myapplication.ui.home.HomeScreenViewModel
 import com.example.myapplication.ui.map.MapScreen
@@ -39,9 +38,13 @@ import com.example.myapplication.ui.theme.AppTheme
 import kotlinx.coroutines.delay
 
 
+val Context.settingsStore: DataStore<Settings> by dataStore (
+    fileName = "settings",
+    serializer = SettingsSerializer()
+)
+
 //TODO: vm skal ikke være sånn! Må ha en viewmodel factory, men slashscreen må ha tilgang på en viewmodel
 val homeScreenViewModel = HomeScreenViewModel()
-
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,9 +55,6 @@ class MainActivity : ComponentActivity() {
             }
         }
         val connectivityObserver = NetworkConnectivityObserver(applicationContext)
-        val viewModelFactory = SettingsScreenViewModel.SettingsViewModelFactory(
-            (application as SmackLipApplication).container, SavedStateHandle()
-        )
         setContent {
             AppTheme {
                 val isConnected by connectivityObserver.observe().collectAsState(
@@ -66,11 +66,11 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     if (isConnected) {
-                        SmackLipNavigation(viewModelFactory)
+                        SmackLipNavigation()
                     }else{
                         ShowSnackBar()
                         if (isConnected) {
-                            SmackLipNavigation(viewModelFactory)
+                            SmackLipNavigation()
                         }
                     }
 
@@ -97,7 +97,7 @@ fun ShowSnackBar() {
 }
 
 @Composable
-fun SmackLipNavigation(viewModelFactory: SettingsScreenViewModel.SettingsViewModelFactory){
+fun SmackLipNavigation(){
     val navController = rememberNavController()
     NavigationManager.navController = navController
     val dsvm = DailySurfAreaScreenViewModel()
@@ -130,8 +130,7 @@ fun SmackLipNavigation(viewModelFactory: SettingsScreenViewModel.SettingsViewMod
             )
         }
         composable("SettingsScreen") {
-            SettingsScreen(navController = navController, viewModelFactory)
+            SettingsScreen(navController = navController)
         }
-
     }
 }
