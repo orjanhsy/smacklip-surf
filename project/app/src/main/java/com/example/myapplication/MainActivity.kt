@@ -27,6 +27,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.data.settings.SettingsSerializer
+import com.example.myapplication.data.smackLip.Repository
 import com.example.myapplication.ui.home.HomeScreen
 import com.example.myapplication.ui.home.HomeScreenViewModel
 import com.example.myapplication.ui.map.MapScreen
@@ -44,7 +45,7 @@ val Context.settingsStore: DataStore<Settings> by dataStore (
 )
 
 //TODO: vm skal ikke være sånn! Må ha en viewmodel factory, men slashscreen må ha tilgang på en viewmodel
-val homeScreenViewModel = HomeScreenViewModel()
+val homeScreenViewModel = HomeScreenViewModel(Repository())
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -29,8 +29,10 @@ data class HomeScreenUiState(
     val loading: Boolean = true
 )
 
-class HomeScreenViewModel() : ViewModel() {
-    private val repo = RepositoryImpl()
+class HomeScreenViewModel(
+    private val repo: Repository
+
+) : ViewModel() {
     private val _favoriteSurfAreas = MutableStateFlow<List<SurfArea>>(emptyList())
     val favoriteSurfAreas: StateFlow<List<SurfArea>> = _favoriteSurfAreas // TODO: asStateFlow()?
 
@@ -53,6 +55,12 @@ class HomeScreenViewModel() : ViewModel() {
         SharingStarted.WhileSubscribed(5_000),
         HomeScreenUiState()
     )
+
+    suspend fun updateOfLF() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.loadOFlF()
+        }
+    }
 
 
 
