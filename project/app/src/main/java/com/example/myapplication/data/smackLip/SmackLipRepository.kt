@@ -312,7 +312,7 @@ class SmackLipRepositoryImpl (
         return when {
             normalizedDiff <= Conditions.WIND_DIR_GREAT_DEVIATION.value -> 1.1
             normalizedDiff >= 180 - Conditions.WIND_DIR_GREAT_DEVIATION.value && normalizedDiff <= 180 + Conditions.WIND_DIR_GREAT_DEVIATION.value -> 1.2
-            else -> 1.5 // From the side, considerably worse
+            else -> 1.5
         }
     }
 
@@ -325,7 +325,7 @@ class SmackLipRepositoryImpl (
         waveHeight: Double,
         waveDir: Double,
     ): ConditionStatus {
-        // Check for scenarios that automatically lead to a POOR condition without further evaluation.
+
         if (wavePeriod == null || wavePeriod <= Conditions.WAVE_PERIOD_LOWER_BOUND.value || windSpeed >= Conditions.WIND_SPEED_UPPER_BOUND.value ||
             waveHeight <= Conditions.WAVE_HEIGHT_LOWER_BOUND.value || waveHeight >= Conditions.WAVE_HEIGHT_UPPER_BOUND.value
         ) {
