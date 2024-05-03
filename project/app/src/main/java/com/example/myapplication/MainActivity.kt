@@ -18,12 +18,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.home.HomeScreen
 import com.example.myapplication.ui.map.MapScreen
+import com.example.myapplication.ui.settings.SettingsScreen
+import com.example.myapplication.ui.settings.SettingsScreenViewModel
 import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
 import com.example.myapplication.ui.surfarea.SurfAreaScreen
 import com.example.myapplication.ui.theme.AppTheme
@@ -39,6 +42,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val connectivityObserver = NetworkConnectivityObserver(applicationContext)
+        val viewModelFactory = SettingsScreenViewModel.SettingsViewModelFactory(
+            (application as SmackLipApplication).container, SavedStateHandle()
+        )
         setContent {
             AppTheme {
                 val isConnected by connectivityObserver.observe().collectAsState(
@@ -50,11 +56,11 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     if (isConnected) {
-                        SmackLipNavigation()
+                        SmackLipNavigation(viewModelFactory)
                     }else{
                         ShowSnackBar()
                         if (isConnected) {
-                            SmackLipNavigation()
+                            SmackLipNavigation(viewModelFactory)
                         }
                     }
 
@@ -80,7 +86,7 @@ fun ShowSnackBar() {
 }
 
 @Composable
-fun SmackLipNavigation(){
+fun SmackLipNavigation(viewModelFactory: SettingsScreenViewModel.SettingsViewModelFactory){
     val navController = rememberNavController()
     NavigationManager.navController = navController
     val dsvm = DailySurfAreaScreenViewModel()
@@ -119,5 +125,9 @@ fun SmackLipNavigation(){
                 }
             )
         }
+        composable("SettingsScreen") {
+            SettingsScreen(viewModelFactory)
+        }
+
     }
 }

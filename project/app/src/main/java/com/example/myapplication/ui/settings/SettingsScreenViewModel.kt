@@ -109,23 +109,6 @@ class SettingsScreenViewModel(
             throw IllegalArgumentException("Unknown ViewModel Class")
         }
     }
-    /*
-    companion object{
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-
-            initializer {
-                (this[APPLICATION_KEY] as SmackLipApplication).container.run {
-                    SettingsScreenViewModel(
-                        savedStateHandle = SavedStateHandle,
-                        settingsRepository = SettingsRepository
-                    )
-                }
-            }
-        }
-    }
-
-     */
-
 }
 
 
