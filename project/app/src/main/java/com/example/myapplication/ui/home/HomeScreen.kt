@@ -115,9 +115,12 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNaviga
                         onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
                     )
                     Spacer(modifier = Modifier.height(14.dp))
-                    Column {
+                    Column (
+                        modifier = Modifier
+                            .padding(horizontal = 10.dp)
+                    ){
                         Text(
-                            text = "  Alle lokasjoner",
+                            text = "Alle lokasjoner",
                             style = AppTypography.bodySmall,
                             )
                     }
@@ -284,10 +287,10 @@ fun FavoritesList(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp)
+            .padding(horizontal = 10.dp)
     ) {
         Text(
-            text = "   Favoritter",
+            text = "Favoritter",
             style = AppTypography.bodySmall,
         )
     }
@@ -384,7 +387,7 @@ fun SurfAreaCard(
     Card(
         modifier = Modifier
             .wrapContentSize()
-            .padding(start = 8.dp, end = 10.dp, bottom = 10.dp)
+            .padding(start = 8.dp, top=2.dp, end = 10.dp, bottom = 10.dp)
             .clickable(
                 onClick = { onNavigateToSurfAreaScreen(surfArea.locationName) })
     ) {
