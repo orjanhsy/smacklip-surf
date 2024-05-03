@@ -36,7 +36,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -70,6 +69,7 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import androidx.compose.runtime.setValue
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -98,6 +98,7 @@ fun SurfAreaScreen(
     val navController = NavigationManager.navController
 
     var showAlert by remember { mutableStateOf(false) }
+    //var alertShowingNow by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -123,7 +124,9 @@ fun SurfAreaScreen(
                 },
                 actions = {
                     if (alerts.isNotEmpty()) {
-                        IconButton(onClick = { showAlert = true }) {
+                        IconButton(onClick = {
+                            showAlert = true
+                        }) {
                             Image(
                                 painter = painterResource(id = R.drawable.icon_awareness_yellow_outlined),
                                 contentDescription = "alert"
@@ -137,10 +140,6 @@ fun SurfAreaScreen(
             BottomBar(navController = navController)
         }
     ) { innerPadding ->
-        if (showAlert){
-            ShowAlert(alerts = alerts, surfArea = surfArea)
-            showAlert = false
-        }
         Box(modifier = Modifier.fillMaxSize()) {
             LazyColumn(
                 modifier = Modifier
@@ -240,7 +239,16 @@ fun SurfAreaScreen(
                 }
             }
             if (alerts.isNotEmpty()) {
-                ShowAlert(alerts, surfArea)
+                ShowAlert(alerts = alerts,
+                    surfArea = surfArea,
+                    action = {})
+            }
+
+            if (showAlert){ //knappen i topappbar synes kun når det er farevarsel, demred er alerts ikke tom
+                ShowAlert(alerts = alerts,
+                    surfArea = surfArea,
+                    action = {
+                        showAlert = false})
             }
             ProgressIndicator(isDisplayed = surfAreaScreenUiState.loading)
         }
@@ -248,7 +256,7 @@ fun SurfAreaScreen(
 }
 
 @Composable
-fun ShowAlert(alerts : List<Alert>, surfArea: SurfArea){
+fun ShowAlert(alerts : List<Alert>, surfArea: SurfArea, action : () -> Unit){
 
     val alert = alerts.first()
     val alertMessage = alert.properties?.description ?: "No description available"
@@ -264,7 +272,7 @@ fun ShowAlert(alerts : List<Alert>, surfArea: SurfArea){
         data = null,
         showAlert = remember { mutableStateOf(true) },
         //actionWithValue = null,
-        action = null,
+        action = action,
     )
 }
 
