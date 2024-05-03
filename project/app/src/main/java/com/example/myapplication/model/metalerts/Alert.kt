@@ -2,7 +2,7 @@ package com.example.myapplication.model.metalerts
 
 import com.google.gson.annotations.SerializedName
 
-data class Features (
+data class Alert (
 
     @SerializedName("geometry"   ) var geometry   : Geometry?   = Geometry(),
     @SerializedName("properties" ) var properties : Properties? = Properties(),

@@ -8,7 +8,7 @@ import kotlinx.coroutines.coroutineScope
 
 
 interface WaveForecastRepository {
-    suspend fun allRelevantWavePeriodsNext3DaysHardCoded(): AllWavePeriods
+    suspend fun allRelevantWavePeriodsNext3Days(): AllWavePeriods
     suspend fun wavePeriodsNext3DaysForArea(modelName: String, pointId: Int): List<Double?>
 
 }
@@ -34,13 +34,13 @@ class WaveForecastRepositoryImpl(
                 async { wavePeriods(modelName, pointId, time) }
             }
 
-            val newTps = tps.map { it.await() }
+            val newTps = tps.map { it.await() }.flatMap { listOf(it, it, it) }
             newTps
         }
     }
 
     // map[surfarea] -> List<Pair<Direction, period>>  .size=20
-    override suspend fun allRelevantWavePeriodsNext3DaysHardCoded(): AllWavePeriods {
+    override suspend fun allRelevantWavePeriodsNext3Days(): AllWavePeriods {
         return coroutineScope {
             val relevantForecasts: Map<SurfArea, Deferred<List<Double?>>> =
                 SurfArea.entries.associateWith {

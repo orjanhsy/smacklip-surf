@@ -3,7 +3,7 @@ package com.example.myapplication
 import com.example.myapplication.data.smackLip.SmackLipRepository
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
 import com.example.myapplication.model.conditions.ConditionStatus
-import com.example.myapplication.model.metalerts.Features
+import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.surfarea.SurfAreaScreenViewModel
 import org.junit.Test
@@ -25,7 +25,7 @@ class TDDRepo {
         val waveHeight = 2.0
         val waveDir = location.optimalWaveDir
         val wavePeriod = 10.0
-        val alerts: List<Features> = listOf(Features())
+        val alerts: List<Alert> = listOf(Alert())
     }
 
     private object greatConditionsWithoutAlert {
@@ -36,7 +36,7 @@ class TDDRepo {
         val waveHeight = 2.0
         val waveDir = location.optimalWaveDir
         val wavePeriod = 12.0
-        val alerts: List<Features> = emptyList()
+        val alerts: List<Alert> = emptyList()
     }
 
     private object decentConditionsHoddevik {
@@ -47,7 +47,7 @@ class TDDRepo {
         val waveHeight = 3.0
         val waveDir = location.optimalWaveDir - 25 % 360
         val wavePeriod = 9.0
-        val alerts: List<Features> = emptyList()
+        val alerts: List<Alert> = emptyList()
     }
     private object splitConditions {
         val location = SurfArea.HODDEVIK
@@ -57,7 +57,7 @@ class TDDRepo {
         val waveHeight = 2.0
         val waveDir = SurfArea.HODDEVIK.optimalWaveDir
         val wavePeriod = 10.6
-        val alerts: List<Features> = emptyList()
+        val alerts: List<Alert> = emptyList()
     }
 
 
@@ -72,7 +72,6 @@ class TDDRepo {
             waveHeight = greatConditionsWithAlert.waveHeight,
             waveDir = greatConditionsWithAlert.waveDir,
             wavePeriod = greatConditionsWithAlert.wavePeriod,
-            alerts = greatConditionsWithAlert.alerts,
         )
         assert(status == ConditionStatus.POOR) {"Status should be Dårlig but was $status"}
     }
@@ -87,7 +86,6 @@ class TDDRepo {
             waveHeight = decentConditionsHoddevik.waveHeight,
             waveDir = decentConditionsHoddevik.waveDir,
             wavePeriod = decentConditionsHoddevik.wavePeriod,
-            alerts = decentConditionsHoddevik.alerts,
         )
         assert(status == ConditionStatus.DECENT) {"Status should be Greit but was $status"}
     }
@@ -104,7 +102,6 @@ class TDDRepo {
             waveHeight = splitConditions.waveHeight,
             waveDir = splitConditions.waveDir,
             wavePeriod = splitConditions.wavePeriod,
-            alerts = splitConditions.alerts,
         )
         assert(status == ConditionStatus.POOR) { "Status should be Dårlig but was $status" }
     }
@@ -118,7 +115,6 @@ class TDDRepo {
             waveHeight = greatConditionsWithoutAlert.waveHeight,
             waveDir =  greatConditionsWithoutAlert.waveDir,
             wavePeriod =  greatConditionsWithoutAlert.wavePeriod,
-            alerts = greatConditionsWithoutAlert.alerts
         )
         assert(status == ConditionStatus.GREAT) {"Status should be Utmerket but was $status"}
     }

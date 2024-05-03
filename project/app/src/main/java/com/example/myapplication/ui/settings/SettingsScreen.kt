@@ -26,6 +26,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.NavigationManager
 import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.theme.AppTheme
@@ -34,7 +36,7 @@ import com.example.myapplication.ui.theme.AppTheme
 @OptIn(ExperimentalMaterial3Api::class)
 //@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun SettingsScreen(settingsScreenViewmodel: SettingsScreenViewModel = viewModel()) {
+fun SettingsScreen(navController: NavController, settingsScreenViewmodel: SettingsScreenViewModel = viewModel()) {
     val settingsUiState : SettingsUiState by settingsScreenViewmodel.settingsUiState.collectAsState()
     val navController = NavigationManager.navController
 
@@ -50,16 +52,7 @@ fun SettingsScreen(settingsScreenViewmodel: SettingsScreenViewModel = viewModel(
                 })
         },
         bottomBar = {
-            BottomBar(
-                onNavigateToHomeScreen = {
-                    navController?.navigate("HomeScreen")
-                    // Navigerer til HomeScreen
-                },
-                onNavigateToMapScreen = {
-                    navController?.navigate("MapScreen")
-                    // Navigerer til HomeScreen
-                }
-            )
+            BottomBar(navController = navController)
         }
     ) { innerPadding ->
         LazyColumn(
@@ -195,7 +188,7 @@ fun InfoCardSettings(){
 @Composable
 private fun PreviewSettingsScreen(){
     AppTheme {
-        SettingsScreen()
+        SettingsScreen(navController = rememberNavController())
     }
 }
 

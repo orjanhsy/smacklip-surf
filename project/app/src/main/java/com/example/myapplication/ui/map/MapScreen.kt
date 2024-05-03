@@ -89,7 +89,7 @@ import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 
 
 @Composable
-fun MapScreen( mapScreenViewModel : MapScreenViewModel = viewModel(), onNavigateToSurfAreaScreen: (String) -> Unit = {}) {
+fun MapScreen( mapScreenViewModel : MapScreenViewModel = viewModel(), onNavigateToSurfAreaScreen: (String) -> Unit) {
 
     val mapScreenUiState : MapScreenUiState by mapScreenViewModel.mapScreenUiState.collectAsState()
     val mapRepository : MapRepositoryImpl = MapRepositoryImpl() //bruker direkte maprepository fordi mapbox har sin egen viewmodel? -
@@ -101,12 +101,7 @@ fun MapScreen( mapScreenViewModel : MapScreenViewModel = viewModel(), onNavigate
 
     Scaffold(
         bottomBar = {
-            BottomBar(
-                onNavigateToHomeScreen = {
-                    navController?.navigate("HomeScreen")
-                    // Navigerer til HomeScreen
-                },
-            )
+            BottomBar(navController = navController)
         }
     ) { innerPadding ->
         Column(
@@ -543,7 +538,6 @@ fun SurfAreaPreview(){
 @Composable
 fun MapScreenPreview(){
     AppTheme {
-        MapScreen()
+        MapScreen(){}
     }
-
 }

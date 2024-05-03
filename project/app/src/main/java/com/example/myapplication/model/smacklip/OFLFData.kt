@@ -1,5 +1,7 @@
 package com.example.myapplication.model.smacklip
 import com.example.myapplication.model.surfareas.SurfArea
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class AllSurfAreasOFLF (
     val next7Days: Map<SurfArea, Forecast7DaysOFLF> = mapOf()
@@ -9,7 +11,7 @@ data class Forecast7DaysOFLF(
     val forecast: List<DayForecast> = listOf()
 )
 data class DayForecast (
-    val data: Map<List<Int>, DataAtTime> = mapOf()
+    val data: Map<LocalDateTime, DataAtTime> = mapOf()
 )
 
 
