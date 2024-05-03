@@ -46,7 +46,6 @@ import com.example.myapplication.ui.surfarea.HeaderCard
 import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.ui.theme.AppTypography
 import com.example.myapplication.utils.RecourseUtils
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
@@ -165,7 +164,7 @@ fun DailySurfAreaScreen(
                             val waveHeight = surfAreaDataForHour?.waveHeight ?: 0.0
                             val waveDir = surfAreaDataForHour?.waveDir ?: 0.0
                             val wavePeriod = try {
-                                dailySurfAreaScreenUiState.wavePeriods[hourIndex]
+                                dailySurfAreaScreenUiState.wavePeriods[hourIndex * daysFromToday]
                             } catch (e: IndexOutOfBoundsException) {
                                 Log.d(
                                     "DSAscreen",
@@ -174,7 +173,7 @@ fun DailySurfAreaScreen(
                                 0.0
                             }
                             val conditionStatus: ConditionStatus? = try {
-                                dailySurfAreaScreenUiState.conditionStatuses[0][time]
+                                dailySurfAreaScreenUiState.conditionStatuses[daysFromToday][times[time]]
                             } catch (e: IndexOutOfBoundsException) {
                                 null
                             }
