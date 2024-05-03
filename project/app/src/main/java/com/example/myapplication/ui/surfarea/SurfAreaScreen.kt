@@ -175,7 +175,7 @@ fun SurfAreaScreen(
 
                             items(surfAreaScreenUiState.forecastNext7Days.forecast.size) { dayIndex ->
                                 val date = today.plusDays(dayIndex.toLong())
-                                val formattedDate = formatter.format(date)
+                                var formattedDate = formatter.format(date)
 
                                 val conditionStatus: ConditionStatus = try {
                                     surfAreaScreenUiState.bestConditionStatuses[dayIndex]!!
@@ -188,6 +188,10 @@ fun SurfAreaScreen(
                                 } catch (e: NullPointerException) {
                                     Log.d("SAscreen", "ConditionStatus at day $dayIndex was null")
                                     ConditionStatus.BLANK
+                                }
+                                var today = "i dag"
+                                if(dayIndex == 0){
+                                    formattedDate = today
                                 }
                                 DayPreviewCard(
                                     surfArea,
@@ -205,8 +209,8 @@ fun SurfAreaScreen(
                             items(6) { dayIndex ->
                                 DayPreviewCard(
                                     surfArea,
-                                    "no data",
-                                    Pair("", ""),
+                                    "man",
+                                    Pair("0.2", "1.3"),
                                     ConditionStatus.BLANK,
                                     0,
                                     null
@@ -426,6 +430,7 @@ fun DayPreviewCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
+
                 Text(
                     text = day,
                     style = AppTypography.titleSmall,
@@ -458,13 +463,17 @@ fun DayPreviewCard(
 
                 }
             }
-            Text(
-                text = conditionStatus?.description ?: "",
-                fontSize = 10.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
 
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = conditionStatus?.description ?: "",
+                    style = AppTypography.titleSmall,
+                    textAlign = TextAlign.Center,
+                )
+            }
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -509,9 +518,17 @@ fun DayPreviewCard(
 @Composable
 private fun PreviewSurfAreaScreen() {
     AppTheme {
-        SurfAreaScreen("Solastranden")
-        //DayPreviewCard()
+        //SurfAreaScreen("Solastranden")
+        DayPreviewCard(
+            SurfArea.BRUSAND,
+            "man",
+            Pair("0.2", "1.3"),
+            ConditionStatus.GREAT,
+            0,
+            null
+        )
         //HeaderCard()
         //InfoCard()
     }
 }
+
