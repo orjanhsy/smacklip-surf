@@ -51,16 +51,15 @@ val Context.settingsStore: DataStore<Settings> by dataStore (
 )
 
 //TODO: vm skal ikke være sånn! Må ha en viewmodel factory, men slashscreen må ha tilgang på en viewmodel
-val homeScreenViewModel = HomeScreenViewModel(RepositoryImpl())
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        installSplashScreen().apply {
-            setKeepOnScreenCondition{
-                homeScreenViewModel.homeScreenUiState.value.loading
-            }
-        }
+//        installSplashScreen().apply {
+//            setKeepOnScreenCondition{
+//                homeScreenViewModel.homeScreenUiState.value.loading
+//            }
+//        }
         val connectivityObserver = NetworkConnectivityObserver(applicationContext)
         setContent {
             AppTheme {
