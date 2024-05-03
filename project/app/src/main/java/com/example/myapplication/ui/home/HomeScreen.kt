@@ -3,7 +3,6 @@ package com.example.myapplication.ui.home
 //import com.example.myapplication.ui.theme.MyApplicationTheme
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -53,12 +52,12 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -283,8 +282,9 @@ fun FavoritesList(
     onNavigateToSurfAreaScreen: (String) -> Unit
 ) {
     Column(
-        verticalArrangement = Arrangement.Bottom,
-        horizontalAlignment = Alignment.Start
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp)
     ) {
         Text(
             text = "   Favoritter",
@@ -343,21 +343,21 @@ fun EmptyFavoriteCard() {
         modifier =
         Modifier
             .wrapContentSize()
-            .padding(start = 12.dp, top = 10.dp, end = 8.dp, bottom = 8.dp)
-            //.border(width = 0.80835.dp, color = Color(0xFFBEC8CA), shape = RoundedCornerShape(size = 6.70023.dp ))
+            .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
             .size(width = 150.dp, height = 200.dp)
-            .background(color = Color(0xFFF5FAFB))
             .clip(RoundedCornerShape(10.dp))
 
     ) {
         Box(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .padding(14.dp),
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = "Trykk på stjernen for å legge til favoritt",
-                style = AppTypography.titleMedium,
+                style = AppTypography.bodySmall,
+                textAlign = TextAlign.Center,
                 )
         }
     }
