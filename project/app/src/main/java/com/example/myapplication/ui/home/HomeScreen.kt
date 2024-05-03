@@ -61,7 +61,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.myapplication.App
 import com.example.myapplication.NavigationManager
 import com.example.myapplication.R
 import com.example.myapplication.data.smackLip.RepositoryImpl
@@ -69,7 +68,6 @@ import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.metalerts.Properties
 import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
-import com.example.myapplication.presentation.viewModelFactory
 import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.ui.theme.AppTypography
@@ -77,10 +75,11 @@ import com.example.myapplication.ui.theme.AppTypography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(homeScreenViewModel : HomeScreenViewModel, onNavigateToSurfAreaScreen: (String) -> Unit = {}){
+fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNavigateToSurfAreaScreen: (String) -> Unit = {}){
     val homeScreenUiState: HomeScreenUiState by homeScreenViewModel.homeScreenUiState.collectAsState()
     val favoriteSurfAreas by homeScreenViewModel.favoriteSurfAreas.collectAsState()
     val isSearchActive = remember { mutableStateOf(false) }
+    val navController = NavigationManager.navController
 
     Scaffold(
         topBar = {
@@ -99,7 +98,7 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel, onNavigateToSurfAreaSc
             }
         },
         bottomBar = {
-            BottomBar(navController = App.appModule.navController)
+            BottomBar(navController = navController)
         }
     ) { innerPadding ->
         Column(
@@ -389,7 +388,7 @@ fun SurfAreaCard(
     Card(
         modifier = Modifier
             .wrapContentSize()
-            .padding(start = 8.dp, top = 2.dp, end = 10.dp, bottom = 10.dp)
+            .padding(start = 8.dp, top=2.dp, end = 10.dp, bottom = 10.dp)
             .clickable(
                 onClick = { onNavigateToSurfAreaScreen(surfArea.locationName) })
     ) {
@@ -571,12 +570,7 @@ private fun PreviewSurfAreaCard() {
 @Preview(showBackground = true)
 @Composable
 private fun PreviewHomeScreen() {
-    val hsvm = viewModel<HomeScreenViewModel>(
-        factory = viewModelFactory{
-            HomeScreenViewModel(App.appModule.stateFulRepo)
-        }
-    )
     AppTheme {
-        HomeScreen(hsvm){}
+        HomeScreen(){}
     }
 }
