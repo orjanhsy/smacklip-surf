@@ -31,15 +31,15 @@ data class HomeScreenUiState(
 class HomeScreenViewModel(
     private val container: AppContainer
 ) : ViewModel() {
-    //private val smackLipRepository = SmackLipRepositoryImpl()
     private val _homeScreenUiState = MutableStateFlow(HomeScreenUiState())
     private val _favoriteSurfAreas = MutableStateFlow<List<SurfArea>>(emptyList())
     val homeScreenUiState: StateFlow<HomeScreenUiState> = _homeScreenUiState.asStateFlow()
-    val favoriteSurfAreas: StateFlow<List<SurfArea>> = _favoriteSurfAreas // TODO: asStateFlow()?
+    val favoriteSurfAreas: StateFlow<List<SurfArea>> = _favoriteSurfAreas
     val settings: Flow<Settings> = container.settingsRepository.settingsFlow
 
 
     init {
+        loadFavoriteSurfAreas()
         updateOFLF()
         updateAlerts()
     }
@@ -105,13 +105,44 @@ class HomeScreenViewModel(
             R.drawable.icon_awareness_default
         }
     }
+    fun getSurfAreaByLocationName(locationName: String): SurfArea? {
+        return SurfArea.entries.firstOrNull{ it.locationName.equals(locationName, ignoreCase = true)}
+    }
+    fun loadFavoriteSurfAreas(){
+        viewModelScope.launch {
+            container.settingsRepository.settingsFlow.collect{
+                Log.d("LogFavorites", "loaded favorite surf areas: ${it.favoriteSurfAreaNamesList}")
+                val favoriteAreas = it.favoriteSurfAreaNamesList.mapNotNull { areaName ->
+                    //konverter locationname ti surfAreaObjekt
+                    val favSurfArea = getSurfAreaByLocationName(areaName)
+                    if (favSurfArea == null){
+                        Log.d("FavoriteList", "Failed to fetch saved Favorites $areaName")
+                    }
+                    favSurfArea
+                }
+                _favoriteSurfAreas.value= favoriteAreas
+            }
+        }
+    }
 
     fun updateFavorites(surfArea: SurfArea) {
-        if (_favoriteSurfAreas.value.contains(surfArea)) {
-            _favoriteSurfAreas.value -= surfArea
-
-        } else {
-            _favoriteSurfAreas.value += surfArea
+        viewModelScope.launch {
+            val currentFavorites = _favoriteSurfAreas.value
+            val isFavorite = currentFavorites.contains(surfArea)
+            val updatedFavorites: List<SurfArea> = if (isFavorite) {
+                container.settingsRepository.removeFavoriteSurfArea(surfArea.locationName)
+                currentFavorites - surfArea
+            } else{
+                try{
+                    container.settingsRepository.addFavoriteSurfArea(surfArea.locationName)
+                    Log.d("CorrectAddFavorites", "Passed add to favorites")
+                    currentFavorites + surfArea
+                } catch(e: IllegalArgumentException){
+                    Log.d("AddFavorites", "Failed to add to favorites")
+                    return@launch
+                }
+            }
+            _favoriteSurfAreas.value= updatedFavorites
         }
     }
 
@@ -122,6 +153,14 @@ class HomeScreenViewModel(
             R.drawable.empty_star_icon
         }
     }
+
+    fun clearAllFavorites(){
+        viewModelScope.launch {
+            container.settingsRepository.clearFavoriteSurfAreas()
+            _favoriteSurfAreas.value = emptyList()
+        }
+    }
+
     class HomeScreenViewModelFactory(
         private val appContainer: AppContainer
     ) : ViewModelProvider.Factory{
