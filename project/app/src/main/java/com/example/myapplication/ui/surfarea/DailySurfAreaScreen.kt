@@ -50,7 +50,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
-@SuppressLint("SuspiciousIndentation")
+@SuppressLint("SuspiciousIndentation", "DefaultLocale")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DailySurfAreaScreen(
@@ -111,6 +111,7 @@ fun DailySurfAreaScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 val currentHour = LocalTime.now().hour
+                val formattedCurrentHour = String.format("%02d", currentHour)
                 var headerIcon = "default_icon"
 
                 val surfAreaDataForDay: Map<LocalDateTime, DataAtTime> = try {
@@ -129,7 +130,7 @@ fun DailySurfAreaScreen(
                     // siden mappet ikke er sortert henter vi ut alle aktuelle tidspunketer og sorterer dem
                     for (time in times) {
                         val hour = time.hour
-                        if (hour == currentHour) {
+                        if (hour == formattedCurrentHour.toInt()) {
                             headerIcon = surfAreaDataForDay[time]!!.symbolCode
                             break
                         }
