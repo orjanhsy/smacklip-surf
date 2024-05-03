@@ -188,8 +188,7 @@ fun SearchBar(
                 activeChanged(true)
                 expanded = true
             },
-            placeholder = { Text(text="Søk etter surfeområde", style = AppTypography.titleMedium,
-            ) },
+            placeholder = { Text(text="Søk etter surfeområde", style = AppTypography.titleMedium,) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Rounded.Search,
