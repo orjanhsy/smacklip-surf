@@ -7,6 +7,7 @@ import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
 import com.example.myapplication.data.waveforecast.WaveForecastRepositoryImpl
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.home.HomeScreenViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import kotlin.system.measureTimeMillis
@@ -51,7 +52,9 @@ class StatefulRepoTests {
     // ViewModels
     @Test
     fun vmSate() = runBlocking{
-        val hsvm = HomeScreenViewModel(Repository())
+        val hsvm = HomeScreenViewModel(RepositoryImpl())
+        hsvm.updateOfLF()
+        print(hsvm.homeScreenUiState.value.ofLfNow)
     }
 
 }
