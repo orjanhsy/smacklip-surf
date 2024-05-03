@@ -136,8 +136,9 @@ fun DailySurfAreaScreen(
                         }
                     }
                 }
-                val time = try {times[0]}
-                catch (e: IndexOutOfBoundsException) {LocalDateTime.now()}
+                val time = try { times[0] }
+                catch (e: IndexOutOfBoundsException) { LocalDateTime.now() }
+
                 HeaderCard(surfArea = surfArea, icon = headerIcon, time)
                 LazyColumn(
                     modifier = Modifier
@@ -146,14 +147,16 @@ fun DailySurfAreaScreen(
 
                     // [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]
                     if (surfAreaDataForDay.isNotEmpty()) {
-                        items(times.size) { time ->
-                            val hourIndex = times[time].hour
+                        items(times.size) { index ->
+                            val time = times[index]
+                            val hourIndex = time.hour
                             Log.d("hourindex", "$hourIndex")
 
                             // TODO: ?
-                            val surfAreaDataForHour: DataAtTime? = surfAreaDataForDay[times[time]]
+                            val surfAreaDataForHour: DataAtTime? = surfAreaDataForDay[time]
+                            val formattedHour = String.format("%02d", hourIndex)
                             //henter objektet for timen som er en liste med Pair<List<Int>, Double>
-                            val timestamp = hourIndex
+                            val timestamp = formattedHour
                             val windSpeed = surfAreaDataForHour?.windSpeed ?: 0.0
                             val windGust = surfAreaDataForHour?.windGust ?: 0.0
                             val windDir = surfAreaDataForHour?.windDir ?: 0.0
@@ -171,13 +174,13 @@ fun DailySurfAreaScreen(
                                 0.0
                             }
                             val conditionStatus: ConditionStatus? = try {
-                                dailySurfAreaScreenUiState.conditionStatuses[0][times[time]]
+                                dailySurfAreaScreenUiState.conditionStatuses[0][time]
                             } catch (e: IndexOutOfBoundsException) {
                                 null
                             }
 
                             AllInfoCard(
-                                timestamp = timestamp.toString(),
+                                timestamp = formattedHour,
                                 surfArea = surfArea,
                                 waveHeight = waveHeight,
                                 windSpeed = windSpeed,
