@@ -5,6 +5,12 @@
       <entry key="MainActivity">
         <State />
       </entry>
+<<<<<<< HEAD
+=======
+      <entry key="PreviewSettingsScreen">
+        <State />
+      </entry>
+>>>>>>> fix/settingsviewmodel
     </value>
   </component>
 </project>
