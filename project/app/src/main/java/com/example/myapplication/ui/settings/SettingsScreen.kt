@@ -21,23 +21,28 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.NavigationManager
+import com.example.myapplication.SmackLipApplication
 import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.theme.AppTheme
 
 
 @OptIn(ExperimentalMaterial3Api::class)
-//@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun SettingsScreen(navController: NavController, settingsScreenViewmodel: SettingsScreenViewModel = viewModel()) {
-    val settingsUiState : SettingsUiState by settingsScreenViewmodel.settingsUiState.collectAsState()
+
+fun SettingsScreen(navController: NavController, settingsViewmodelFactory: SettingsScreenViewModel.SettingsViewModelFactory) {
+    val settingsScreenViewModel : SettingsScreenViewModel = viewModel(factory = settingsViewmodelFactory)
+    val settingsUiState by settingsScreenViewModel.settingsUiState.collectAsState()
     val navController = NavigationManager.navController
 
     Scaffold(
@@ -77,21 +82,23 @@ fun SettingsScreen(navController: NavController, settingsScreenViewmodel: Settin
                         DarkModeCard(
                             darkModeEnabled = currentState.settings.darkMode,
                             onDarkModeToggle = { enabled ->
-                                settingsScreenViewmodel.setDarkMode(enabled)
+                                settingsScreenViewModel.setDarkMode(enabled)
 
                             }
                         )
                     }
-                    item {
+                    /*item {
                         TestValueCard(
                             testValue = currentState.settings.test,
                             onTestValueChanged = { value ->
-                                settingsScreenViewmodel.setTest(value)
+                                settingsScreenViewModel.setTest(value)
 
                             }
 
                         )
                     }
+
+                     */
                     item {
                         InfoCardSettings()
                     }
@@ -103,6 +110,8 @@ fun SettingsScreen(navController: NavController, settingsScreenViewmodel: Settin
                         )
                     }
                 }
+
+                else -> {}
             }
         }
 
@@ -188,9 +197,18 @@ fun InfoCardSettings(){
 @Composable
 private fun PreviewSettingsScreen(){
     AppTheme {
-        SettingsScreen(navController = rememberNavController())
+        val context = LocalContext.current
+        val viewModelFactory = remember {
+            SettingsScreenViewModel.SettingsViewModelFactory(
+                (context.applicationContext as SmackLipApplication).container, SavedStateHandle()
+            )
+        }
+        SettingsScreen(navController = rememberNavController(), viewModelFactory)
+
     }
+
 }
+
 
 
 
