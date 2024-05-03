@@ -1,24 +1,34 @@
 package com.example.myapplication.ui.settings
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.myapplication.AppContainer
 import com.example.myapplication.Settings
-import com.example.myapplication.data.settings.SettingsRepositoryImpl
+import com.example.myapplication.data.settings.SettingsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+
+
+//val Context.settingsDataStore: DataStore<Settings> by preferencesDataStore()
 
 sealed class SettingsUiState{
     object Loading : SettingsUiState()
     data class Loaded(val settings: Settings): SettingsUiState()
     data class Error(val message: String): SettingsUiState()
 }
+
 class SettingsScreenViewModel(
-    private val settingsRepository: SettingsRepositoryImpl
+    private val savedStateHandle: SavedStateHandle,
+    private val settingsRepository: SettingsRepository
 ) : ViewModel() {
-    private val _settingsUiState: MutableStateFlow<SettingsUiState> = MutableStateFlow(SettingsUiState.Loading)
-    val settingsUiState: StateFlow<SettingsUiState> = _settingsUiState
+    private val _settingsUiState: MutableStateFlow<SettingsUiState> =
+        MutableStateFlow(SettingsUiState.Loading)
+    val settingsUiState: StateFlow<SettingsUiState> = _settingsUiState.asStateFlow()
     val settings: Flow<Settings> = settingsRepository.settingsFlow
     init {
         viewModelScope.launch {
@@ -27,6 +37,7 @@ class SettingsScreenViewModel(
             }
         }
     }
+
 
     /*
     //test med midlertidig datastore
@@ -86,5 +97,35 @@ class SettingsScreenViewModel(
         }
     }
 
+    class SettingsViewModelFactory(
+        private val appContainer: AppContainer,
+        private val savedStateHandle: SavedStateHandle
+    ) : ViewModelProvider.Factory{
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(SettingsScreenViewModel::class.java)){
+                @Suppress("UNCHECKED_CAST")
+                return SettingsScreenViewModel(savedStateHandle, appContainer.settingsRepository) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel Class")
+        }
+    }
+    /*
+    companion object{
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+
+            initializer {
+                (this[APPLICATION_KEY] as SmackLipApplication).container.run {
+                    SettingsScreenViewModel(
+                        savedStateHandle = SavedStateHandle,
+                        settingsRepository = SettingsRepository
+                    )
+                }
+            }
+        }
+    }
+
+     */
 
 }
+
+
