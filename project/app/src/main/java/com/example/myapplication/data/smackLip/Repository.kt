@@ -65,11 +65,13 @@ class RepositoryImpl(
     init {
         CoroutineScope(Dispatchers.IO).launch{
             loadOFlF()
+            loadAlerts()
         }
     }
 
 
     override fun updateAreaInFocus(surfArea: SurfArea) {
+        Log.d("REPO", "Updating areaInFOcus to $surfArea")
         _areaInFocus.update {
             surfArea
         }
@@ -79,6 +81,7 @@ class RepositoryImpl(
         Funksjonen henter all oflf data for hvert sted, som resulterer i en 9-dagers forecast (den tar med dager der windGust er 0.0  forelopig)
          */
     override suspend fun loadOFlF() {
+        Log.d("REPO", "Updating OFLF")
         withContext(Dispatchers.IO) {// burde context bli sendt ned fra vm?
             _ofLfNext7Days.update {
                 val all7DayForecasts: Map<SurfArea, Deferred<MutableList<DayForecast>>> = SurfArea.entries.associateWith { sa ->
@@ -170,12 +173,16 @@ class RepositoryImpl(
     }
 
     override suspend fun loadWavePeriods() {
+        Log.d("REPO", "Updating waveperiods")
+
         _wavePeriods.update {
             waveForecastRepository.allRelevantWavePeriodsNext3Days()
         }
     }
 
     override suspend fun loadAlerts() {
+        Log.d("REPO", "Updating Alerts")
+
         _alerts.update {
             metAlertsRepository.getAllRelevantAlerts()
         }
