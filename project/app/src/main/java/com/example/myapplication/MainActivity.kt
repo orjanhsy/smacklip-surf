@@ -114,7 +114,7 @@ fun ShowSnackBar() {
 }
 
 @Composable
-fun SmackLipNavigation(viewModelFactory: SettingsScreenViewModel.SettingsViewModelFactory){
+fun SmackLipNavigation(){
     val navController = rememberNavController()
     NavigationManager.navController = navController
 
