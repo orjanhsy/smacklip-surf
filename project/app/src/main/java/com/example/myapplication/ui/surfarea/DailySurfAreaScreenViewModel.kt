@@ -3,6 +3,8 @@ package com.example.myapplication.ui.surfarea
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myapplication.data.smackLip.Repository
+import com.example.myapplication.data.smackLip.RepositoryImpl
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
 import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.metalerts.Alert
@@ -10,8 +12,11 @@ import com.example.myapplication.model.smacklip.DayForecast
 import com.example.myapplication.model.surfareas.SurfArea
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -25,9 +30,25 @@ data class DailySurfAreaScreenUiState(
     val loading: Boolean = false
 )
 
-class DailySurfAreaScreenViewModel: ViewModel() {
-    private val _dailySurfAreaScreenUiState = MutableStateFlow(DailySurfAreaScreenUiState())
-    val dailySurfAreaScreenUiState: StateFlow<DailySurfAreaScreenUiState> = _dailySurfAreaScreenUiState.asStateFlow()
+class DailySurfAreaScreenViewModel(
+    val repo: Repository
+): ViewModel() {
+
+    val dailySurfAreaScreenUiState: StateFlow<DailySurfAreaScreenUiState> = combine(
+        repo.ofLfNext7Days,
+        repo.wavePeriods,
+        repo.areaInFocus,
+        repo.dayInFocus
+    ) { oflf, wavePeriods, sa, day ->
+        //TODO: !!
+        val newForecast7DaysOFLF: DayForecast = oflf.next7Days[sa]!!.forecast[day!!]
+
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5_000),
+        DailySurfAreaScreenUiState()
+    )
+
 
 //    fun updateStatusConditions(surfArea: SurfArea, forecast: List<DayForecast>) {
 //        viewModelScope.launch(Dispatchers.IO) {
