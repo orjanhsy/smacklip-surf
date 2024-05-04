@@ -68,26 +68,26 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import androidx.compose.runtime.setValue
+import com.example.myapplication.SmackLipApplication
+import com.example.myapplication.presentation.viewModelFactory
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SurfAreaScreen(
     surfAreaName: String,
-    surfAreaScreenViewModel: SurfAreaScreenViewModel = viewModel(),
+    surfAreaScreenViewModel: SurfAreaScreenViewModel,
 ) {
 
     val surfArea: SurfArea = SurfArea.entries.find {
         it.locationName == surfAreaName
     }!!
 
+    if (surfArea != SmackLipApplication.container.stateFulRepo.areaInFocus.collectAsState().value) {
+        surfAreaScreenViewModel.updateLocation(surfArea)
+    }
 
     val surfAreaScreenUiState: SurfAreaScreenUiState by surfAreaScreenViewModel.surfAreaScreenUiState.collectAsState()
-    //starter loadingscreen i VM her
-    surfAreaScreenViewModel.asyncNext7Days(surfArea)
-    surfAreaScreenViewModel.updateWavePeriods(surfArea)
-    surfAreaScreenViewModel.updateAlertsSurfArea(surfArea)
-    //avslutter loadingscreen i VM her
 
     val alerts = surfAreaScreenUiState.alertsSurfArea
 
@@ -185,27 +185,27 @@ fun SurfAreaScreen(
                     ) {
                         if (surfAreaScreenUiState.forecastNext7Days.forecast.isNotEmpty()) {
                             val today = LocalDate.now()
-                            surfAreaScreenViewModel.updateBestConditionStatuses( //loading screen vises
-                                surfArea,
-                                surfAreaScreenUiState.forecastNext7Days.forecast
-                            )
+//                            surfAreaScreenViewModel.updateBestConditionStatuses( //loading screen vises
+//                                surfArea,
+//                                surfAreaScreenUiState.forecastNext7Days.forecast
+//                            )
 
                             items(surfAreaScreenUiState.forecastNext7Days.forecast.size) { dayIndex ->
                                 val date = today.plusDays(dayIndex.toLong())
                                 val formattedDate = formatter.format(date)
 
-                                val conditionStatus: ConditionStatus = try {
-                                    surfAreaScreenUiState.bestConditionStatuses[dayIndex]!!
-                                } catch (e: IndexOutOfBoundsException) {
-                                    Log.d(
-                                        "SAscreen",
-                                        "ConditionStatus at day $dayIndex was out of bounds"
-                                    )
-                                    ConditionStatus.BLANK
-                                } catch (e: NullPointerException) {
-                                    Log.d("SAscreen", "ConditionStatus at day $dayIndex was null")
-                                    ConditionStatus.BLANK
-                                }
+//                                val conditionStatus: ConditionStatus = try {
+//                                    surfAreaScreenUiState.bestConditionStatuses[dayIndex]!!
+//                                } catch (e: IndexOutOfBoundsException) {
+//                                    Log.d(
+//                                        "SAscreen",
+//                                        "ConditionStatus at day $dayIndex was out of bounds"
+//                                    )
+//                                    ConditionStatus.BLANK
+//                                } catch (e: NullPointerException) {
+//                                    Log.d("SAscreen", "ConditionStatus at day $dayIndex was null")
+//                                    ConditionStatus.BLANK
+//                                }
                                 DayPreviewCard(
                                     surfArea,
                                     formattedDate,
@@ -213,7 +213,7 @@ fun SurfAreaScreen(
                                         surfAreaScreenUiState.minWaveHeights[dayIndex].toString(),
                                         surfAreaScreenUiState.maxWaveHeights[dayIndex].toString()
                                     ),
-                                    conditionStatus,
+                                    null,
                                     dayIndex,
                                     navController
                                 )
@@ -539,8 +539,13 @@ fun DayPreviewCard(
 @Preview(showBackground = true)
 @Composable
 private fun PreviewSurfAreaScreen() {
+    val savm = viewModel<SurfAreaScreenViewModel>(
+        factory = viewModelFactory {
+            SurfAreaScreenViewModel(SmackLipApplication.container.stateFulRepo)
+        }
+    )
     AppTheme {
-        SurfAreaScreen("Solastranden")
+        SurfAreaScreen("Solastranden", savm)
         //DayPreviewCard()
         //HeaderCard()
         //InfoCard()

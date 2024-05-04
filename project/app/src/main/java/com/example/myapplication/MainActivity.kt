@@ -42,6 +42,7 @@ import com.example.myapplication.ui.settings.SettingsScreen
 import com.example.myapplication.ui.settings.SettingsScreenViewModel
 import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
 import com.example.myapplication.ui.surfarea.SurfAreaScreen
+import com.example.myapplication.ui.surfarea.SurfAreaScreenViewModel
 import com.example.myapplication.ui.theme.AppTheme
 
 
@@ -108,13 +109,13 @@ fun SmackLipNavigation(){
     val navController = rememberNavController()
     NavigationManager.navController = navController
 
-    val dailyScreenVM = viewModel<DailySurfAreaScreenViewModel>(
+    val dsvm = viewModel<DailySurfAreaScreenViewModel>(
         factory = viewModelFactory {
             DailySurfAreaScreenViewModel() // send med argument
         }
     )
 
-    val homeScreenVM = viewModel<HomeScreenViewModel>(
+    val hsvm = viewModel<HomeScreenViewModel>(
         factory = viewModelFactory {
             HomeScreenViewModel(SmackLipApplication.container.stateFulRepo)
         }
@@ -125,6 +126,11 @@ fun SmackLipNavigation(){
             SettingsScreenViewModel(SmackLipApplication.container)
         }
     )
+    val savm = viewModel<SurfAreaScreenViewModel>(
+        factory = viewModelFactory {
+            SurfAreaScreenViewModel(SmackLipApplication.container.stateFulRepo)
+        }
+    )
 
     NavHost(
         navController = navController,
@@ -132,19 +138,19 @@ fun SmackLipNavigation(){
 
         ){
         composable("HomeScreen"){
-            HomeScreen(homeScreenVM){
+            HomeScreen(hsvm){
 
                 navController.navigate("SurfAreaScreen/$it")
             }
         }
         composable("SurfAreaScreen/{surfArea}") { backStackEntry ->
             val surfArea = backStackEntry.arguments?.getString("surfArea") ?: ""
-            SurfAreaScreen(surfAreaName = surfArea)
+            SurfAreaScreen(surfAreaName = surfArea, savm)
         }
         composable("DailySurfAreaScreen/{surfArea}/{dayIndex}") { backStackEntry ->
             val surfArea = backStackEntry.arguments?.getString("surfArea") ?: ""
             val dayIndex = backStackEntry.arguments?.getString("dayIndex")?.toInt() ?: 0 // TODO: Handle differently
-            DailySurfAreaScreen(surfAreaName = surfArea, daysFromToday = dayIndex, dailyScreenVM)
+            DailySurfAreaScreen(surfAreaName = surfArea, daysFromToday = dayIndex, dsvm)
 
         }
         composable("MapScreen"){
