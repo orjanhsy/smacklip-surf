@@ -1,5 +1,6 @@
 package com.example.myapplication.data.smackLip
 
+import android.util.Log
 import com.example.myapplication.data.locationForecast.LocationForecastRepository
 import com.example.myapplication.data.locationForecast.LocationForecastRepositoryImpl
 import com.example.myapplication.data.metalerts.MetAlertsRepository
@@ -17,12 +18,19 @@ import com.example.myapplication.model.smacklip.DayForecast
 import com.example.myapplication.model.smacklip.Forecast7DaysOFLF
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.waveforecast.AllWavePeriods
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.coroutines.CoroutineContext
 
 interface Repository {
     val ofLfNext7Days: StateFlow<AllSurfAreasOFLF>
@@ -51,79 +59,90 @@ class RepositoryImpl(
     override val wavePeriods: StateFlow<AllWavePeriods> = _wavePeriods.asStateFlow()
     override val alerts: StateFlow<Map<SurfArea, List<Alert>>> = _alerts.asStateFlow()
 
+    init {
+        CoroutineScope(Dispatchers.IO).launch{
+            loadOFlF()
+        }
+    }
 
     /*
     Funksjonen henter all oflf data for hvert sted, som resulterer i en 9-dagers forecast (den tar med dager der windGust er 0.0  forelopig)
      */
     override suspend fun loadOFlF() {
-        _ofLfNext7Days.update {
-            val all7DayForecasts = SurfArea.entries.associateWith {sa ->
-                val lf = getLFTimeSeries(sa)
-                val of = getOFTimeSeries(sa)
-
-                val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-
-                val allDayForecasts: MutableList<DayForecast> = mutableListOf()
-
-                for (day in lf.keys) {
-                    val dayForecasts: MutableMap<LocalDateTime, DataAtTime> = mutableMapOf()
-                    // TODO: !!
-                    val lfAtDay = lf[day]!!
-                    val ofAtDay = try {of[day]!!} catch(e: NullPointerException) {continue} // skips iteration if there is not data for both lf and of
-
-                    val allDataAtDay: MutableMap<LocalDateTime, MutableList<Any>> = mutableMapOf()
-                    val dayForecast: MutableMap<LocalDateTime, DataAtTime> = mutableMapOf()
-
-                    lfAtDay.map {
-                        val time = LocalDateTime.parse(it.first, dateFormatter)
-                        allDataAtDay[time] = mutableListOf()
-                        allDataAtDay[time]!!.add(it.second.instant.details.wind_speed)
-                        allDataAtDay[time]!!.add(it.second.instant.details.wind_speed_of_gust)
-                        allDataAtDay[time]!!.add(it.second.instant.details.wind_from_direction)
-                        allDataAtDay[time]!!.add(it.second.instant.details.air_temperature)
-                        val symbolCode = try {
-                            it.second.next_1_hours.summary.symbol_code
-                        } catch (e: NullPointerException) {
-                            // for days where there are no longer hourly forecasts
-                            it.second.next_6_hours.summary.symbol_code
-                        }
-                        allDataAtDay[time]!!.add(symbolCode)
-                    }
-
-                    ofAtDay.map {
-                        val time = LocalDateTime.parse(it.first, dateFormatter)
-                        try {
-                            allDataAtDay[time]!!.add(it.second.instant.details.sea_surface_wave_height)
-                            allDataAtDay[time]!!.add(it.second.instant.details.sea_water_to_direction)
-
-                            val dataAtTime = DataAtTime(
-                                windSpeed   = allDataAtDay[time]!![0] as Double,
-                                windGust    = allDataAtDay[time]!![1] as Double,
-                                windDir     = allDataAtDay[time]!![2] as Double,
-                                airTemp     = allDataAtDay[time]!![3] as Double,
-                                symbolCode  = allDataAtDay[time]!![4] as String,
-                                waveHeight  = allDataAtDay[time]!![5] as Double,
-                                waveDir     = allDataAtDay[time]!![6] as Double,
-                            )
-                            dayForecast.put(time, dataAtTime)
-                        } catch(_: NullPointerException) {
-//                            Log.d("REPO", "Omitting OFdata at $time as there was no LFdata")
-                        }
-                    }
-                    allDayForecasts.add(
-                        DayForecast(
-                            data = dayForecast
-                        )
-                    )
+        withContext(Dispatchers.IO) {
+            _ofLfNext7Days.update {
+                val all7DayForecasts: Map<SurfArea, Deferred<MutableList<DayForecast>>> = SurfArea.entries.associateWith { sa ->
+                    async { getOFLFForArea(sa) }
                 }
-                Forecast7DaysOFLF(allDayForecasts)
+                Log.d("REPO", "Loading oflf is complete")
+                AllSurfAreasOFLF(
+                    next7Days = all7DayForecasts.keys.associateWith {
+                        Forecast7DaysOFLF(all7DayForecasts[it]!!.await())
+                    }
+                )
+            }
+        }
+    }
 
+    private suspend fun getOFLFForArea(sa: SurfArea): MutableList<DayForecast> {
+        val lf = getLFTimeSeries(sa)
+        val of = getOFTimeSeries(sa)
+
+        val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+
+        val allDayForecasts: MutableList<DayForecast> = mutableListOf()
+
+        for (day in lf.keys) {
+            val dayForecasts: MutableMap<LocalDateTime, DataAtTime> = mutableMapOf()
+            // TODO: !!
+            val lfAtDay = lf[day]!!
+            val ofAtDay = try {of[day]!!} catch(e: NullPointerException) {continue} // skips iteration if there is not data for both lf and of
+
+            val allDataAtDay: MutableMap<LocalDateTime, MutableList<Any>> = mutableMapOf()
+            val dayForecast: MutableMap<LocalDateTime, DataAtTime> = mutableMapOf()
+
+            lfAtDay.map {
+                val time = LocalDateTime.parse(it.first, dateFormatter)
+                allDataAtDay[time] = mutableListOf()
+                allDataAtDay[time]!!.add(it.second.instant.details.wind_speed)
+                allDataAtDay[time]!!.add(it.second.instant.details.wind_speed_of_gust)
+                allDataAtDay[time]!!.add(it.second.instant.details.wind_from_direction)
+                allDataAtDay[time]!!.add(it.second.instant.details.air_temperature)
+                val symbolCode = try {
+                    it.second.next_1_hours.summary.symbol_code
+                } catch (e: NullPointerException) {
+                    // for days where there are no longer hourly forecasts
+                    it.second.next_6_hours.summary.symbol_code
+                }
+                allDataAtDay[time]!!.add(symbolCode)
             }
 
-            AllSurfAreasOFLF(
-                next7Days = all7DayForecasts
+            ofAtDay.map {
+                val time = LocalDateTime.parse(it.first, dateFormatter)
+                try {
+                    allDataAtDay[time]!!.add(it.second.instant.details.sea_surface_wave_height)
+                    allDataAtDay[time]!!.add(it.second.instant.details.sea_water_to_direction)
+
+                    val dataAtTime = DataAtTime(
+                        windSpeed   = allDataAtDay[time]!![0] as Double,
+                        windGust    = allDataAtDay[time]!![1] as Double,
+                        windDir     = allDataAtDay[time]!![2] as Double,
+                        airTemp     = allDataAtDay[time]!![3] as Double,
+                        symbolCode  = allDataAtDay[time]!![4] as String,
+                        waveHeight  = allDataAtDay[time]!![5] as Double,
+                        waveDir     = allDataAtDay[time]!![6] as Double,
+                    )
+                    dayForecast.put(time, dataAtTime)
+                } catch(_: NullPointerException) {
+                }
+            }
+            allDayForecasts.add(
+                DayForecast(
+                    data = dayForecast
+                )
             )
         }
+        return allDayForecasts
     }
 
     private suspend fun getOFTimeSeries(surfArea: SurfArea): Map<Int, List<Pair<String, DataOF>>> {

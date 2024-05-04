@@ -32,6 +32,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.NavigationManager
 import com.example.myapplication.SmackLipApplication
+import com.example.myapplication.presentation.viewModelFactory
 import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.theme.AppTheme
 
@@ -39,8 +40,7 @@ import com.example.myapplication.ui.theme.AppTheme
 @OptIn(ExperimentalMaterial3Api::class)
 //@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun SettingsScreen(navController: NavController, settingsViewmodelFactory: SettingsScreenViewModel.SettingsViewModelFactory) {
-    val settingsScreenViewModel : SettingsScreenViewModel = viewModel(factory = settingsViewmodelFactory)
+fun SettingsScreen(navController: NavController, settingsScreenViewModel: SettingsScreenViewModel) {
     val settingsUiState by settingsScreenViewModel.settingsUiState.collectAsState()
     //val navController = NavigationManager.navController
 
@@ -192,13 +192,12 @@ fun InfoCardSettings(){
 @Composable
 private fun PreviewSettingsScreen(){
     AppTheme {
-        val context = LocalContext.current
-        val viewModelFactory = remember {
-            SettingsScreenViewModel.SettingsViewModelFactory(
-                (context.applicationContext as SmackLipApplication).container)
-
-        }
-        SettingsScreen(navController = rememberNavController(), viewModelFactory)
+        val settingsVM = viewModel<SettingsScreenViewModel> (
+            factory = viewModelFactory {
+                SettingsScreenViewModel(SmackLipApplication.container)
+            }
+        )
+        SettingsScreen(navController = rememberNavController(), settingsVM)
     }
 }
 

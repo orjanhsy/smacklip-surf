@@ -56,7 +56,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -71,6 +70,7 @@ import com.example.myapplication.SmackLipApplication
 import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
+import com.example.myapplication.presentation.viewModelFactory
 import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.ui.theme.AppTypography
@@ -78,8 +78,9 @@ import com.example.myapplication.ui.theme.AppTypography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(homeScreenViewModelFactory: HomeScreenViewModel.HomeScreenViewModelFactory, onNavigateToSurfAreaScreen: (String) -> Unit = {}){
-    val homeScreenViewModel : HomeScreenViewModel = viewModel(factory = homeScreenViewModelFactory)
+
+fun HomeScreen(homeScreenViewModel : HomeScreenViewModel, onNavigateToSurfAreaScreen: (String) -> Unit = {}){
+
     val homeScreenUiState: HomeScreenUiState by homeScreenViewModel.homeScreenUiState.collectAsState()
     val favoriteSurfAreas by homeScreenViewModel.favoriteSurfAreas.collectAsState()
     val isSearchActive = remember { mutableStateOf(false) }
@@ -579,7 +580,7 @@ private fun PreviewSurfAreaCard() {
     val waveHeight = 5.0
     val waveDir =  184.3
 
-    val viewModel = HomeScreenViewModel()
+    val viewModel = HomeScreenViewModel(RepositoryImpl())
     AppTheme {
         SurfAreaCard(
             SurfArea.HODDEVIK,
@@ -600,14 +601,12 @@ private fun PreviewSurfAreaCard() {
 @Preview(showBackground = true)
 @Composable
 private fun PreviewHomeScreen() {
-    AppTheme {
-        val context = LocalContext.current
-        val viewModelFactory = remember {
-            HomeScreenViewModel.HomeScreenViewModelFactory(
-                (context.applicationContext as SmackLipApplication).container
-            )
+    val hsvm = viewModel<HomeScreenViewModel>(
+        factory = viewModelFactory {
+            HomeScreenViewModel(SmackLipApplication.container.stateFulRepo)
         }
-        HomeScreen(viewModelFactory)
-
+    )
+    AppTheme {
+        HomeScreen(hsvm){}
     }
 }
