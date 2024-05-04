@@ -58,7 +58,7 @@ class MainActivity : ComponentActivity() {
 //            }
 //        }
 
-        val viewModelFactory = SettingsScreenViewModel.SettingsViewModelFactory(appContainer)
+        val viewModelFactory = SettingsScreenViewModel.SettingsViewModelFactory(SmackLipApplication.container)
 
 
         val connectivityObserver = NetworkConnectivityObserver(applicationContext)

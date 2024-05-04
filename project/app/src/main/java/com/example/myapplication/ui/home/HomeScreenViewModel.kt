@@ -11,6 +11,7 @@ import com.example.myapplication.data.smackLip.RepositoryImpl
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
 
 import com.example.myapplication.Settings
+import com.example.myapplication.SmackLipApplication.Companion.container
 
 import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.smacklip.AllSurfAreasOFLF
