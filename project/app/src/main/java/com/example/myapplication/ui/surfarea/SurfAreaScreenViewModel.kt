@@ -10,6 +10,7 @@ import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.smacklip.DayForecast
 import com.example.myapplication.model.smacklip.Forecast7DaysOFLF
 import com.example.myapplication.model.surfareas.SurfArea
+import com.example.myapplication.model.waveforecast.AllWavePeriods
 import com.example.myapplication.ui.home.HomeScreenUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -35,7 +37,7 @@ data class SurfAreaScreenUiState(
 
 
 class SurfAreaScreenViewModel(
-    repo: Repository
+    private val repo: Repository
 ): ViewModel() {
 
 
@@ -46,9 +48,10 @@ class SurfAreaScreenViewModel(
         repo.areaInFocus
     ) { oflf, alerts, wavePeriods, sa ->
         // TODO: !!
-        val newOfLf = oflf.next7Days[sa]!!
-        val newAlerts = alerts[sa]!!
-        val newWavePeriods = wavePeriods.wavePeriods[sa]!!
+        val newOfLf         = try {oflf.next7Days[sa]!! } catch(e: NullPointerException) {Forecast7DaysOFLF()}
+        val newAlerts       = try {alerts[sa]!!} catch (e: NullPointerException) {listOf()}
+        val newWavePeriods  = try {wavePeriods.wavePeriods[sa]!!} catch(e: NullPointerException) {listOf()}
+
         val newMaxWaveHeights = newOfLf.forecast.map {
             it.data.values.maxOf {dataAtTime -> dataAtTime.waveHeight }
         }
@@ -68,6 +71,12 @@ class SurfAreaScreenViewModel(
         SharingStarted.WhileSubscribed(5_000),
         SurfAreaScreenUiState()
     )
+
+    fun updateLocation(surfArea: SurfArea) {
+        viewModelScope.launch(Dispatchers.IO){
+            repo.updateAreaInFocus(surfArea)
+        }
+    }
 
 
     // map<tidspunkt -> [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]>
