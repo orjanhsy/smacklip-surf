@@ -66,6 +66,7 @@ class RepositoryImpl(
         CoroutineScope(Dispatchers.IO).launch{
             loadOFlF()
             loadAlerts()
+            loadWavePeriods()
         }
     }
 
