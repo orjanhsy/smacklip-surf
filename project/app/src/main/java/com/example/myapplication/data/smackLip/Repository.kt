@@ -36,7 +36,9 @@ interface Repository {
     val ofLfNext7Days: StateFlow<AllSurfAreasOFLF>
     val wavePeriods: StateFlow<AllWavePeriods>
     val alerts: StateFlow<Map<SurfArea, List<Alert>>>
+    val areaInFocus: StateFlow<SurfArea?>
 
+    fun updateAreaInFocus(surfArea: SurfArea)
     suspend fun loadOFlF()
     suspend fun loadWavePeriods()
     suspend fun loadAlerts()
@@ -50,11 +52,12 @@ class RepositoryImpl(
 
 ): Repository {
 
-
+    private val _areaInFocus: MutableStateFlow<SurfArea?> = MutableStateFlow(null)
     private val _ofLfNext7Days: MutableStateFlow<AllSurfAreasOFLF> = MutableStateFlow(AllSurfAreasOFLF())
     private val _wavePeriods: MutableStateFlow<AllWavePeriods> = MutableStateFlow(AllWavePeriods())
     private val _alerts: MutableStateFlow<Map<SurfArea, List<Alert>>> = MutableStateFlow(mapOf())
 
+    override val areaInFocus: StateFlow<SurfArea?> = _areaInFocus.asStateFlow()
     override val ofLfNext7Days: StateFlow<AllSurfAreasOFLF> = _ofLfNext7Days.asStateFlow()
     override val wavePeriods: StateFlow<AllWavePeriods> = _wavePeriods.asStateFlow()
     override val alerts: StateFlow<Map<SurfArea, List<Alert>>> = _alerts.asStateFlow()
@@ -62,14 +65,25 @@ class RepositoryImpl(
     init {
         CoroutineScope(Dispatchers.IO).launch{
             loadOFlF()
+            loadAlerts()
+            loadWavePeriods()
+        }
+    }
+
+
+    override fun updateAreaInFocus(surfArea: SurfArea) {
+        Log.d("REPO", "Updating areaInFOcus to $surfArea")
+        _areaInFocus.update {
+            surfArea
         }
     }
 
     /*
-    Funksjonen henter all oflf data for hvert sted, som resulterer i en 9-dagers forecast (den tar med dager der windGust er 0.0  forelopig)
-     */
+        Funksjonen henter all oflf data for hvert sted, som resulterer i en 9-dagers forecast (den tar med dager der windGust er 0.0  forelopig)
+         */
     override suspend fun loadOFlF() {
-        withContext(Dispatchers.IO) {
+        Log.d("REPO", "Updating OFLF")
+        withContext(Dispatchers.IO) {// burde context bli sendt ned fra vm?
             _ofLfNext7Days.update {
                 val all7DayForecasts: Map<SurfArea, Deferred<MutableList<DayForecast>>> = SurfArea.entries.associateWith { sa ->
                     async { getOFLFForArea(sa) }
@@ -160,12 +174,16 @@ class RepositoryImpl(
     }
 
     override suspend fun loadWavePeriods() {
+        Log.d("REPO", "Updating waveperiods")
+
         _wavePeriods.update {
             waveForecastRepository.allRelevantWavePeriodsNext3Days()
         }
     }
 
     override suspend fun loadAlerts() {
+        Log.d("REPO", "Updating Alerts")
+
         _alerts.update {
             metAlertsRepository.getAllRelevantAlerts()
         }
