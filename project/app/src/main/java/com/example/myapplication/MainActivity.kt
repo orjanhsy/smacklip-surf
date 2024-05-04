@@ -126,7 +126,7 @@ fun SmackLipNavigation(viewModelFactory: SettingsScreenViewModel.SettingsViewMod
 
     val hsvm = viewModel<HomeScreenViewModel>(
         factory = viewModelFactory {
-            HomeScreenViewModel(App.appModule.stateFulRepo)
+            HomeScreenViewModel(SmackLipApplication.container.stateFulRepo)
         }
     )
 

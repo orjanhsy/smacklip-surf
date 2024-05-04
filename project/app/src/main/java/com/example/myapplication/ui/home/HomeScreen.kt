@@ -56,7 +56,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -65,10 +64,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.myapplication.App
 import com.example.myapplication.NavigationManager
 import com.example.myapplication.R
-import com.example.myapplication.data.smackLip.RepositoryImpl
 import com.example.myapplication.SmackLipApplication
 import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.smacklip.DataAtTime
@@ -606,7 +603,7 @@ private fun PreviewSurfAreaCard() {
 private fun PreviewHomeScreen() {
     val hsvm = viewModel<HomeScreenViewModel>(
         factory = viewModelFactory {
-            HomeScreenViewModel(App.appModule.stateFulRepo)
+            HomeScreenViewModel(SmackLipApplication.container.stateFulRepo)
         }
     )
     AppTheme {
