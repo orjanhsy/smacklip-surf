@@ -83,11 +83,11 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     if (isConnected) {
-                        SmackLipNavigation(viewModelFactory)
+                        SmackLipNavigation()
                     }else{
                         ShowSnackBar()
                         if (isConnected) {
-                            SmackLipNavigation(viewModelFactory)
+                            SmackLipNavigation()
                         }
                     }
                 }
