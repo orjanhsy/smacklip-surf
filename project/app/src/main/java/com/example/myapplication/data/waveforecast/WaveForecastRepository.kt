@@ -17,7 +17,7 @@ class WaveForecastRepositoryImpl(
     private val waveForecastDataSource: WaveForecastDataSource = WaveForecastDataSource()
 ): WaveForecastRepository {
 
-    private suspend fun wavePeriods(modelName: String, pointId: Int, time: String): Double? {
+    private suspend fun wavePeriod(modelName: String, pointId: Int, time: String): Double? {
         val forecast = waveForecastDataSource.fetchPointForecast(modelName, pointId, time)
         return forecast.tpLocal
     }
@@ -31,10 +31,10 @@ class WaveForecastRepositoryImpl(
 
         return coroutineScope {
             val tps: List<Deferred<Double?>> = availableForecastTimes.map { time ->
-                async { wavePeriods(modelName, pointId, time) }
+                async { wavePeriod(modelName, pointId, time) }
             }
 
-            val newTps = tps.map { it.await() }.flatMap { listOf(it, it, it) }
+            val newTps = tps.map { it.await() }.flatMap { listOf(it, it, it) } //konverter til size == 60 (time for time) istedenfor 20 (3-timers-intervaller)
             newTps
         }
     }

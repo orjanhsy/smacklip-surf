@@ -37,30 +37,36 @@ interface Repository {
     val wavePeriods: StateFlow<AllWavePeriods>
     val alerts: StateFlow<Map<SurfArea, List<Alert>>>
     val areaInFocus: StateFlow<SurfArea?>
+    val dayInFocus: StateFlow<Int?>
 
     fun updateAreaInFocus(surfArea: SurfArea)
+    fun updateDayInFocus(day: Int)
     suspend fun loadOFlF()
     suspend fun loadWavePeriods()
     suspend fun loadAlerts()
 }
 
 class RepositoryImpl(
-    val waveForecastRepository: WaveForecastRepository = WaveForecastRepositoryImpl(),
-    val oceanForecastRepository: OceanforecastRepository = OceanforecastRepositoryImpl(),
-    val locationForecastRepository: LocationForecastRepository = LocationForecastRepositoryImpl(),
-    val metAlertsRepository: MetAlertsRepository = MetAlertsRepositoryImpl()
+    private val waveForecastRepository: WaveForecastRepository = WaveForecastRepositoryImpl(),
+    private val oceanForecastRepository: OceanforecastRepository = OceanforecastRepositoryImpl(),
+    private val locationForecastRepository: LocationForecastRepository = LocationForecastRepositoryImpl(),
+    private val metAlertsRepository: MetAlertsRepository = MetAlertsRepositoryImpl()
 
 ): Repository {
 
-    private val _areaInFocus: MutableStateFlow<SurfArea?> = MutableStateFlow(null)
     private val _ofLfNext7Days: MutableStateFlow<AllSurfAreasOFLF> = MutableStateFlow(AllSurfAreasOFLF())
     private val _wavePeriods: MutableStateFlow<AllWavePeriods> = MutableStateFlow(AllWavePeriods())
     private val _alerts: MutableStateFlow<Map<SurfArea, List<Alert>>> = MutableStateFlow(mapOf())
+    private val _areaInFocus: MutableStateFlow<SurfArea?> = MutableStateFlow(null)
+    private val _dayInFocus: MutableStateFlow<Int?> = MutableStateFlow(null)
 
-    override val areaInFocus: StateFlow<SurfArea?> = _areaInFocus.asStateFlow()
+
     override val ofLfNext7Days: StateFlow<AllSurfAreasOFLF> = _ofLfNext7Days.asStateFlow()
     override val wavePeriods: StateFlow<AllWavePeriods> = _wavePeriods.asStateFlow()
     override val alerts: StateFlow<Map<SurfArea, List<Alert>>> = _alerts.asStateFlow()
+    override val areaInFocus: StateFlow<SurfArea?> = _areaInFocus.asStateFlow()
+    override val dayInFocus: StateFlow<Int?> = _dayInFocus.asStateFlow()
+
 
     init {
         CoroutineScope(Dispatchers.IO).launch{
@@ -72,15 +78,22 @@ class RepositoryImpl(
 
 
     override fun updateAreaInFocus(surfArea: SurfArea) {
-        Log.d("REPO", "Updating areaInFOcus to $surfArea")
+        Log.d("REPO", "Updating areaInFocus to $surfArea")
         _areaInFocus.update {
             surfArea
         }
     }
 
+    override fun updateDayInFocus(day: Int) {
+        Log.d("REPO", "Updating dayInFocus to $day")
+        _dayInFocus.update {
+            day
+        }
+    }
+
     /*
-        Funksjonen henter all oflf data for hvert sted, som resulterer i en 9-dagers forecast (den tar med dager der windGust er 0.0  forelopig)
-         */
+            Funksjonen henter all oflf data for hvert sted, som resulterer i en 9-dagers forecast (den tar med dager der windGust er 0.0  forelopig)
+             */
     override suspend fun loadOFlF() {
         Log.d("REPO", "Updating OFLF")
         withContext(Dispatchers.IO) {// burde context bli sendt ned fra vm?
