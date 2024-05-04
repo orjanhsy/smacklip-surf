@@ -52,13 +52,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        installSplashScreen().apply {
-//            setKeepOnScreenCondition{
-//                homeScreenViewModel.homeScreenUiState.value.loading
-//            }
-//        }
-
-        val viewModelFactory = SettingsScreenViewModel.SettingsViewModelFactory(SmackLipApplication.container)
+        installSplashScreen().apply {
+            setKeepOnScreenCondition{
+                SmackLipApplication.container.stateFulRepo.ofLfNext7Days.value.next7Days.isNotEmpty()
+            }
+        }
 
 
         val connectivityObserver = NetworkConnectivityObserver(applicationContext)
@@ -67,14 +65,6 @@ class MainActivity : ComponentActivity() {
                 val isConnected by connectivityObserver.observe().collectAsState(
                     initial = false
                 )
-                //foreløpig kommentert ut
-                /*
-                val viewModel = viewModel<SettingsScreenViewModel>(
-                    factory = viewModelFactory{
-                        SettingsScreenViewModel(SmackLipApplication.container.smackLipRepository)
-                    }
-                )
-                 */
 
 
                 // A surface container using the 'background' color from the theme

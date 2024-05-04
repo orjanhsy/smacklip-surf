@@ -55,7 +55,8 @@ class HomeScreenViewModel(
         val allRelevantAlerts: Map<SurfArea, List<Alert>> = alerts
         HomeScreenUiState(
             ofLfNow = oflfNow,
-            allRelevantAlerts = allRelevantAlerts
+            allRelevantAlerts = allRelevantAlerts,
+            loading = false
         )
 
     }.stateIn(
