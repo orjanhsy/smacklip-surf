@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -42,45 +43,55 @@ import com.example.myapplication.ui.settings.SettingsScreenViewModel
 import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
 import com.example.myapplication.ui.surfarea.SurfAreaScreen
 import com.example.myapplication.ui.theme.AppTheme
-import kotlinx.coroutines.delay
 
 
-val Context.settingsStore: DataStore<Settings> by dataStore (
-    fileName = "settings",
-    serializer = SettingsSerializer()
-)
 
 //TODO: vm skal ikke være sånn! Må ha en viewmodel factory, men slashscreen må ha tilgang på en viewmodel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
 //        installSplashScreen().apply {
 //            setKeepOnScreenCondition{
 //                homeScreenViewModel.homeScreenUiState.value.loading
 //            }
 //        }
+
+        val viewModelFactory = SettingsScreenViewModel.SettingsViewModelFactory(appContainer)
+
+
         val connectivityObserver = NetworkConnectivityObserver(applicationContext)
         setContent {
             AppTheme {
                 val isConnected by connectivityObserver.observe().collectAsState(
                     initial = false
                 )
+                //foreløpig kommentert ut
+                /*
+                val viewModel = viewModel<SettingsScreenViewModel>(
+                    factory = viewModelFactory{
+                        SettingsScreenViewModel(SmackLipApplication.container.smackLipRepository)
+                    }
+                )
+                 */
+
+
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     if (isConnected) {
-                        SmackLipNavigation()
+                        SmackLipNavigation(viewModelFactory)
                     }else{
                         ShowSnackBar()
                         if (isConnected) {
-                            SmackLipNavigation()
+                            SmackLipNavigation(viewModelFactory)
                         }
                     }
-
                 }
+
             }
         }
     }
@@ -103,7 +114,7 @@ fun ShowSnackBar() {
 }
 
 @Composable
-fun SmackLipNavigation(){
+fun SmackLipNavigation(viewModelFactory: SettingsScreenViewModel.SettingsViewModelFactory){
     val navController = rememberNavController()
     NavigationManager.navController = navController
 
@@ -112,6 +123,7 @@ fun SmackLipNavigation(){
             DailySurfAreaScreenViewModel() // send med argument
         }
     )
+
     val hsvm = viewModel<HomeScreenViewModel>(
         factory = viewModelFactory {
             HomeScreenViewModel(App.appModule.stateFulRepo)
@@ -125,6 +137,7 @@ fun SmackLipNavigation(){
         ){
         composable("HomeScreen"){
             HomeScreen(hsvm){
+
                 navController.navigate("SurfAreaScreen/$it")
             }
         }
@@ -147,7 +160,7 @@ fun SmackLipNavigation(){
             )
         }
         composable("SettingsScreen") {
-            SettingsScreen(navController = navController)
+            SettingsScreen(navController = navController, viewModelFactory)
         }
     }
 }
