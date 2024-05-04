@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 data class SurfAreaScreenUiState(
     val forecastNext7Days: Forecast7DaysOFLF = Forecast7DaysOFLF(),
     val alertsSurfArea: List<Alert> = emptyList(),
-    val wavePeriods: List<Double?> = emptyList(),
+    val wavePeriods: Map<Int, List<Double?>> = emptyMap(),
     val maxWaveHeights: List<Double> = emptyList(),
     val minWaveHeights: List<Double> = emptyList(),
     val bestConditionStatuses: Map<Int, ConditionStatus> = mutableMapOf(),
@@ -39,7 +39,7 @@ class SurfAreaScreenViewModel(
         // TODO: !!
         val newOfLf         = try {oflf.next7Days[sa]!! } catch(e: NullPointerException) {Forecast7DaysOFLF()}
         val newAlerts       = try {alerts[sa]!!} catch (e: NullPointerException) {listOf()}
-        val newWavePeriods  = try {wavePeriods.wavePeriods[sa]!!} catch(e: NullPointerException) {listOf()}
+        val newWavePeriods  = try {wavePeriods.wavePeriods[sa]!!} catch(e: NullPointerException) {mapOf()}
 
         val newMaxWaveHeights = newOfLf.forecast.map {
             it.data.values.maxOf {dataAtTime -> dataAtTime.waveHeight }

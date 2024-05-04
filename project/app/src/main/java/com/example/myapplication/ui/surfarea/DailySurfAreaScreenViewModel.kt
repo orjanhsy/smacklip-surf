@@ -26,7 +26,7 @@ data class DailySurfAreaScreenUiState(
     val wavePeriods: List<Double?> = emptyList(),
 
     val conditionStatuses: List<Map<LocalDateTime, ConditionStatus>> = emptyList(),
-    val forecast7Days: DayForecast = DayForecast(),
+    val dataAtDay: DayForecast = DayForecast(),
     val loading: Boolean = false
 )
 
@@ -41,14 +41,15 @@ class DailySurfAreaScreenViewModel(
         repo.dayInFocus
     ) { oflf, wavePeriods, sa, day ->
         //TODO: !!
-        val newForecast7DaysOFLF: DayForecast = try { oflf.next7Days[sa]!!.forecast[day!!] }
+        val today = LocalDateTime.now().dayOfMonth
+        val newDataAtDay: DayForecast = try { oflf.next7Days[sa]!!.forecast[day!! - today] }
         catch(e: NullPointerException) {DayForecast()}
 
         val newWavePeriods: List<Double?> = try { wavePeriods.wavePeriods[sa]!![day]!! }
-        catch(e: IndexOutOfBoundsException) {listOf()}
+        catch(e: NullPointerException) {listOf()}
 
         DailySurfAreaScreenUiState(
-            forecast7Days = newForecast7DaysOFLF,
+            dataAtDay = newDataAtDay,
             wavePeriods = newWavePeriods,
         )
 

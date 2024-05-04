@@ -31,7 +31,7 @@ class WaveForecastRepositoryImpl(
      */
     override suspend fun wavePeriodsNext3DaysForArea(modelName: String, pointId: Int): Map<Int, List<Double?>> {
         val availableForecastTimes = waveForecastDataSource.fetchAvaliableTimestamps().availableForecastTimes
-        val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+        val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX")
 
         return coroutineScope {
 
