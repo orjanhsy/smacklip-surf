@@ -3,40 +3,71 @@ package com.example.myapplication.ui.surfarea
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myapplication.data.smackLip.Repository
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
 import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.smacklip.DayForecast
 import com.example.myapplication.model.smacklip.Forecast7DaysOFLF
 import com.example.myapplication.model.surfareas.SurfArea
+import com.example.myapplication.ui.home.HomeScreenUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import kotlin.text.Typography.times
 
 data class SurfAreaScreenUiState(
-    val location: SurfArea? = null,
+    val forecastNext7Days: Forecast7DaysOFLF = Forecast7DaysOFLF(),
     val alertsSurfArea: List<Alert> = emptyList(),
     val wavePeriods: List<Double?> = emptyList(),
     val maxWaveHeights: List<Double> = emptyList(),
     val minWaveHeights: List<Double> = emptyList(),
     val bestConditionStatuses: Map<Int, ConditionStatus> = mutableMapOf(),
-
-    val forecastNext7Days: Forecast7DaysOFLF = Forecast7DaysOFLF(), //hører til den nye metoden med async
-    val loading: Boolean = false
-
 )
 
 
 
-class SurfAreaScreenViewModel: ViewModel() {
+class SurfAreaScreenViewModel(
+    repo: Repository
+): ViewModel() {
 
-    val surfAreaScreenUiState: StateFlow<SurfAreaScreenUiState> =
 
+    val surfAreaScreenUiState: StateFlow<SurfAreaScreenUiState> = combine(
+        repo.ofLfNext7Days,
+        repo.alerts,
+        repo.wavePeriods,
+        repo.areaInFocus
+    ) { oflf, alerts, wavePeriods, sa ->
+        // TODO: !!
+        val newOfLf = oflf.next7Days[sa]!!
+        val newAlerts = alerts[sa]!!
+        val newWavePeriods = wavePeriods.wavePeriods[sa]!!
+        val newMaxWaveHeights = newOfLf.forecast.map {
+            it.data.values.maxOf {dataAtTime -> dataAtTime.waveHeight }
+        }
+        val newMinWaveHeights = newOfLf.forecast.map {
+            it.data.values.minOf {dataAtTime -> dataAtTime.waveHeight }
+        }
+
+        SurfAreaScreenUiState(
+            forecastNext7Days = newOfLf,
+            alertsSurfArea = newAlerts,
+            wavePeriods = newWavePeriods,
+            maxWaveHeights = newMaxWaveHeights,
+            minWaveHeights = newMinWaveHeights,
+        )
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5_000),
+        SurfAreaScreenUiState()
+    )
 
 
     // map<tidspunkt -> [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]>
