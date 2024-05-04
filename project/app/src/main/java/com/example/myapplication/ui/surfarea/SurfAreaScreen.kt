@@ -83,6 +83,10 @@ fun SurfAreaScreen(
         it.locationName == surfAreaName
     }!!
 
+    if (surfArea != SmackLipApplication.container.stateFulRepo.areaInFocus.collectAsState().value) {
+        surfAreaScreenViewModel.updateLocation(surfArea)
+    }
+
     val surfAreaScreenUiState: SurfAreaScreenUiState by surfAreaScreenViewModel.surfAreaScreenUiState.collectAsState()
 
     val alerts = surfAreaScreenUiState.alertsSurfArea
