@@ -1,7 +1,6 @@
 package com.example.myapplication.ui.surfarea
 
 //import androidx.compose.material.icons.outlined.Tsunami
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -62,7 +61,6 @@ import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.ui.theme.AppTypography
 import com.example.myapplication.utils.RecourseUtils
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -184,7 +182,7 @@ fun SurfAreaScreen(
                         modifier = Modifier.padding(5.dp)
                     ) {
                         if (surfAreaScreenUiState.forecastNext7Days.forecast.isNotEmpty()) {
-                            val today = LocalDate.now()
+                            val today = LocalDateTime.now()
 //                            surfAreaScreenViewModel.updateBestConditionStatuses( //loading screen vises
 //                                surfArea,
 //                                surfAreaScreenUiState.forecastNext7Days.forecast
@@ -214,7 +212,7 @@ fun SurfAreaScreen(
                                         surfAreaScreenUiState.maxWaveHeights[dayIndex].toString()
                                     ),
                                     null,
-                                    dayIndex,
+                                    date.dayOfMonth,
                                     navController
                                 )
                             }
@@ -433,7 +431,7 @@ fun DayPreviewCard(
     day: String,
     waveHeightMinMax: Pair<String, String>,
     conditionStatus: ConditionStatus?,
-    dayIndex: Int,
+    dayOfMonth: Int,
     navController: NavController?
 ) {
     Card(
@@ -443,7 +441,7 @@ fun DayPreviewCard(
             .height(120.dp)
             .clickable(
                 onClick = {
-                    navController?.navigate("DailySurfAreaScreen/${surfArea.locationName}/$dayIndex")
+                    navController?.navigate("DailySurfAreaScreen/${surfArea.locationName}/$dayOfMonth")
                         ?: Unit
                 }
             )
