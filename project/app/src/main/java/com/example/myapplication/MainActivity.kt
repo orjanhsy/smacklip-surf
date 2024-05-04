@@ -29,7 +29,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.data.settings.SettingsSerializer
+
+import com.example.myapplication.data.smackLip.Repository
+import com.example.myapplication.data.smackLip.RepositoryImpl
+
 import com.example.myapplication.presentation.viewModelFactory
+
 import com.example.myapplication.ui.home.HomeScreen
 import com.example.myapplication.ui.home.HomeScreenViewModel
 import com.example.myapplication.ui.map.MapScreen
@@ -44,34 +49,22 @@ import com.example.myapplication.ui.theme.AppTheme
 //TODO: vm skal ikke være sånn! Må ha en viewmodel factory, men slashscreen må ha tilgang på en viewmodel
 
 class MainActivity : ComponentActivity() {
-    private lateinit var homeViewModelFactory: HomeScreenViewModel.HomeScreenViewModelFactory
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val appContainer =(application as SmackLipApplication).container
-        homeViewModelFactory = HomeScreenViewModel.HomeScreenViewModelFactory(appContainer)
-        val viewModelFactory = SettingsScreenViewModel.SettingsViewModelFactory(appContainer)
-
-        val homeScreenViewModel: HomeScreenViewModel by viewModels { homeViewModelFactory }
         installSplashScreen().apply {
             setKeepOnScreenCondition{
-                homeScreenViewModel.homeScreenUiState.value.loading
+                SmackLipApplication.container.stateFulRepo.ofLfNext7Days.value.next7Days.isEmpty()
             }
         }
+
+
         val connectivityObserver = NetworkConnectivityObserver(applicationContext)
         setContent {
             AppTheme {
                 val isConnected by connectivityObserver.observe().collectAsState(
                     initial = false
                 )
-                //foreløpig kommentert ut
-                /*
-                val viewModel = viewModel<SettingsScreenViewModel>(
-                    factory = viewModelFactory{
-                        SettingsScreenViewModel(SmackLipApplication.container.smackLipRepository)
-                    }
-                )
-                 */
 
 
                 // A surface container using the 'background' color from the theme
@@ -80,11 +73,11 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     if (isConnected) {
-                        SmackLipNavigation(viewModelFactory, homeViewModelFactory)
+                        SmackLipNavigation()
                     }else{
                         ShowSnackBar()
                         if (isConnected) {
-                            SmackLipNavigation(viewModelFactory, homeViewModelFactory)
+                            SmackLipNavigation()
                         }
                     }
                 }
@@ -111,12 +104,25 @@ fun ShowSnackBar() {
 }
 
 @Composable
-fun SmackLipNavigation(viewModelFactory: SettingsScreenViewModel.SettingsViewModelFactory, homeViewModelFactory: HomeScreenViewModel.HomeScreenViewModelFactory){
+fun SmackLipNavigation(){
     val navController = rememberNavController()
     NavigationManager.navController = navController
-    val dsvm = viewModel<DailySurfAreaScreenViewModel>(
+
+    val dailyScreenVM = viewModel<DailySurfAreaScreenViewModel>(
         factory = viewModelFactory {
             DailySurfAreaScreenViewModel() // send med argument
+        }
+    )
+
+    val homeScreenVM = viewModel<HomeScreenViewModel>(
+        factory = viewModelFactory {
+            HomeScreenViewModel(SmackLipApplication.container.stateFulRepo)
+        }
+    )
+
+    val settingsVm = viewModel<SettingsScreenViewModel>(
+        factory = viewModelFactory {
+            SettingsScreenViewModel(SmackLipApplication.container)
         }
     )
 
@@ -126,7 +132,8 @@ fun SmackLipNavigation(viewModelFactory: SettingsScreenViewModel.SettingsViewMod
 
         ){
         composable("HomeScreen"){
-            HomeScreen(homeViewModelFactory){
+            HomeScreen(homeScreenVM){
+
                 navController.navigate("SurfAreaScreen/$it")
             }
         }
@@ -137,7 +144,7 @@ fun SmackLipNavigation(viewModelFactory: SettingsScreenViewModel.SettingsViewMod
         composable("DailySurfAreaScreen/{surfArea}/{dayIndex}") { backStackEntry ->
             val surfArea = backStackEntry.arguments?.getString("surfArea") ?: ""
             val dayIndex = backStackEntry.arguments?.getString("dayIndex")?.toInt() ?: 0 // TODO: Handle differently
-            DailySurfAreaScreen(surfAreaName = surfArea, daysFromToday = dayIndex, dsvm)
+            DailySurfAreaScreen(surfAreaName = surfArea, daysFromToday = dayIndex, dailyScreenVM)
 
         }
         composable("MapScreen"){
@@ -149,7 +156,7 @@ fun SmackLipNavigation(viewModelFactory: SettingsScreenViewModel.SettingsViewMod
             )
         }
         composable("SettingsScreen") {
-            SettingsScreen(navController = navController, viewModelFactory)
+            SettingsScreen(navController = navController, settingsVm)
         }
     }
 }
