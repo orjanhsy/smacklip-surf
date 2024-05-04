@@ -1,29 +1,18 @@
 package com.example.myapplication.ui.surfarea
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.smackLip.Repository
-import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
 import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.metalerts.Alert
-import com.example.myapplication.model.smacklip.DayForecast
 import com.example.myapplication.model.smacklip.Forecast7DaysOFLF
 import com.example.myapplication.model.surfareas.SurfArea
-import com.example.myapplication.model.waveforecast.AllWavePeriods
-import com.example.myapplication.ui.home.HomeScreenUiState
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
-import kotlin.text.Typography.times
 
 data class SurfAreaScreenUiState(
     val forecastNext7Days: Forecast7DaysOFLF = Forecast7DaysOFLF(),
