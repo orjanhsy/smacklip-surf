@@ -454,11 +454,11 @@ fun DayPreviewCard(
                     null -> R.drawable.spm
                 }
                 //surfboard icon
-                Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 15.dp)) {
+                Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 10.dp, bottom = 5.dp)) {
                     Image(
                         painter = painterResource(id = surfBoard),
                         contentDescription = "Weather Icon",
-                        modifier = Modifier.size(20.dp),
+                        modifier = Modifier.size(30.dp),
                     )
 
                 }
@@ -471,6 +471,7 @@ fun DayPreviewCard(
                 Text(
                     text = conditionStatus?.description ?: "",
                     style = AppTypography.titleSmall,
+                    fontSize = 10.sp,
                     textAlign = TextAlign.Center,
                 )
             }
