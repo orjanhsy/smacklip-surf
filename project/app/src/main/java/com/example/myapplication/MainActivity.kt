@@ -118,15 +118,21 @@ fun SmackLipNavigation(viewModelFactory: SettingsScreenViewModel.SettingsViewMod
     val navController = rememberNavController()
     NavigationManager.navController = navController
 
-    val dsvm = viewModel<DailySurfAreaScreenViewModel>(
+    val dailyScreenVM = viewModel<DailySurfAreaScreenViewModel>(
         factory = viewModelFactory {
             DailySurfAreaScreenViewModel() // send med argument
         }
     )
 
-    val hsvm = viewModel<HomeScreenViewModel>(
+    val homeScreenVM = viewModel<HomeScreenViewModel>(
         factory = viewModelFactory {
             HomeScreenViewModel(SmackLipApplication.container.stateFulRepo)
+        }
+    )
+
+    val settingsVm = viewModel<SettingsScreenViewModel>(
+        factory = viewModelFactory {
+            SettingsScreenViewModel(SmackLipApplication.container)
         }
     )
 
@@ -136,7 +142,7 @@ fun SmackLipNavigation(viewModelFactory: SettingsScreenViewModel.SettingsViewMod
 
         ){
         composable("HomeScreen"){
-            HomeScreen(hsvm){
+            HomeScreen(homeScreenVM){
 
                 navController.navigate("SurfAreaScreen/$it")
             }
@@ -148,7 +154,7 @@ fun SmackLipNavigation(viewModelFactory: SettingsScreenViewModel.SettingsViewMod
         composable("DailySurfAreaScreen/{surfArea}/{dayIndex}") { backStackEntry ->
             val surfArea = backStackEntry.arguments?.getString("surfArea") ?: ""
             val dayIndex = backStackEntry.arguments?.getString("dayIndex")?.toInt() ?: 0 // TODO: Handle differently
-            DailySurfAreaScreen(surfAreaName = surfArea, daysFromToday = dayIndex, dsvm)
+            DailySurfAreaScreen(surfAreaName = surfArea, daysFromToday = dayIndex, dailyScreenVM)
 
         }
         composable("MapScreen"){
@@ -160,7 +166,7 @@ fun SmackLipNavigation(viewModelFactory: SettingsScreenViewModel.SettingsViewMod
             )
         }
         composable("SettingsScreen") {
-            SettingsScreen(navController = navController, viewModelFactory)
+            SettingsScreen(navController = navController, settingsVm)
         }
     }
 }
