@@ -2,17 +2,23 @@ package com.example.myapplication.ui.home
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.myapplication.AppContainer
 import com.example.myapplication.R
 import com.example.myapplication.data.smackLip.Repository
 import com.example.myapplication.data.smackLip.RepositoryImpl
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
+
+import com.example.myapplication.Settings
+
 import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.smacklip.AllSurfAreasOFLF
 import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.waveforecast.AllWavePeriods
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -35,6 +41,7 @@ class HomeScreenViewModel(
 ) : ViewModel() {
     private val _favoriteSurfAreas = MutableStateFlow<List<SurfArea>>(emptyList())
     val favoriteSurfAreas: StateFlow<List<SurfArea>> = _favoriteSurfAreas // TODO: asStateFlow()?
+    val settings: Flow<Settings> = container.settingsRepository.settingsFlow
 
 
     val homeScreenUiState: StateFlow<HomeScreenUiState> = combine(
@@ -82,13 +89,44 @@ class HomeScreenViewModel(
             R.drawable.icon_awareness_default
         }
     }
+    fun getSurfAreaByLocationName(locationName: String): SurfArea? {
+        return SurfArea.entries.firstOrNull{ it.locationName.equals(locationName, ignoreCase = true)}
+    }
+    fun loadFavoriteSurfAreas(){
+        viewModelScope.launch {
+            container.settingsRepository.settingsFlow.collect{
+                Log.d("LogFavorites", "loaded favorite surf areas: ${it.favoriteSurfAreaNamesList}")
+                val favoriteAreas = it.favoriteSurfAreaNamesList.mapNotNull { areaName ->
+                    //konverter locationname ti surfAreaObjekt
+                    val favSurfArea = getSurfAreaByLocationName(areaName)
+                    if (favSurfArea == null){
+                        Log.d("FavoriteList", "Failed to fetch saved Favorites $areaName")
+                    }
+                    favSurfArea
+                }
+                _favoriteSurfAreas.value= favoriteAreas
+            }
+        }
+    }
 
     fun updateFavorites(surfArea: SurfArea) {
-        if (_favoriteSurfAreas.value.contains(surfArea)) {
-            _favoriteSurfAreas.value -= surfArea
-
-        } else {
-            _favoriteSurfAreas.value += surfArea
+        viewModelScope.launch {
+            val currentFavorites = _favoriteSurfAreas.value
+            val isFavorite = currentFavorites.contains(surfArea)
+            val updatedFavorites: List<SurfArea> = if (isFavorite) {
+                container.settingsRepository.removeFavoriteSurfArea(surfArea.locationName)
+                currentFavorites - surfArea
+            } else{
+                try{
+                    container.settingsRepository.addFavoriteSurfArea(surfArea.locationName)
+                    Log.d("CorrectAddFavorites", "Passed add to favorites")
+                    currentFavorites + surfArea
+                } catch(e: IllegalArgumentException){
+                    Log.d("AddFavorites", "Failed to add to favorites")
+                    return@launch
+                }
+            }
+            _favoriteSurfAreas.value= updatedFavorites
         }
     }
 
@@ -100,4 +138,10 @@ class HomeScreenViewModel(
         }
     }
 
+    fun clearAllFavorites(){
+        viewModelScope.launch {
+            container.settingsRepository.clearFavoriteSurfAreas()
+            _favoriteSurfAreas.value = emptyList()
+        }
+    }
 }
