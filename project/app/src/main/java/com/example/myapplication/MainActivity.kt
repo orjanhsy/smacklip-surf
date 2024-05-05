@@ -136,7 +136,7 @@ fun SmackLipNavigation(viewModelFactory: SettingsScreenViewModel.SettingsViewMod
         composable("DailySurfAreaScreen/{surfArea}/{dayIndex}") { backStackEntry ->
             val surfArea = backStackEntry.arguments?.getString("surfArea") ?: ""
             val dayIndex = backStackEntry.arguments?.getString("dayIndex")?.toInt() ?: 0 // TODO: Handle differently
-            DailySurfAreaScreen(surfAreaName = surfArea, daysFromToday = dayIndex, dsvm)
+            DailySurfAreaScreen(surfAreaName = surfArea, daysFromToday = dayIndex, dsvm, navController = navController)
         }
         composable("MapScreen"){
             MapScreen(mapScreenViewModel = MapScreenViewModel(), navController = navController)
