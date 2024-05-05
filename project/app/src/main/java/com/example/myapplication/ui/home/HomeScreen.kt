@@ -37,6 +37,7 @@ import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -134,7 +135,7 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel, onNavigateToSurfAreaSc
                         homeScreenViewModel,
                         onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
                     )
-                    Spacer(modifier = Modifier.height(14.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
                     Column (
                         modifier = Modifier
                             .padding(horizontal = 10.dp)
@@ -147,9 +148,10 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel, onNavigateToSurfAreaSc
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(2),
                         modifier = Modifier
+                            .padding(horizontal = 6.dp)
                             .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(2.dp),
-                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
                     )
 
                         {
@@ -309,7 +311,7 @@ fun FavoritesList(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp),
+            .padding(horizontal = 6.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
@@ -340,11 +342,14 @@ fun FavoritesList(
         }
     }
     if (favorites.isNotEmpty()) {
-        LazyRow {
+        LazyRow (
+            modifier = Modifier
+                .padding(start = 2.dp)
+        ) {
             items(favorites) { surfArea ->
                 Card(
                     modifier = Modifier
-                        .padding(horizontal = 8.dp, vertical = 8.dp)
+                        .padding(horizontal = 4.dp, vertical = 2.dp)
                         .size(width = 150.0.dp, height = 200.00.dp)
                         .clip(RoundedCornerShape(10.dp))
                 ) {
@@ -433,10 +438,12 @@ fun SurfAreaCard(
     Card(
         modifier = Modifier
             .wrapContentSize()
-            .padding(start = 8.dp, top = 2.dp, end = 10.dp, bottom = 10.dp)
+            //.padding(start = 8.dp, top = 2.dp, end = 10.dp, bottom = 10.dp)
             .clickable(
-                onClick = { onNavigateToSurfAreaScreen(surfArea.locationName) })
-    ) {
+                onClick = { onNavigateToSurfAreaScreen(surfArea.locationName) }),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimary),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        ) {
 
         Box(
             modifier = Modifier
