@@ -29,6 +29,7 @@ import com.example.myapplication.presentation.viewModelFactory
 import com.example.myapplication.ui.home.HomeScreen
 import com.example.myapplication.ui.home.HomeScreenViewModel
 import com.example.myapplication.ui.map.MapScreen
+import com.example.myapplication.ui.map.MapScreenViewModel
 import com.example.myapplication.ui.settings.SettingsScreen
 import com.example.myapplication.ui.settings.SettingsScreenViewModel
 import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
@@ -122,6 +123,12 @@ fun SmackLipNavigation(){
         }
     )
 
+    val mapVm = viewModel<MapScreenViewModel>(
+        factory = viewModelFactory {
+            MapScreenViewModel(SmackLipApplication.container.stateFulRepo)
+        }
+    )
+
     //navigation
     NavHost(
         navController = navController,
@@ -149,7 +156,8 @@ fun SmackLipNavigation(){
                 onNavigateToSurfAreaScreen = {
                     navController.navigate("SurfAreaScreen/$it")
 
-                }
+                },
+                mapScreenViewModel = mapVm
             )
         }
         composable("SettingsScreen") {
