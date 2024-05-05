@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -37,10 +38,8 @@ class MapScreenViewModel(
     private val repo: Repository
 ) : ViewModel() {
 
-    val mapScreenUiState: StateFlow<MapScreenUiState> = combine(
-        repo.ofLfNext7Days,
-        repo.alerts
-    ) { oflf, alerts ->
+    val mapScreenUiState: StateFlow<MapScreenUiState> =
+        repo.ofLfNext7Days.map{ oflf->
         val oflfNow: Map<SurfArea, DataAtTime> = oflf.next7Days.entries.associate {
             it.key to it.value.forecast[0].data.entries.sortedBy {timeToData -> timeToData.key.hour }[0].value
         }
