@@ -1,5 +1,6 @@
 package com.example.myapplication.data.waveforecast
 
+import android.util.Log
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.waveforecast.AllWavePeriods
 import com.example.myapplication.model.waveforecast.PointForecast
@@ -35,9 +36,16 @@ class WaveForecastRepositoryImpl(
         val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX")
         val wavePeriods: Map<SurfArea, Map<Int, List<Double?>>> = SurfArea.entries.associateWith {sa ->
             pointForecasts.map {
-                val pointData = it.value.filter {point -> point.modelName == sa.modelName && point.idNumber == sa.pointId }[0]
-                val day = LocalDateTime.parse(pointData.forcastDateTime, dateFormatter).dayOfMonth
-                Pair(day, pointData.tpLocal)
+                try {
+                    val pointData =
+                        it.value.filter { point -> point.modelName == sa.modelName && point.idNumber == sa.pointId }[0]
+                    val day =
+                        LocalDateTime.parse(pointData.forcastDateTime, dateFormatter).dayOfMonth
+                    Pair(day, pointData.tpLocal)
+                } catch(e: Exception) {
+                    Log.d("WFREPO", "No data for $sa at time ${it.key}")
+                    Pair(10, 0.0)
+                }
             }.groupBy (
                 {it.first}, {it.second}
             )
