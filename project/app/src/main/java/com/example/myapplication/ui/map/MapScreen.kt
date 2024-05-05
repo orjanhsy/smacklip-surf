@@ -70,7 +70,6 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.myapplication.NavigationManager
 import com.example.myapplication.R
 import com.example.myapplication.data.map.MapRepositoryImpl
 import com.example.myapplication.model.surfareas.SurfArea
