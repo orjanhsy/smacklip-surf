@@ -3,7 +3,11 @@ option java_package = "com.example.myapplication";
 option java_multiple_files = true;
 
 message Settings {
-  double test = 1;
-  bool darkMode = 2;
-  repeated string favoriteSurfAreaNames = 3;
+  enum Theme{
+    UNDEFINED = 0;
+    DARK = 1;
+    LIGHT = 2;
+  }
+  Theme theme = 1;
+  repeated string favoriteSurfAreaNames = 2;
 }

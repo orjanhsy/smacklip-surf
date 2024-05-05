@@ -1,5 +1,7 @@
 package com.example.myapplication
 
+//import androidx.datastore.preferences.createDataStore
+
 import DailySurfAreaScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -16,16 +18,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-//import androidx.datastore.preferences.createDataStore
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-
 import com.example.myapplication.presentation.viewModelFactory
-
 import com.example.myapplication.ui.home.HomeScreen
 import com.example.myapplication.ui.home.HomeScreenViewModel
 import com.example.myapplication.ui.map.MapScreen
@@ -52,11 +51,18 @@ class MainActivity : ComponentActivity() {
 
         val connectivityObserver = NetworkConnectivityObserver(applicationContext)
         setContent {
-            AppTheme {
+
+            //foreløpig til jeg finner en bedre måte å få det over hele appen på
+            val settingsVm = viewModel<SettingsScreenViewModel>(
+                factory = viewModelFactory {
+                    SettingsScreenViewModel(SmackLipApplication.container)
+                }
+            )
+            val isDarkTheme by settingsVm.isDarkThemEnabled.collectAsState(initial = false)
+            AppTheme( darkTheme = isDarkTheme) {
                 val isConnected by connectivityObserver.observe().collectAsState(
                     initial = false
                 )
-
 
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -151,6 +157,7 @@ fun SmackLipNavigation() {
             MapScreen(mapScreenViewModel = mapVm, navController =  navController)
         }
         composable("SettingsScreen") {
+
             SettingsScreen(settingsVm, navController)
         }
     }
