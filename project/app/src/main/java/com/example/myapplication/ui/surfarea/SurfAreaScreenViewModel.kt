@@ -3,165 +3,143 @@ package com.example.myapplication.ui.surfarea
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myapplication.data.smackLip.Repository
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
 import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.smacklip.DayForecast
 import com.example.myapplication.model.smacklip.Forecast7DaysOFLF
 import com.example.myapplication.model.surfareas.SurfArea
+import com.example.myapplication.model.waveforecast.AllWavePeriods
+import com.example.myapplication.ui.home.HomeScreenUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import kotlin.text.Typography.times
 
 data class SurfAreaScreenUiState(
-    val location: SurfArea? = null,
+    val forecastNext7Days: Forecast7DaysOFLF = Forecast7DaysOFLF(),
     val alertsSurfArea: List<Alert> = emptyList(),
     val wavePeriods: List<Double?> = emptyList(),
     val maxWaveHeights: List<Double> = emptyList(),
     val minWaveHeights: List<Double> = emptyList(),
     val bestConditionStatuses: Map<Int, ConditionStatus> = mutableMapOf(),
-
-    val forecastNext7Days: Forecast7DaysOFLF = Forecast7DaysOFLF(), //hører til den nye metoden med async
-    val loading: Boolean = false
-
 )
 
 
 
-class SurfAreaScreenViewModel: ViewModel() {
-    private val smackLipRepository = SmackLipRepositoryImpl()
-    private val _surfAreaScreenUiState = MutableStateFlow(SurfAreaScreenUiState())
-    val surfAreaScreenUiState: StateFlow<SurfAreaScreenUiState> = _surfAreaScreenUiState.asStateFlow()
+class SurfAreaScreenViewModel(
+    private val repo: Repository
+): ViewModel() {
 
 
-    fun asyncNext7Days(surfArea: SurfArea){
-        viewModelScope.launch(Dispatchers.IO) {
-            _surfAreaScreenUiState.update {
-                if (it.forecastNext7Days.forecast.isNotEmpty()) {
-                    Log.d("SAVM", "quitting 'asyncNext7Days', data already loaded")
-                    return@launch
-                }
-                it.copy(loading = true)
-            }
-            val newNext7Days: Forecast7DaysOFLF = smackLipRepository.getSurfAreaOFLFNext7Days(surfArea)
-            val newMaxWaveHeights: List<Double> = newNext7Days.forecast.map{ dayData ->
-                dayData.data.maxBy {
-                    it.value.waveHeight
-                }.value.waveHeight
-            }
+    val surfAreaScreenUiState: StateFlow<SurfAreaScreenUiState> = combine(
+        repo.ofLfNext7Days,
+        repo.alerts,
+        repo.wavePeriods,
+        repo.areaInFocus
+    ) { oflf, alerts, wavePeriods, sa ->
+        // TODO: !!
+        val newOfLf         = try {oflf.next7Days[sa]!! } catch(e: NullPointerException) {Forecast7DaysOFLF()}
+        val newAlerts       = try {alerts[sa]!!} catch (e: NullPointerException) {listOf()}
+        val newWavePeriods  = try {wavePeriods.wavePeriods[sa]!!} catch(e: NullPointerException) {listOf()}
 
-            val newMinWaveHeights: List<Double> = newNext7Days.forecast.map{ dayData ->
-                dayData.data.minBy {
-                    it.value.waveHeight
-                }.value.waveHeight
-            }
-            _surfAreaScreenUiState.update {
-                it.copy (
-                    forecastNext7Days = newNext7Days,
-                    maxWaveHeights = newMaxWaveHeights,
-                    minWaveHeights = newMinWaveHeights
-                )
-            }
-            _surfAreaScreenUiState.update {
-                it.copy(loading = false)
-            }
+        val newMaxWaveHeights = newOfLf.forecast.map {
+            it.data.values.maxOf {dataAtTime -> dataAtTime.waveHeight }
         }
-    }
-
-    fun updateAlertsSurfArea(surfArea: SurfArea) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _surfAreaScreenUiState.update {
-                val newAlerts = if (surfArea != null) smackLipRepository.getRelevantAlertsFor(surfArea) else listOf()
-                it.copy(alertsSurfArea = newAlerts)
-            }
-
+        val newMinWaveHeights = newOfLf.forecast.map {
+            it.data.values.minOf {dataAtTime -> dataAtTime.waveHeight }
         }
-    }
 
+        SurfAreaScreenUiState(
+            forecastNext7Days = newOfLf,
+            alertsSurfArea = newAlerts,
+            wavePeriods = newWavePeriods,
+            maxWaveHeights = newMaxWaveHeights,
+            minWaveHeights = newMinWaveHeights,
+        )
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5_000),
+        SurfAreaScreenUiState()
+    )
 
-    // TODO: Get waveperiods from repo stateflow
-    fun updateWavePeriods(surfArea: SurfArea) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _surfAreaScreenUiState.update {state ->
-                if (state.wavePeriods.isNotEmpty()) {
-                    Log.e("SAVM", "Quitting update of wavePeriods, data already loaded")
-                    return@launch
-                }
-                val newWavePeriods = smackLipRepository.getWavePeriodsNext3DaysForArea(surfArea)
-                state.copy(
-                    wavePeriods = newWavePeriods
-                )
-            }
+    fun updateLocation(surfArea: SurfArea) {
+        viewModelScope.launch(Dispatchers.IO){
+            repo.updateAreaInFocus(surfArea)
         }
     }
 
 
     // map<tidspunkt -> [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]>
-    fun updateBestConditionStatuses(surfArea: SurfArea, forecast7Days: List<DayForecast>) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _surfAreaScreenUiState.update {
-                if (forecast7Days.isEmpty() || it.wavePeriods.isEmpty()) {
-                    Log.e("SAVM", "Attempted to update condition status on empty forecast7Days")
-                    return@launch
-                }
-                it.copy(loading = true) //starter loading screen
-            }
-            _surfAreaScreenUiState.update { state ->
-
-                val newBestConditionStatuses: MutableMap<Int, ConditionStatus> = mutableMapOf()
-
-                for (dayIndex in 0.. 2) {
-
-                    val dayForecast: DayForecast = forecast7Days[dayIndex]
-                    val times = dayForecast.data.keys.sortedWith (
-                        compareBy<LocalDateTime> { it.month }.thenBy { it.dayOfMonth }
-                    )
-                    var bestToday = ConditionStatus.BLANK
-
-                    for (time in times) {
-                        val wavePeriod = try {
-                            state.wavePeriods[(dayIndex + 1) * time.hour]
-                        } catch (e: IndexOutOfBoundsException) {
-                            Log.d("SAVM", "No status given as wavePeriods were out of bounds for ${(dayIndex + 1)}")
-                            null
-                        }
-                        val statusToday = smackLipRepository.getConditionStatus(
-                            location = surfArea,
-                            wavePeriod = wavePeriod,
-                            windSpeed  = dayForecast.data[time]!!.windSpeed,
-                            windGust   = dayForecast.data[time]!!.windGust,
-                            windDir    = dayForecast.data[time]!!.windDir,
-                            waveHeight = dayForecast.data[time]!!.waveHeight,
-                            waveDir    = dayForecast.data[time]!!.waveDir,
-                        )
-
-                        if (statusToday == ConditionStatus.GREAT) {
-                            bestToday = statusToday
-                            break
-                        } else if (bestToday == ConditionStatus.DECENT) {
-                            continue
-                        } else {
-                            bestToday = statusToday
-                        }
-                    }
-                    newBestConditionStatuses[dayIndex] = bestToday
-                }
-
-                Log.d("SAVM", "Updating status conditions with ${newBestConditionStatuses.values}")
-                state.copy(
-                    bestConditionStatuses =  newBestConditionStatuses
-                )
-            }
-            _surfAreaScreenUiState.update {
-                it.copy(loading = false) //avslutter visning av loading screen
-            }
-        }
-    }
+//    fun updateBestConditionStatuses(surfArea: SurfArea, forecast7Days: List<DayForecast>) {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            _surfAreaScreenUiState.update {
+//                if (forecast7Days.isEmpty() || it.wavePeriods.isEmpty()) {
+//                    Log.e("SAVM", "Attempted to update condition status on empty forecast7Days")
+//                    return@launch
+//                }
+//                it.copy(loading = true) //starter loading screen
+//            }
+//            _surfAreaScreenUiState.update { state ->
+//
+//                val newBestConditionStatuses: MutableMap<Int, ConditionStatus> = mutableMapOf()
+//
+//                for (dayIndex in 0.. 2) {
+//
+//                    val dayForecast: DayForecast = forecast7Days[dayIndex]
+//                    val times = dayForecast.data.keys.sortedWith (
+//                        compareBy<LocalDateTime> { it.month }.thenBy { it.dayOfMonth }
+//                    )
+//                    var bestToday = ConditionStatus.BLANK
+//
+//                    for (time in times) {
+//                        val wavePeriod = try {
+//                            state.wavePeriods[(dayIndex + 1) * time.hour]
+//                        } catch (e: IndexOutOfBoundsException) {
+//                            Log.d("SAVM", "No status given as wavePeriods were out of bounds for ${(dayIndex + 1)}")
+//                            null
+//                        }
+//                        val statusToday = smackLipRepository.getConditionStatus(
+//                            location = surfArea,
+//                            wavePeriod = wavePeriod,
+//                            windSpeed  = dayForecast.data[time]!!.windSpeed,
+//                            windGust   = dayForecast.data[time]!!.windGust,
+//                            windDir    = dayForecast.data[time]!!.windDir,
+//                            waveHeight = dayForecast.data[time]!!.waveHeight,
+//                            waveDir    = dayForecast.data[time]!!.waveDir,
+//                        )
+//
+//                        if (statusToday == ConditionStatus.GREAT) {
+//                            bestToday = statusToday
+//                            break
+//                        } else if (bestToday == ConditionStatus.DECENT) {
+//                            continue
+//                        } else {
+//                            bestToday = statusToday
+//                        }
+//                    }
+//                    newBestConditionStatuses[dayIndex] = bestToday
+//                }
+//
+//                Log.d("SAVM", "Updating status conditions with ${newBestConditionStatuses.values}")
+//                state.copy(
+//                    bestConditionStatuses =  newBestConditionStatuses
+//                )
+//            }
+//            _surfAreaScreenUiState.update {
+//                it.copy(loading = false) //avslutter visning av loading screen
+//            }
+//        }
+//    }
 }
 
 

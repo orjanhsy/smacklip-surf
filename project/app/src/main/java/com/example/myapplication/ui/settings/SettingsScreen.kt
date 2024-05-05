@@ -21,14 +21,18 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.NavigationManager
+import com.example.myapplication.SmackLipApplication
+import com.example.myapplication.presentation.viewModelFactory
 import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.theme.AppTheme
 
@@ -36,9 +40,9 @@ import com.example.myapplication.ui.theme.AppTheme
 @OptIn(ExperimentalMaterial3Api::class)
 //@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun SettingsScreen(navController: NavController, settingsScreenViewmodel: SettingsScreenViewModel = viewModel()) {
-    val settingsUiState : SettingsUiState by settingsScreenViewmodel.settingsUiState.collectAsState()
-    val navController = NavigationManager.navController
+fun SettingsScreen(navController: NavController, settingsScreenViewModel: SettingsScreenViewModel) {
+    val settingsUiState by settingsScreenViewModel.settingsUiState.collectAsState()
+    //val navController = NavigationManager.navController
 
     Scaffold(
         topBar = {
@@ -77,7 +81,7 @@ fun SettingsScreen(navController: NavController, settingsScreenViewmodel: Settin
                         DarkModeCard(
                             darkModeEnabled = currentState.settings.darkMode,
                             onDarkModeToggle = { enabled ->
-                                settingsScreenViewmodel.setDarkMode(enabled)
+                                settingsScreenViewModel.setDarkMode(enabled)
 
                             }
                         )
@@ -86,7 +90,7 @@ fun SettingsScreen(navController: NavController, settingsScreenViewmodel: Settin
                         TestValueCard(
                             testValue = currentState.settings.test,
                             onTestValueChanged = { value ->
-                                settingsScreenViewmodel.setTest(value)
+                                settingsScreenViewModel.setTest(value)
 
                             }
 
@@ -188,7 +192,12 @@ fun InfoCardSettings(){
 @Composable
 private fun PreviewSettingsScreen(){
     AppTheme {
-        SettingsScreen(navController = rememberNavController())
+        val settingsVM = viewModel<SettingsScreenViewModel> (
+            factory = viewModelFactory {
+                SettingsScreenViewModel(SmackLipApplication.container)
+            }
+        )
+        SettingsScreen(navController = rememberNavController(), settingsVM)
     }
 }
 

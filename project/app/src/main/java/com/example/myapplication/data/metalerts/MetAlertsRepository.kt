@@ -15,6 +15,8 @@ interface MetAlertsRepository{
     suspend fun getAllRelevantAlerts(): Map<SurfArea, List<Alert>>
 
 }
+
+const val ALERT_RADIUS = 50.0 // 10 == 1 mil, 20 er sikkert nice men 50 er nice for testing
 class MetAlertsRepositoryImpl (
 
     private val metAlertsDataSource : MetAlertsDataSource = MetAlertsDataSource()
@@ -54,7 +56,7 @@ class MetAlertsRepositoryImpl (
                     i.forEach { j ->
                         val lon = j[0] as Double
                         val lat = j[1] as Double
-                        if (distanceTo(lat, lon, surfArea) < 10.0) { // henter alle varsel innenfor en mil
+                        if (distanceTo(lat, lon, surfArea) < ALERT_RADIUS) { // henter alle varsel innenfor en mil
                             feature.let { relevantAlerts.add(it) }
                         }
                     }
@@ -66,7 +68,7 @@ class MetAlertsRepositoryImpl (
                             val coords = k as List<*>
                             val lon = coords[0] as Double
                             val lat = coords[1] as Double
-                            if (distanceTo(lat, lon, surfArea) < 10.0) { // henter alle varsel innenfor en mil
+                            if (distanceTo(lat, lon, surfArea) < ALERT_RADIUS) { // henter alle varsel innenfor en mil
                                 feature.let { relevantAlerts.add(it) }
                             }
                         }
