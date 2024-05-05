@@ -51,7 +51,7 @@ private val lightScheme = lightColorScheme(
 
 private val darkScheme = darkColorScheme(
     primary = primaryDark,
-    onPrimary = onPrimaryDark,
+    onPrimary = surfaceVariantDark,
     primaryContainer = primaryContainerDark,
     onPrimaryContainer = onPrimaryContainerDark,
     secondary = secondaryDark,
@@ -66,7 +66,7 @@ private val darkScheme = darkColorScheme(
     onError = onErrorDark,
     errorContainer = errorContainerDark,
     onErrorContainer = onErrorContainerDark,
-    background = inversePrimaryDark,
+    background = backgroundDark,
     onBackground = onBackgroundDark,
     surface = surfaceDark,
     onSurface = onSurfaceDark,
@@ -77,8 +77,7 @@ private val darkScheme = darkColorScheme(
     scrim = scrimDark,
     inverseSurface = inverseSurfaceDark,
     inverseOnSurface = inverseOnSurfaceDark,
-    inversePrimary = inversePrimaryDark,
-
+    inversePrimary = backgroundDark,
 )
 
 
