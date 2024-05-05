@@ -50,7 +50,6 @@ import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.ui.theme.AppTypography
 import com.example.myapplication.utils.RecourseUtils
 import java.time.LocalDateTime
-import java.time.LocalTime
 
 @SuppressLint("SuspiciousIndentation", "DefaultLocale")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -122,9 +121,12 @@ fun DailySurfAreaScreen(
                 }
 
 
-                val times = surfAreaDataForDay.keys.sortedWith(
+                var times = surfAreaDataForDay.keys.sortedWith(
                     compareBy<LocalDateTime> { it.month }.thenBy { it.dayOfMonth }
                 )
+                if (times.any{it.dayOfMonth == currentTime.dayOfMonth}) {
+                    times = times.filter { it.hour >= currentHour }
+                }
 
                 if (surfAreaDataForDay.isNotEmpty()) {
                     // siden mappet ikke er sortert henter vi ut alle aktuelle tidspunketer og sorterer dem
@@ -150,58 +152,60 @@ fun DailySurfAreaScreen(
                         items(times.size) { index ->
                             val time = times[index]
                             val hour = time.hour
-                            if (time.dayOfMonth == currentTime.dayOfMonth && time.hour < currentTime.hour) { // håndterer forecasts 2 timer før "nå"
-                                AllInfoCard(surfArea = surfArea)
-                            } else {
-                                val formattedHour = String.format("%02d", hour)
+                            val formattedHour = String.format("%02d", hour)
 
-                                // TODO: ?
-                                val surfAreaDataForHour: DataAtTime? = surfAreaDataForDay[time]
-                                //henter objektet for timen som er en liste med Pair<List<Int>, Double>
+                            // TODO: ?
+                            val surfAreaDataForHour: DataAtTime? = surfAreaDataForDay[time]
+                            //henter objektet for timen som er en liste med Pair<List<Int>, Double>
 
-                                val windSpeed = surfAreaDataForHour?.windSpeed ?: 0.0
-                                val windGust = surfAreaDataForHour?.windGust ?: 0.0
-                                val windDir = surfAreaDataForHour?.windDir ?: 0.0
-                                val temp = surfAreaDataForHour?.airTemp ?: 0.0
-                                val icon = surfAreaDataForHour?.symbolCode ?: 0.0
-                                val waveHeight = surfAreaDataForHour?.waveHeight ?: 0.0
-                                val waveDir = surfAreaDataForHour?.waveDir ?: 0.0
+                            val windSpeed = surfAreaDataForHour?.windSpeed ?: 0.0
+                            val windGust = surfAreaDataForHour?.windGust ?: 0.0
+                            val windDir = surfAreaDataForHour?.windDir ?: 0.0
+                            val temp = surfAreaDataForHour?.airTemp ?: 0.0
+                            val icon = surfAreaDataForHour?.symbolCode ?: 0.0
+                            val waveHeight = surfAreaDataForHour?.waveHeight ?: 0.0
+                            val waveDir = surfAreaDataForHour?.waveDir ?: 0.0
 
-                                val wavePeriod = try {
-                                    val currentWaveIndex =  if (hour < 23){
-                                        times.indexOf(times.find { it.hour in hour .. hour+2})
-                                    } else {
-                                        times.indexOf(times.find { it.hour in listOf(hour, hour + 1 % 24, hour + 2 % 24)})
-                                    }
-                                    dailySurfAreaScreenUiState.wavePeriods[currentWaveIndex]
-                                } catch (e: IndexOutOfBoundsException) {
-                                    Log.d(
-                                        "DSAscreen",
-                                        "Waveperiods ${hour} out of bounds for waveperiods of size ${dailySurfAreaScreenUiState.wavePeriods.size}"
-                                    )
-                                    0.0
+                            val wavePeriod = try {
+                                val waveIndex =  if (hour < 23){
+                                    times.indexOf(times.find { it.hour == hour})
+                                } else {
+                                    Log.d ("xd", "lol")
+                                    times.indexOf(times.find { it.hour in listOf(hour, hour + 1 % 24, hour + 2 % 24)})
                                 }
-
-                                val conditionStatus: ConditionStatus? = try {
-                                    dailySurfAreaScreenUiState.conditionStatuses[dayOfMonth][time]
-                                } catch (e: IndexOutOfBoundsException) {
-                                    null
-                                }
-
-                                AllInfoCard(
-                                    timestamp = formattedHour,
-                                    surfArea = surfArea,
-                                    waveHeight = waveHeight,
-                                    windSpeed = windSpeed,
-                                    windGust = windGust,
-                                    windDir = windDir,
-                                    waveDir = waveDir,
-                                    temp = temp,
-                                    icon = icon,
-                                    wavePeriod = wavePeriod,
-                                    conditionStatus = conditionStatus
+                                Log.d(
+                                    "DSVM",
+                                    "Got waveperiod ${dailySurfAreaScreenUiState.wavePeriods[waveIndex]} from hour $hour at index $waveIndex from ${dailySurfAreaScreenUiState.wavePeriods}"
                                 )
+                                dailySurfAreaScreenUiState.wavePeriods[waveIndex]
+
+                            } catch (e: IndexOutOfBoundsException) {
+                                Log.d(
+                                    "DSAscreen",
+                                    "Waveperiods ${hour} out of bounds for waveperiods of size ${dailySurfAreaScreenUiState.wavePeriods.size}"
+                                )
+                                0.0
                             }
+
+                            val conditionStatus: ConditionStatus? = try {
+                                dailySurfAreaScreenUiState.conditionStatuses[dayOfMonth][time]
+                            } catch (e: IndexOutOfBoundsException) {
+                                null
+                            }
+
+                            AllInfoCard(
+                                timestamp = formattedHour,
+                                surfArea = surfArea,
+                                waveHeight = waveHeight,
+                                windSpeed = windSpeed,
+                                windGust = windGust,
+                                windDir = windDir,
+                                waveDir = waveDir,
+                                temp = temp,
+                                icon = icon,
+                                wavePeriod = wavePeriod,
+                                conditionStatus = conditionStatus
+                            )
                         }
                     } else {
                         item(7) {
