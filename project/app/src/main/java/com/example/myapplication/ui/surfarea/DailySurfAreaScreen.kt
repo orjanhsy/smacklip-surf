@@ -35,7 +35,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.myapplication.NavigationManager
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.R
 import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.smacklip.DataAtTime
@@ -55,7 +56,8 @@ import java.time.LocalTime
 fun DailySurfAreaScreen(
     surfAreaName: String,
     daysFromToday: Int,
-    dailySurfAreaScreenViewModel: DailySurfAreaScreenViewModel
+    dailySurfAreaScreenViewModel: DailySurfAreaScreenViewModel,
+    navController: NavController
 ) {
 
     val surfArea: SurfArea = SurfArea.entries.find {
@@ -70,14 +72,12 @@ fun DailySurfAreaScreen(
     dailySurfAreaScreenViewModel.updateStatusConditions(surfArea, dailySurfAreaScreenUiState.forecast7Days)
     //avslutter loading screen i dailySurfAreaScreenUiState her:
 
-    val navController = NavigationManager.navController
-
 
     Scaffold(
                 topBar = {
                     TopAppBar(title = { /*TODO*/ },
                         navigationIcon = {
-                            IconButton(onClick = { navController?.popBackStack() }) {
+                            IconButton(onClick = { navController.popBackStack() }) {
                                 Column(
                                     modifier = Modifier
                                         .height(50.dp)
@@ -372,11 +372,12 @@ fun AllInfoCard(
         }
     }
 }
+
 //@Preview(showBackground = true, name = "Dark Mode")
 @Preview(showBackground = true, name = "Light Mode")
 @Composable
 private fun PreviewDailyScreen() {
     AppTheme (darkTheme = false){
-        DailySurfAreaScreen("Hoddevik", 0, DailySurfAreaScreenViewModel())
+        DailySurfAreaScreen("Hoddevik", 0, DailySurfAreaScreenViewModel(), rememberNavController())
     }
 }
