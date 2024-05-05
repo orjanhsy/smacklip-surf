@@ -35,26 +35,20 @@ class StatefulRepoTests {
     }
 
     @Test
-    fun wavePeriodsAreX() = runBlocking{
+    fun wavePeriodsAreX(): Unit = runBlocking{
         repo.loadWavePeriods()
         val state = repo.wavePeriods.value
-        println(state)
+        state.wavePeriods.entries.map {
+            println(it)
+        }
     }
 
     @Test
-    fun alertsAreX() = runBlocking{
+    fun alertsAreX(): Unit = runBlocking{
         repo.loadAlerts()
 
         val state = repo.alerts.value
         println(state)
-    }
-
-    // ViewModels
-    @Test
-    fun vmSate() = runBlocking{
-        val hsvm = HomeScreenViewModel(RepositoryImpl())
-        hsvm.updateOfLF()
-        print(hsvm.homeScreenUiState.value.ofLfNow)
     }
 
 }

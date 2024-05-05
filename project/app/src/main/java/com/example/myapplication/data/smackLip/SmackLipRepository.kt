@@ -46,7 +46,7 @@ interface SmackLipRepository {
 
     // waveforecast
     suspend fun getAllWavePeriodsNext3Days(): AllWavePeriods
-    suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): List<Double?> // skal fjernes til fordel for AllWavePeriods.wavePeriods[surfArea]
+    suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): Map<Int, List<Double?>> // skal fjernes til fordel for AllWavePeriods.wavePeriods[surfArea]
 
     suspend fun getAllOFLF7Days (): AllSurfAreasOFLF
 
@@ -296,7 +296,7 @@ class SmackLipRepositoryImpl (
         return waveForecastRepository.allRelevantWavePeriodsNext3Days()
     }
 
-    override suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): List<Double?> {
+    override suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): Map<Int, List<Double?>> {
         return waveForecastRepository.wavePeriodsNext3DaysForArea(surfArea.modelName, surfArea.pointId)
     }
 
