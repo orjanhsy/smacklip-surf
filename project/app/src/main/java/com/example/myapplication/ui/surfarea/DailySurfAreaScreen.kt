@@ -35,8 +35,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.myapplication.NavigationManager
 import com.example.myapplication.R
 import com.example.myapplication.SmackLipApplication
 import com.example.myapplication.model.conditions.ConditionStatus
@@ -57,7 +58,8 @@ import java.time.LocalDateTime
 fun DailySurfAreaScreen(
     surfAreaName: String,
     dayOfMonth: Int,
-    dailySurfAreaScreenViewModel: DailySurfAreaScreenViewModel
+    dailySurfAreaScreenViewModel: DailySurfAreaScreenViewModel,
+    navController: NavController
 ) {
 
     val surfArea: SurfArea = SurfArea.entries.find {
@@ -70,14 +72,11 @@ fun DailySurfAreaScreen(
         dailySurfAreaScreenViewModel.updateDayInFocus(dayOfMonth)
     }
 
-    val navController = NavigationManager.navController
-
-
     Scaffold(
                 topBar = {
                     TopAppBar(title = { /*TODO*/ },
                         navigationIcon = {
-                            IconButton(onClick = { navController?.popBackStack() }) {
+                            IconButton(onClick = { navController.popBackStack() }) {
                                 Column(
                                     modifier = Modifier
                                         .height(50.dp)
@@ -376,6 +375,7 @@ fun AllInfoCard(
         }
     }
 }
+
 //@Preview(showBackground = true, name = "Dark Mode")
 @Preview(showBackground = true, name = "Light Mode")
 @Composable
@@ -386,6 +386,6 @@ private fun PreviewDailyScreen() {
         }
     )
     AppTheme (darkTheme = false){
-        DailySurfAreaScreen("Hoddevik", 5, dsvm)
+        DailySurfAreaScreen("Hoddevik", 5, dsvm, rememberNavController())
     }
 }

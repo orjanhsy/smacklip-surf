@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.myapplication.NavigationManager
 import com.example.myapplication.SmackLipApplication
 import com.example.myapplication.presentation.viewModelFactory
 import com.example.myapplication.ui.common.composables.BottomBar
@@ -40,9 +39,8 @@ import com.example.myapplication.ui.theme.AppTheme
 @OptIn(ExperimentalMaterial3Api::class)
 //@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun SettingsScreen(navController: NavController, settingsScreenViewModel: SettingsScreenViewModel) {
+fun SettingsScreen(settingsScreenViewModel: SettingsScreenViewModel, navController: NavController) {
     val settingsUiState by settingsScreenViewModel.settingsUiState.collectAsState()
-    //val navController = NavigationManager.navController
 
     Scaffold(
         topBar = {
@@ -197,9 +195,6 @@ private fun PreviewSettingsScreen(){
                 SettingsScreenViewModel(SmackLipApplication.container)
             }
         )
-        SettingsScreen(navController = rememberNavController(), settingsVM)
+        SettingsScreen(settingsVM, rememberNavController())
     }
 }
-
-
-
