@@ -2,6 +2,7 @@ package com.example.myapplication.ui.map
 
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -109,6 +110,7 @@ fun MapScreen( mapScreenViewModel : MapScreenViewModel = viewModel(), onNavigate
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
+                .background(Color.Transparent)
         ) {
             SearchBar(onQueryChange = {},
                 isSearchActive = isSearchActive.value,
@@ -292,6 +294,7 @@ fun SurfAreaCard(
                     fontWeight = FontWeight.Bold,
                     fontSize = 25.sp,
                     textAlign = TextAlign.Center,
+                    color = onSurfaceVariantLight,
                     modifier = Modifier
                         .align(Alignment.Center)
                 )
