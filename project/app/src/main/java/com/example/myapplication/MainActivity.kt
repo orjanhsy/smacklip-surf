@@ -112,7 +112,10 @@ fun ShowSnackBar() {
 }
 
 @Composable
-fun SmackLipNavigation(viewModelFactory: SettingsScreenViewModel.SettingsViewModelFactory, homeViewModelFactory: HomeScreenViewModel.HomeScreenViewModelFactory){
+fun SmackLipNavigation(
+    viewModelFactory: SettingsScreenViewModel.SettingsViewModelFactory,
+    homeViewModelFactory: HomeScreenViewModel.HomeScreenViewModelFactory
+){
     val navController = rememberNavController()
     NavigationManager.navController = navController
     val dsvm = viewModel<DailySurfAreaScreenViewModel>(
@@ -127,7 +130,7 @@ fun SmackLipNavigation(viewModelFactory: SettingsScreenViewModel.SettingsViewMod
 
         ){
         composable("HomeScreen"){
-            HomeScreen(homeScreenViewModelFactory = homeViewModelFactory, navController = navController)
+            HomeScreen(homeViewModelFactory, navController)
         }
         composable("SurfAreaScreen/{surfArea}") { backStackEntry ->
             val surfArea = backStackEntry.arguments?.getString("surfArea") ?: ""
@@ -136,13 +139,13 @@ fun SmackLipNavigation(viewModelFactory: SettingsScreenViewModel.SettingsViewMod
         composable("DailySurfAreaScreen/{surfArea}/{dayIndex}") { backStackEntry ->
             val surfArea = backStackEntry.arguments?.getString("surfArea") ?: ""
             val dayIndex = backStackEntry.arguments?.getString("dayIndex")?.toInt() ?: 0 // TODO: Handle differently
-            DailySurfAreaScreen(surfAreaName = surfArea, daysFromToday = dayIndex, dsvm, navController = navController)
+            DailySurfAreaScreen(surfAreaName = surfArea, daysFromToday = dayIndex, dsvm, navController)
         }
         composable("MapScreen"){
-            MapScreen(mapScreenViewModel = MapScreenViewModel(), navController = navController)
+            MapScreen(MapScreenViewModel(), navController)
         }
         composable("SettingsScreen") {
-            SettingsScreen(settingsViewmodelFactory = viewModelFactory, navController = navController)
+            SettingsScreen(viewModelFactory, navController)
         }
     }
 }
