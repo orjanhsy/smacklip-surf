@@ -7,10 +7,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
@@ -23,12 +25,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.myapplication.R
+import com.example.myapplication.ui.theme.AppTypography
 
 @Composable
 fun <T> CustomAlert(
@@ -45,14 +46,14 @@ fun <T> CustomAlert(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(10.dp), // Outer padding to ensure Card shadow is visible
+                .padding(10.dp),
             contentAlignment = Alignment.Center
         ) {
             Card(
                 modifier = modifier
-                    .padding(16.dp), // Inner padding for content inside the card
-                shape = RoundedCornerShape(35.dp),
-                border = BorderStroke(1.dp, Color.LightGray) // Border with 1dp width and LightGray color
+                    .padding(16.dp),
+                shape = RoundedCornerShape(15.dp),
+                border = BorderStroke(1.5.dp, Color.LightGray)
 
             ) {
                 Column(
@@ -64,36 +65,37 @@ fun <T> CustomAlert(
                         painter = painterResource(id = warningIcon),
                         contentDescription = "Image",
                         modifier = Modifier
-                            .size(86.dp)
+                            .size(100.dp)
                             .align(Alignment.CenterHorizontally)
-                            .padding(12.dp, top = 16.dp)
+                            .padding(12.dp, top = 12.dp)
                     )
-                    Text(
-                        message,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp),
-                        fontSize = 19.sp,
-                        textAlign = TextAlign.Center,
-                        color = Color.Gray,
-                        style = MaterialTheme.typography.titleLarge
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = message,
+                            modifier = Modifier
+                                .width(200.dp)
+                                .padding(vertical = 8.dp),
+                            style = AppTypography.titleMedium,
+                            textAlign = TextAlign.Center
+                        )
+                    }
                     Box(
                         modifier = Modifier
-                            .fillMaxWidth(0.75f) // Increased width to make the button larger
+                            .fillMaxWidth(0.75f)
                             //.padding(16.dp)
                             .clickable {
                                 showAlert.value = false
                                 action?.invoke()
                             }
-                            .align(Alignment.CenterHorizontally) // Centering the button horizontally
+                            .align(Alignment.CenterHorizontally)
                     ) {
                         Text(
                             text = actionText,
-                            color = Color.DarkGray,
-                            fontWeight = FontWeight.Bold, // Made the font weight bolder
-                            fontSize = 20.sp, // Increased font size
-                            style = MaterialTheme.typography.titleMedium,
+                            style = AppTypography.titleLarge,
                             modifier = Modifier
                                 .align(Alignment.Center)
                         )
@@ -119,7 +121,7 @@ fun PreviewCustomAlert() {
             title = "Farevarsel",
             message = "STOOORM incoming, søk dekning søk dekning søk dekning søk dekning",
             actionText = "OK",
-            warningIcon = R.drawable.icon_awareness_yellow_outlined,
+            warningIcon = R.drawable.icon_warning_orange,
             data = null,
             showAlert = remember { mutableStateOf(true) },
             //actionWithValue = null,
