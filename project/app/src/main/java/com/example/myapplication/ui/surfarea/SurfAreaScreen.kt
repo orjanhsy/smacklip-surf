@@ -299,7 +299,6 @@ fun InfoCard(surfArea: SurfArea) {
                 text = stringResource(surfArea.description),
                 style = AppTypography.titleSmall,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(bottom = 8.dp)
             )
             Image(
                 painter = painterResource(id = surfArea.image),
