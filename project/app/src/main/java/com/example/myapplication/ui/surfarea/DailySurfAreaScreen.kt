@@ -167,12 +167,7 @@ fun DailySurfAreaScreen(
                             val waveDir = surfAreaDataForHour?.waveDir ?: 0.0
 
                             val wavePeriod = try {
-                                val waveIndex =  if (hour < 23){
-                                    times.indexOf(times.find { it.hour == hour})
-                                } else {
-                                    Log.d ("xd", "lol")
-                                    times.indexOf(times.find { it.hour in listOf(hour, hour + 1 % 24, hour + 2 % 24)})
-                                }
+                                val waveIndex = times.indexOf(times.find { it.hour == hour})
                                 Log.d(
                                     "DSVM",
                                     "Got waveperiod ${dailySurfAreaScreenUiState.wavePeriods[waveIndex]} from hour $hour at index $waveIndex from ${dailySurfAreaScreenUiState.wavePeriods}"
@@ -208,7 +203,7 @@ fun DailySurfAreaScreen(
                             )
                         }
                     } else {
-                        item(7) {
+                        item(1) {
                             AllInfoCard(surfArea = surfArea)
                         }
                     }
@@ -223,7 +218,7 @@ fun DailySurfAreaScreen(
 // TODO: tror type kan være noe annet enn default, og de kan ha andre default values
 @Composable
 fun AllInfoCard(
-    timestamp: String = "00",
+    timestamp: String = "x",
     surfArea: SurfArea,
     waveHeight: Any = 0.0,
     windSpeed: Any = 0.0,
@@ -236,7 +231,7 @@ fun AllInfoCard(
     conditionStatus: ConditionStatus? = ConditionStatus.BLANK
 ) {
 
-    if (timestamp != "00") {
+    if (timestamp != "x") {
 
         val recourseUtils: RecourseUtils = RecourseUtils()
 
@@ -286,7 +281,8 @@ fun AllInfoCard(
                     Spacer(modifier = Modifier.width(6.dp))
 
                     Text(
-                        text = "${(windSpeed as Double).toInt()} (${(windGust as Double).toInt()})",
+                        text = if (windGust as Double > windSpeed as Double) "${(windSpeed).toInt()} (${(windGust).toInt()})"
+                        else "${(windSpeed).toInt()}",
                         style = AppTypography.bodySmall,
                     )
 
