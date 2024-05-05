@@ -333,11 +333,13 @@ fun InfoCard(surfArea: SurfArea) {
                 Text(
                     text = surfArea.locationName,
                     style = AppTypography.titleLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
                 Text(
                     text = stringResource(surfArea.description),
                     style = AppTypography.titleSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
                 )
                 Image(
@@ -401,7 +403,7 @@ fun HeaderCard(surfArea: SurfArea, icon : String, date: LocalDateTime) {
                             style = TextStyle(
                                 fontSize = calculateFontSizeForText(surfArea.locationName),
                                 fontWeight = FontWeight(500),
-                                color = Color(0xFF313341),
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             ),
                             modifier = Modifier
                                 .padding(16.dp)
@@ -414,8 +416,9 @@ fun HeaderCard(surfArea: SurfArea, icon : String, date: LocalDateTime) {
                         Text(
                             text = formattedDate1,
                             style = AppTypography.titleSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
 
-                            modifier = Modifier
+                                modifier = Modifier
                                 .padding(5.dp)
                                 .width(73.dp)
                                 .height(16.dp)
@@ -480,7 +483,9 @@ fun DayPreviewCard(
                 Text(
                     text = day,
                     style = AppTypography.titleSmall,
-                  modifier = Modifier
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+
+                        modifier = Modifier
                       .align(Alignment.CenterVertically)
                       .padding(5.dp)
                 )
@@ -517,6 +522,7 @@ fun DayPreviewCard(
                 Text(
                     text = conditionStatus?.description ?: "",
                     style = AppTypography.titleSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 10.sp,
                     textAlign = TextAlign.Center,
                 )
@@ -549,6 +555,7 @@ fun DayPreviewCard(
                         Text(
                             text = "${waveHeightMinMax.first} - ${waveHeightMinMax.second}",
                             style = AppTypography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }

@@ -34,7 +34,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -88,7 +87,7 @@ fun DailySurfAreaScreen(
                                     Icon(
                                         Icons.Default.ArrowBack,
                                         contentDescription = "Back",
-                                        tint = Color.Black,
+                                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                         modifier = Modifier
                                             .width(42.dp)
                                             .height(42.dp)
@@ -272,6 +271,7 @@ fun AllInfoCard(
                 Text(
                     text = timestamp,
                     style = AppTypography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.weight(1f)
                 )
 
@@ -282,6 +282,7 @@ fun AllInfoCard(
                     Icon(
                         imageVector = Icons.Outlined.Air,
                         contentDescription = "Air",
+                        tint= MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(20.dp)
                     )
 
@@ -291,6 +292,8 @@ fun AllInfoCard(
                         text = if (windGust as Double > windSpeed as Double) "${(windSpeed).toInt()} (${(windGust).toInt()})"
                         else "${(windSpeed).toInt()}",
                         style = AppTypography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+
                     )
 
                     Spacer(modifier = Modifier.width(6.dp))
@@ -298,6 +301,7 @@ fun AllInfoCard(
                     Icon(
                         imageVector = Icons.Outlined.CallMade,
                         contentDescription = "Arrow",
+                        tint=  MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier
                             .size(17.dp)
                             .rotate(rotationAngleWind - 45)
@@ -313,6 +317,7 @@ fun AllInfoCard(
                     Icon(
                         imageVector = Icons.Outlined.Tsunami,
                         contentDescription = "Tsunami",
+                        tint=MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(18.dp)
                     )
 
@@ -321,6 +326,7 @@ fun AllInfoCard(
                     Text(
                         text = "$waveHeight m",
                         style = AppTypography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
 
                     Spacer(modifier = Modifier.width(6.dp))
@@ -328,6 +334,7 @@ fun AllInfoCard(
                     Text(
                         text = "${wavePeriod?.toInt()} sek",
                         style = AppTypography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
 
                     Spacer(modifier = Modifier.width(6.dp))
@@ -335,6 +342,7 @@ fun AllInfoCard(
                     Icon(
                         imageVector = Icons.Outlined.CallMade,
                         contentDescription = "Arrow",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier
                             .size(17.dp)
                             .rotate(rotationAngleWaveDir - 45)
@@ -354,6 +362,7 @@ fun AllInfoCard(
                             temp.toString()
                         },
                         style = AppTypography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(end = 4.dp)
                     )
 

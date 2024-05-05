@@ -77,7 +77,6 @@ import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.ui.theme.AppTypography
-import com.example.myapplication.ui.theme.onSurfaceVariantLight
 import com.example.myapplication.utils.RecourseUtils
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
@@ -294,7 +293,7 @@ fun SurfAreaCard(
                     fontWeight = FontWeight.Bold,
                     fontSize = 25.sp,
                     textAlign = TextAlign.Center,
-                    color = onSurfaceVariantLight,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier
                         .align(Alignment.Center)
                 )
@@ -306,7 +305,7 @@ fun SurfAreaCard(
                     Icon(
                         imageVector = Icons.Outlined.Close,
                         contentDescription = "Close",
-                        tint = onSurfaceVariantLight
+                        tint=MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
@@ -317,6 +316,7 @@ fun SurfAreaCard(
             Text(
                 text = stringResource(surfArea.description),
                 style = AppTypography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
             )
 
@@ -330,21 +330,25 @@ fun SurfAreaCard(
                 Icon(
                     imageVector = Icons.Outlined.Air,
                     contentDescription = "Tsunami",
+                    tint=MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(18.dp)
                 )
                 Text(
                     text = "${windSpeed.toInt()}(${windGust.toInt()})",
                     style = AppTypography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(horizontal=8.dp)
                 )
                 Icon(
                     imageVector = Icons.Outlined.Tsunami,
                     contentDescription = "Tsunami",
+                    tint=MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(18.dp)
                 )
                 Text(
                     text = "$waveHeight",
                     style = AppTypography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(horizontal=8.dp)
                 )
                 Image(
@@ -359,6 +363,7 @@ fun SurfAreaCard(
                 Text(
                     text = "${airTemperature.toInt()} °C",
                     style = AppTypography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(horizontal=8.dp)
                 )
             }
@@ -394,12 +399,12 @@ fun SurfAreaCard(
                     Text(
                         text = "Gå til ${surfArea.locationName}",
                         style = AppTypography.bodySmall,
-                        //modifier = Modifier.weight(1f)
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Icon(
                         imageVector = Icons.Default.ArrowForward,
                         contentDescription = "Arrow Forward",
-                        tint = onSurfaceVariantLight,
+                        tint=MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier
                             .size(20.dp)
                     )
@@ -446,12 +451,13 @@ fun SearchBar(
                 activeChanged(true)
                 expanded = true
             },
-            placeholder = { Text("Søk etter surfeområde", style = AppTypography.titleMedium) },
+            placeholder = { Text("Søk etter surfeområde", style = AppTypography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant
+            ) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Rounded.Search,
                     contentDescription = "Search icon",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    tint=MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             },
             trailingIcon = {
@@ -467,6 +473,7 @@ fun SearchBar(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Clear,
+                            tint=MaterialTheme.colorScheme.onSurfaceVariant,
                             contentDescription = "Clear searchbar"
                         )
                     }
@@ -508,7 +515,9 @@ fun SearchBar(
                         ) {
                             Text(
                                 text = surfArea.locationName,
-                                modifier = Modifier.weight(1f)
+                                modifier = Modifier.weight(1f),
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+
                             )
                             Spacer(modifier = Modifier.width(12.dp))
                             Image(
