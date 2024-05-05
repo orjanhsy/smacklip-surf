@@ -33,6 +33,7 @@ import com.example.myapplication.presentation.viewModelFactory
 import com.example.myapplication.ui.home.HomeScreen
 import com.example.myapplication.ui.home.HomeScreenViewModel
 import com.example.myapplication.ui.map.MapScreen
+import com.example.myapplication.ui.map.MapScreenViewModel
 import com.example.myapplication.ui.settings.SettingsScreen
 import com.example.myapplication.ui.settings.SettingsScreenViewModel
 import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
@@ -126,25 +127,19 @@ fun SmackLipNavigation(viewModelFactory: SettingsScreenViewModel.SettingsViewMod
 
         ){
         composable("HomeScreen"){
-            HomeScreen(navController, homeViewModelFactory)
+            HomeScreen(homeScreenViewModelFactory = homeViewModelFactory, navController = navController)
         }
         composable("SurfAreaScreen/{surfArea}") { backStackEntry ->
             val surfArea = backStackEntry.arguments?.getString("surfArea") ?: ""
-            SurfAreaScreen(surfAreaName = surfArea)
+            SurfAreaScreen(surfAreaName = surfArea, navController = navController)
         }
         composable("DailySurfAreaScreen/{surfArea}/{dayIndex}") { backStackEntry ->
             val surfArea = backStackEntry.arguments?.getString("surfArea") ?: ""
             val dayIndex = backStackEntry.arguments?.getString("dayIndex")?.toInt() ?: 0 // TODO: Handle differently
             DailySurfAreaScreen(surfAreaName = surfArea, daysFromToday = dayIndex, dsvm)
-
         }
         composable("MapScreen"){
-            MapScreen(
-                onNavigateToSurfAreaScreen = {
-                    navController.navigate("SurfAreaScreen/$it")
-
-                }
-            )
+            MapScreen(mapScreenViewModel = MapScreenViewModel(), navController = navController)
         }
         composable("SettingsScreen") {
             SettingsScreen(navController = navController, viewModelFactory)
