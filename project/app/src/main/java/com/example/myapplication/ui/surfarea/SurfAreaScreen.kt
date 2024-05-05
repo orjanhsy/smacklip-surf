@@ -36,6 +36,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -58,8 +59,10 @@ import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.AlertCard.CustomAlert
 import com.example.myapplication.ui.common.composables.BottomBar
+import com.example.myapplication.ui.common.composables.ProgressIndicator
 import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.ui.theme.AppTypography
+import com.example.myapplication.ui.theme.outlineLight
 import com.example.myapplication.utils.RecourseUtils
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -190,7 +193,8 @@ fun SurfAreaScreen(
 
                             items(surfAreaScreenUiState.forecastNext7Days.forecast.size) { dayIndex ->
                                 val date = today.plusDays(dayIndex.toLong())
-                                val formattedDate = formatter.format(date)
+                                var formattedDate = formatter.format(date)
+
 
 //                                val conditionStatus: ConditionStatus = try {
 //                                    surfAreaScreenUiState.bestConditionStatuses[dayIndex]!!
@@ -220,8 +224,8 @@ fun SurfAreaScreen(
                             items(6) { dayIndex ->
                                 DayPreviewCard(
                                     surfArea,
-                                    "no data",
-                                    Pair("", ""),
+                                    "man",
+                                    Pair("0.2", "1.3"),
                                     ConditionStatus.BLANK,
                                     0,
                                     null
@@ -246,7 +250,7 @@ fun SurfAreaScreen(
                     action = {
                         showAlert = false})
             }
-           // ProgressIndicator(isDisplayed = surfAreaScreenUiState.loading)
+            //ProgressIndicator(isDisplayed = surfAreaScreenUiState.loading)
            // ProgressIndicator(isDisplayed = surfAreaScreenUiState.loading)
         }
     }
@@ -280,13 +284,13 @@ fun getIconBasedOnAwarenessLevel(awarenessLevel: String): Int {
             val firstChar = awarenessLevel.firstOrNull()?.toString()
 
             when (firstChar) {
-                "2" -> R.drawable.icon_awareness_yellow_outlined
-                "3" -> R.drawable.icon_awareness_orange
-                "4" -> R.drawable.icon_awareness_red
+                "2" -> R.drawable.icon_warning_yellow
+                "3" -> R.drawable.icon_warning_orange
+                "4" -> R.drawable.icon_warning_red
                 else -> R.drawable.icon_awareness_default // If awarenessLevel is not 2, 3, or 4
             }
         } else {
-            R.drawable.icon_awareness_default // If awarenessLevel is an empty string
+            R.drawable.icon_awareness_default
         }
     } catch (e: Exception) {
         R.drawable.icon_awareness_default
@@ -303,7 +307,7 @@ fun InfoCard(surfArea: SurfArea) {
             .height(350.dp)
             .padding(8.dp),
         shape = RoundedCornerShape(16.dp),
-        border = BorderStroke(2.dp, Color(0xFFBEC8CA)) // Define the border color and width
+        border = BorderStroke(2.dp, outlineLight) //BorderStroke(0.dp, Color.Transparent) //BorderStroke(2.dp, Color(0xFFBEC8CA))
     ) {
         Column(
             modifier = Modifier
@@ -321,7 +325,6 @@ fun InfoCard(surfArea: SurfArea) {
                 text = stringResource(surfArea.description),
                 style = AppTypography.titleSmall,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(bottom = 8.dp)
             )
             Image(
                 painter = painterResource(id = surfArea.image),
@@ -330,6 +333,7 @@ fun InfoCard(surfArea: SurfArea) {
                 modifier = Modifier
                     .width(250.dp)
                     .height(150.dp)
+                    .clip(RoundedCornerShape(8.dp))
             )
         }
     }
@@ -455,6 +459,7 @@ fun DayPreviewCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
+
                 Text(
                     text = day,
                     style = AppTypography.titleSmall,
@@ -475,25 +480,30 @@ fun DayPreviewCard(
                     ConditionStatus.DECENT -> ConditionStatus.DECENT.surfBoard
                     ConditionStatus.POOR -> ConditionStatus.POOR.surfBoard
                     ConditionStatus.BLANK -> ConditionStatus.BLANK.surfBoard
-                    null -> R.drawable.spm
+                    null -> R.drawable.blankboard
                 }
                 //surfboard icon
-                Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 15.dp)) {
+                Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 10.dp, bottom = 5.dp)) {
                     Image(
                         painter = painterResource(id = surfBoard),
                         contentDescription = "Weather Icon",
-                        modifier = Modifier.size(20.dp),
+                        modifier = Modifier.size(30.dp),
                     )
 
                 }
             }
-            Text(
-                text = conditionStatus?.description ?: "",
-                fontSize = 10.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
 
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = conditionStatus?.description ?: "",
+                    style = AppTypography.titleSmall,
+                    fontSize = 10.sp,
+                    textAlign = TextAlign.Center,
+                )
+            }
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -549,3 +559,4 @@ private fun PreviewSurfAreaScreen() {
         //InfoCard()
     }
 }
+
