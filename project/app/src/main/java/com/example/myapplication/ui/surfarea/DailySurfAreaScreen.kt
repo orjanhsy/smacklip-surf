@@ -149,11 +149,11 @@ fun DailySurfAreaScreen(
                     if (surfAreaDataForDay.isNotEmpty()) {
                         items(times.size) { index ->
                             val time = times[index]
-                            val hourIndex = time.hour
+                            val hour = time.hour
                             if (time.dayOfMonth == currentTime.dayOfMonth && time.hour < currentTime.hour) { // håndterer forecasts 2 timer før "nå"
                                 AllInfoCard(surfArea = surfArea)
                             } else {
-                                val formattedHour = String.format("%02d", hourIndex)
+                                val formattedHour = String.format("%02d", hour)
 
                                 // TODO: ?
                                 val surfAreaDataForHour: DataAtTime? = surfAreaDataForDay[time]
@@ -166,15 +166,22 @@ fun DailySurfAreaScreen(
                                 val icon = surfAreaDataForHour?.symbolCode ?: 0.0
                                 val waveHeight = surfAreaDataForHour?.waveHeight ?: 0.0
                                 val waveDir = surfAreaDataForHour?.waveDir ?: 0.0
+
                                 val wavePeriod = try {
-                                    dailySurfAreaScreenUiState.wavePeriods[24 - hourIndex]
+                                    val currentWaveIndex =  if (hour < 23){
+                                        times.indexOf(times.find { it.hour in hour .. hour+2})
+                                    } else {
+                                        times.indexOf(times.find { it.hour in listOf(hour, hour + 1 % 24, hour + 2 % 24)})
+                                    }
+                                    dailySurfAreaScreenUiState.wavePeriods[currentWaveIndex]
                                 } catch (e: IndexOutOfBoundsException) {
                                     Log.d(
                                         "DSAscreen",
-                                        "Waveperiods ${24 - hourIndex} out of bounds for waveperiods of size ${dailySurfAreaScreenUiState.wavePeriods.size}"
+                                        "Waveperiods ${hour} out of bounds for waveperiods of size ${dailySurfAreaScreenUiState.wavePeriods.size}"
                                     )
                                     0.0
                                 }
+
                                 val conditionStatus: ConditionStatus? = try {
                                     dailySurfAreaScreenUiState.conditionStatuses[dayOfMonth][time]
                                 } catch (e: IndexOutOfBoundsException) {
