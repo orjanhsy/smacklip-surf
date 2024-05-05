@@ -80,7 +80,7 @@ import com.example.myapplication.ui.theme.AppTypography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController, homeScreenViewModelFactory: HomeScreenViewModel.HomeScreenViewModelFactory) {
+fun HomeScreen(homeScreenViewModelFactory: HomeScreenViewModel.HomeScreenViewModelFactory, navController: NavController) {
     val homeScreenViewModel : HomeScreenViewModel = viewModel(factory = homeScreenViewModelFactory)
     val homeScreenUiState: HomeScreenUiState by homeScreenViewModel.homeScreenUiState.collectAsState()
     val favoriteSurfAreas by homeScreenViewModel.favoriteSurfAreas.collectAsState()
@@ -612,6 +612,6 @@ private fun PreviewHomeScreen() {
                 (context.applicationContext as SmackLipApplication).container
             )
         }
-        HomeScreen(rememberNavController(), viewModelFactory)
+        HomeScreen(viewModelFactory, rememberNavController())
     }
 }
