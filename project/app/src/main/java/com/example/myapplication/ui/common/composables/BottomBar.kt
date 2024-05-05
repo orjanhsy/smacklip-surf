@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.ui.theme.AppTheme
 
 data class BottomNavigationItem(
@@ -29,8 +30,8 @@ data class BottomNavigationItem(
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomBar(navController: NavController?) {
-    val navBackStackEntry by navController!!.currentBackStackEntryAsState()
+fun BottomBar(navController: NavController) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination?.route
 
     val items = listOf(
@@ -60,7 +61,7 @@ fun BottomBar(navController: NavController?) {
                 selected = isSelected,
                 onClick = {
                     if (!isSelected) {
-                        navController?.navigate(item.route)
+                        navController.navigate(item.route)
                     }
                 },
                 label = {
@@ -91,6 +92,6 @@ fun BottomBar(navController: NavController?) {
 @Composable
 private fun PreviewBottomBar() {
     AppTheme {
-        BottomBar(navController = null)
+        BottomBar(navController = rememberNavController())
     }
 }

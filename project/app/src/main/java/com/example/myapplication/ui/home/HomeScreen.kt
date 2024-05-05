@@ -64,7 +64,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.myapplication.NavigationManager
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.R
 import com.example.myapplication.SmackLipApplication
 import com.example.myapplication.model.metalerts.Alert
@@ -78,16 +79,14 @@ import com.example.myapplication.ui.theme.AppTypography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-
-fun HomeScreen(homeScreenViewModel : HomeScreenViewModel, onNavigateToSurfAreaScreen: (String) -> Unit = {}){
+fun HomeScreen(homeScreenViewModel: HomeScreenViewModel, navController: NavController) {
 
     val homeScreenUiState: HomeScreenUiState by homeScreenViewModel.homeScreenUiState.collectAsState()
     val favoriteSurfAreas by homeScreenViewModel.favoriteSurfAreas.collectAsState()
     val isSearchActive = remember { mutableStateOf(false) }
-    val navController = NavigationManager.navController
+
     LaunchedEffect(Unit) {
         homeScreenViewModel.loadFavoriteSurfAreas()
-
     }
 
     Scaffold(
@@ -102,7 +101,7 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel, onNavigateToSurfAreaSc
                         isSearchActive.value = isActive
                     },
                     surfAreas = SurfArea.entries.toList(),
-                    onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
+                    navController = navController
                 )
             }
         },
@@ -122,7 +121,7 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel, onNavigateToSurfAreaSc
                         ofLfNow = homeScreenUiState.ofLfNow,
                         alerts = homeScreenUiState.allRelevantAlerts,
                         homeScreenViewModel,
-                        onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
+                        navController = navController
                     )
                     Spacer(modifier = Modifier.height(14.dp))
                     Column (
@@ -153,7 +152,7 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel, onNavigateToSurfAreaSc
                                 waveDir = homeScreenUiState.ofLfNow[location]?.waveDir ?: 0.0,
                                 alerts = homeScreenUiState.allRelevantAlerts[location],
                                 homeScreenViewModel = homeScreenViewModel,
-                                onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
+                                navController = navController
                             )
                         }
                     }
@@ -174,7 +173,7 @@ fun SearchBar(
     onActiveChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     onSearch: ((String) -> Unit)? = null,
-    onNavigateToSurfAreaScreen: (String) -> Unit
+    navController: NavController
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
@@ -249,7 +248,7 @@ fun SearchBar(
                     surfAreas.filter { it.locationName.contains(searchQuery, ignoreCase = true) }
                 items(filteredSurfAreas) { surfArea ->
                     Column(modifier = Modifier.clickable {
-                        onNavigateToSurfAreaScreen(surfArea.locationName)
+                        navController.navigate("SurfAreaScreen/${surfArea.locationName}")
                     }) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -292,7 +291,7 @@ fun FavoritesList(
     ofLfNow: Map<SurfArea, DataAtTime>,
     alerts: Map<SurfArea, List<Alert>>?,
     homeScreenViewModel: HomeScreenViewModel,
-    onNavigateToSurfAreaScreen: (String) -> Unit
+    navController: NavController
 ) {
     Row(
         modifier = Modifier
@@ -331,6 +330,9 @@ fun FavoritesList(
                         .padding(horizontal = 8.dp, vertical = 8.dp)
                         .size(width = 150.0.dp, height = 200.00.dp)
                         .clip(RoundedCornerShape(10.dp))
+                        .clickable {
+                            navController.navigate("SurfAreaScreen/${surfArea.locationName}")
+                        }
                 ) {
                     // TODO: !!
                     SurfAreaCard(
@@ -343,7 +345,7 @@ fun FavoritesList(
                         alerts = alerts?.get(surfArea),
                         homeScreenViewModel = homeScreenViewModel,
                         showFavoriteButton = false,
-                        onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
+                        navController = navController
                     )
                     if (!alerts.isNullOrEmpty()) {
                         Image(
@@ -406,7 +408,7 @@ fun SurfAreaCard(
     alerts: List<Alert>?,
     homeScreenViewModel: HomeScreenViewModel,
     showFavoriteButton: Boolean = true,
-    onNavigateToSurfAreaScreen: (String) -> Unit
+    navController: NavController
 ) {
 
     // windDirection
@@ -417,8 +419,9 @@ fun SurfAreaCard(
         modifier = Modifier
             .wrapContentSize()
             .padding(start = 8.dp, top = 2.dp, end = 10.dp, bottom = 10.dp)
-            .clickable(
-                onClick = { onNavigateToSurfAreaScreen(surfArea.locationName) })
+            .clickable {
+                navController.navigate("SurfAreaScreen/${surfArea.locationName}")
+            }
     ) {
 
         Box(
@@ -607,6 +610,6 @@ private fun PreviewHomeScreen() {
         }
     )
     AppTheme {
-        HomeScreen(hsvm){}
+        HomeScreen(hsvm, rememberNavController())
     }
 }

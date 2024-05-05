@@ -95,7 +95,7 @@ fun ShowSnackBar() {
 }
 
 @Composable
-fun SmackLipNavigation(){
+fun SmackLipNavigation() {
     val navController = rememberNavController()
     NavigationManager.navController = navController
 
@@ -136,32 +136,22 @@ fun SmackLipNavigation(){
 
         ){
         composable("HomeScreen"){
-            HomeScreen(hsvm){
-
-                navController.navigate("SurfAreaScreen/$it")
-            }
+            HomeScreen(hsvm, navController)
         }
         composable("SurfAreaScreen/{surfArea}") { backStackEntry ->
             val surfArea = backStackEntry.arguments?.getString("surfArea") ?: ""
-            SurfAreaScreen(surfAreaName = surfArea, savm)
+            SurfAreaScreen(surfAreaName = surfArea, savm, navController)
         }
         composable("DailySurfAreaScreen/{surfArea}/{dayIndex}") { backStackEntry ->
             val surfArea = backStackEntry.arguments?.getString("surfArea") ?: ""
             val dayIndex = backStackEntry.arguments?.getString("dayIndex")?.toInt() ?: 0 // TODO: Handle differently
-            DailySurfAreaScreen(surfAreaName = surfArea, dayOfMonth = dayIndex, dsvm)
-
+            DailySurfAreaScreen(surfAreaName = surfArea, dayOfMonth = dayIndex, dsvm, navController)
         }
         composable("MapScreen"){
-            MapScreen(
-                onNavigateToSurfAreaScreen = {
-                    navController.navigate("SurfAreaScreen/$it")
-
-                },
-                mapScreenViewModel = mapVm
-            )
+            MapScreen(mapScreenViewModel = mapVm, navController =  navController)
         }
         composable("SettingsScreen") {
-            SettingsScreen(navController = navController, settingsVm)
+            SettingsScreen(settingsVm, navController)
         }
     }
 }
