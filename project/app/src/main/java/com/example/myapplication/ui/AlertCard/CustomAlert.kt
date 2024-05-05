@@ -82,6 +82,7 @@ fun <T> CustomAlert(
                                 .width(200.dp)
                                 .padding(vertical = 8.dp),
                             style = AppTypography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             textAlign = TextAlign.Center
                         )
                     }
@@ -98,7 +99,8 @@ fun <T> CustomAlert(
                         Text(
                             text = actionText,
                             style = AppTypography.titleLarge,
-                            modifier = Modifier
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier
                                 .align(Alignment.Center)
                         )
                     }
