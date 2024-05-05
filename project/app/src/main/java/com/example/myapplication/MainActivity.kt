@@ -126,9 +126,7 @@ fun SmackLipNavigation(viewModelFactory: SettingsScreenViewModel.SettingsViewMod
 
         ){
         composable("HomeScreen"){
-            HomeScreen(homeViewModelFactory){
-                navController.navigate("SurfAreaScreen/$it")
-            }
+            HomeScreen(navController, homeViewModelFactory)
         }
         composable("SurfAreaScreen/{surfArea}") { backStackEntry ->
             val surfArea = backStackEntry.arguments?.getString("surfArea") ?: ""
