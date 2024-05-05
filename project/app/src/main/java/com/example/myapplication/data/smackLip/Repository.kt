@@ -190,7 +190,7 @@ class RepositoryImpl(
 //        Log.d("REPO", "Updating waveperiods")
 
         _wavePeriods.update {
-            waveForecastRepository.allRelevantWavePeriodsNext3Days()
+            waveForecastRepository.allWavePeriodsNext3Days()
         }
     }
 
