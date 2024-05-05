@@ -1,11 +1,9 @@
 package com.example.myapplication
 
 import DailySurfAreaScreen
-import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,9 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.datastore.core.DataStore
-import androidx.datastore.dataStore
-import androidx.datastore.preferences.core.Preferences
 //import androidx.datastore.preferences.createDataStore
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -28,10 +23,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.myapplication.data.settings.SettingsSerializer
-
-import com.example.myapplication.data.smackLip.Repository
-import com.example.myapplication.data.smackLip.RepositoryImpl
 
 import com.example.myapplication.presentation.viewModelFactory
 
@@ -109,9 +100,10 @@ fun SmackLipNavigation(){
     val navController = rememberNavController()
     NavigationManager.navController = navController
 
+    //viewmodels
     val dsvm = viewModel<DailySurfAreaScreenViewModel>(
         factory = viewModelFactory {
-            DailySurfAreaScreenViewModel() // send med argument
+            DailySurfAreaScreenViewModel(SmackLipApplication.container.stateFulRepo)
         }
     )
 
@@ -132,6 +124,7 @@ fun SmackLipNavigation(){
         }
     )
 
+    //navigation
     NavHost(
         navController = navController,
         startDestination = "HomeScreen",
@@ -150,7 +143,7 @@ fun SmackLipNavigation(){
         composable("DailySurfAreaScreen/{surfArea}/{dayIndex}") { backStackEntry ->
             val surfArea = backStackEntry.arguments?.getString("surfArea") ?: ""
             val dayIndex = backStackEntry.arguments?.getString("dayIndex")?.toInt() ?: 0 // TODO: Handle differently
-            DailySurfAreaScreen(surfAreaName = surfArea, daysFromToday = dayIndex, dsvm)
+            DailySurfAreaScreen(surfAreaName = surfArea, dayOfMonth = dayIndex, dsvm)
 
         }
         composable("MapScreen"){
