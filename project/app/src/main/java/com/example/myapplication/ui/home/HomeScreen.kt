@@ -3,6 +3,7 @@ package com.example.myapplication.ui.home
 //import com.example.myapplication.ui.theme.MyApplicationTheme
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,6 +35,7 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.outlined.CallMade
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -43,6 +45,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -92,19 +96,25 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel, onNavigateToSurfAreaSc
 
     Scaffold(
         topBar = {
-            Column(
-                modifier = Modifier.padding(top = 12.dp) // Adjust padding as needed
-            ) {
-                SearchBar(
-                    onQueryChange = {},
-                    isSearchActive = isSearchActive.value,
-                    onActiveChanged = { isActive ->
-                        isSearchActive.value = isActive
-                    },
-                    surfAreas = SurfArea.entries.toList(),
-                    onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
-                )
-            }
+            TopAppBar(
+                modifier = Modifier.background(MaterialTheme.colorScheme.inversePrimary),
+                title = {
+                    Column(
+                        modifier = Modifier.padding(top = 12.dp) // Adjust padding as needed
+                    ) {
+                        SearchBar(
+                            onQueryChange = {},
+                            isSearchActive = isSearchActive.value,
+                            onActiveChanged = { isActive ->
+                                isSearchActive.value = isActive
+                            },
+                            surfAreas = SurfArea.entries.toList(),
+                            onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.inversePrimary)
+            )
         },
         bottomBar = {
             BottomBar(navController = navController)
@@ -138,10 +148,11 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel, onNavigateToSurfAreaSc
                         columns = GridCells.Fixed(2),
                         modifier = Modifier
                             .fillMaxWidth(),
-                        //verticalArrangement = Arrangement.spacedBy(2.dp),
-                        horizontalArrangement = Arrangement.Center)
+                        horizontalArrangement = Arrangement.spacedBy(2.dp),
+                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                    )
 
-                    {
+                        {
                         items(SurfArea.entries) { location ->
                             // TODO: !!
                             SurfAreaCard(
@@ -193,6 +204,7 @@ fun SearchBar(
         OutlinedTextField(
             modifier = modifier
                 .padding(12.dp)
+                .height(56.dp)
                 .fillMaxWidth(),
             shape = CircleShape,
             value = searchQuery,
@@ -309,17 +321,21 @@ fun FavoritesList(
             onClick = { homeScreenViewModel.clearAllFavorites()},
             modifier = Modifier
                 .defaultMinSize(minWidth = 62.dp, minHeight = 32.dp)
-                .padding(start = 8.dp),
+                .padding(start = 8.dp, top = 2.dp),
             contentPadding = PaddingValues(
                 top = 4.dp,
                 bottom = 4.dp,
                 start = 8.dp,
                 end = 8.dp
+            ),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.secondaryContainer
             )
-
-
         ) {
-            Text("Tøm favoritter")
+            Text(text="Tøm favoritter",
+                style = AppTypography.bodySmall,
+
+            )
 
         }
     }
@@ -383,6 +399,7 @@ fun EmptyFavoriteCard() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .background(MaterialTheme.colorScheme.onPrimary)
                 .padding(14.dp),
             contentAlignment = Alignment.Center
         ) {
@@ -426,6 +443,7 @@ fun SurfAreaCard(
                 .fillMaxSize()
                 .width(162.dp)
                 .height(162.dp)
+                .background(MaterialTheme.colorScheme.onPrimary)
 
         ) {
 
@@ -610,3 +628,5 @@ private fun PreviewHomeScreen() {
         HomeScreen(hsvm){}
     }
 }
+
+
