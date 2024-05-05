@@ -142,7 +142,7 @@ fun SmackLipNavigation(viewModelFactory: SettingsScreenViewModel.SettingsViewMod
             MapScreen(mapScreenViewModel = MapScreenViewModel(), navController = navController)
         }
         composable("SettingsScreen") {
-            SettingsScreen(navController = navController, viewModelFactory)
+            SettingsScreen(settingsViewmodelFactory = viewModelFactory, navController = navController)
         }
     }
 }
