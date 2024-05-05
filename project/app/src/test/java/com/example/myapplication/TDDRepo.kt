@@ -14,7 +14,7 @@ class TDDRepo {
     private val repo: SmackLipRepository = SmackLipRepositoryImpl()
 
     // vm: SurfAreaScreen
-    private val vm = SurfAreaScreenViewModel()
+    private val vm = SurfAreaScreenViewModel(SmackLipApplication.container.stateFulRepo)
 
 
     private object greatConditionsWithAlert {
