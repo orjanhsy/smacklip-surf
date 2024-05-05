@@ -135,18 +135,4 @@ class MapScreenViewModel : ViewModel() {
         }
     }
 
-    fun updateWavePeriods() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val updatedWavePeriods: MutableMap<SurfArea, List<Double?>> = mutableMapOf()
-            SurfArea.entries.forEach { surfArea ->
-                val newWavePeriods = smackLipRepository.getWavePeriodsNext3DaysForArea(surfArea)
-                updatedWavePeriods[surfArea] = newWavePeriods
-            }
-            _mapScreenUiState.update {
-                it.copy(wavePeriods = updatedWavePeriods)
-            }
-        }
-    }
-
-
 }

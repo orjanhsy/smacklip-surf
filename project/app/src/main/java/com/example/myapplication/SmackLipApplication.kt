@@ -3,17 +3,18 @@ package com.example.myapplication
 import android.app.Application
 
 class SmackLipApplication: Application() {
-    lateinit var container: AppContainer
-        private set
+    companion object {
+        lateinit var container: AppContainer
+    }
 
     override fun onCreate() {
         super.onCreate()
-        container = DefaultAppContainer(applicationContext)
+        container = DefaultAppContainer(this)
     }
 
-    override fun onTerminate() {
+    override fun onTerminate() { // har denne en funksjon?
         super.onTerminate()
-        container = DefaultAppContainer(applicationContext)
+        container = DefaultAppContainer(this)
     }
 
 }
