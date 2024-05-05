@@ -91,7 +91,8 @@ import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 
 
 @Composable
-fun MapScreen(mapScreenViewModel : MapScreenViewModel = viewModel(), navController: NavController) {
+
+fun MapScreen(mapScreenViewModel : MapScreenViewModel, navController: NavController) {
 
     val mapScreenUiState : MapScreenUiState by mapScreenViewModel.mapScreenUiState.collectAsState()
     val mapRepository : MapRepositoryImpl = MapRepositoryImpl() //bruker direkte maprepository fordi mapbox har sin egen viewmodel? -
@@ -258,12 +259,13 @@ fun SurfAreaCard(
     navController: NavController
 ) {
 
+
     //current data for surfArea som sendes inn:
-    val windSpeed: Double = uiState.windSpeed[surfArea]?.get(0)?.second ?: 0.0
-    val windGust: Double = uiState.windGust[surfArea]?.get(0)?.second ?: 0.0
-    val airTemperature: Double = uiState.airTemperature[surfArea]?.get(0)?.second ?: 0.0
-    val symbolCode: String = uiState.symbolCode[surfArea]?.get(0)?.second ?: ""
-    val waveHeight: Double = uiState.waveHeight[surfArea]?.get(0)?.second ?: 0.0
+    val windSpeed: Double = uiState.oflfNow[surfArea]?.windSpeed ?: 0.0
+    val windGust: Double = uiState.oflfNow[surfArea]?.windGust ?: 0.0
+    val airTemperature: Double = uiState.oflfNow[surfArea]?.airTemp ?: 0.0
+    val symbolCode: String = uiState.oflfNow[surfArea]?.symbolCode ?: ""
+    val waveHeight: Double = uiState.oflfNow[surfArea]?.waveHeight ?: 0.0
 
     Card(
         modifier = Modifier
@@ -534,6 +536,7 @@ fun SurfAreaPreview(){
     }
 }
 
+/*
 
 @Preview
 @Composable
@@ -542,3 +545,4 @@ fun MapScreenPreview(){
         MapScreen(MapScreenViewModel(), rememberNavController())
     }
 }
+ */

@@ -123,6 +123,12 @@ fun SmackLipNavigation() {
         }
     )
 
+    val mapVm = viewModel<MapScreenViewModel>(
+        factory = viewModelFactory {
+            MapScreenViewModel(SmackLipApplication.container.stateFulRepo)
+        }
+    )
+
     //navigation
     NavHost(
         navController = navController,
@@ -142,7 +148,7 @@ fun SmackLipNavigation() {
             DailySurfAreaScreen(surfAreaName = surfArea, dayOfMonth = dayIndex, dsvm, navController)
         }
         composable("MapScreen"){
-            MapScreen(MapScreenViewModel(), navController)
+            MapScreen(mapScreenViewModel = mapVm, navController =  navController)
         }
         composable("SettingsScreen") {
             SettingsScreen(settingsVm, navController)
