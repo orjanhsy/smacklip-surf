@@ -258,13 +258,13 @@ fun getIconBasedOnAwarenessLevel(awarenessLevel: String): Int {
             val firstChar = awarenessLevel.firstOrNull()?.toString()
 
             when (firstChar) {
-                "2" -> R.drawable.icon_awareness_yellow_outlined
-                "3" -> R.drawable.icon_awareness_orange
-                "4" -> R.drawable.icon_awareness_red
+                "2" -> R.drawable.icon_warning_yellow
+                "3" -> R.drawable.icon_warning_orange
+                "4" -> R.drawable.icon_warning_red
                 else -> R.drawable.icon_awareness_default // If awarenessLevel is not 2, 3, or 4
             }
         } else {
-            R.drawable.icon_awareness_default // If awarenessLevel is an empty string
+            R.drawable.icon_awareness_default
         }
     } catch (e: Exception) {
         R.drawable.icon_awareness_default
