@@ -46,14 +46,14 @@ fun <T> CustomAlert(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(10.dp), // Outer padding to ensure Card shadow is visible
+                .padding(10.dp),
             contentAlignment = Alignment.Center
         ) {
             Card(
                 modifier = modifier
-                    .padding(16.dp), // Inner padding for content inside the card
+                    .padding(16.dp),
                 shape = RoundedCornerShape(15.dp),
-                border = BorderStroke(1.dp, Color.LightGray) // Border with 1dp width and LightGray color
+                border = BorderStroke(1.dp, Color.LightGray)
 
             ) {
                 Column(
@@ -65,9 +65,9 @@ fun <T> CustomAlert(
                         painter = painterResource(id = warningIcon),
                         contentDescription = "Image",
                         modifier = Modifier
-                            .size(86.dp)
+                            .size(100.dp)
                             .align(Alignment.CenterHorizontally)
-                            .padding(12.dp, top = 16.dp)
+                            .padding(12.dp, top = 12.dp)
                     )
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -121,7 +121,7 @@ fun PreviewCustomAlert() {
             title = "Farevarsel",
             message = "STOOORM incoming, søk dekning søk dekning søk dekning søk dekning",
             actionText = "OK",
-            warningIcon = R.drawable.icon_awareness_yellow_outlined,
+            warningIcon = R.drawable.icon_warning_orange,
             data = null,
             showAlert = remember { mutableStateOf(true) },
             //actionWithValue = null,
