@@ -32,7 +32,9 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.outlined.Air
 import androidx.compose.material.icons.outlined.CallMade
+import androidx.compose.material.icons.outlined.Tsunami
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -143,7 +145,7 @@ fun HomeScreen(homeScreenViewModel : HomeScreenViewModel, onNavigateToSurfAreaSc
                         Text(
                             text = "Alle lokasjoner",
                             style = AppTypography.bodySmall,
-                            )
+                            color = MaterialTheme.colorScheme.onSurfaceVariant                            )
                     }
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(2),
@@ -216,7 +218,7 @@ fun SearchBar(
                 activeChanged(true)
                 expanded = true
             },
-            placeholder = { Text(text="Søk etter surfeområde", style = AppTypography.titleMedium,) },
+            placeholder = { Text(text="Søk etter surfeområde", style = AppTypography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Rounded.Search,
@@ -273,7 +275,8 @@ fun SearchBar(
                             Text(
                                 text = surfArea.locationName,
                                 style = AppTypography.bodySmall,
-                                modifier = Modifier.weight(1f)
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.weight(1f)
                             )
                             Spacer(modifier = Modifier.width(12.dp))
                             Image(
@@ -317,7 +320,9 @@ fun FavoritesList(
         Text(
             text = "Favoritter",
             style = AppTypography.bodySmall,
-            modifier = Modifier.weight(1f, true)
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+
+        modifier = Modifier.weight(1f, true)
         )
         Button(
             onClick = { homeScreenViewModel.clearAllFavorites()},
@@ -336,8 +341,7 @@ fun FavoritesList(
         ) {
             Text(text="Tøm favoritter",
                 style = AppTypography.bodySmall,
-
-            )
+                color = MaterialTheme.colorScheme.onSurfaceVariant)
 
         }
     }
@@ -411,7 +415,8 @@ fun EmptyFavoriteCard() {
             Text(
                 text = "Trykk på stjernen for å legge til favoritt",
                 style = AppTypography.bodySmall,
-                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
                 )
         }
     }
@@ -484,26 +489,27 @@ fun SurfAreaCard(
                     Text(
                         text = surfArea.locationName,
                         style = AppTypography.bodyMedium,
-                        )
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
 
                 Row {
                     Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 2.dp)) {
-                        Image(
-                            painter = painterResource(id = R.drawable.tsunami),
-                            contentDescription = "wave icon",
+                        Icon(
+                            imageVector = Icons.Outlined.Tsunami,
+                            contentDescription = "tsunami",
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier
-                                .padding(0.02021.dp)
-                                .width(15.3587.dp)
-                                .height(14.47855.dp)
-
+                                .width(17.dp)
+                                .height(17.dp)
                         )
                     }
                     Spacer(modifier = Modifier.width(5.dp))
                     Text(
                         text = waveHeight.toString(),
                         style = AppTypography.bodySmall,
-                        )
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                     Spacer(modifier = Modifier.width(5.dp))
                     Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 0.dp)) {
                         Icon(
@@ -519,20 +525,21 @@ fun SurfAreaCard(
 
                 Row {
                     Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 2.dp)) {
-                        Image(
-                            painter = painterResource(id = R.drawable.air),
-                            contentDescription = "Air icon",
+                        Icon(
+                            imageVector = Icons.Outlined.Air,
+                            contentDescription = "air",
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier
-                                .padding(0.02021.dp)
-                                .width(15.3587.dp)
-                                .height(13.6348.dp)
+                                .width(17.dp)
+                                .height(17.dp)
                         )
                     }
                     Spacer(modifier = Modifier.width(5.dp))
                     Text(
                        text = "${windSpeed.toInt()}${if (windGust > windSpeed) " (${windGust.toInt()})" else ""}",
                       style = AppTypography.bodySmall,
-                        )
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
 
                     Spacer(modifier = Modifier.width(5.dp))
                     Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 0.dp)) {
