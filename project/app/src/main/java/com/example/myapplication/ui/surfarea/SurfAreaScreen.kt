@@ -3,6 +3,7 @@ package com.example.myapplication.ui.surfarea
 //import androidx.compose.material.icons.outlined.Tsunami
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,14 +22,17 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Tsunami
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -131,7 +135,8 @@ fun SurfAreaScreen(
                                 )
                             }
                         }
-                    }
+                    },
+                    colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.inversePrimary)
                 )
             },
             bottomBar = {
@@ -313,32 +318,38 @@ fun InfoCard(surfArea: SurfArea) {
         shape = RoundedCornerShape(16.dp),
         border = BorderStroke(2.dp, outlineLight) //BorderStroke(0.dp, Color.Transparent) //BorderStroke(2.dp, Color(0xFFBEC8CA))
     ) {
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = surfArea.locationName,
-                style = AppTypography.titleLarge,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-            Text(
-                text = stringResource(surfArea.description),
-                style = AppTypography.titleSmall,
-                textAlign = TextAlign.Center,
-            )
-            Image(
-                painter = painterResource(id = surfArea.image),
-                contentDescription = "Image",
-                contentScale = ContentScale.FillWidth,
+                .background(MaterialTheme.colorScheme.inversePrimary)
+        ){
+            Column(
                 modifier = Modifier
-                    .width(250.dp)
-                    .height(150.dp)
-                    .clip(RoundedCornerShape(8.dp))
-            )
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = surfArea.locationName,
+                    style = AppTypography.titleLarge,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+                Text(
+                    text = stringResource(surfArea.description),
+                    style = AppTypography.titleSmall,
+                    textAlign = TextAlign.Center,
+                )
+                Image(
+                    painter = painterResource(id = surfArea.image),
+                    contentDescription = "Image",
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier
+                        .width(250.dp)
+                        .height(150.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                )
+            }
         }
     }
 }
@@ -453,8 +464,10 @@ fun DayPreviewCard(
                         ?: Unit
                 }
             )
-            .shadow(4.dp, shape = RoundedCornerShape(10.dp))
-    ) {
+            .shadow(4.dp, shape = RoundedCornerShape(10.dp)),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimary),
+
+        ) {
         Column(
             modifier = Modifier
                 .padding(5.dp)
