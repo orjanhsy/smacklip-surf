@@ -23,12 +23,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.myapplication.R
+import com.example.myapplication.ui.theme.AppTypography
 
 @Composable
 fun <T> CustomAlert(
@@ -51,7 +49,7 @@ fun <T> CustomAlert(
             Card(
                 modifier = modifier
                     .padding(16.dp), // Inner padding for content inside the card
-                shape = RoundedCornerShape(35.dp),
+                shape = RoundedCornerShape(15.dp),
                 border = BorderStroke(1.dp, Color.LightGray) // Border with 1dp width and LightGray color
 
             ) {
@@ -73,11 +71,8 @@ fun <T> CustomAlert(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp),
-                        fontSize = 19.sp,
-                        textAlign = TextAlign.Center,
-                        color = Color.Gray,
-                        style = MaterialTheme.typography.titleLarge
-                    )
+                        style = AppTypography.titleMedium,
+                        )
                     Box(
                         modifier = Modifier
                             .fillMaxWidth(0.75f) // Increased width to make the button larger
@@ -90,10 +85,7 @@ fun <T> CustomAlert(
                     ) {
                         Text(
                             text = actionText,
-                            color = Color.DarkGray,
-                            fontWeight = FontWeight.Bold, // Made the font weight bolder
-                            fontSize = 20.sp, // Increased font size
-                            style = MaterialTheme.typography.titleMedium,
+                            style = AppTypography.titleLarge,
                             modifier = Modifier
                                 .align(Alignment.Center)
                         )
