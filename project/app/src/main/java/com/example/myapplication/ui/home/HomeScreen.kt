@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,6 +33,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.outlined.CallMade
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -42,6 +44,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -63,10 +66,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.NavigationManager
 import com.example.myapplication.R
+import com.example.myapplication.SmackLipApplication
 import com.example.myapplication.model.metalerts.Alert
-import com.example.myapplication.model.metalerts.Properties
 import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
+import com.example.myapplication.presentation.viewModelFactory
 import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.ui.theme.AppTypography
@@ -74,11 +78,17 @@ import com.example.myapplication.ui.theme.AppTypography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(homeScreenViewModel : HomeScreenViewModel = viewModel(), onNavigateToSurfAreaScreen: (String) -> Unit = {}){
+
+fun HomeScreen(homeScreenViewModel : HomeScreenViewModel, onNavigateToSurfAreaScreen: (String) -> Unit = {}){
+
     val homeScreenUiState: HomeScreenUiState by homeScreenViewModel.homeScreenUiState.collectAsState()
     val favoriteSurfAreas by homeScreenViewModel.favoriteSurfAreas.collectAsState()
     val isSearchActive = remember { mutableStateOf(false) }
     val navController = NavigationManager.navController
+    LaunchedEffect(Unit) {
+        homeScreenViewModel.loadFavoriteSurfAreas()
+
+    }
 
     Scaffold(
         topBar = {
@@ -284,15 +294,34 @@ fun FavoritesList(
     homeScreenViewModel: HomeScreenViewModel,
     onNavigateToSurfAreaScreen: (String) -> Unit
 ) {
-    Column(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp)
+            .padding(horizontal = 10.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = "Favoritter",
             style = AppTypography.bodySmall,
+            modifier = Modifier.weight(1f, true)
         )
+        Button(
+            onClick = { homeScreenViewModel.clearAllFavorites()},
+            modifier = Modifier
+                .defaultMinSize(minWidth = 62.dp, minHeight = 32.dp)
+                .padding(start = 8.dp),
+            contentPadding = PaddingValues(
+                top = 4.dp,
+                bottom = 4.dp,
+                start = 8.dp,
+                end = 8.dp
+            )
+
+
+        ) {
+            Text("Tøm favoritter")
+
+        }
     }
     if (favorites.isNotEmpty()) {
         LazyRow {
@@ -306,11 +335,11 @@ fun FavoritesList(
                     // TODO: !!
                     SurfAreaCard(
                         surfArea = surfArea,
-                        windSpeed = ofLfNow[surfArea]!!.windSpeed,
-                        windGust = ofLfNow[surfArea]!!.windGust,
-                        windDir = ofLfNow[surfArea]!!.windDir,
-                        waveHeight = ofLfNow[surfArea]!!.waveHeight,
-                        waveDir = ofLfNow[surfArea]!!.waveDir,
+                        windSpeed = ofLfNow[surfArea]?.windSpeed ?: 0.0,
+                        windGust = ofLfNow[surfArea]?.windGust?: 0.0,
+                        windDir = ofLfNow[surfArea]?.windDir?: 0.0,
+                        waveHeight = ofLfNow[surfArea]?.waveHeight?: 0.0,
+                        waveDir = ofLfNow[surfArea]?.waveDir?: 0.0,
                         alerts = alerts?.get(surfArea),
                         homeScreenViewModel = homeScreenViewModel,
                         showFavoriteButton = false,
@@ -387,7 +416,7 @@ fun SurfAreaCard(
     Card(
         modifier = Modifier
             .wrapContentSize()
-            .padding(start = 8.dp, top=2.dp, end = 10.dp, bottom = 10.dp)
+            .padding(start = 8.dp, top = 2.dp, end = 10.dp, bottom = 10.dp)
             .clickable(
                 onClick = { onNavigateToSurfAreaScreen(surfArea.locationName) })
     ) {
@@ -541,6 +570,7 @@ fun SurfAreaCard(
     }
 }
 
+/*
 @Preview(showBackground = true)
 @Composable
 private fun PreviewSurfAreaCard() {
@@ -550,7 +580,7 @@ private fun PreviewSurfAreaCard() {
     val waveHeight = 5.0
     val waveDir =  184.3
 
-    val viewModel = HomeScreenViewModel()
+    val viewModel = HomeScreenViewModel(RepositoryImpl())
     AppTheme {
         SurfAreaCard(
             SurfArea.HODDEVIK,
@@ -566,10 +596,17 @@ private fun PreviewSurfAreaCard() {
     }
 }
 
+ */
+
 @Preview(showBackground = true)
 @Composable
 private fun PreviewHomeScreen() {
+    val hsvm = viewModel<HomeScreenViewModel>(
+        factory = viewModelFactory {
+            HomeScreenViewModel(SmackLipApplication.container.stateFulRepo)
+        }
+    )
     AppTheme {
-        HomeScreen(){}
+        HomeScreen(hsvm){}
     }
 }

@@ -55,6 +55,7 @@ import androidx.navigation.NavController
 import com.example.myapplication.NavigationManager
 import com.example.myapplication.R
 import com.example.myapplication.model.conditions.ConditionStatus
+import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.AlertCard.CustomAlert
@@ -69,26 +70,27 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import androidx.compose.runtime.setValue
+import com.example.myapplication.SmackLipApplication
+import com.example.myapplication.presentation.viewModelFactory
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SurfAreaScreen(
     surfAreaName: String,
-    surfAreaScreenViewModel: SurfAreaScreenViewModel = viewModel(),
+    surfAreaScreenViewModel: SurfAreaScreenViewModel,
 ) {
 
     val surfArea: SurfArea = SurfArea.entries.find {
         it.locationName == surfAreaName
     }!!
 
+    if (surfArea != SmackLipApplication.container.stateFulRepo.areaInFocus.collectAsState().value) {
+        surfAreaScreenViewModel.updateLocation(surfArea)
+    }
 
     val surfAreaScreenUiState: SurfAreaScreenUiState by surfAreaScreenViewModel.surfAreaScreenUiState.collectAsState()
-    //starter loadingscreen i VM her
-    surfAreaScreenViewModel.asyncNext7Days(surfArea)
-    surfAreaScreenViewModel.updateWavePeriods(surfArea)
-    surfAreaScreenViewModel.updateAlertsSurfArea(surfArea)
-    //avslutter loadingscreen i VM her
 
     val alerts = surfAreaScreenUiState.alertsSurfArea
 
@@ -96,6 +98,8 @@ fun SurfAreaScreen(
     val formatter = DateTimeFormatter.ofPattern("EEE", Locale("no", "NO"))
     val navController = NavigationManager.navController
 
+    var showAlert by remember { mutableStateOf(false) }
+    //var alertShowingNow by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -119,6 +123,18 @@ fun SurfAreaScreen(
                         }
                     }
                 },
+                actions = {
+                    if (alerts.isNotEmpty()) {
+                        IconButton(onClick = {
+                            showAlert = true
+                        }) {
+                            Image(
+                                painter = painterResource(id = R.drawable.icon_awareness_yellow_outlined),
+                                contentDescription = "alert"
+                            )
+                        }
+                    }
+                }
             )
         },
         bottomBar = {
@@ -135,6 +151,7 @@ fun SurfAreaScreen(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+
                 item {
                     val surfAreaDataForDay: Map<LocalDateTime, DataAtTime> = try {
                         surfAreaScreenUiState.forecastNext7Days.forecast[0].data
@@ -171,31 +188,28 @@ fun SurfAreaScreen(
                     ) {
                         if (surfAreaScreenUiState.forecastNext7Days.forecast.isNotEmpty()) {
                             val today = LocalDate.now()
-                            surfAreaScreenViewModel.updateBestConditionStatuses( //loading screen vises
-                                surfArea,
-                                surfAreaScreenUiState.forecastNext7Days.forecast
-                            )
+//                            surfAreaScreenViewModel.updateBestConditionStatuses( //loading screen vises
+//                                surfArea,
+//                                surfAreaScreenUiState.forecastNext7Days.forecast
+//                            )
 
                             items(surfAreaScreenUiState.forecastNext7Days.forecast.size) { dayIndex ->
                                 val date = today.plusDays(dayIndex.toLong())
                                 var formattedDate = formatter.format(date)
 
-                                val conditionStatus: ConditionStatus = try {
-                                    surfAreaScreenUiState.bestConditionStatuses[dayIndex]!!
-                                } catch (e: IndexOutOfBoundsException) {
-                                    Log.d(
-                                        "SAscreen",
-                                        "ConditionStatus at day $dayIndex was out of bounds"
-                                    )
-                                    ConditionStatus.BLANK
-                                } catch (e: NullPointerException) {
-                                    Log.d("SAscreen", "ConditionStatus at day $dayIndex was null")
-                                    ConditionStatus.BLANK
-                                }
-                                var today = "i dag"
-                                if(dayIndex == 0){
-                                    formattedDate = today
-                                }
+
+//                                val conditionStatus: ConditionStatus = try {
+//                                    surfAreaScreenUiState.bestConditionStatuses[dayIndex]!!
+//                                } catch (e: IndexOutOfBoundsException) {
+//                                    Log.d(
+//                                        "SAscreen",
+//                                        "ConditionStatus at day $dayIndex was out of bounds"
+//                                    )
+//                                    ConditionStatus.BLANK
+//                                } catch (e: NullPointerException) {
+//                                    Log.d("SAscreen", "ConditionStatus at day $dayIndex was null")
+//                                    ConditionStatus.BLANK
+//                                }
                                 DayPreviewCard(
                                     surfArea,
                                     formattedDate,
@@ -203,7 +217,7 @@ fun SurfAreaScreen(
                                         surfAreaScreenUiState.minWaveHeights[dayIndex].toString(),
                                         surfAreaScreenUiState.maxWaveHeights[dayIndex].toString()
                                     ),
-                                    conditionStatus,
+                                    null,
                                     dayIndex,
                                     navController
                                 )
@@ -227,28 +241,42 @@ fun SurfAreaScreen(
                 }
             }
             if (alerts.isNotEmpty()) {
-                val alert = alerts.first()
-                val alertMessage = alert.properties?.description ?: "No description available"
-                val awarenessLevel = alert.properties?.awarenessLevel
-                val icon = awarenessLevel?.let { getIconBasedOnAwarenessLevel(it) }
-                    ?: R.drawable.icon_awareness_default
-
-
-                CustomAlert(
-                    title = surfArea.name,
-                    message = alertMessage.toString(),
-                    actionText = "OK",
-                    warningIcon = icon,
-                    data = null,
-                    showAlert = remember { mutableStateOf(true) },
-                    //actionWithValue = null,
-                    action = null,
-                )
+                ShowAlert(alerts = alerts,
+                    surfArea = surfArea,
+                    action = {})
             }
-            ProgressIndicator(isDisplayed = surfAreaScreenUiState.loading)
+
+            if (showAlert){ //knappen i topappbar synes kun når det er farevarsel, demred er alerts ikke tom
+                ShowAlert(alerts = alerts,
+                    surfArea = surfArea,
+                    action = {
+                        showAlert = false})
+            }
+            //ProgressIndicator(isDisplayed = surfAreaScreenUiState.loading)
            // ProgressIndicator(isDisplayed = surfAreaScreenUiState.loading)
         }
     }
+}
+
+@Composable
+fun ShowAlert(alerts : List<Alert>, surfArea: SurfArea, action : () -> Unit){
+
+    val alert = alerts.first()
+    val alertMessage = alert.properties?.description ?: "No description available"
+    val awarenessLevel = alert.properties?.awarenessLevel
+    val icon = awarenessLevel?.let { getIconBasedOnAwarenessLevel(it) }
+        ?: R.drawable.icon_awareness_default
+
+    CustomAlert(
+        title = surfArea.name,
+        message = alertMessage.toString(),
+        actionText = "OK",
+        warningIcon = icon,
+        data = null,
+        showAlert = remember { mutableStateOf(true) },
+        //actionWithValue = null,
+        action = action,
+    )
 }
 
 
@@ -438,8 +466,8 @@ fun DayPreviewCard(
                     text = day,
                     style = AppTypography.titleSmall,
                   modifier = Modifier
-                        .align(Alignment.CenterVertically)
-                        .padding(5.dp)
+                      .align(Alignment.CenterVertically)
+                      .padding(5.dp)
                 )
             }
 
@@ -521,16 +549,14 @@ fun DayPreviewCard(
 @Preview(showBackground = true)
 @Composable
 private fun PreviewSurfAreaScreen() {
+    val savm = viewModel<SurfAreaScreenViewModel>(
+        factory = viewModelFactory {
+            SurfAreaScreenViewModel(SmackLipApplication.container.stateFulRepo)
+        }
+    )
     AppTheme {
-        SurfAreaScreen("Solastranden")
-       /* DayPreviewCard(
-            SurfArea.BRUSAND,
-            "man",
-            Pair("0.2", "1.3"),
-            ConditionStatus.GREAT,
-            0,
-            null
-        )*/
+        SurfAreaScreen("Solastranden", savm)
+        //DayPreviewCard()
         //HeaderCard()
         //InfoCard()
     }
