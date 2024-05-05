@@ -37,6 +37,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -58,8 +59,10 @@ import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.AlertCard.CustomAlert
 import com.example.myapplication.ui.common.composables.BottomBar
+import com.example.myapplication.ui.common.composables.ProgressIndicator
 import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.ui.theme.AppTypography
+import com.example.myapplication.ui.theme.outlineLight
 import com.example.myapplication.utils.RecourseUtils
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -242,7 +245,7 @@ fun SurfAreaScreen(
                     action = null,
                 )
             }
-           // ProgressIndicator(isDisplayed = surfAreaScreenUiState.loading)
+            ProgressIndicator(isDisplayed = surfAreaScreenUiState.loading)
            // ProgressIndicator(isDisplayed = surfAreaScreenUiState.loading)
         }
     }
@@ -278,7 +281,7 @@ fun InfoCard(surfArea: SurfArea) {
             .height(350.dp)
             .padding(8.dp),
         shape = RoundedCornerShape(16.dp),
-        border = BorderStroke(2.dp, Color(0xFFBEC8CA)) // Define the border color and width
+        border = BorderStroke(2.dp, outlineLight) //BorderStroke(0.dp, Color.Transparent) //BorderStroke(2.dp, Color(0xFFBEC8CA))
     ) {
         Column(
             modifier = Modifier
@@ -305,6 +308,7 @@ fun InfoCard(surfArea: SurfArea) {
                 modifier = Modifier
                     .width(250.dp)
                     .height(150.dp)
+                    .clip(RoundedCornerShape(8.dp))
             )
         }
     }
@@ -519,15 +523,15 @@ fun DayPreviewCard(
 @Composable
 private fun PreviewSurfAreaScreen() {
     AppTheme {
-        //SurfAreaScreen("Solastranden")
-        DayPreviewCard(
+        SurfAreaScreen("Solastranden")
+       /* DayPreviewCard(
             SurfArea.BRUSAND,
             "man",
             Pair("0.2", "1.3"),
             ConditionStatus.GREAT,
             0,
             null
-        )
+        )*/
         //HeaderCard()
         //InfoCard()
     }
