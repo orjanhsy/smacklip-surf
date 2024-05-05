@@ -455,7 +455,7 @@ fun DayPreviewCard(
                     ConditionStatus.DECENT -> ConditionStatus.DECENT.surfBoard
                     ConditionStatus.POOR -> ConditionStatus.POOR.surfBoard
                     ConditionStatus.BLANK -> ConditionStatus.BLANK.surfBoard
-                    null -> R.drawable.spm
+                    null -> R.drawable.blankboard
                 }
                 //surfboard icon
                 Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 10.dp, bottom = 5.dp)) {

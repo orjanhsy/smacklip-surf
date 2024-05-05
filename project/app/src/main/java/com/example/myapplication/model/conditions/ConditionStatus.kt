@@ -6,5 +6,5 @@ enum class ConditionStatus(val description: String, val surfBoard: Int) {
     GREAT("Utmerket", R.drawable.greenboard),
     DECENT("Greit", R.drawable.yellowboard),
     POOR("Dårlig", R.drawable.redboard),
-    BLANK("Uvisst", R.drawable.spm)
+    BLANK("Uvisst", R.drawable.blankboard)
 }

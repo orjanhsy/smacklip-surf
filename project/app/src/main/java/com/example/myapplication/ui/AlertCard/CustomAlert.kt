@@ -53,7 +53,7 @@ fun <T> CustomAlert(
                 modifier = modifier
                     .padding(16.dp),
                 shape = RoundedCornerShape(15.dp),
-                border = BorderStroke(1.dp, Color.LightGray)
+                border = BorderStroke(1.5.dp, Color.LightGray)
 
             ) {
                 Column(
