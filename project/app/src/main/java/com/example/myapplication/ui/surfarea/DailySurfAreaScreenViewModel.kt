@@ -47,6 +47,7 @@ class DailySurfAreaScreenViewModel(
 
         val newWavePeriods: List<Double?> = try { wavePeriods.wavePeriods[sa]!![day]!! }
         catch(e: NullPointerException) {listOf()}
+//        Log.d("DSVM", "Updated waveperiods with $newWavePeriods for $sa at $day")
 
         DailySurfAreaScreenUiState(
             dataAtDay = newDataAtDay,

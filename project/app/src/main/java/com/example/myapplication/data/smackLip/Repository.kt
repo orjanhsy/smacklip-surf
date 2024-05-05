@@ -187,7 +187,7 @@ class RepositoryImpl(
     }
 
     override suspend fun loadWavePeriods() {
-        Log.d("REPO", "Updating waveperiods")
+//        Log.d("REPO", "Updating waveperiods")
 
         _wavePeriods.update {
             waveForecastRepository.allRelevantWavePeriodsNext3Days()
@@ -195,7 +195,7 @@ class RepositoryImpl(
     }
 
     override suspend fun loadAlerts() {
-        Log.d("REPO", "Updating Alerts")
+//        Log.d("REPO", "Updating Alerts")
 
         _alerts.update {
             metAlertsRepository.getAllRelevantAlerts()
