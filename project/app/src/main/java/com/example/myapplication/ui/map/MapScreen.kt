@@ -69,7 +69,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.viewinterop.NoOpUpdate
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.myapplication.NavigationManager
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.R
 import com.example.myapplication.data.map.MapRepositoryImpl
 import com.example.myapplication.model.surfareas.SurfArea
@@ -90,13 +91,13 @@ import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 
 
 @Composable
-fun MapScreen( mapScreenViewModel : MapScreenViewModel, onNavigateToSurfAreaScreen: (String) -> Unit) {
+
+fun MapScreen(mapScreenViewModel : MapScreenViewModel, navController: NavController) {
 
     val mapScreenUiState : MapScreenUiState by mapScreenViewModel.mapScreenUiState.collectAsState()
     val mapRepository : MapRepositoryImpl = MapRepositoryImpl() //bruker direkte maprepository fordi mapbox har sin egen viewmodel? -
-    val navController = NavigationManager.navController
     val isSearchActive = remember { mutableStateOf(false) }
-    val rememberPoint : MutableState<Point?> = remember{ mutableStateOf(null)}
+    val rememberPoint : MutableState<Point?> = remember { mutableStateOf(null) }
     // TODO: sjekke (maprepository) ut at dette er ok.
 
 
@@ -110,26 +111,25 @@ fun MapScreen( mapScreenViewModel : MapScreenViewModel, onNavigateToSurfAreaScre
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
-            SearchBar(onQueryChange = {},
+            SearchBar(
+                onQueryChange = {},
                 isSearchActive = isSearchActive.value,
                 onActiveChanged = { isActive ->
                     isSearchActive.value = isActive
                 },
                 surfAreas = SurfArea.entries.toList(),
-                onZoomToLocation = {point -> rememberPoint.value = point}
-                )
+                onZoomToLocation = { point -> rememberPoint.value = point }
+            )
             MapBoxMap(
                 modifier = Modifier
                     .fillMaxSize(),
                 locations = mapRepository.locationToPoint(),
                 uiState = mapScreenUiState,
-                onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen,
+                navController = navController,
                 rememberPoint = rememberPoint
-
             )
         }
     }
-
 }
 
 
@@ -138,7 +138,7 @@ fun MapBoxMap(
     modifier: Modifier = Modifier,
     locations: List<Pair<SurfArea, Point>>,
     uiState: MapScreenUiState,
-    onNavigateToSurfAreaScreen: (String) -> Unit = {},
+    navController: NavController,
     rememberPoint: MutableState<Point?>
 ) {
     val startPosition = Point.fromLngLat(13.0, 65.1)
@@ -233,8 +233,8 @@ fun MapBoxMap(
                 surfArea = selectedMarker.value!!,
                 onCloseClick = { selectedMarker.value = null },
                 uiState = uiState,
-                onNavigateToSurfAreaScreen = onNavigateToSurfAreaScreen
-                )
+                navController = navController
+            )
             Modifier.padding(16.dp)
         }
             //Modifier.padding(horizontal = 16.dp)
@@ -255,9 +255,9 @@ fun SurfAreaCard(
     surfArea: SurfArea,
     onCloseClick: () -> Unit,
     uiState: MapScreenUiState,
-    onNavigateToSurfAreaScreen: (String) -> Unit = {},
-    resourceUtils: RecourseUtils = RecourseUtils()
-    ) {
+    resourceUtils: RecourseUtils = RecourseUtils(),
+    navController: NavController
+) {
 
 
     //current data for surfArea som sendes inn:
@@ -349,7 +349,7 @@ fun SurfAreaCard(
                     painter = painterResource(id = resourceUtils.findWeatherSymbol(symbolCode)),
                     contentDescription = "wave icon",
                     modifier = Modifier
-                        .padding(horizontal=8.dp)
+                        .padding(horizontal = 8.dp)
                         .width(30.dp)
                         .height(30.dp)
 
@@ -383,7 +383,7 @@ fun SurfAreaCard(
                 //Navigerer til SurfAreaScreen
                 Button(
                     onClick = {
-                        onNavigateToSurfAreaScreen(surfArea.locationName)
+                       navController.navigate("SurfAreaScreen/${surfArea.locationName}")
                     },
                     colors = ButtonDefaults.buttonColors(Color.Transparent),
                     modifier = Modifier
@@ -532,7 +532,7 @@ fun SearchBar(
 @Composable
 fun SurfAreaPreview(){
     AppTheme {
-        SurfAreaCard(surfArea = SurfArea.STAVASANDEN, {}, MapScreenUiState())
+        SurfAreaCard(surfArea = SurfArea.STAVASANDEN, {}, MapScreenUiState(), RecourseUtils(), rememberNavController())
     }
 }
 
@@ -542,7 +542,7 @@ fun SurfAreaPreview(){
 @Composable
 fun MapScreenPreview(){
     AppTheme {
-        MapScreen(){}
+        MapScreen(MapScreenViewModel(), rememberNavController())
     }
 }
  */

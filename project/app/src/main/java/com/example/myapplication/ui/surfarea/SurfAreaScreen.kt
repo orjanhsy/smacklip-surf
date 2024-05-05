@@ -51,7 +51,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.myapplication.NavigationManager
 import com.example.myapplication.R
 import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.metalerts.Alert
@@ -69,6 +68,7 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import androidx.compose.runtime.setValue
+import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.SmackLipApplication
 import com.example.myapplication.presentation.viewModelFactory
 
@@ -78,6 +78,7 @@ import com.example.myapplication.presentation.viewModelFactory
 fun SurfAreaScreen(
     surfAreaName: String,
     surfAreaScreenViewModel: SurfAreaScreenViewModel,
+    navController: NavController
 ) {
 
     val surfArea: SurfArea = SurfArea.entries.find {
@@ -92,9 +93,7 @@ fun SurfAreaScreen(
 
     val alerts = surfAreaScreenUiState.alertsSurfArea
 
-
     val formatter = DateTimeFormatter.ofPattern("EEE", Locale("no", "NO"))
-    val navController = NavigationManager.navController
 
     var showAlert by remember { mutableStateOf(false) }
     //var alertShowingNow by remember { mutableStateOf(false) }
@@ -104,7 +103,7 @@ fun SurfAreaScreen(
             TopAppBar(
                 title = { /*TODO*/ },
                 navigationIcon = {
-                    IconButton(onClick = { navController?.popBackStack() }) {
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Column(
                             modifier = Modifier
                                 .height(50.dp)
@@ -145,7 +144,6 @@ fun SurfAreaScreen(
                     .fillMaxWidth()
                     .padding(innerPadding)
                     .padding(horizontal = 16.dp),
-
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -175,8 +173,7 @@ fun SurfAreaScreen(
                             }
                         }
                         HeaderCard(surfArea = surfArea, icon = headerIcon, LocalDateTime.now())
-                    }
-                        else{
+                    } else {
                             HeaderCard(surfArea = surfArea, icon = R.drawable.spm.toString(), LocalDateTime.now())
                     }
                 }
@@ -553,10 +550,9 @@ private fun PreviewSurfAreaScreen() {
         }
     )
     AppTheme {
-        SurfAreaScreen("Solastranden", savm)
+        SurfAreaScreen("Solastranden", savm, rememberNavController())
         //DayPreviewCard()
         //HeaderCard()
         //InfoCard()
     }
 }
-
