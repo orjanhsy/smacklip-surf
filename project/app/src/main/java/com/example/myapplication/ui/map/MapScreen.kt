@@ -34,6 +34,7 @@ import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -267,7 +268,11 @@ fun SurfAreaCard(
     Card(
         modifier = Modifier
             .width(350.dp)
-            .wrapContentHeight()
+            .wrapContentHeight(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.onPrimary
+        )
+
     ) {
         Column(
             modifier = Modifier
@@ -399,9 +404,6 @@ fun SurfAreaCard(
         }
     }
 }
-
-
-
 
 
 @Composable

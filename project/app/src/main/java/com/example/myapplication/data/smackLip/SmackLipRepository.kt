@@ -46,7 +46,7 @@ interface SmackLipRepository {
 
     // waveforecast
     suspend fun getAllWavePeriodsNext3Days(): AllWavePeriods
-    suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): List<Double?> // skal fjernes til fordel for AllWavePeriods.wavePeriods[surfArea]
+    suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): Map<Int, List<Double?>> // skal fjernes til fordel for AllWavePeriods.wavePeriods[surfArea]
 
     suspend fun getAllOFLF7Days (): AllSurfAreasOFLF
 
@@ -296,7 +296,7 @@ class SmackLipRepositoryImpl (
         return waveForecastRepository.allRelevantWavePeriodsNext3Days()
     }
 
-    override suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): List<Double?> {
+    override suspend fun getWavePeriodsNext3DaysForArea(surfArea: SurfArea): Map<Int, List<Double?>> {
         return waveForecastRepository.wavePeriodsNext3DaysForArea(surfArea.modelName, surfArea.pointId)
     }
 
@@ -305,6 +305,15 @@ class SmackLipRepositoryImpl (
     private fun withinDir(optimalDir: Double, actualDir: Double, acceptedOffset: Double): Boolean {
 
         return abs(optimalDir - actualDir) !in acceptedOffset .. 360 - acceptedOffset
+    }
+
+    private fun evaluateWindDir(optimalDir: Double, actualDir: Double): Double {
+        val normalizedDiff = Math.min(abs(optimalDir - actualDir) % 360, abs(actualDir - optimalDir) % 360)
+        return when {
+            normalizedDiff <= Conditions.WIND_DIR_GREAT_DEVIATION.value -> 1.0
+            normalizedDiff >= 180 - Conditions.WIND_DIR_GREAT_DEVIATION.value && normalizedDiff <= 180 + Conditions.WIND_DIR_GREAT_DEVIATION.value -> 1.1
+            else -> 1.5
+        }
     }
 
     override fun getConditionStatus(
@@ -316,57 +325,48 @@ class SmackLipRepositoryImpl (
         waveHeight: Double,
         waveDir: Double,
     ): ConditionStatus {
-        var conditionStatus: ConditionStatus = ConditionStatus.DECENT
 
-        if (wavePeriod == null) {
-            return ConditionStatus.BLANK
-        }
-        // conditions that result in poor status regardless of other variables.
-        if (
-            windSpeed >= Conditions.WIND_SPEED_UPPER_BOUND.value
-            || waveHeight <= Conditions.WAVE_HEIGHT_LOWER_BOUND.value
-            || waveHeight >= Conditions.WAVE_HEIGHT_UPPER_BOUND.value
-            || wavePeriod <= Conditions.WAVE_PERIOD_LOWER_BOUND.value
+        if (wavePeriod == null || wavePeriod <= Conditions.WAVE_PERIOD_LOWER_BOUND.value || windSpeed >= Conditions.WIND_SPEED_UPPER_BOUND.value ||
+            waveHeight <= Conditions.WAVE_HEIGHT_LOWER_BOUND.value || waveHeight >= Conditions.WAVE_HEIGHT_UPPER_BOUND.value
         ) {
-            conditionStatus = ConditionStatus.POOR
-            return conditionStatus
+            return ConditionStatus.POOR
         }
 
         val status = mutableMapOf<String, Double>()
+
+        // Evaluate wind speed condition
         status["windSpeed"] = when {
             windSpeed < Conditions.WIND_SPEED_GREAT_UPPER_BOUND.value -> 1.0
             windSpeed < Conditions.WIND_SPEED_DECENT_UPPER_BOUND.value -> 2.0
             else -> 3.0
         }
-        status["windGust"] = status["windSpeed"]!!
 
-        val windDirFactor = when(withinDir(location.optimalWindDir, windDir, Conditions.WIND_DIR_GREAT_DEVIATION.value)) {
-            true -> 1.0
-            false -> if (withinDir(location.optimalWindDir, windDir, Conditions.WIND_DIR_DECENT_DEVIATION.value)) 1.2 else 1.5
-        }
+        // Apply wind direction factor to wind speed condition
+        status["windSpeed"] = status["windSpeed"]!! * evaluateWindDir(location.optimalWindDir, windDir)
 
-        status["windSpeed"] = status["windSpeed"]!! * windDirFactor
-
-        status["waveDir"] = when(withinDir(location.optimalWaveDir, waveDir, Conditions.WAVE_DIR_GREAT_DEVIATION.value)) {
-            true -> 1.0
-            false -> if (withinDir(location.optimalWaveDir, waveDir, Conditions.WAVE_DIR_DECENT_DEVIATION.value)) 2.0 else 3.0
-        }
-
-        status["wavePeriod"] = when {
-            wavePeriod > Conditions.WAVE_PERIOD_GREAT_LOWER_BOUND.value -> 1.0
-            wavePeriod in Conditions.WAVE_PERIOD_DECENT_LOWER_BOUND.value ..
-                    Conditions.WAVE_PERIOD_GREAT_LOWER_BOUND.value -> 2.0
+        // Evaluate wave direction condition
+        status["waveDir"] = when {
+            withinDir(location.optimalWaveDir, waveDir, Conditions.WAVE_DIR_GREAT_DEVIATION.value) -> 1.0
+            withinDir(location.optimalWaveDir, waveDir, Conditions.WAVE_DIR_DECENT_DEVIATION.value) -> 2.0
             else -> 3.0
         }
 
+        // Evaluate wave period condition
+        status["wavePeriod"] = when {
+            wavePeriod > Conditions.WAVE_PERIOD_GREAT_LOWER_BOUND.value -> 1.0
+            wavePeriod >= Conditions.WAVE_PERIOD_DECENT_LOWER_BOUND.value -> 2.0
+            else -> 3.0
+        }
+
+        // Calculate average status
         val averageStatus = status.values.sum() / status.size
 
-        conditionStatus = when {
+        // Determine overall condition status
+        return when {
             averageStatus < 1.3 -> ConditionStatus.GREAT
             averageStatus in 1.3 .. 2.3 -> ConditionStatus.DECENT
             else -> ConditionStatus.POOR
         }
-        return conditionStatus
     }
 
     // testing

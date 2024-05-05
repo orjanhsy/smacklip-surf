@@ -1,10 +1,13 @@
 package com.example.myapplication
 
+import androidx.compose.runtime.collectAsState
 import com.example.myapplication.data.smackLip.Repository
 import com.example.myapplication.data.smackLip.RepositoryImpl
 import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
 import com.example.myapplication.data.waveforecast.WaveForecastRepositoryImpl
 import com.example.myapplication.model.surfareas.SurfArea
+import com.example.myapplication.ui.home.HomeScreenViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import kotlin.system.measureTimeMillis
@@ -32,19 +35,35 @@ class StatefulRepoTests {
     }
 
     @Test
-    fun wavePeriodsAreX() = runBlocking{
+    fun wavePeriodsAreX(): Unit = runBlocking{
         repo.loadWavePeriods()
         val state = repo.wavePeriods.value
-        println(state)
+        state.wavePeriods.entries.map {
+            println(it)
+        }
     }
 
     @Test
-    fun alertsAreX() = runBlocking{
+    fun alertsAreX(): Unit = runBlocking{
         repo.loadAlerts()
 
         val state = repo.alerts.value
         println(state)
     }
 
+    @Test
+    fun pointForecastsFilterTime()= runBlocking{
+        val time2 = measureTimeMillis {
+            WaveForecastRepositoryImpl().allRelevantWavePeriodsNext3Days()
+        }
+
+        val time1 = measureTimeMillis {
+            WaveForecastRepositoryImpl().allWavePeriodsNext3Days()
+        }
+
+
+        println("$time1, $time2")
+
+    }
 
 }
