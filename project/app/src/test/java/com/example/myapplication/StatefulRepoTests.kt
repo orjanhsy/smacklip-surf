@@ -51,4 +51,9 @@ class StatefulRepoTests {
         println(state)
     }
 
+    @Test
+    fun pointForecastsFilterTime()= runBlocking{
+        print(WaveForecastRepositoryImpl().allWavePeriodsNext3Days())
+    }
+
 }
