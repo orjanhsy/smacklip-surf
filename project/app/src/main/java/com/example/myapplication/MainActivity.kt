@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
 
         installSplashScreen().apply {
             setKeepOnScreenCondition{
-                SmackLipApplication.container.stateFulRepo.ofLfNext7Days.value.next7Days.isEmpty()
+                SmackLipApplication.container.stateFulRepo.wavePeriods.value.wavePeriods.isEmpty()
             }
         }
 
