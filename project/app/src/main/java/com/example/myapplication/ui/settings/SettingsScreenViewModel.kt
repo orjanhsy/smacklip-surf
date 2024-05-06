@@ -1,15 +1,18 @@
 package com.example.myapplication.ui.settings
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.AppContainer
 import com.example.myapplication.Settings
-import com.example.myapplication.data.settings.SettingsRepositoryImpl
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 sealed class SettingsUiState{
@@ -24,12 +27,24 @@ class SettingsScreenViewModel(
         MutableStateFlow(SettingsUiState.Loading)
     val settingsUiState: StateFlow<SettingsUiState> = _settingsUiState.asStateFlow()
     val settings: Flow<Settings> = container.settingsRepository.settingsFlow
+    val isDarkThemEnabled: StateFlow<Boolean> = container.settingsRepository.settingsFlow
+        .map {  it.theme == Settings.Theme.DARK}
+        .stateIn(viewModelScope, SharingStarted.Lazily, false)
+
+
 
     init {
         viewModelScope.launch {
             container.settingsRepository.settingsFlow.collect{
                 _settingsUiState.value = SettingsUiState.Loaded(it)
             }
+        }
+    }
+
+    fun updateTheme(theme: Settings.Theme){
+        viewModelScope.launch {
+            container.settingsRepository.updateTheme(theme)
+            Log.d("Dark Mode", "Successfully updated theme to: $theme")
         }
     }
 
@@ -52,15 +67,7 @@ class SettingsScreenViewModel(
 
      */
 
-    fun setTest(test: Double){
-        viewModelScope.launch {
-            try {
-                container.settingsRepository.setTest(test)
-            } catch (e: Exception){
-                _settingsUiState.value = SettingsUiState.Error("Failed to update test value")
-            }
-        }
-    }
+    /*
     fun setDarkMode(enabled: Boolean){
         viewModelScope.launch{
             try {
@@ -71,25 +78,9 @@ class SettingsScreenViewModel(
         }
     }
 
-    fun addFavoriteSurfArea(favorite: String){
-        viewModelScope.launch {
-            try {
-                container.settingsRepository.addFavoriteSurfArea(favorite)
-            } catch (e: Exception){
-                _settingsUiState.value = SettingsUiState.Error("Failed to add favorite surf area")
-            }
-        }
-    }
+     */
 
-    fun removeFavoriteSurfArea(favorite: String){
-        viewModelScope.launch {
-            try {
-                container.settingsRepository.removeFavoriteSurfArea(favorite)
-            } catch (e: Exception){
-                _settingsUiState.value = SettingsUiState.Error("Failed to remove favorite surf area")
-            }
-        }
-    }
+
 
 
     class SettingsViewModelFactory(

@@ -1,5 +1,7 @@
 package com.example.myapplication
 
+//import androidx.datastore.preferences.createDataStore
+
 import DailySurfAreaScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -16,19 +18,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-//import androidx.datastore.preferences.createDataStore
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-
 import com.example.myapplication.presentation.viewModelFactory
-
 import com.example.myapplication.ui.home.HomeScreen
 import com.example.myapplication.ui.home.HomeScreenViewModel
 import com.example.myapplication.ui.map.MapScreen
+import com.example.myapplication.ui.map.MapScreenViewModel
 import com.example.myapplication.ui.settings.SettingsScreen
 import com.example.myapplication.ui.settings.SettingsScreenViewModel
 import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
@@ -51,11 +51,18 @@ class MainActivity : ComponentActivity() {
 
         val connectivityObserver = NetworkConnectivityObserver(applicationContext)
         setContent {
-            AppTheme {
+
+            //foreløpig til jeg finner en bedre måte å få det over hele appen på
+            val settingsVm = viewModel<SettingsScreenViewModel>(
+                factory = viewModelFactory {
+                    SettingsScreenViewModel(SmackLipApplication.container)
+                }
+            )
+            val isDarkTheme by settingsVm.isDarkThemEnabled.collectAsState(initial = false)
+            AppTheme( darkTheme = isDarkTheme) {
                 val isConnected by connectivityObserver.observe().collectAsState(
                     initial = false
                 )
-
 
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -94,7 +101,7 @@ fun ShowSnackBar() {
 }
 
 @Composable
-fun SmackLipNavigation(){
+fun SmackLipNavigation() {
     val navController = rememberNavController()
     NavigationManager.navController = navController
 
@@ -122,6 +129,12 @@ fun SmackLipNavigation(){
         }
     )
 
+    val mapVm = viewModel<MapScreenViewModel>(
+        factory = viewModelFactory {
+            MapScreenViewModel(SmackLipApplication.container.stateFulRepo)
+        }
+    )
+
     //navigation
     NavHost(
         navController = navController,
@@ -129,31 +142,23 @@ fun SmackLipNavigation(){
 
         ){
         composable("HomeScreen"){
-            HomeScreen(hsvm){
-
-                navController.navigate("SurfAreaScreen/$it")
-            }
+            HomeScreen(hsvm, navController)
         }
         composable("SurfAreaScreen/{surfArea}") { backStackEntry ->
             val surfArea = backStackEntry.arguments?.getString("surfArea") ?: ""
-            SurfAreaScreen(surfAreaName = surfArea, savm)
+            SurfAreaScreen(surfAreaName = surfArea, savm, navController)
         }
         composable("DailySurfAreaScreen/{surfArea}/{dayIndex}") { backStackEntry ->
             val surfArea = backStackEntry.arguments?.getString("surfArea") ?: ""
             val dayIndex = backStackEntry.arguments?.getString("dayIndex")?.toInt() ?: 0 // TODO: Handle differently
-            DailySurfAreaScreen(surfAreaName = surfArea, dayOfMonth = dayIndex, dsvm)
-
+            DailySurfAreaScreen(surfAreaName = surfArea, dayOfMonth = dayIndex, dsvm, navController)
         }
         composable("MapScreen"){
-            MapScreen(
-                onNavigateToSurfAreaScreen = {
-                    navController.navigate("SurfAreaScreen/$it")
-
-                }
-            )
+            MapScreen(mapScreenViewModel = mapVm, navController =  navController)
         }
         composable("SettingsScreen") {
-            SettingsScreen(navController = navController, settingsVm)
+
+            SettingsScreen(settingsVm, navController)
         }
     }
 }
