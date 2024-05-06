@@ -15,7 +15,7 @@ val AppTypography = Typography(
                 titleSmall = TextStyle(
                     fontSize = 14.sp,
                     fontWeight = FontWeight(400),
-                    //color = MaterialTheme.colorScheme.outline,
+                    color = outlineLight,
                 ),
     //header (icon)
                 titleLarge = TextStyle(
@@ -25,13 +25,13 @@ val AppTypography = Typography(
                     lineHeight = 26.sp,
                     letterSpacing = 0.sp,
                     hyphens = Hyphens.Auto,
-                    //color = outlineLightMediumContrast
+                    color = outlineLightMediumContrast
                 ),
     //daily
                 bodySmall = TextStyle(
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Normal,
-                   // color = onSurfaceVariantLight,
+                    color = onSurfaceVariantLight,
                     lineHeight = 15.sp,
                     ),
     //title in surfareacard homescreen
@@ -45,7 +45,7 @@ val AppTypography = Typography(
                 titleMedium = TextStyle(
                     fontSize = 18.sp,
                     textAlign = TextAlign.Center,
-               //     color = onSurfaceVariantLight,
+                    color = onSurfaceVariantLight,
                 ),
 
 
