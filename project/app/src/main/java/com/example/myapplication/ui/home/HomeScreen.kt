@@ -3,7 +3,6 @@ package com.example.myapplication.ui.home
 //import com.example.myapplication.ui.theme.MyApplicationTheme
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,14 +31,10 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.outlined.Air
 import androidx.compose.material.icons.outlined.CallMade
-import androidx.compose.material.icons.outlined.Tsunami
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -48,8 +43,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -98,26 +91,19 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel, navController: NavContr
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                modifier = Modifier.background(MaterialTheme.colorScheme.inversePrimary),
-                title = {
-                    Column(
-                        modifier = Modifier.padding(top = 12.dp) // Adjust padding as needed
-                    ) {
-                        SearchBar(
-                            onQueryChange = {},
-                            isSearchActive = isSearchActive.value,
-                            onActiveChanged = { isActive ->
-                                isSearchActive.value = isActive
-                            },
-                            surfAreas = SurfArea.entries.toList(),
-                            navController = navController
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.inversePrimary)
-            )
-
+            Column(
+                modifier = Modifier.padding(top = 12.dp) // Adjust padding as needed
+            ) {
+                SearchBar(
+                    onQueryChange = {},
+                    isSearchActive = isSearchActive.value,
+                    onActiveChanged = { isActive ->
+                        isSearchActive.value = isActive
+                    },
+                    surfAreas = SurfArea.entries.toList(),
+                    navController = navController
+                )
+            }
         },
         bottomBar = {
             BottomBar(navController = navController)
@@ -137,7 +123,7 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel, navController: NavContr
                         homeScreenViewModel,
                         navController = navController
                     )
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(14.dp))
                     Column (
                         modifier = Modifier
                             .padding(horizontal = 10.dp)
@@ -145,18 +131,16 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel, navController: NavContr
                         Text(
                             text = "Alle lokasjoner",
                             style = AppTypography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant                            )
+                            )
                     }
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(2),
                         modifier = Modifier
-                            .padding(horizontal = 6.dp)
                             .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    )
+                        //verticalArrangement = Arrangement.spacedBy(2.dp),
+                        horizontalArrangement = Arrangement.Center)
 
-                        {
+                    {
                         items(SurfArea.entries) { location ->
                             // TODO: !!
                             SurfAreaCard(
@@ -208,7 +192,6 @@ fun SearchBar(
         OutlinedTextField(
             modifier = modifier
                 .padding(12.dp)
-                .height(56.dp)
                 .fillMaxWidth(),
             shape = CircleShape,
             value = searchQuery,
@@ -218,7 +201,7 @@ fun SearchBar(
                 activeChanged(true)
                 expanded = true
             },
-            placeholder = { Text(text="Søk etter surfeområde", style = AppTypography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
+            placeholder = { Text(text="Søk etter surfeområde", style = AppTypography.titleMedium,) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Rounded.Search,
@@ -275,8 +258,7 @@ fun SearchBar(
                             Text(
                                 text = surfArea.locationName,
                                 style = AppTypography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.weight(1f)
+                                modifier = Modifier.weight(1f)
                             )
                             Spacer(modifier = Modifier.width(12.dp))
                             Image(
@@ -314,46 +296,38 @@ fun FavoritesList(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 6.dp),
+            .padding(horizontal = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = "Favoritter",
             style = AppTypography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-
-        modifier = Modifier.weight(1f, true)
+            modifier = Modifier.weight(1f, true)
         )
         Button(
             onClick = { homeScreenViewModel.clearAllFavorites()},
             modifier = Modifier
                 .defaultMinSize(minWidth = 62.dp, minHeight = 32.dp)
-                .padding(start = 8.dp, top = 2.dp),
+                .padding(start = 8.dp),
             contentPadding = PaddingValues(
                 top = 4.dp,
                 bottom = 4.dp,
                 start = 8.dp,
                 end = 8.dp
-            ),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.secondaryContainer
             )
+
+
         ) {
-            Text(text="Tøm favoritter",
-                style = AppTypography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text("Tøm favoritter")
 
         }
     }
     if (favorites.isNotEmpty()) {
-        LazyRow (
-            modifier = Modifier
-                .padding(start = 2.dp)
-        ) {
+        LazyRow {
             items(favorites) { surfArea ->
                 Card(
                     modifier = Modifier
-                        .padding(horizontal = 4.dp, vertical = 2.dp)
+                        .padding(horizontal = 8.dp, vertical = 8.dp)
                         .size(width = 150.0.dp, height = 200.00.dp)
                         .clip(RoundedCornerShape(10.dp))
                         .clickable {
@@ -411,15 +385,13 @@ fun EmptyFavoriteCard() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.onPrimary)
                 .padding(14.dp),
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = "Trykk på stjernen for å legge til favoritt",
                 style = AppTypography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center,
+                textAlign = TextAlign.Center,
                 )
         }
     }
@@ -446,20 +418,17 @@ fun SurfAreaCard(
     Card(
         modifier = Modifier
             .wrapContentSize()
-            //.padding(start = 8.dp, top = 2.dp, end = 10.dp, bottom = 10.dp)
             .padding(start = 8.dp, top = 2.dp, end = 10.dp, bottom = 10.dp)
             .clickable {
                 navController.navigate("SurfAreaScreen/${surfArea.locationName}")
-            },
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimary),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
-        ) {
+            }
+    ) {
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .width(162.dp)
                 .height(162.dp)
-                .background(MaterialTheme.colorScheme.onPrimary)
 
         ) {
 
@@ -493,27 +462,26 @@ fun SurfAreaCard(
                     Text(
                         text = surfArea.locationName,
                         style = AppTypography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                        )
                 }
 
                 Row {
                     Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 2.dp)) {
-                        Icon(
-                            imageVector = Icons.Outlined.Tsunami,
-                            contentDescription = "tsunami",
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        Image(
+                            painter = painterResource(id = R.drawable.tsunami),
+                            contentDescription = "wave icon",
                             modifier = Modifier
-                                .width(17.dp)
-                                .height(17.dp)
+                                .padding(0.02021.dp)
+                                .width(15.3587.dp)
+                                .height(14.47855.dp)
+
                         )
                     }
                     Spacer(modifier = Modifier.width(5.dp))
                     Text(
                         text = waveHeight.toString(),
                         style = AppTypography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                        )
                     Spacer(modifier = Modifier.width(5.dp))
                     Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 0.dp)) {
                         Icon(
@@ -529,21 +497,20 @@ fun SurfAreaCard(
 
                 Row {
                     Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 2.dp)) {
-                        Icon(
-                            imageVector = Icons.Outlined.Air,
-                            contentDescription = "air",
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        Image(
+                            painter = painterResource(id = R.drawable.air),
+                            contentDescription = "Air icon",
                             modifier = Modifier
-                                .width(17.dp)
-                                .height(17.dp)
+                                .padding(0.02021.dp)
+                                .width(15.3587.dp)
+                                .height(13.6348.dp)
                         )
                     }
                     Spacer(modifier = Modifier.width(5.dp))
                     Text(
                        text = "${windSpeed.toInt()}${if (windGust > windSpeed) " (${windGust.toInt()})" else ""}",
                       style = AppTypography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                        )
 
                     Spacer(modifier = Modifier.width(5.dp))
                     Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 0.dp)) {
@@ -646,5 +613,3 @@ private fun PreviewHomeScreen() {
         HomeScreen(hsvm, rememberNavController())
     }
 }
-
-
