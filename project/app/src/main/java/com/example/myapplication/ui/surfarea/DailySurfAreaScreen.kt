@@ -19,19 +19,21 @@ import androidx.compose.material.icons.outlined.Air
 import androidx.compose.material.icons.outlined.CallMade
 import androidx.compose.material.icons.outlined.Tsunami
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -84,7 +86,7 @@ fun DailySurfAreaScreen(
                                     Icon(
                                         Icons.Default.ArrowBack,
                                         contentDescription = "Back",
-                                        tint = Color.Black,
+                                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                         modifier = Modifier
                                             .width(42.dp)
                                             .height(42.dp)
@@ -92,7 +94,9 @@ fun DailySurfAreaScreen(
 
                                 }
                             }
-                        }
+                        },
+                        colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.inversePrimary)
+
                     )
 
                 },
@@ -252,8 +256,10 @@ fun AllInfoCard(
             modifier = Modifier
                 .padding(3.dp)
                 .fillMaxWidth()
-                .height(49.dp)
-        ) {
+                .height(49.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimary),
+
+            ) {
             Spacer(modifier = Modifier.height(8.dp))
             Row(
                 modifier = Modifier
@@ -264,6 +270,7 @@ fun AllInfoCard(
                 Text(
                     text = timestamp,
                     style = AppTypography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.weight(1f)
                 )
 
@@ -274,6 +281,7 @@ fun AllInfoCard(
                     Icon(
                         imageVector = Icons.Outlined.Air,
                         contentDescription = "Air",
+                        tint= MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(20.dp)
                     )
 
@@ -283,6 +291,8 @@ fun AllInfoCard(
                         text = if (windGust as Double > windSpeed as Double) "${(windSpeed).toInt()} (${(windGust).toInt()})"
                         else "${(windSpeed).toInt()}",
                         style = AppTypography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+
                     )
 
                     Spacer(modifier = Modifier.width(6.dp))
@@ -290,6 +300,7 @@ fun AllInfoCard(
                     Icon(
                         imageVector = Icons.Outlined.CallMade,
                         contentDescription = "Arrow",
+                        tint=  MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier
                             .size(17.dp)
                             .rotate(rotationAngleWind - 45)
@@ -305,6 +316,7 @@ fun AllInfoCard(
                     Icon(
                         imageVector = Icons.Outlined.Tsunami,
                         contentDescription = "Tsunami",
+                        tint=MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(18.dp)
                     )
 
@@ -313,6 +325,7 @@ fun AllInfoCard(
                     Text(
                         text = "$waveHeight m",
                         style = AppTypography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
 
                     Spacer(modifier = Modifier.width(6.dp))
@@ -320,6 +333,7 @@ fun AllInfoCard(
                     Text(
                         text = "${wavePeriod?.toInt()} sek",
                         style = AppTypography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
 
                     Spacer(modifier = Modifier.width(6.dp))
@@ -327,6 +341,7 @@ fun AllInfoCard(
                     Icon(
                         imageVector = Icons.Outlined.CallMade,
                         contentDescription = "Arrow",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier
                             .size(17.dp)
                             .rotate(rotationAngleWaveDir - 45)
@@ -346,6 +361,7 @@ fun AllInfoCard(
                             temp.toString()
                         },
                         style = AppTypography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(end = 4.dp)
                     )
 
