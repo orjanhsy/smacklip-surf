@@ -8,6 +8,7 @@ import com.example.myapplication.data.waveforecast.WaveForecastDataSource
 import com.example.myapplication.data.waveforecast.WaveForecastRepositoryImpl
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.home.HomeScreenViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
@@ -54,22 +55,19 @@ class StatefulRepoTests {
 
     @Test
     fun pointForecastsFilterTime()= runBlocking{
-        val time2 = measureTimeMillis {
-            WaveForecastRepositoryImpl().allRelevantWavePeriodsNext3Days()
-        }
 
         val time1 = measureTimeMillis {
             WaveForecastRepositoryImpl().allWavePeriodsNext3Days()
         }
 
 
-        println("$time1, $time2")
+        println("$time1")
 
     }
 
     @Test
     fun waveForecastXd()= runBlocking{
-        print(WaveForecastDataSource().fetchPointForecastWithTimeTimestamps(SurfArea.HODDEVIK.lat, SurfArea.HODDEVIK.lon))
+        WaveForecastRepositoryImpl().getAllWavePeriods()
     }
 
 }
