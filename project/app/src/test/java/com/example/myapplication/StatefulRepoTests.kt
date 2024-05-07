@@ -66,7 +66,7 @@ class StatefulRepoTests {
     }
 
     @Test
-    fun waveForecastXd()= runBlocking{
+    fun waveForecastXd(): Unit = runBlocking{
         WaveForecastRepositoryImpl().getAllWavePeriods()
     }
 
