@@ -47,9 +47,9 @@ class WaveForecastRepositoryImpl(
             }
             val mappedForecastsByDay = mappedForecasts.entries.associate { (area, pointForecasts) ->
                 area to pointForecasts.await().groupBy {forecast ->
-                    LocalDateTime.parse(forecast.forecastTime).dayOfMonth
+                    LocalDateTime.parse(forecast.forecastTime, dateFormatter).dayOfMonth
                 }.mapValues { (_, forecasts) ->
-                    forecasts.map { it.totalPeakPeriod }
+                    forecasts.flatMap { listOf(it.totalPeakPeriod, it.totalPeakPeriod, it.totalPeakPeriod) }
                 }
             }
             AllWavePeriods(
