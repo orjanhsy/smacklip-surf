@@ -67,7 +67,8 @@ class StatefulRepoTests {
 
     @Test
     fun waveForecastXd(): Unit = runBlocking{
-        WaveForecastRepositoryImpl().getAllWavePeriods()
+        WaveForecastRepositoryImpl().getAllWavePeriods().wavePeriods.entries.forEach {
+            println("${it.key} -> ${it.value}")
+        }
     }
-
 }
