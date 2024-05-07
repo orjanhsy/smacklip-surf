@@ -57,7 +57,7 @@ fun SettingsScreen(settingsScreenViewModel: SettingsScreenViewModel, navControll
     val isDarkThemeEnabled by settingsScreenViewModel.isDarkThemEnabled.collectAsState()
 
 
-    AppTheme(darkTheme = isDarkThemeEnabled) {
+    AppTheme(useDarkTheme = isDarkThemeEnabled) {
         Scaffold(
             bottomBar = {
                 BottomBar(navController = navController)

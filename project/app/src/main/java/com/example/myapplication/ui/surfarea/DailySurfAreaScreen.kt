@@ -385,7 +385,7 @@ private fun PreviewDailyScreen() {
             DailySurfAreaScreenViewModel(SmackLipApplication.container.stateFulRepo)
         }
     )
-    AppTheme (darkTheme = false){
+    AppTheme (useDarkTheme = false){
         DailySurfAreaScreen("Hoddevik", 5, dsvm, rememberNavController())
     }
 }
