@@ -503,15 +503,10 @@ fun SearchBar(
                 modifier = Modifier
                     .padding(start = 12.dp, top = 0.dp, end = 12.dp, bottom = 12.dp)
                     .background(Color.White),
-                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 12.dp)
+                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
             ) {
                 val filteredSurfAreas =
-                    surfAreas.filter {
-                        it.locationName.startsWith(
-                            searchQuery,
-                            ignoreCase = true
-                        )
-                    }
+                    surfAreas.filter { it.locationName.startsWith(searchQuery, ignoreCase = true) }
                 items(filteredSurfAreas) { surfArea ->
                     Column(modifier = Modifier.clickable {
                         searchQuery = ""
