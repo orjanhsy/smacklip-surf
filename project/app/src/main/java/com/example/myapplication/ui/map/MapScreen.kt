@@ -37,12 +37,15 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
@@ -112,23 +115,25 @@ fun MapScreen(mapScreenViewModel : MapScreenViewModel, navController: NavControl
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
-            SearchBar(
-                onQueryChange = {},
-                isSearchActive = isSearchActive.value,
-                onActiveChanged = { isActive ->
-                    isSearchActive.value = isActive
-                },
-                surfAreas = SurfArea.entries.toList(),
-                onZoomToLocation = { point -> rememberPoint.value = point }
-            )
-            MapBoxMap(
-                modifier = Modifier
-                    .fillMaxSize(),
-                locations = mapRepository.locationToPoint(),
-                uiState = mapScreenUiState,
-                navController = navController,
-                rememberPoint = rememberPoint
-            )
+            Box(modifier = Modifier.weight(1f)) {
+                MapBoxMap(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    locations = mapRepository.locationToPoint(),
+                    uiState = mapScreenUiState,
+                    navController = navController,
+                    rememberPoint = rememberPoint
+                )
+                SearchBar(
+                    onQueryChange = {},
+                    isSearchActive = isSearchActive.value,
+                    onActiveChanged = { isActive ->
+                        isSearchActive.value = isActive
+                    },
+                    surfAreas = SurfArea.entries.toList(),
+                    onZoomToLocation = { point -> rememberPoint.value = point },
+                )
+            }
         }
     }
 }
@@ -409,6 +414,7 @@ fun SurfAreaCard(
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(
     surfAreas: List<SurfArea>,
@@ -432,106 +438,109 @@ fun SearchBar(
         onActiveChanged(active)
     }
 
-    Box(modifier = modifier) {
-        Box(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .background(Color.Transparent)
-                .fillMaxWidth()
+    Column(modifier = modifier.clip(RoundedCornerShape(50.dp))) {
+        OutlinedTextField(
+            modifier = modifier
                 .padding(12.dp)
-        ) {
-            OutlinedTextField(
-                modifier = modifier
-                    .padding(12.dp)
-                    .fillMaxWidth(),
-                shape = CircleShape,
-                value = searchQuery,
-                onValueChange = { query ->
-                    searchQuery = query
-                    onQueryChange(query)
-                    activeChanged(true)
-                    expanded = true
-                },
-                placeholder = { Text("Søk etter surfeområde", style = AppTypography.titleMedium) },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Rounded.Search,
-                        contentDescription = "Search icon",
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                },
-                trailingIcon = {
-                    if (isSearchActive) {
-                        IconButton(
-                            onClick = {
-                                searchQuery = ""
-                                onQueryChange("")
-                                onActiveChanged(false)
-                                focusManager.clearFocus()
-                                keyboardController?.hide()
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Clear,
-                                contentDescription = "Clear searchbar"
-                            )
-                        }
-                    }
-                },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    imeAction = ImeAction.Search
-                ),
-                keyboardActions = KeyboardActions(
-                    onSearch = {
-                        onSearch?.invoke(searchQuery)
-                        activeChanged(false)
-                        keyboardController?.hide()
-                        focusManager.clearFocus()
-                    }
+                .fillMaxWidth()
+                .background(color = Color.Transparent),
+            shape = CircleShape,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                disabledContainerColor = MaterialTheme.colorScheme.surface,
+                cursorColor = MaterialTheme.colorScheme.onBackground,
+                focusedBorderColor = Color.Gray,
+                unfocusedBorderColor = Color.Gray,
+            ),
+            value = searchQuery,
+            onValueChange = { query ->
+                searchQuery = query
+                onQueryChange(query)
+                activeChanged(true)
+                expanded = true
+            },
+            placeholder = { Text("Søk etter surfeområde", style = AppTypography.titleMedium) },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Rounded.Search,
+                    contentDescription = "Search icon",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
-            )
-            if (expanded && searchQuery.isNotEmpty()) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
-                ) {
-                    val filteredSurfAreas =
-                        surfAreas.filter {
-                            it.locationName.startsWith(
-                                searchQuery,
-                                ignoreCase = true
-                            )
-                        }
-                    items(filteredSurfAreas) { surfArea ->
-                        Column(modifier = Modifier.clickable {
+            },
+            trailingIcon = {
+                if (isSearchActive) {
+                    IconButton(
+                        onClick = {
                             searchQuery = ""
                             onQueryChange("")
                             onActiveChanged(false)
                             focusManager.clearFocus()
                             keyboardController?.hide()
-                            onZoomToLocation(Point.fromLngLat(surfArea.lon, surfArea.lat))
-                        }) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .padding(vertical = 8.dp)
-                            ) {
-                                Text(
-                                    text = surfArea.locationName,
-                                    modifier = Modifier.weight(1f)
-                                )
-                                Spacer(modifier = Modifier.width(12.dp))
-                                Image(
-                                    painter = painterResource(id = surfArea.image),
-                                    contentDescription = "SurfArea image",
-                                    modifier = Modifier.size(48.dp),
-                                    contentScale = ContentScale.Crop,
-                                    alignment = Alignment.CenterEnd
-                                )
-                            }
-                            Divider(modifier = Modifier.padding(horizontal = 12.dp))
                         }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = "Clear searchbar"
+                        )
+                    }
+                }
+            },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Search
+            ),
+            keyboardActions = KeyboardActions(
+                onSearch = {
+                    onSearch?.invoke(searchQuery)
+                    activeChanged(false)
+                    keyboardController?.hide()
+                    focusManager.clearFocus()
+                }
+            )
+        )
+        if (expanded && searchQuery.isNotEmpty()) {
+            LazyColumn(
+                modifier = Modifier
+                    .padding(start = 12.dp, top = 0.dp, end = 12.dp, bottom = 12.dp)
+                    .background(Color.White),
+                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp)
+            ) {
+                val filteredSurfAreas =
+                    surfAreas.filter {
+                        it.locationName.startsWith(
+                            searchQuery,
+                            ignoreCase = true
+                        )
+                    }
+                items(filteredSurfAreas) { surfArea ->
+                    Column(modifier = Modifier.clickable {
+                        searchQuery = ""
+                        onQueryChange("")
+                        onActiveChanged(false)
+                        focusManager.clearFocus()
+                        keyboardController?.hide()
+                        onZoomToLocation(Point.fromLngLat(surfArea.lon, surfArea.lat))
+                    }) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .padding(vertical = 8.dp)
+                        ) {
+                            Text(
+                                text = surfArea.locationName,
+                                modifier = Modifier.weight(1f)
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Image(
+                                painter = painterResource(id = surfArea.image),
+                                contentDescription = "SurfArea image",
+                                modifier = Modifier.size(48.dp),
+                                contentScale = ContentScale.Crop,
+                                alignment = Alignment.CenterEnd
+                            )
+                        }
+                        Divider(modifier = Modifier.padding(horizontal = 12.dp))
                     }
                 }
             }
