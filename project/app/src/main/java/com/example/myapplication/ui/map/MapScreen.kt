@@ -2,6 +2,7 @@ package com.example.myapplication.ui.map
 
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -431,93 +432,106 @@ fun SearchBar(
         onActiveChanged(active)
     }
 
-    Column(modifier = modifier) {
-        OutlinedTextField(
-            modifier = modifier
+    Box(modifier = modifier) {
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .background(Color.Transparent)
+                .fillMaxWidth()
                 .padding(12.dp)
-                .fillMaxWidth(),
-            shape = CircleShape,
-            value = searchQuery,
-            onValueChange = { query ->
-                searchQuery = query
-                onQueryChange(query)
-                activeChanged(true)
-                expanded = true
-            },
-            placeholder = { Text("Søk etter surfeområde", style = AppTypography.titleMedium) },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Rounded.Search,
-                    contentDescription = "Search icon",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+        ) {
+            OutlinedTextField(
+                modifier = modifier
+                    .padding(12.dp)
+                    .fillMaxWidth(),
+                shape = CircleShape,
+                value = searchQuery,
+                onValueChange = { query ->
+                    searchQuery = query
+                    onQueryChange(query)
+                    activeChanged(true)
+                    expanded = true
+                },
+                placeholder = { Text("Søk etter surfeområde", style = AppTypography.titleMedium) },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Rounded.Search,
+                        contentDescription = "Search icon",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                },
+                trailingIcon = {
+                    if (isSearchActive) {
+                        IconButton(
+                            onClick = {
+                                searchQuery = ""
+                                onQueryChange("")
+                                onActiveChanged(false)
+                                focusManager.clearFocus()
+                                keyboardController?.hide()
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Clear,
+                                contentDescription = "Clear searchbar"
+                            )
+                        }
+                    }
+                },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Search
+                ),
+                keyboardActions = KeyboardActions(
+                    onSearch = {
+                        onSearch?.invoke(searchQuery)
+                        activeChanged(false)
+                        keyboardController?.hide()
+                        focusManager.clearFocus()
+                    }
                 )
-            },
-            trailingIcon = {
-                if (isSearchActive) {
-                    IconButton(
-                        onClick = {
+            )
+            if (expanded && searchQuery.isNotEmpty()) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
+                ) {
+                    val filteredSurfAreas =
+                        surfAreas.filter {
+                            it.locationName.startsWith(
+                                searchQuery,
+                                ignoreCase = true
+                            )
+                        }
+                    items(filteredSurfAreas) { surfArea ->
+                        Column(modifier = Modifier.clickable {
                             searchQuery = ""
                             onQueryChange("")
                             onActiveChanged(false)
                             focusManager.clearFocus()
                             keyboardController?.hide()
+                            onZoomToLocation(Point.fromLngLat(surfArea.lon, surfArea.lat))
+                        }) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .padding(vertical = 8.dp)
+                            ) {
+                                Text(
+                                    text = surfArea.locationName,
+                                    modifier = Modifier.weight(1f)
+                                )
+                                Spacer(modifier = Modifier.width(12.dp))
+                                Image(
+                                    painter = painterResource(id = surfArea.image),
+                                    contentDescription = "SurfArea image",
+                                    modifier = Modifier.size(48.dp),
+                                    contentScale = ContentScale.Crop,
+                                    alignment = Alignment.CenterEnd
+                                )
+                            }
+                            Divider(modifier = Modifier.padding(horizontal = 12.dp))
                         }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Clear,
-                            contentDescription = "Clear searchbar"
-                        )
-                    }
-                }
-            },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions.Default.copy(
-                imeAction = ImeAction.Search
-            ),
-            keyboardActions = KeyboardActions(
-                onSearch = {
-                    onSearch?.invoke(searchQuery)
-                    activeChanged(false)
-                    keyboardController?.hide()
-                    focusManager.clearFocus()
-                }
-            )
-        )
-        if (expanded && searchQuery.isNotEmpty()) {
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth(),
-                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
-            ) {
-                val filteredSurfAreas =
-                    surfAreas.filter { it.locationName.startsWith(searchQuery, ignoreCase = true) }
-                items(filteredSurfAreas) { surfArea ->
-                    Column(modifier = Modifier.clickable {
-                        searchQuery = ""
-                        onQueryChange("")
-                        onActiveChanged(false)
-                        focusManager.clearFocus()
-                        keyboardController?.hide()
-                        onZoomToLocation(Point.fromLngLat(surfArea.lon, surfArea.lat))
-                    }) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .padding(vertical = 8.dp)
-                        ) {
-                            Text(
-                                text = surfArea.locationName,
-                                modifier = Modifier.weight(1f)
-                            )
-                            Spacer(modifier = Modifier.width(12.dp))
-                            Image(
-                                painter = painterResource(id = surfArea.image),
-                                contentDescription = "SurfArea image",
-                                modifier = Modifier.size(48.dp),
-                                contentScale = ContentScale.Crop,
-                                alignment = Alignment.CenterEnd
-                            )
-                        }
-                        Divider(modifier = Modifier.padding(horizontal = 12.dp))
                     }
                 }
             }
