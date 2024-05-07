@@ -26,7 +26,7 @@ interface WaveForecastRepository {
 
     suspend fun allPointForecasts(): Map<LocalDateTime, List<PointForecast>>
     suspend fun allWavePeriodsNext3Days(): AllWavePeriods
-    suspend fun getAllWavePeriods(): Map<SurfArea, NewPointForecasts>
+    suspend fun getAllWavePeriods(): AllWavePeriods
 
 }
 
@@ -34,7 +34,8 @@ class WaveForecastRepositoryImpl(
     private val waveForecastDataSource: WaveForecastDataSource = WaveForecastDataSource()
 ): WaveForecastRepository {
 
-    override suspend fun getAllWavePeriods(): Map<SurfArea, NewPointForecasts> {
+    override suspend fun getAllWavePeriods(): AllWavePeriods {
+        val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX")
         return coroutineScope {
             val mappedForecasts = SurfArea.entries.associateWith {
                 async {
@@ -44,7 +45,16 @@ class WaveForecastRepositoryImpl(
                     )
                 }
             }
-            mappedForecasts.entries.associate { it.key to it.value.await() }
+            val mappedForecastsByDay = mappedForecasts.entries.associate { (area, pointForecasts) ->
+                area to pointForecasts.await().groupBy {forecast ->
+                    LocalDateTime.parse(forecast.forecastTime).dayOfMonth
+                }.mapValues { (_, forecasts) ->
+                    forecasts.map { it.totalPeakPeriod }
+                }
+            }
+            AllWavePeriods(
+                mappedForecastsByDay
+            )
         }
     }
 
