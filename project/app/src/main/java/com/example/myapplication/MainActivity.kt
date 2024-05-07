@@ -59,7 +59,7 @@ class MainActivity : ComponentActivity() {
                 }
             )
             val isDarkTheme by settingsVm.isDarkThemEnabled.collectAsState(initial = false)
-            AppTheme( darkTheme = isDarkTheme) {
+            AppTheme( useDarkTheme = isDarkTheme) {
                 val isConnected by connectivityObserver.observe().collectAsState(
                     initial = false
                 )
