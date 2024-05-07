@@ -2,6 +2,7 @@ package com.example.myapplication.ui.map
 
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -36,10 +37,12 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -111,23 +114,25 @@ fun MapScreen(mapScreenViewModel : MapScreenViewModel, navController: NavControl
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
-            SearchBar(
-                onQueryChange = {},
-                isSearchActive = isSearchActive.value,
-                onActiveChanged = { isActive ->
-                    isSearchActive.value = isActive
-                },
-                surfAreas = SurfArea.entries.toList(),
-                onZoomToLocation = { point -> rememberPoint.value = point }
-            )
-            MapBoxMap(
-                modifier = Modifier
-                    .fillMaxSize(),
-                locations = mapRepository.locationToPoint(),
-                uiState = mapScreenUiState,
-                navController = navController,
-                rememberPoint = rememberPoint
-            )
+            Box(modifier = Modifier.weight(1f)) {
+                MapBoxMap(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    locations = mapRepository.locationToPoint(),
+                    uiState = mapScreenUiState,
+                    navController = navController,
+                    rememberPoint = rememberPoint
+                )
+                SearchBar(
+                    onQueryChange = {},
+                    isSearchActive = isSearchActive.value,
+                    onActiveChanged = { isActive ->
+                        isSearchActive.value = isActive
+                    },
+                    surfAreas = SurfArea.entries.toList(),
+                    onZoomToLocation = { point -> rememberPoint.value = point },
+                )
+            }
         }
     }
 }
@@ -408,6 +413,7 @@ fun SurfAreaCard(
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(
     surfAreas: List<SurfArea>,
@@ -431,12 +437,21 @@ fun SearchBar(
         onActiveChanged(active)
     }
 
-    Column(modifier = modifier) {
+    Column(modifier = modifier.clip(RoundedCornerShape(50.dp))) {
         OutlinedTextField(
             modifier = modifier
                 .padding(12.dp)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .background(color = Color.Transparent),
             shape = CircleShape,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                disabledContainerColor = MaterialTheme.colorScheme.surface,
+                cursorColor = MaterialTheme.colorScheme.onBackground,
+                focusedBorderColor = Color.Gray,
+                unfocusedBorderColor = Color.Gray,
+            ),
             value = searchQuery,
             onValueChange = { query ->
                 searchQuery = query
@@ -485,7 +500,9 @@ fun SearchBar(
         )
         if (expanded && searchQuery.isNotEmpty()) {
             LazyColumn(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .padding(start = 12.dp, top = 0.dp, end = 12.dp, bottom = 12.dp)
+                    .background(Color.White),
                 contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
             ) {
                 val filteredSurfAreas =
