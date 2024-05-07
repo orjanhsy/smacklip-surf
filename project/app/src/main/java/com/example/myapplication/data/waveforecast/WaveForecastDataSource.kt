@@ -5,8 +5,11 @@ import com.example.myapplication.data.utils.HTTPServiceHandler.WF_ACCESS_TOKEN_U
 import com.example.myapplication.data.utils.HTTPServiceHandler.WF_ALL_POINT_FORECASTS_URL
 import com.example.myapplication.data.utils.HTTPServiceHandler.WF_AVALIABLE_ALL_URL
 import com.example.myapplication.data.utils.HTTPServiceHandler.WF_BASE_URL
+import com.example.myapplication.data.utils.HTTPServiceHandler.WF_CLOSEST_ALL_TIME_URL
 import com.example.myapplication.data.utils.HTTPServiceHandler.WF_POINT_FORECAST_URL
 import com.example.myapplication.model.waveforecast.AccessToken
+import com.example.myapplication.model.waveforecast.NewPointForecast
+import com.example.myapplication.model.waveforecast.NewPointForecasts
 import com.example.myapplication.model.waveforecast.PointForecast
 import com.example.myapplication.model.waveforecast.TimeStamps
 import io.ktor.client.HttpClient
@@ -117,8 +120,27 @@ class WaveForecastDataSource {
             - other error (500)
              */
         }
-
     }
+
+    suspend fun fetchPointForecastWithTimeTimestamps(lat: Double, lon: Double): List<NewPointForecast> {
+        if (bearerTokenStorage.isEmpty()){
+            val (token, refresh) = getAccessToken()
+            bearerTokenStorage.add(BearerTokens(token, ""))
+        }
+        return try {
+            val response = client.get("$WF_CLOSEST_ALL_TIME_URL?x=$lon&y=$lat")
+            response.body()
+        } catch (e: Exception) {
+            throw e
+            /* TODO: Handle exceptions appropriately
+            - parameter is invalid (?)
+            - token is expired (401)
+            - other error (500)
+             */
+        }
+    }
+
+
 
     suspend fun getAccessToken(): Pair<String, String?> {
         val requestBody = parameters {

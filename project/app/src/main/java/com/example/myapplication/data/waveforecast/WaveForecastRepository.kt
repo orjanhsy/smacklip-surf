@@ -3,6 +3,7 @@ package com.example.myapplication.data.waveforecast
 import android.util.Log
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.waveforecast.AllWavePeriods
+import com.example.myapplication.model.waveforecast.NewPointForecasts
 import com.example.myapplication.model.waveforecast.PointForecast
 import com.example.myapplication.model.waveforecast.PointForecasts
 import kotlinx.coroutines.CoroutineScope
@@ -25,12 +26,38 @@ interface WaveForecastRepository {
 
     suspend fun allPointForecasts(): Map<LocalDateTime, List<PointForecast>>
     suspend fun allWavePeriodsNext3Days(): AllWavePeriods
+    suspend fun getAllWavePeriods(): AllWavePeriods
 
 }
 
 class WaveForecastRepositoryImpl(
     private val waveForecastDataSource: WaveForecastDataSource = WaveForecastDataSource()
 ): WaveForecastRepository {
+
+    override suspend fun getAllWavePeriods(): AllWavePeriods {
+        val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX")
+        return coroutineScope {
+            val mappedForecasts = SurfArea.entries.associateWith {
+                async {
+                    waveForecastDataSource.fetchPointForecastWithTimeTimestamps(
+                        it.lat,
+                        it.lon
+                    )
+                }
+            }
+            val mappedForecastsByDay = mappedForecasts.entries.associate { (area, pointForecasts) ->
+                area to pointForecasts.await().groupBy {forecast ->
+                    LocalDateTime.parse(forecast.forecastTime, dateFormatter).dayOfMonth
+                }.mapValues { (_, forecasts) ->
+                    forecasts.flatMap { listOf(it.totalPeakPeriod, it.totalPeakPeriod, it.totalPeakPeriod) }
+                }
+            }
+            AllWavePeriods(
+                mappedForecastsByDay
+            )
+        }
+    }
+
     override suspend fun allWavePeriodsNext3Days(): AllWavePeriods {
         val pointForecasts: Map<LocalDateTime, List<PointForecast>> = allPointForecasts()
         val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX")
@@ -59,6 +86,8 @@ class WaveForecastRepositoryImpl(
 
         return AllWavePeriods(hourByHour)
     }
+
+
 
     private fun distanceTo(lat: Double, lon: Double, surfArea: SurfArea): Double {
         // acos(sin(lat1)*sin(lat2)+cos(lat1)*cos(lat2)*cos(lon2-lon1))*6371 (6371 is Earth radius in km.)
