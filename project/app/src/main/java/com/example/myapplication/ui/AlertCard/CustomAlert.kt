@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,20 +47,21 @@ fun <T> CustomAlert(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(10.dp),
-            contentAlignment = Alignment.Center
+                .padding(8.dp),
+            contentAlignment = Alignment.Center,
         ) {
             Card(
                 modifier = modifier
-                    .padding(16.dp),
+                    .padding(12.dp)
+                    .width(280.dp),
                 shape = RoundedCornerShape(15.dp),
-                border = BorderStroke(1.5.dp, Color.LightGray)
-
+                border = BorderStroke(1.5.dp, Color.LightGray),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimary),
             ) {
                 Column(
                     modifier = Modifier
-                        .background(MaterialTheme.colorScheme.background)
-                        .padding(16.dp)
+                        .background(MaterialTheme.colorScheme.onPrimary)
+                        .padding(10.dp)
                 ) {
                     Image(
                         painter = painterResource(id = warningIcon),
@@ -87,7 +89,7 @@ fun <T> CustomAlert(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth(0.75f)
-                            //.padding(16.dp)
+                            .padding(8.dp)
                             .clickable {
                                 showAlert.value = false
                                 action?.invoke()
@@ -98,7 +100,7 @@ fun <T> CustomAlert(
                             text = actionText,
                             style = AppTypography.titleLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    modifier = Modifier
+                            modifier = Modifier
                                 .align(Alignment.Center)
                         )
                     }
@@ -131,4 +133,3 @@ fun PreviewCustomAlert() {
         )
     }
 }
-
