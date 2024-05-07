@@ -8,6 +8,7 @@ import com.example.myapplication.data.utils.HTTPServiceHandler.WF_BASE_URL
 import com.example.myapplication.data.utils.HTTPServiceHandler.WF_CLOSEST_ALL_TIME_URL
 import com.example.myapplication.data.utils.HTTPServiceHandler.WF_POINT_FORECAST_URL
 import com.example.myapplication.model.waveforecast.AccessToken
+import com.example.myapplication.model.waveforecast.NewPointForecasts
 import com.example.myapplication.model.waveforecast.PointForecast
 import com.example.myapplication.model.waveforecast.TimeStamps
 import io.ktor.client.HttpClient
@@ -120,14 +121,14 @@ class WaveForecastDataSource {
         }
     }
 
-    suspend fun fetchPointForecastWithTimeTimestamps(lat: Double, lon: Double): PointForecast {
+    suspend fun fetchPointForecastWithTimeTimestamps(lat: Double, lon: Double): NewPointForecasts {
         if (bearerTokenStorage.isEmpty()){
             val (token, refresh) = getAccessToken()
             bearerTokenStorage.add(BearerTokens(token, ""))
         }
         return try {
             val response = client.get("$WF_CLOSEST_ALL_TIME_URL?x=$lon&y=$lat")
-            response.body<PointForecast>()
+            response.body<NewPointForecasts>()
         } catch (e: Exception) {
             throw e
             /* TODO: Handle exceptions appropriately
