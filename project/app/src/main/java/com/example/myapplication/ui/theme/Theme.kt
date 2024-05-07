@@ -80,7 +80,7 @@ private val darkScheme = darkColorScheme(
     scrim = scrimDark,
     inverseSurface = inverseSurfaceDark,
     inverseOnSurface = inverseOnSurfaceDark,
-    inversePrimary = backgroundDark,
+    inversePrimary = inversePrimaryDark,
 )
 
 
