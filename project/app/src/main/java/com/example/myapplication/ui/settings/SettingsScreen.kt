@@ -171,8 +171,8 @@ fun SettingsScreen(settingsScreenViewModel: SettingsScreenViewModel, navControll
                             }
                             item{
                                 InformationCard(
-                                    title = "Hvor henter vi data fra?", 
-                                    content = "Beskrivelse"
+                                    title = "Hvor henter vi data fra?",
+                                    content = stringResource(id = R.string.henter_data)
                                 )
                             }
                         }
