@@ -33,8 +33,11 @@ private fun getConditionStatus(
     waveHeight: Double,
     waveDir: Double,
 ): ConditionStatus {
+    if (wavePeriod == null) {
+        return ConditionStatus.BLANK
+    }
 
-    if (wavePeriod == null || wavePeriod <= Conditions.WAVE_PERIOD_LOWER_BOUND.value || windSpeed >= Conditions.WIND_SPEED_UPPER_BOUND.value ||
+    if (wavePeriod <= Conditions.WAVE_PERIOD_LOWER_BOUND.value || windSpeed >= Conditions.WIND_SPEED_UPPER_BOUND.value ||
         waveHeight <= Conditions.WAVE_HEIGHT_LOWER_BOUND.value || waveHeight >= Conditions.WAVE_HEIGHT_UPPER_BOUND.value
     ) {
         return ConditionStatus.POOR
@@ -71,8 +74,8 @@ private fun getConditionStatus(
 
     // Determine overall condition status
     return when {
-        averageStatus < 1.3 -> ConditionStatus.GREAT
-        averageStatus in 1.3 .. 2.3 -> ConditionStatus.DECENT
+        averageStatus < 1.5 -> ConditionStatus.GREAT
+        averageStatus in 1.5 .. 2.5 -> ConditionStatus.DECENT
         else -> ConditionStatus.POOR
     }
 }

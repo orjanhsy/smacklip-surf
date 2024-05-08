@@ -200,7 +200,7 @@ fun SurfAreaScreen(
 
 
                                 val conditionStatus: ConditionStatus = try {
-                                    surfAreaScreenUiState.bestConditionStatusPerDay[dayIndex]!!
+                                    surfAreaScreenUiState.bestConditionStatusPerDay[dayIndex]
                                 } catch (e: IndexOutOfBoundsException) {
                                     Log.d(
                                         "SAscreen",
@@ -218,7 +218,7 @@ fun SurfAreaScreen(
                                     surfAreaScreenUiState.minWaveHeights[dayIndex].toString(),
                                     surfAreaScreenUiState.maxWaveHeights[dayIndex].toString()
                                 ),
-                                null,
+                                conditionStatus,
                                 date.dayOfMonth,
                                 navController
                             )
