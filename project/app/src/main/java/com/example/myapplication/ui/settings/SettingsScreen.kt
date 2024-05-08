@@ -164,8 +164,8 @@ fun SettingsScreen(settingsScreenViewModel: SettingsScreenViewModel, navControll
                             }
                             item {
                                 InformationCard(
-                                    title = "Hvordan beregner vi forhold?", 
-                                    content = "Beskrivelse"
+                                    title = "Hvordan beregner vi forhold?",
+                                    content = stringResource(id = R.string.beregner_forhold)
                                 )
                                 Spacer(modifier = Modifier.height(14.dp))
                             }
