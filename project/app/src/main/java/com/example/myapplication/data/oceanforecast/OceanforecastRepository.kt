@@ -12,8 +12,6 @@ interface OceanforecastRepository{
     suspend fun getTimeSeries(surfArea: SurfArea): List<Pair<String, DataOF>>
     suspend fun getWaveHeights(surfArea: SurfArea): List<Pair<String, Double>>
 
-    suspend fun getWaveDirections(surfArea: SurfArea): List<Pair<String, Double>>
-
     suspend fun getTimeSeriesDayByDay(surfArea: SurfArea): List<List<Pair<String, DataOF>>>
 }
 
@@ -36,7 +34,6 @@ class OceanforecastRepositoryImpl(
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun getTimeSeriesDayByDay(surfArea: SurfArea): List<List<Pair<String, DataOF>>> {
         //henter timeSeries som er en liste av TimeSerie-objekter som består av de to variablene time og data
         val timeSeries: List<TimeserieOF> =
@@ -72,12 +69,6 @@ class OceanforecastRepositoryImpl(
         // Map og konverter timeSeries-dataene til bølgehøyder
         return timeSeriesForArea.map { it.first to findWaveHeightFromData(it.second) } ?: emptyList()
 
-    }
-
-    override suspend fun getWaveDirections(surfArea: SurfArea): List<Pair<String, Double>> {
-        val timeSeriesForArea = getTimeSeries(surfArea)
-
-        return timeSeriesForArea.map { it.first to findWaveDirectionFromData(it.second)}
     }
 
 }

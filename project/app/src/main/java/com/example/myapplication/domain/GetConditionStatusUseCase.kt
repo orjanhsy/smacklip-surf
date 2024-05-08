@@ -74,8 +74,8 @@ private fun getConditionStatus(
 
     // Determine overall condition status
     return when {
-        averageStatus < 1.5 -> ConditionStatus.GREAT
-        averageStatus in 1.5 .. 2.5 -> ConditionStatus.DECENT
+        averageStatus < 1.3 -> ConditionStatus.GREAT
+        averageStatus in 1.3 .. 2.3 -> ConditionStatus.DECENT
         else -> ConditionStatus.POOR
     }
 }
