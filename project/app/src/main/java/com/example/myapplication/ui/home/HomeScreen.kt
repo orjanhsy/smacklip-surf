@@ -48,8 +48,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -97,28 +95,6 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel, navController: NavContr
     }
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                modifier = Modifier.background(MaterialTheme.colorScheme.inversePrimary),
-                title = {
-                    Column(
-                        modifier = Modifier.padding(top = 12.dp) // Adjust padding as needed
-                    ) {
-                        SearchBar(
-                            onQueryChange = {},
-                            isSearchActive = isSearchActive.value,
-                            onActiveChanged = { isActive ->
-                                isSearchActive.value = isActive
-                            },
-                            surfAreas = SurfArea.entries.toList(),
-                            navController = navController
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.inversePrimary)
-            )
-
-        },
         bottomBar = {
             BottomBar(navController = navController)
         }
@@ -128,8 +104,21 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel, navController: NavContr
                 .padding(innerPadding)
             //.verticalScroll(rememberScrollState())
         ) {
+            SearchBar(
+                onQueryChange = {},
+                isSearchActive = isSearchActive.value,
+                onActiveChanged = { isActive ->
+                    isSearchActive.value = isActive
+                },
+                surfAreas = SurfArea.entries.toList(),
+                navController = navController
+            )
             Box(modifier = Modifier.fillMaxSize()){
-                Column (modifier = Modifier.fillMaxSize()){
+                Column (modifier = Modifier
+                    .padding(horizontal = 10.dp)
+                ){
+
+
                     FavoritesList(
                         favorites = favoriteSurfAreas,
                         ofLfNow = homeScreenUiState.ofLfNow,
@@ -143,9 +132,12 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel, navController: NavContr
                             .padding(horizontal = 10.dp)
                     ){
                         Text(
+                            modifier = Modifier
+                                .padding(vertical = 15.dp),
                             text = "Alle lokasjoner",
                             style = AppTypography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant                            )
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(2),
@@ -313,8 +305,7 @@ fun FavoritesList(
 ) {
     Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 6.dp),
+            .padding(horizontal = 10.dp, vertical = 0.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
@@ -322,7 +313,8 @@ fun FavoritesList(
             style = AppTypography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
 
-            modifier = Modifier.weight(1f, true)
+            modifier = Modifier
+                .weight(1f, true)
         )
         Button(
             onClick = { homeScreenViewModel.clearAllFavorites()},
@@ -336,7 +328,7 @@ fun FavoritesList(
                 end = 8.dp
             ),
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.secondaryContainer
+                containerColor = MaterialTheme.colorScheme.inverseOnSurface
             )
         ) {
             Text(text="Tøm favoritter",
@@ -345,6 +337,7 @@ fun FavoritesList(
 
         }
     }
+
     if (favorites.isNotEmpty()) {
         LazyRow (
             modifier = Modifier
