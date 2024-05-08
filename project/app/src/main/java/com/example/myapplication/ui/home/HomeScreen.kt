@@ -514,7 +514,7 @@ fun SurfAreaCard(
                             modifier = Modifier
                                 .width(17.dp)
                                 .height(17.dp)
-                                .rotate(rotationAngleWave - 45)
+                                .rotate(rotationAngleWave - 135)// 180-45
                         )
                     }
                 }
@@ -545,7 +545,7 @@ fun SurfAreaCard(
                             modifier = Modifier
                                 .width(17.dp)
                                 .height(17.dp)
-                                .rotate(rotationAngleWind - 45)
+                                .rotate(rotationAngleWind - 135)
                         )
                     }
                 }
