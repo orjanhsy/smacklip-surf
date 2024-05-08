@@ -56,12 +56,18 @@ class SurfAreaScreenViewModel(
                 val availableTimes = dayForecasts.data.keys.sortedBy {time -> time.hour }
 
                 dayForecasts.data.entries.map { (time, dataAtTime) ->
-                    val conditionStatus = GetConditionStatusUseCase(
-                        sa!!,
-                        dataAtTime,
-                        newWavePeriods[time.dayOfMonth]?.get(availableTimes.indexOf(time))
-                    )
-                    conditionStatus()
+                    val conditionStatus = try {
+                        val cs = GetConditionStatusUseCase(
+                            sa!!,
+                            dataAtTime,
+                            newWavePeriods[time.dayOfMonth]?.get(availableTimes.indexOf(time))
+                        )
+                        Log.d("SAVM", "Adding ${cs()} for $sa at $time")
+                        cs()
+                    } catch (e: IndexOutOfBoundsException) {
+                        ConditionStatus.BLANK
+                    }
+                    conditionStatus
                 }.minBy {status ->  status.value }
             }
         } catch (e: Exception) {
