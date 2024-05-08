@@ -3,6 +3,7 @@ package com.example.myapplication.ui.surfarea
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.smackLip.Repository
+import com.example.myapplication.domain.GetConditionStatusUseCase
 import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.smacklip.Forecast7DaysOFLF
@@ -20,7 +21,7 @@ data class SurfAreaScreenUiState(
     val wavePeriods: Map<Int, List<Double?>> = emptyMap(),
     val maxWaveHeights: List<Double> = emptyList(),
     val minWaveHeights: List<Double> = emptyList(),
-    val bestConditionStatuses: Map<Int, ConditionStatus> = mutableMapOf(),
+    val bestConditionStatusAtDay: Map<Int, ConditionStatus> = mutableMapOf(),
 )
 
 
@@ -48,6 +49,16 @@ class SurfAreaScreenViewModel(
             it.data.values.minOf {dataAtTime -> dataAtTime.waveHeight }
         }
 
+        val newBestCondition = try {
+            newOfLf.forecast.associateBy {
+                newOfLf.forecast.indexOf(it)
+            }.mapValues {
+                it.value.data.values.maxOf {dataAtTime ->
+                    GetConditionStatusUseCase(sa, dataAtTime, )
+                }
+            }
+        }
+
         SurfAreaScreenUiState(
             forecastNext7Days = newOfLf,
             alertsSurfArea = newAlerts,
@@ -68,7 +79,7 @@ class SurfAreaScreenViewModel(
     }
 
 
-    // map<tidspunkt -> [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]>
+//     map<tidspunkt -> [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]>
 //    fun updateBestConditionStatuses(surfArea: SurfArea, forecast7Days: List<DayForecast>) {
 //        viewModelScope.launch(Dispatchers.IO) {
 //            _surfAreaScreenUiState.update {
