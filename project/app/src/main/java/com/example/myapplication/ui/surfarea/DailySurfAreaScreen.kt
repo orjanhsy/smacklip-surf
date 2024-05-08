@@ -303,7 +303,7 @@ fun AllInfoCard(
                         tint=  MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier
                             .size(17.dp)
-                            .rotate(rotationAngleWind - 45)
+                            .rotate(rotationAngleWind - 135)
                     )
                 }
 
@@ -344,7 +344,7 @@ fun AllInfoCard(
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier
                             .size(17.dp)
-                            .rotate(rotationAngleWaveDir - 45)
+                            .rotate(rotationAngleWaveDir - 135)
                     )
                 }
 
