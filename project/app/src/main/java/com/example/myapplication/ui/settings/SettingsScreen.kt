@@ -48,6 +48,7 @@ import com.example.myapplication.R
 import com.example.myapplication.Settings
 import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.theme.AppTheme
+import com.example.myapplication.ui.theme.AppTypography
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -206,7 +207,7 @@ fun InformationCard(title: String, content: String) {
                     fontFamily =
                     FontFamily.Default,
                     fontWeight = FontWeight(400),
-                    //color = Color(0xFF4D5E6F),
+
                     textAlign = TextAlign.Center
                 ),
                 modifier = Modifier.fillMaxWidth()
@@ -231,6 +232,7 @@ fun InformationCard(title: String, content: String) {
                 Text(
                     text = content,
                     style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(top = 4.dp)
                 )
 
