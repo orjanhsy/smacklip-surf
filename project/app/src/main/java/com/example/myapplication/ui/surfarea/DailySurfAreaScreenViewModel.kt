@@ -51,8 +51,15 @@ class DailySurfAreaScreenViewModel(
 
         val times = newDataAtDay.data.map {it.key}.sortedBy { it.hour }
         val newConditionStatuses = newDataAtDay.data.mapValues {(time, dataAtTime) ->
-            val conditionStatus = GetConditionStatusUseCase(sa!!, dataAtTime, newWavePeriods[times.indexOf(time)])
-            conditionStatus()
+            try {
+                val conditionStatus =
+                    GetConditionStatusUseCase(sa!!, dataAtTime, newWavePeriods[times.indexOf(time)])
+                val cs = conditionStatus()
+                Log.d("DSVM", "Conditions: $dataAtTime and tp: ${newWavePeriods[times.indexOf(time)]} resulted in $cs for $sa")
+                cs
+            } catch (e: IndexOutOfBoundsException) {
+                ConditionStatus.BLANK
+            }
         }
 
         DailySurfAreaScreenUiState(

@@ -186,7 +186,7 @@ fun DailySurfAreaScreen(
                             }
 
                             val conditionStatus: ConditionStatus? = try {
-                                dailySurfAreaScreenUiState.conditionStatuses[dayOfMonth][time]
+                                dailySurfAreaScreenUiState.conditionStatuses[time]
                             } catch (e: IndexOutOfBoundsException) {
                                 null
                             }
