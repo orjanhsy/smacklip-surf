@@ -1,6 +1,7 @@
 package com.example.myapplication.ui.surfarea
 
 //import androidx.compose.material.icons.outlined.Tsunami
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -9,7 +10,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -199,18 +199,18 @@ fun SurfAreaScreen(
                             var formattedDate = formatter.format(date)
 
 
-//                                val conditionStatus: ConditionStatus = try {
-//                                    surfAreaScreenUiState.bestConditionStatuses[dayIndex]!!
-//                                } catch (e: IndexOutOfBoundsException) {
-//                                    Log.d(
-//                                        "SAscreen",
-//                                        "ConditionStatus at day $dayIndex was out of bounds"
-//                                    )
-//                                    ConditionStatus.BLANK
-//                                } catch (e: NullPointerException) {
-//                                    Log.d("SAscreen", "ConditionStatus at day $dayIndex was null")
-//                                    ConditionStatus.BLANK
-//                                }
+                                val conditionStatus: ConditionStatus = try {
+                                    surfAreaScreenUiState.bestConditionStatusPerDay[dayIndex]
+                                } catch (e: IndexOutOfBoundsException) {
+                                    Log.d(
+                                        "SAscreen",
+                                        "ConditionStatus at day $dayIndex was out of bounds"
+                                    )
+                                    ConditionStatus.BLANK
+                                } catch (e: NullPointerException) {
+                                    Log.d("SAscreen", "ConditionStatus at day $dayIndex was null")
+                                    ConditionStatus.BLANK
+                                }
                             DayPreviewCard(
                                 surfArea,
                                 formattedDate,
@@ -218,7 +218,7 @@ fun SurfAreaScreen(
                                     surfAreaScreenUiState.minWaveHeights[dayIndex].toString(),
                                     surfAreaScreenUiState.maxWaveHeights[dayIndex].toString()
                                 ),
-                                null,
+                                conditionStatus,
                                 date.dayOfMonth,
                                 navController
                             )

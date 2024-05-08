@@ -8,7 +8,6 @@ import com.example.myapplication.AppContainer
 import com.example.myapplication.R
 import com.example.myapplication.data.smackLip.Repository
 import com.example.myapplication.data.smackLip.RepositoryImpl
-import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
 
 import com.example.myapplication.Settings
 import com.example.myapplication.SmackLipApplication.Companion.container

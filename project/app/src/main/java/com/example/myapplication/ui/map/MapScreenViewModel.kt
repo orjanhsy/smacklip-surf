@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.map.MapRepositoryImpl
 import com.example.myapplication.data.smackLip.Repository
-import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
 import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
