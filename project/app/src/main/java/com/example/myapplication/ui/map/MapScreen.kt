@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -26,7 +27,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.outlined.Air
 import androidx.compose.material.icons.outlined.Close
@@ -71,7 +71,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.viewinterop.NoOpUpdate
 import androidx.core.graphics.drawable.toBitmap
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.R
@@ -385,27 +384,45 @@ fun SurfAreaCard(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+
                 //Navigerer til SurfAreaScreen
                 Button(
                     onClick = {
                        navController.navigate("SurfAreaScreen/${surfArea.locationName}")
                     },
-                    colors = ButtonDefaults.buttonColors(Color.Transparent),
+                    modifier = Modifier
+                        .defaultMinSize(minWidth = 62.dp, minHeight = 32.dp)
+                        .padding(start = 8.dp, top = 2.dp),
+                    contentPadding = PaddingValues(
+                        top = 4.dp,
+                        bottom = 4.dp,
+                        start = 8.dp,
+                        end = 8.dp
+                    ),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.inverseOnSurface
+                    )
+                    /*colors = ButtonDefaults.buttonColors(Color.Transparent),
                     modifier = Modifier
                         .fillMaxWidth()
+
+                     */
                 ) {
                     Text(
-                        text = "Gå til ${surfArea.locationName}",
+                        text = "   Gå til ${surfArea.locationName}   ",
                         style = AppTypography.bodySmall,
+                        color =MaterialTheme.colorScheme.onSurfaceVariant
                         //modifier = Modifier.weight(1f)
                     )
-                    Icon(
+                    /*Icon(
                         imageVector = Icons.Default.ArrowForward,
                         contentDescription = "Arrow Forward",
                         tint = onSurfaceVariantLight,
                         modifier = Modifier
                             .size(20.dp)
                     )
+
+                     */
                 }
             }
         }
