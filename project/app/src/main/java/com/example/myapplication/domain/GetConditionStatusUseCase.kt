@@ -7,12 +7,12 @@ import com.example.myapplication.model.surfareas.SurfArea
 import kotlin.math.abs
 
 class GetConditionStatusUseCase(
-    surfArea: SurfArea,
-    dataAtTime: DataAtTime,
-    wavePeriod: Double?
+    private val surfArea: SurfArea,
+    private val dataAtTime: DataAtTime,
+    private val wavePeriod: Double?
 ) {
 
-    operator fun invoke(surfArea: SurfArea, dataAtTime: DataAtTime, wavePeriod: Double?): ConditionStatus {
+    operator fun invoke(): ConditionStatus {
         return getConditionStatus(
             location = surfArea,
             wavePeriod = wavePeriod,
