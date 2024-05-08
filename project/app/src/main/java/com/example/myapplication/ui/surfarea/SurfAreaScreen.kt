@@ -219,7 +219,7 @@ fun SurfAreaScreen(
                                     surfAreaScreenUiState.maxWaveHeights[dayIndex].toString()
                                 ),
                                 conditionStatus,
-                                date.dayOfMonth,
+                                date,
                                 navController
                             )
                         }
@@ -230,7 +230,7 @@ fun SurfAreaScreen(
                                 "man",
                                 Pair("0.2", "1.3"),
                                 ConditionStatus.BLANK,
-                                0,
+                                LocalDateTime.now(),
                                 null
                             )
                         }
@@ -273,7 +273,7 @@ fun ShowAlert(alerts : List<Alert>, surfArea: SurfArea, action : () -> Unit){
 
     CustomAlert(
         title = surfArea.name,
-        message = alertMessage.toString(),
+        message = alertMessage,
         actionText = "OK",
         warningIcon = icon,
         data = null,
@@ -450,7 +450,7 @@ fun DayPreviewCard(
     day: String,
     waveHeightMinMax: Pair<String, String>,
     conditionStatus: ConditionStatus?,
-    dayOfMonth: Int,
+    date: LocalDateTime,
     navController: NavController?
 ) {
     Card(
@@ -460,7 +460,7 @@ fun DayPreviewCard(
             .height(120.dp)
             .clickable(
                 onClick = {
-                    navController?.navigate("DailySurfAreaScreen/${surfArea.locationName}/$dayOfMonth")
+                    navController?.navigate("DailySurfAreaScreen/${surfArea.locationName}/${date.dayOfMonth}")
                         ?: Unit
                 }
             )
@@ -478,7 +478,7 @@ fun DayPreviewCard(
             ) {
 
                 Text(
-                    text = day,
+                    text = "$day ${date.dayOfMonth}",
                     style = AppTypography.titleSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
 
