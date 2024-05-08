@@ -3,8 +3,8 @@ package com.example.myapplication.ui.common.composables
 import android.annotation.SuppressLint
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -36,22 +36,22 @@ fun BottomBar(navController: NavController) {
 
     val items = listOf(
         BottomNavigationItem(
-            title = "Home",
+            title = "Hjem",
             route = "HomeScreen",
             selectedIcon = Icons.Filled.Home,
             unselectedIcon = Icons.Default.Home
         ),
         BottomNavigationItem(
-            title = "Explore",
+            title = "Utforsk",
             route = "MapScreen",
             selectedIcon = Icons.Filled.LocationOn,
             unselectedIcon = Icons.Default.LocationOn
         ),
         BottomNavigationItem(
-            title = "Settings",
+            title = "Info",
             route = "SettingsScreen",
-            selectedIcon = Icons.Filled.Settings,
-            unselectedIcon = Icons.Default.Settings
+            selectedIcon = Icons.Filled.Info,
+            unselectedIcon = Icons.Default.Info
         ),
     )
     NavigationBar {
