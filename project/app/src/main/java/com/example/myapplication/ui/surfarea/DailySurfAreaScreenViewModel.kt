@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.smackLip.Repository
 import com.example.myapplication.data.smackLip.RepositoryImpl
+import com.example.myapplication.domain.GetConditionStatusUseCase
 import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.smacklip.DayForecast
@@ -24,7 +25,7 @@ data class DailySurfAreaScreenUiState(
     val alerts: List<Alert> = emptyList(),
     val wavePeriods: List<Double?> = emptyList(),
 
-    val conditionStatuses: List<Map<LocalDateTime, ConditionStatus>> = emptyList(),
+    val conditionStatuses: Map<LocalDateTime, ConditionStatus> = emptyMap(),
     val dataAtDay: DayForecast = DayForecast(),
     val loading: Boolean = false
 )
@@ -48,9 +49,16 @@ class DailySurfAreaScreenViewModel(
         catch(e: NullPointerException) {listOf()}
 //        Log.d("DSVM", "Updated waveperiods with $newWavePeriods for $sa at $day")
 
+        val times = newDataAtDay.data.map {it.key}.sortedBy { it.hour }
+        val newConditionStatuses = newDataAtDay.data.mapValues {(time, dataAtTime) ->
+            val conditionStatus = GetConditionStatusUseCase(sa!!, dataAtTime, newWavePeriods[times.indexOf(time)])
+            conditionStatus()
+        }
+
         DailySurfAreaScreenUiState(
             dataAtDay = newDataAtDay,
             wavePeriods = newWavePeriods,
+            conditionStatuses = newConditionStatuses
         )
 
     }.stateIn(
