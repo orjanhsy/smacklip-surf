@@ -148,7 +148,7 @@ class RepositoryImpl(
                 val time = LocalDateTime.parse(it.first, dateFormatter)
                 try {
                     allDataAtDay[time]!!.add(it.second.instant.details.sea_surface_wave_height)
-                    allDataAtDay[time]!!.add(it.second.instant.details.sea_water_to_direction)
+                    allDataAtDay[time]!!.add(it.second.instant.details.sea_surface_wave_from_direction)
 
                     val dataAtTime = DataAtTime(
                         windSpeed   = allDataAtDay[time]!![0] as Double,
