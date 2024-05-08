@@ -200,7 +200,7 @@ fun SurfAreaScreen(
 
 
                                 val conditionStatus: ConditionStatus = try {
-                                    surfAreaScreenUiState.bestConditionStatusAtDay[dayIndex]!!
+                                    surfAreaScreenUiState.bestConditionStatusPerDay[dayIndex]!!
                                 } catch (e: IndexOutOfBoundsException) {
                                     Log.d(
                                         "SAscreen",

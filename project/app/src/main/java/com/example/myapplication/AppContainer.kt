@@ -9,14 +9,12 @@ import com.example.myapplication.data.settings.SettingsRepositoryImpl
 import com.example.myapplication.data.settings.SettingsSerializer
 import com.example.myapplication.data.smackLip.Repository
 import com.example.myapplication.data.smackLip.RepositoryImpl
-import com.example.myapplication.data.smackLip.SmackLipRepository
-import com.example.myapplication.data.smackLip.SmackLipRepositoryImpl
+
 
 
 private const val DATA_STORE_FILE_NAME = "settings.pb"
 interface AppContainer {
     val settingsRepository: SettingsRepository
-    val smackLipRepository: SmackLipRepository
     val stateFulRepo: Repository
 }
 class DefaultAppContainer(
@@ -34,8 +32,7 @@ class DefaultAppContainer(
     override val settingsRepository: SettingsRepository =
         SettingsRepositoryImpl(settingsStore)
 
-    override val smackLipRepository: SmackLipRepository =
-        SmackLipRepositoryImpl()
+
 
 
 }

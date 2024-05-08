@@ -8,6 +8,7 @@ import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.smacklip.Forecast7DaysOFLF
 import com.example.myapplication.model.surfareas.SurfArea
+import io.ktor.client.utils.EmptyContent.status
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +22,7 @@ data class SurfAreaScreenUiState(
     val wavePeriods: Map<Int, List<Double?>> = emptyMap(),
     val maxWaveHeights: List<Double> = emptyList(),
     val minWaveHeights: List<Double> = emptyList(),
-    val bestConditionStatusAtDay: Map<Int, ConditionStatus> = mutableMapOf(),
+    val bestConditionStatusPerDay: List<ConditionStatus> = mutableListOf(),
 )
 
 
@@ -49,14 +50,17 @@ class SurfAreaScreenViewModel(
             it.data.values.minOf {dataAtTime -> dataAtTime.waveHeight }
         }
 
-        val newBestCondition = try {
-            newOfLf.forecast.associateBy {
-                newOfLf.forecast.indexOf(it)
-            }.mapValues {
-                it.value.data.values.maxOf {dataAtTime ->
-                    GetConditionStatusUseCase(sa, dataAtTime, )
-                }
+        val newBestConditions = try {
+            newOfLf.forecast.map {
+                it.data.entries.map { (time, dataAtTime) ->
+                    val conditionStatus = GetConditionStatusUseCase(sa!!, dataAtTime,
+                        newWavePeriods[time.dayOfMonth]?.get(time.hour)
+                    )
+                    conditionStatus()
+                }.minBy {status ->  status.value }
             }
+        } catch (e: Exception) {
+            listOf()
         }
 
         SurfAreaScreenUiState(
@@ -65,6 +69,7 @@ class SurfAreaScreenViewModel(
             wavePeriods = newWavePeriods,
             maxWaveHeights = newMaxWaveHeights,
             minWaveHeights = newMinWaveHeights,
+            bestConditionStatusPerDay = newBestConditions
         )
     }.stateIn(
         viewModelScope,
