@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -591,6 +592,7 @@ fun SurfAreaCard(
                             modifier = Modifier
                                 .width(162.dp)
                                 .height(100.dp)
+                                .aspectRatio(12f / 5f)
                                 .clip(RoundedCornerShape(8.dp))
                         )
                     }
