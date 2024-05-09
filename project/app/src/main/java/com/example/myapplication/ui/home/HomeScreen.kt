@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -349,7 +350,7 @@ fun FavoritesList(
                 Card(
                     modifier = Modifier
                         .padding(horizontal = 4.dp, vertical = 2.dp)
-                        .size(width = 150.0.dp, height = 200.00.dp)
+                        .size(width = 150.0.dp, height = 190.00.dp)
                         .clip(RoundedCornerShape(10.dp))
                         .clickable {
                             navController.navigate("SurfAreaScreen/${surfArea.locationName}")
@@ -552,33 +553,6 @@ fun SurfAreaCard(
                     }
                 }
 
-                /*
-                Row {
-                    Text(
-                        // only shows description of first alert. There may be several.
-                        text = "Alert:  ${if (alerts?.isNotEmpty() == true) alerts[0][0].properties?.description else ""}"
-                    )
-                }
-
-                Row {
-                    if (alerts?.isNotEmpty() == true) {
-                        val icon =
-                            homeScreenViewModel.getIconBasedOnAwarenessLevel(alerts[0][0].properties?.awarenessLevel.toString())
-                        Image(
-                            painter = painterResource(id = icon),
-                            contentDescription = "Awareness Level Icon",
-                            modifier = Modifier.size(24.dp)
-                        )
-                    } else {
-                        Image(
-                            painter = painterResource(id = R.drawable.icon_awareness_default),
-                            contentDescription = "Awareness Level Icon",
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
-                }
-
-                 */
                 Spacer(modifier = Modifier.height(8.dp))
                 Column(
                     horizontalAlignment = Alignment.End
@@ -591,6 +565,7 @@ fun SurfAreaCard(
                             modifier = Modifier
                                 .width(162.dp)
                                 .height(100.dp)
+                                .aspectRatio(12f / 5f)
                                 .clip(RoundedCornerShape(8.dp))
                         )
                     }
