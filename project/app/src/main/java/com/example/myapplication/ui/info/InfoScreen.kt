@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.settings
+package com.example.myapplication.ui.info
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -54,9 +55,9 @@ import com.example.myapplication.ui.theme.AppTypography
 @OptIn(ExperimentalMaterial3Api::class)
 //@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun SettingsScreen(settingsScreenViewModel: SettingsScreenViewModel, navController: NavController) {
-    val settingsUiState by settingsScreenViewModel.settingsUiState.collectAsState()
-    val isDarkThemeEnabled by settingsScreenViewModel.isDarkThemEnabled.collectAsState()
+fun InfoScreen(infoScreenViewModel: InfoScreenViewModel, navController: NavController) {
+    //val infoUiState by infoScreenViewModel.infoUiState.collectAsState()
+    val isDarkThemeEnabled by infoScreenViewModel.isDarkThemEnabled.collectAsState()
 
 
     AppTheme(useDarkTheme = isDarkThemeEnabled) {
@@ -98,6 +99,8 @@ fun SettingsScreen(settingsScreenViewModel: SettingsScreenViewModel, navControll
                                         .width(265.dp)
                                         .heightIn(min = 57.dp)
                                         .animateContentSize(),
+                                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimary),
+                                    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
                                 ) {
                                     var expandedThemeCard by remember { mutableStateOf(false) }
                                     Column(
@@ -129,7 +132,6 @@ fun SettingsScreen(settingsScreenViewModel: SettingsScreenViewModel, navControll
                                                  else
                                                      Icons.Filled.ExpandMore,
                                                  contentDescription = if (expandedThemeCard) "Skjul" else "Utvid",
-                                                 modifier = Modifier.rotate(if (expandedThemeCard) 180f else 0f)
 
                                              )
                                          }
@@ -145,7 +147,7 @@ fun SettingsScreen(settingsScreenViewModel: SettingsScreenViewModel, navControll
                                                 Switch(
                                                     checked = isDarkThemeEnabled,
                                                     onCheckedChange = { isChecked ->
-                                                        settingsScreenViewModel.updateTheme(if (isChecked) Settings.Theme.DARK else Settings.Theme.LIGHT)
+                                                        infoScreenViewModel.updateTheme(if (isChecked) Settings.Theme.DARK else Settings.Theme.LIGHT)
                                                     }
                                                 )
                                             }
@@ -193,6 +195,8 @@ fun InformationCard(title: String, content: String) {
             .width(265.dp)
             .heightIn(min = 57.dp)
             .animateContentSize(),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimary),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Column(
             modifier = Modifier
@@ -204,12 +208,10 @@ fun InformationCard(title: String, content: String) {
                 text = title,
                 style = TextStyle(
                     fontSize = 16.sp,
-                    fontFamily =
-                    FontFamily.Default,
                     fontWeight = FontWeight(400),
-
                     textAlign = TextAlign.Center
                 ),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.fillMaxWidth()
             )
             IconButton(

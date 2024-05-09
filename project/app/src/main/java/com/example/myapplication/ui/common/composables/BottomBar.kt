@@ -49,7 +49,7 @@ fun BottomBar(navController: NavController) {
         ),
         BottomNavigationItem(
             title = "Info",
-            route = "SettingsScreen",
+            route = "InfoScreen",
             selectedIcon = Icons.Filled.Info,
             unselectedIcon = Icons.Default.Info
         ),

@@ -27,15 +27,14 @@ import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.presentation.viewModelFactory
 import com.example.myapplication.ui.home.HomeScreen
 import com.example.myapplication.ui.home.HomeScreenViewModel
+import com.example.myapplication.ui.info.InfoScreen
+import com.example.myapplication.ui.info.InfoScreenViewModel
 import com.example.myapplication.ui.map.MapScreen
 import com.example.myapplication.ui.map.MapScreenViewModel
-import com.example.myapplication.ui.settings.SettingsScreen
-import com.example.myapplication.ui.settings.SettingsScreenViewModel
 import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
 import com.example.myapplication.ui.surfarea.SurfAreaScreen
 import com.example.myapplication.ui.surfarea.SurfAreaScreenViewModel
 import com.example.myapplication.ui.theme.AppTheme
-
 
 
 class MainActivity : ComponentActivity() {
@@ -48,17 +47,9 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-
         val connectivityObserver = NetworkConnectivityObserver(applicationContext)
         setContent {
-
-            //foreløpig til jeg finner en bedre måte å få det over hele appen på
-            val settingsVm = viewModel<SettingsScreenViewModel>(
-                factory = viewModelFactory {
-                    SettingsScreenViewModel(SmackLipApplication.container)
-                }
-            )
-            val isDarkTheme by settingsVm.isDarkThemEnabled.collectAsState(initial = false)
+            val isDarkTheme by SmackLipApplication.container.infoViewModel.isDarkThemEnabled.collectAsState(initial = false)
             AppTheme( useDarkTheme = isDarkTheme) {
                 val isConnected by connectivityObserver.observe().collectAsState(
                     initial = false
@@ -118,9 +109,9 @@ fun SmackLipNavigation() {
         }
     )
 
-    val settingsVm = viewModel<SettingsScreenViewModel>(
+    val infoVm = viewModel<InfoScreenViewModel>(
         factory = viewModelFactory {
-            SettingsScreenViewModel(SmackLipApplication.container)
+            InfoScreenViewModel(SmackLipApplication.container)
         }
     )
     val savm = viewModel<SurfAreaScreenViewModel>(
@@ -156,9 +147,9 @@ fun SmackLipNavigation() {
         composable("MapScreen"){
             MapScreen(mapScreenViewModel = mapVm, navController =  navController)
         }
-        composable("SettingsScreen") {
+        composable("InfoScreen") {
 
-            SettingsScreen(settingsVm, navController)
+            InfoScreen(infoVm, navController)
         }
     }
 }
