@@ -2,32 +2,22 @@ package com.example.myapplication.ui.home
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.myapplication.AppContainer
 import com.example.myapplication.R
-import com.example.myapplication.data.smackLip.Repository
-import com.example.myapplication.data.smackLip.RepositoryImpl
-
 import com.example.myapplication.Settings
 import com.example.myapplication.SmackLipApplication.Companion.container
-
+import com.example.myapplication.data.smackLip.Repository
 import com.example.myapplication.model.metalerts.Alert
-import com.example.myapplication.model.smacklip.AllSurfAreasOFLF
 import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
-import com.example.myapplication.model.waveforecast.AllWavePeriods
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 
 data class HomeScreenUiState(
     val ofLfNow: Map<SurfArea, DataAtTime> = mapOf(),
