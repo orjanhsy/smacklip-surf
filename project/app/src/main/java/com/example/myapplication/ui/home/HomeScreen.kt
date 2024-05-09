@@ -248,13 +248,14 @@ fun SearchBar(
                 }
             )
         )
-        if (expanded && searchQuery.isNotEmpty()) {
+        val filteredSurfAreas =
+            surfAreas.filter { it.locationName.contains(searchQuery, ignoreCase = true) }
+
+        if (expanded && searchQuery.isNotEmpty() && filteredSurfAreas.isNotEmpty()) {
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
                 contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
             ) {
-                val filteredSurfAreas =
-                    surfAreas.filter { it.locationName.contains(searchQuery, ignoreCase = true) }
                 items(filteredSurfAreas) { surfArea ->
                     Column(modifier = Modifier.clickable {
                         navController.navigate("SurfAreaScreen/${surfArea.locationName}")
