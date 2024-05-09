@@ -350,7 +350,7 @@ fun FavoritesList(
                 Card(
                     modifier = Modifier
                         .padding(horizontal = 4.dp, vertical = 2.dp)
-                        .size(width = 150.0.dp, height = 200.00.dp)
+                        .size(width = 150.0.dp, height = 190.00.dp)
                         .clip(RoundedCornerShape(10.dp))
                         .clickable {
                             navController.navigate("SurfAreaScreen/${surfArea.locationName}")
