@@ -292,7 +292,7 @@ fun AllInfoCard(
 
                     Box(
                         modifier = Modifier
-                            .size(width = 37.dp, height = 30.dp) // Set size with shorter height
+                            .size(width = 50.dp, height = 30.dp) // Set size with shorter height
                             .padding(top = 6.dp) // Add padding to the top
                     ) {
                         Text(
