@@ -201,6 +201,7 @@ fun SearchBar(
             modifier = modifier
                 .padding(12.dp)
                 .height(56.dp)
+                .background(color = MaterialTheme.colorScheme.onPrimary, shape = RoundedCornerShape(50.dp))
                 .fillMaxWidth(),
             shape = CircleShape,
             value = searchQuery,
