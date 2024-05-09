@@ -553,33 +553,6 @@ fun SurfAreaCard(
                     }
                 }
 
-                /*
-                Row {
-                    Text(
-                        // only shows description of first alert. There may be several.
-                        text = "Alert:  ${if (alerts?.isNotEmpty() == true) alerts[0][0].properties?.description else ""}"
-                    )
-                }
-
-                Row {
-                    if (alerts?.isNotEmpty() == true) {
-                        val icon =
-                            homeScreenViewModel.getIconBasedOnAwarenessLevel(alerts[0][0].properties?.awarenessLevel.toString())
-                        Image(
-                            painter = painterResource(id = icon),
-                            contentDescription = "Awareness Level Icon",
-                            modifier = Modifier.size(24.dp)
-                        )
-                    } else {
-                        Image(
-                            painter = painterResource(id = R.drawable.icon_awareness_default),
-                            contentDescription = "Awareness Level Icon",
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
-                }
-
-                 */
                 Spacer(modifier = Modifier.height(8.dp))
                 Column(
                     horizontalAlignment = Alignment.End
