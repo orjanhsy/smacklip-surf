@@ -24,13 +24,14 @@ class MetAlertsDataSource(private val metAlertsUrl: String = METALERTS_URL) {
         install(ContentNegotiation) {
             gson()
         }
-
     }
 
 
     suspend fun fetchMetAlertsData(): MetAlerts {
-        val response = try {client.get(metAlertsUrl)}
-        catch (e: Exception) {
+        val response = try {
+            client.get(metAlertsUrl)
+        } catch (e: Exception) {
+            // does not handle exceptions differently
             Log.e(TAG, "${e.message}")
             throw e
         }
