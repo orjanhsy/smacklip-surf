@@ -8,6 +8,7 @@ import androidx.compose.ui.window.DialogProperties
 
 @Composable
 fun <T> CustomAlertDialog(
+    time: String,
     title: String,
     message: String,
     actionText: String,
@@ -21,6 +22,7 @@ fun <T> CustomAlertDialog(
         properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
         CustomAlert(
+            time = time,
             title = title,
             message = message,
             actionText = actionText,
@@ -34,6 +36,7 @@ fun <T> CustomAlertDialog(
 
 @Composable
 fun CustomAlertDialog(
+    time: String,
     title: String,
     message: String,
     actionText: String,
@@ -46,6 +49,7 @@ fun CustomAlertDialog(
         properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
         CustomAlert(
+            time = time,
             title = title,
             message = message,
             actionText = actionText,
