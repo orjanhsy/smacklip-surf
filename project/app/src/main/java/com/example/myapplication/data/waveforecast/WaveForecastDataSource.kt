@@ -1,14 +1,17 @@
 package com.example.myapplication.data.waveforecast
 
+import android.util.Log
 import com.example.myapplication.data.config.Client
 import com.example.myapplication.data.utils.HTTPServiceHandler.WF_ACCESS_TOKEN_URL
 import com.example.myapplication.data.utils.HTTPServiceHandler.WF_BASE_URL
 import com.example.myapplication.data.utils.HTTPServiceHandler.WF_CLOSEST_ALL_TIME_URL
 import com.example.myapplication.model.waveforecast.AccessToken
 import com.example.myapplication.model.waveforecast.NewPointForecast
+import com.mapbox.common.MapboxOptions.accessToken
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.DefaultRequest
+import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.client.plugins.auth.*
@@ -17,9 +20,7 @@ import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.gson.gson
 
-fun main() {
-
-}
+private const val TAG = "WFDS"
 
 /* TODO:
 create a way to refresh tokens (redirect?), bw do not provide refresh-tokens
@@ -44,6 +45,17 @@ class WaveForecastDataSource {
         install(ContentNegotiation) {
             gson()
         }
+
+        install(HttpRequestRetry) {
+            maxRetries = 3
+            retryIf{request, response ->
+                response.status.value == 401
+            }
+            delayMillis { retry ->
+                retry * 3000L
+            }
+        }
+
         install(Auth) {
             bearer {
                 loadTokens {
@@ -57,7 +69,11 @@ class WaveForecastDataSource {
 
     suspend fun fetchNearestPointForecast(lat: Double, lon: Double): List<NewPointForecast> {
         if (bearerTokenStorage.isEmpty()){
-            val (token, _) = getAccessToken()
+            val (token, _) = try {
+                getAccessToken()
+            } catch (e: Exception) {
+                return emptyList()
+            }
             bearerTokenStorage.add(BearerTokens(token, ""))
         }
         return try {
@@ -65,11 +81,6 @@ class WaveForecastDataSource {
             response.body()
         } catch (e: Exception) {
             throw e
-            /* TODO: Handle exceptions appropriately
-            - parameter is invalid (?)
-            - token is expired (401)
-            - other error (500)
-             */
         }
     }
 
@@ -82,9 +93,14 @@ class WaveForecastDataSource {
             append("client_secret", Client.CLIENT_SECRET)
             append("scope", "api")
         }
-        val accessToken = tokenClient.post(WF_ACCESS_TOKEN_URL) {
-            contentType(ContentType.Application.FormUrlEncoded)
-            setBody(requestBody.formUrlEncode())
+        val accessToken = try {
+            tokenClient.post(WF_ACCESS_TOKEN_URL) {
+                contentType(ContentType.Application.FormUrlEncoded)
+                setBody(requestBody.formUrlEncode())
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Access token not acquiered ${e.stackTraceToString()}")
+            throw e
         }
         return Pair(accessToken.body<AccessToken>().accessToken, accessToken.body<AccessToken>().refreshToken)
     }
