@@ -3,6 +3,7 @@ package com.example.myapplication.data.metalerts
 
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.metalerts.Alert
+import com.example.myapplication.model.metalerts.MetAlerts
 import kotlin.math.PI
 import kotlin.math.acos
 import kotlin.math.cos
@@ -10,10 +11,9 @@ import kotlin.math.sin
 
 
 interface MetAlertsRepository{
-    suspend fun getAlerts(): List<Alert>
-    suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Alert>
     suspend fun getAllRelevantAlerts(): Map<SurfArea, List<Alert>>
 
+    suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Alert>
 }
 
 const val ALERT_RADIUS = 50.0 // 10 == 1 mil, 20 er sikkert nice men 50 er nice for testing
@@ -23,10 +23,13 @@ class MetAlertsRepositoryImpl (
 
 ) : MetAlertsRepository {
 
-    private var allFeatures: List<Alert> = listOf()
-    override suspend fun getAlerts(): List<Alert> {
-        allFeatures = metAlertsDataSource.fetchMetAlertsData().features
-        return allFeatures
+    private var _allAlerts: List<Alert> = listOf()
+    private suspend fun loadAlerts() {
+        _allAlerts = try {
+             metAlertsDataSource.fetchMetAlertsData().features
+        } catch (e: Exception) {
+            emptyList()
+        }
     }
 
 
@@ -41,27 +44,27 @@ class MetAlertsRepositoryImpl (
     }
 
     override suspend fun getAllRelevantAlerts(): Map<SurfArea, List<Alert>> {
+        if (_allAlerts.isEmpty()) {
+            loadAlerts()
+        }
         return SurfArea.entries.associateWith { getRelevantAlertsFor(it) }
     }
 
     override suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Alert> {
         val relevantAlerts: MutableList<Alert> = mutableListOf()
-        if (allFeatures.isEmpty()) {
-            getAlerts()
-        }
-        allFeatures.forEach() {feature ->
-            val coordinates = feature.geometry?.coordinates
-            if (feature.geometry?.type == "Polygon") {
+        _allAlerts.forEach {alert ->
+            val coordinates = alert.geometry?.coordinates
+            if (alert.geometry?.type == "Polygon") {
                 coordinates?.forEach {i ->
                     i.forEach { j ->
                         val lon = j[0] as Double
                         val lat = j[1] as Double
                         if (distanceTo(lat, lon, surfArea) < ALERT_RADIUS) { // henter alle varsel innenfor en mil
-                            feature.let { relevantAlerts.add(it) }
+                            alert.let { relevantAlerts.add(it) }
                         }
                     }
                 }
-            } else if (feature.geometry?.type == "MultiPolygon") {
+            } else if (alert.geometry?.type == "MultiPolygon") {
                 coordinates?.forEach { i ->
                     i.forEach { j ->
                         j.forEach { k ->
@@ -69,7 +72,7 @@ class MetAlertsRepositoryImpl (
                             val lon = coords[0] as Double
                             val lat = coords[1] as Double
                             if (distanceTo(lat, lon, surfArea) < ALERT_RADIUS) { // henter alle varsel innenfor en mil
-                                feature.let { relevantAlerts.add(it) }
+                                alert.let { relevantAlerts.add(it) }
                             }
                         }
                     }
