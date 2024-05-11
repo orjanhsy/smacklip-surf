@@ -95,7 +95,6 @@ graph TD;
 2. Appen viser at hen ikke er pålogget internett
 3. Aktør logger på og går videre, eller sjekker ikke forhold
 
-### Sekvensdiagram
 ```mermaid
 sequenceDiagram
     participant User
@@ -127,22 +126,5 @@ sequenceDiagram
         App->>App: Laster TodayScreen for valgt dag
         App->>User: Viser TodayScreen med prognose time for time
     end
-```
-
-### Aktivitetsdiagram
-```mermaid
-graph TD;
-    Start((Start)) --> Åpner_appen;
-    Åpner_appen --> Valg{   };
-    Valg -->|Internett_ok| Gå_til_MapScreen;
-    Valg -->|Internett_ikke_ok| Logg_på_nett;
-    Gå_til_MapScreen --> Søk_lokasjon;
-    Søk_lokasjon --> Velg_lokasjon;
-    Velg_lokasjon --> Velg_dag;
-    Velg_dag --> Sjekk_forhold;
-    Sjekk_forhold --> Slutt((Slutt));
-    Logg_på_nett -->|Logget_på| Åpner_appen;
-    Logg_på_nett -->|Ikke_logget_på| Slutt;
-
 ```
 
