@@ -119,8 +119,9 @@ class RepositoryImpl(
 
         val allDayForecasts: MutableList<DayForecast> = mutableListOf()
 
-        for (day in lf.keys) {
-            val dayForecasts: MutableMap<LocalDateTime, DataAtTime> = mutableMapOf()
+        val longest = if(lf.keys.size > of.keys.size) lf else of
+
+        for (day in longest.keys) {
             // TODO: !!
             val lfAtDay = lf[day]!!
             val ofAtDay = try {of[day]!!} catch(e: NullPointerException) {continue} // skips iteration if there is not data for both lf and of
