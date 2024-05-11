@@ -50,10 +50,6 @@ class WaveForecastDataSource {
         install(DefaultRequest) {
             url(WF_BASE_URL)
         }
-        install(Logging) {
-            logger = Logger.DEFAULT
-            level = LogLevel.ALL
-        }
 
         install(ContentNegotiation) {
             gson()
