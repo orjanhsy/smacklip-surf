@@ -139,7 +139,7 @@ fun PreviewCustomAlert() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         CustomAlert(
-            time = "Tiden",
+            time = "1.jan - 3.jan",
             title = "Farevarsel",
             message = "STOOORM incoming, søk dekning søk dekning søk dekning søk dekning",
             actionText = "OK",
