@@ -39,6 +39,7 @@ fun <T> CustomAlert(
     actionText: String,
     warningIcon: Int,
     data: T?,
+    time: String,
     showAlert: MutableState<Boolean>,
     action: (() -> Unit)? = null,
     modifier: Modifier = Modifier
@@ -86,6 +87,22 @@ fun <T> CustomAlert(
                             textAlign = TextAlign.Center
                         )
                     }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = time,
+                            modifier = Modifier
+                                .width(200.dp)
+                                .padding(vertical = 8.dp),
+                            style = AppTypography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = TextAlign.Center
+
+                        )
+                    }
                     Box(
                         modifier = Modifier
                             .fillMaxWidth(0.75f)
@@ -122,6 +139,7 @@ fun PreviewCustomAlert() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         CustomAlert(
+            time = "1.jan - 3.jan",
             title = "Farevarsel",
             message = "STOOORM incoming, søk dekning søk dekning søk dekning søk dekning",
             actionText = "OK",
