@@ -71,6 +71,7 @@ import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.ui.theme.AppTypography
 import com.example.myapplication.ui.theme.outlineLight
 import com.example.myapplication.utils.RecourseUtils
+import com.example.myapplication.utils.DateUtils
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -259,38 +260,15 @@ fun SurfAreaScreen(
     }
 }
 
-fun formatTimeInterval(interval: List<String>?): String {
-    if (interval == null || interval.isEmpty()) return "Time not available"
 
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX")
-    val firstDate = LocalDateTime.parse(interval.firstOrNull(), formatter)
-    val lastDate = LocalDateTime.parse(interval.lastOrNull(), formatter)
-
-    val firstDay = firstDate.dayOfMonth
-    val firstMonth = getMonthAbbreviation(firstDate.monthValue)
-
-    val lastDay = lastDate.dayOfMonth
-    val lastMonth = getMonthAbbreviation(lastDate.monthValue)
-
-    return "$firstDay.$firstMonth - $lastDay.$lastMonth"
-}
-
-fun getMonthAbbreviation(monthValue: Int): String {
-    val monthsAbbreviations = mapOf(
-        1 to "Jan", 2 to "Feb", 3 to "Mar", 4 to "Apr",
-        5 to "Mai", 6 to "Jun", 7 to "Jul", 8 to "Aug",
-        9 to "Sep", 10 to "Okt", 11 to "Nov", 12 to "Des"
-    )
-    return monthsAbbreviations[monthValue] ?: ""
-}
 
 @Composable
 fun ShowAlert(alerts : List<Alert>, surfArea: SurfArea, action : () -> Unit){
-
+    val dateFormatter: DateUtils = DateUtils();
     val alert = alerts.first()
+    val time = dateFormatter.formatTimeInterval(alert.timeInterval?.interval)
     val alertMessage = alert.properties?.description ?: "No description available"
     val awarenessLevel = alert.properties?.awarenessLevel
-    val time = formatTimeInterval(alert.timeInterval?.interval)
     val icon = awarenessLevel?.let { getIconBasedOnAwarenessLevel(it) }
         ?: R.drawable.icon_awareness_default
 
