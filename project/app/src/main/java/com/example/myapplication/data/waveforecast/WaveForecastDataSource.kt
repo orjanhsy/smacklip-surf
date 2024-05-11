@@ -47,6 +47,7 @@ class WaveForecastDataSource {
         }
 
         install(HttpRequestRetry) {
+            //handles 401 exceptions, retries getting access tokens
             maxRetries = 3
             retryIf{request, response ->
                 response.status.value == 401
@@ -80,6 +81,7 @@ class WaveForecastDataSource {
             val response = client.get("$WF_CLOSEST_ALL_TIME_URL?x=$lon&y=$lat")
             response.body()
         } catch (e: Exception) {
+            Log.e(TAG, "Failed to fetch point forecast at $lat, $lon. Cause: ${e.message}")
             throw e
         }
     }
@@ -99,7 +101,7 @@ class WaveForecastDataSource {
                 setBody(requestBody.formUrlEncode())
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Access token not acquiered ${e.stackTraceToString()}")
+            Log.e(TAG, "Access token not acquiered. Cause: ${e.message}")
             throw e
         }
         return Pair(accessToken.body<AccessToken>().accessToken, accessToken.body<AccessToken>().refreshToken)
