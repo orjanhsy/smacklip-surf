@@ -20,6 +20,7 @@ class OceanforecastRepositoryImpl(
         //gets list of timeseries objects, containing time and data
         val timeSeries: List<TimeserieOF> = try { dataSource.fetchOceanforecast(surfArea).properties.timeseries }
         catch (e: Exception) {
+            // handles http exceptions from data source
             listOf()
         }
 
