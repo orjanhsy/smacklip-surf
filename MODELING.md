@@ -22,12 +22,13 @@
 2. Appen viser at hen ikke er pålogget internett
 3. Aktør logger på og går videre, eller sjekker ikke forhold
 
-### Sekvensdiagram
+### Sekvensdiagram - her må teksten omformuleres
 
 ```mermaid
 sequenceDiagram
     participant User
     participant App
+    participant ViewModel
     participant Repository
     participant API
 
@@ -40,14 +41,20 @@ sequenceDiagram
         App->>Repository: Henter data fra Repository
         Repository->>API: Henter data fra API
         API-->>Repository: Sender data
-        Repository-->>App: Sender data til App
-        App->>App: Laster HomeScreen med surf location cards
+        Repository-->>ViewModel: Oppdaterer ViewModel
+        ViewModel -->>App: Oppdaterer state
         App->>User: Viser HomeScreen
         User->>App: Velger ett surf location card fra listen
-        App->>App: Laster AreaScreen for valgte lokasjoner
+        App ->>ViewModel: Oppdaterer viewmodel
+        ViewModel->>Repository: "Lytter"
+        Repository-->>ViewModel: Oppdaterer ViewModel
+        ViewModel -->>App: Oppdaterer state
         App->>User: Viser AreaScreen med lokasjonsdetaljer
         User->>App: Trykker på en dag
-        App->>App: Laster TodayScreen for valgt dag
+        App ->>ViewModel: Oppdaterer viewmodel
+        ViewModel->>Repository: "Lytter"
+        Repository-->>ViewModel: Oppdaterer ViewModel
+        ViewModel -->>App: Oppdaterer state
         App->>User: Viser TodayScreen med prognose time for time
     end
 ```
