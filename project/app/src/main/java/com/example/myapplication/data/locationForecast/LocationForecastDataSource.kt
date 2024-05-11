@@ -16,7 +16,7 @@ import io.ktor.serialization.gson.gson
 import io.ktor.util.appendIfNameAbsent
 private const val TAG = "LFDS"
 class LocationForecastDataSource(
-    private val path: String = LOCATION_FORECAST_URL
+    private val locationForecastUrl: String = LOCATION_FORECAST_URL
 
 ) {
 
@@ -33,7 +33,7 @@ class LocationForecastDataSource(
     suspend fun fetchLocationForecastData(surfArea: SurfArea): LocationForecast {
         val locationForecast: LocationForecast = try {
             client.get(
-                "$path?lat=${surfArea.lat}&lon=${surfArea.lon}"
+                "$locationForecastUrl?lat=${surfArea.lat}&lon=${surfArea.lon}"
             ) {
                 header(API_HEADER, API_KEY)
             }.body()
