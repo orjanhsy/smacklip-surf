@@ -1,6 +1,5 @@
 package com.example.myapplication.utils
 
-package com.example.myapplication.domain
 
 import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.conditions.Conditions
