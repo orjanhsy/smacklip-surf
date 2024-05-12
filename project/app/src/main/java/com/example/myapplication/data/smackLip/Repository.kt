@@ -102,8 +102,7 @@ class RepositoryImpl(
 
 
         for (day in lf.keys) {
-            // TODO: !!
-            val lfAtDay = lf[day]!!
+            val lfAtDay = lf[day]!! // always exists as day is derived from lf.keys
             val ofAtDay = try {of[day]!!} catch(e: NullPointerException) {continue} // skips iteration if there is not data for both lf and of
 
             val allDataAtDay: MutableMap<LocalDateTime, MutableList<Any>> = mutableMapOf()
@@ -112,37 +111,35 @@ class RepositoryImpl(
             lfAtDay.map {
                 val time = LocalDateTime.parse(it.first, dateFormatter)
                 allDataAtDay[time] = mutableListOf()
-                allDataAtDay[time]!!.add(it.second.instant.details.wind_speed)
-                allDataAtDay[time]!!.add(it.second.instant.details.wind_speed_of_gust)
-                allDataAtDay[time]!!.add(it.second.instant.details.wind_from_direction)
-                allDataAtDay[time]!!.add(it.second.instant.details.air_temperature)
-                val symbolCode = try {
-                    it.second.next_1_hours.summary.symbol_code
-                } catch (e: NullPointerException) {
-                    // for days where there are no longer hourly forecasts
-                    it.second.next_6_hours.summary.symbol_code
+                allDataAtDay[time]!!.let { intervalData ->
+                    intervalData.add(it.second.instant.details.wind_speed)
+                    intervalData.add(it.second.instant.details.wind_speed_of_gust)
+                    intervalData.add(it.second.instant.details.wind_from_direction)
+                    intervalData.add(it.second.instant.details.air_temperature)
+                    val symbolCode = it.second.next_1_hours?.summary?.symbol_code ?: it.second.next_6_hours.summary.symbol_code
+                    intervalData.add(symbolCode)
                 }
-                allDataAtDay[time]!!.add(symbolCode)
+
             }
 
-            ofAtDay.map {
-                val time = LocalDateTime.parse(it.first, dateFormatter)
-                try {
-                    allDataAtDay[time]!!.add(it.second.instant.details.sea_surface_wave_height)
-                    allDataAtDay[time]!!.add(it.second.instant.details.sea_surface_wave_from_direction)
+            ofAtDay.map {(timeStr, data) ->
+
+                // adds a dataAtTime object to dayForecast if both lf and of have data at that time
+                val time = LocalDateTime.parse(timeStr, dateFormatter)
+                allDataAtDay[time]?.let {intervalData ->
+                    intervalData.add(data.instant.details.sea_surface_wave_height)
+                    intervalData.add(data.instant.details.sea_surface_wave_from_direction)
 
                     val dataAtTime = DataAtTime(
-                        windSpeed   = allDataAtDay[time]!![0] as Double,
-                        windGust    = allDataAtDay[time]!![1] as Double,
-                        windDir     = allDataAtDay[time]!![2] as Double,
-                        airTemp     = allDataAtDay[time]!![3] as Double,
-                        symbolCode  = allDataAtDay[time]!![4] as String,
-                        waveHeight  = allDataAtDay[time]!![5] as Double,
-                        waveDir     = allDataAtDay[time]!![6] as Double,
+                        windSpeed = intervalData[0] as Double,
+                        windGust = intervalData[1] as Double,
+                        windDir = intervalData[2] as Double,
+                        airTemp = intervalData[3] as Double,
+                        symbolCode = intervalData[4] as String,
+                        waveHeight = intervalData[5] as Double,
+                        waveDir = intervalData[6] as Double,
                     )
                     dayForecast.put(time, dataAtTime)
-                } catch(_: NullPointerException) {
-                    // continues iteration if of is missing data at time
                 }
             }
             allDayForecasts.add(
