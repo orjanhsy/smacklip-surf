@@ -35,7 +35,6 @@ import kotlin.coroutines.CoroutineContext
 interface Repository {
     val ofLfNext7Days: StateFlow<AllSurfAreasOFLF>
     val wavePeriods: StateFlow<AllWavePeriods>
-    val alerts: StateFlow<Map<SurfArea, List<Alert>>>
     val areaInFocus: StateFlow<SurfArea?>
     val dayInFocus: StateFlow<Int?>
 
@@ -43,27 +42,22 @@ interface Repository {
     fun updateDayInFocus(day: Int)
     suspend fun loadOFlF()
     suspend fun loadWavePeriods()
-    suspend fun loadAlerts()
 }
 
 class RepositoryImpl(
     private val waveForecastRepository: WaveForecastRepository = WaveForecastRepositoryImpl(),
     private val oceanForecastRepository: OceanforecastRepository = OceanforecastRepositoryImpl(),
     private val locationForecastRepository: LocationForecastRepository = LocationForecastRepositoryImpl(),
-    private val metAlertsRepository: MetAlertsRepository = MetAlertsRepositoryImpl()
-
 ): Repository {
 
     private val _ofLfNext7Days: MutableStateFlow<AllSurfAreasOFLF> = MutableStateFlow(AllSurfAreasOFLF())
     private val _wavePeriods: MutableStateFlow<AllWavePeriods> = MutableStateFlow(AllWavePeriods())
-    private val _alerts: MutableStateFlow<Map<SurfArea, List<Alert>>> = MutableStateFlow(mapOf())
     private val _areaInFocus: MutableStateFlow<SurfArea?> = MutableStateFlow(null)
     private val _dayInFocus: MutableStateFlow<Int?> = MutableStateFlow(null)
 
 
     override val ofLfNext7Days: StateFlow<AllSurfAreasOFLF> = _ofLfNext7Days.asStateFlow()
     override val wavePeriods: StateFlow<AllWavePeriods> = _wavePeriods.asStateFlow()
-    override val alerts: StateFlow<Map<SurfArea, List<Alert>>> = _alerts.asStateFlow()
     override val areaInFocus: StateFlow<SurfArea?> = _areaInFocus.asStateFlow()
     override val dayInFocus: StateFlow<Int?> = _dayInFocus.asStateFlow()
 
@@ -178,13 +172,6 @@ class RepositoryImpl(
 
         _wavePeriods.update {
             waveForecastRepository.getAllWavePeriods()
-        }
-    }
-
-    override suspend fun loadAlerts() {
-
-        _alerts.update {
-            metAlertsRepository.getAllRelevantAlerts()
         }
     }
 

@@ -4,6 +4,9 @@ package com.example.myapplication.data.metalerts
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.metalerts.MetAlerts
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlin.math.PI
 import kotlin.math.acos
 import kotlin.math.cos
@@ -11,9 +14,9 @@ import kotlin.math.sin
 
 
 interface MetAlertsRepository{
-    suspend fun getAllRelevantAlerts(): Map<SurfArea, List<Alert>>
+    suspend fun loadAllRelevantAlerts(): Map<SurfArea, List<Alert>>
 
-    suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Alert>
+    val alerts: StateFlow<Map<SurfArea, List<Alert>>>
 }
 
 const val ALERT_RADIUS = 50.0 // 10 == 1 mil, 20 er sikkert nice men 50 er nice for testing
@@ -23,7 +26,9 @@ class MetAlertsRepositoryImpl (
 
 ) : MetAlertsRepository {
 
-    private var _allAlerts: List<Alert> = listOf()
+    private val _alerts: MutableStateFlow<Map<SurfArea, List<Alert>>> = MutableStateFlow(mapOf())
+    override val alerts: StateFlow<Map<SurfArea, List<Alert>>> = _alerts.asStateFlow()
+
     private suspend fun loadAlerts() {
         _allAlerts = try {
              metAlertsDataSource.fetchMetAlertsData().features
@@ -43,14 +48,14 @@ class MetAlertsRepositoryImpl (
         return acos(sin(lat1) * sin(lat2) + cos(lat1) * cos(lat2) * cos(lon2-lon1)) * radiusEarth
     }
 
-    override suspend fun getAllRelevantAlerts(): Map<SurfArea, List<Alert>> {
+    override suspend fun loadAllRelevantAlerts(): Map<SurfArea, List<Alert>> {
         if (_allAlerts.isEmpty()) {
             loadAlerts()
         }
         return SurfArea.entries.associateWith { getRelevantAlertsFor(it) }
     }
 
-    override suspend fun getRelevantAlertsFor(surfArea: SurfArea): List<Alert> {
+    private fun getRelevantAlertsFor(surfArea: SurfArea): List<Alert> {
         val relevantAlerts: MutableList<Alert> = mutableListOf()
         _allAlerts.forEach {alert ->
             val coordinates = alert.geometry?.coordinates
