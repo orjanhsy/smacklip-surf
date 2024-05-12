@@ -80,47 +80,4 @@ class DailySurfAreaScreenViewModel(
         }
     }
 
-
-//    fun updateStatusConditions(surfArea: SurfArea, forecast: List<DayForecast>) {
-//        viewModelScope.launch(Dispatchers.IO) {
-//
-//            _dailySurfAreaScreenUiState.update {state ->
-//                Log.d("DSVM", "Updating statuses")
-//                val newConditionStatuses: MutableList<Map<LocalDateTime, ConditionStatus>> = mutableListOf()
-//                if (forecast.isEmpty()) {
-//                    Log.d("DSVM", "Forecast empty, quitting update")
-//                    return@launch
-//                }
-//
-//                forecast.map {dayForecast ->
-//                    val todaysStatuses: MutableMap<LocalDateTime, ConditionStatus> = mutableMapOf()
-//
-//                    dayForecast.data.entries.map {(time, dataAtTime) ->
-//                        val wavePeriod = try{state.wavePeriods[forecast.indexOf(dayForecast) * time.hour]}
-//                        catch (e: IndexOutOfBoundsException) {null}
-//
-//                        val conditionStatus = smackLipRepository.getConditionStatus(
-//                            location = surfArea,
-//                            wavePeriod = wavePeriod,
-//                            windSpeed = dataAtTime.windSpeed,
-//                            windGust = dataAtTime.windGust,
-//                            windDir = dataAtTime.windDir,
-//                            waveHeight = dataAtTime.waveHeight,
-//                            waveDir = dataAtTime.waveDir,
-//                        )
-//                        todaysStatuses[time] = conditionStatus
-//                    }
-//                    newConditionStatuses.add(todaysStatuses.toMap())
-//                }
-//
-//                state.copy(
-//                    conditionStatuses = newConditionStatuses.toList()
-//                )
-//            }
-//            _dailySurfAreaScreenUiState.update {
-//                it.copy(loading = false) //avslutte loading screen - det siste som kalles fra DailySurfScreen
-//            }
-//        }
-//    }
-
 }
