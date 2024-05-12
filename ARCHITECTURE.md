@@ -33,19 +33,44 @@ Et viktig begrep i UDF er *Single Source of Truth*, SSOT. SSOT handler om at all
 
 
 
-## Verktøy og API-nivå
-Vi har brukt en del verktøy som bør tas hensyn til videre i utvikling og vedlikehold av appen:
+## API-nivå og verktøy
+
+### API-nivå
+Vi bruker API-nivå XXXXX. Dette er fordi XXXX.
+
+### Verktøy
 
 #### Proto Data Store
+Vi bruker Proto Data Store til å generere filer som lagrer favorites og valg av theme slik at dette ikke forsvinner hver gang appen lukkes.
 
-#### Gson
+#### Ktor
+Ktor brukes til å håndtere HTTP-forespørsler til de brukte API-ene. 
+ContentNegotiation brukes for å tillatte mottakelse av data på JSON-format. GSON er brukt til å deserialisere JSON-objekter til kotlink-klasser.
+Versjon må jevnlig vedlikeholdes i build.gradle.
 
 #### LocalDateTime
-Vi har gjennomgående brukt Java Time sitt LocalDateTime API til å behandle tidspunkt i UI-laget. Om appen senere skal tilbys på andre plattformer enn Android må tidspunkt enten håndteres manuelt eller av ett annet tredjepartsbibliotek.
+Vi bruker Java Time sitt LocalDateTime API til å behandle tidspunkt i UI-laget. Om appen senere skal tilbys på andre plattformer enn Android må tidspunkt enten håndteres manuelt eller av ett annet tredjepartsbibliotek.
 
 #### MapBox
+Hva bruker vi det til, gjerne clarify det med viewmodel og sånn så det ikke ser random ut i skissen.
 
-### 
+#### Barentswatch
+Vi bruker barentswatch sitt WaveForecast API for å hente bølgeperioder.\
+URL: https://www.barentswatch.no/bwapi \
+Path: /v1/waveforecastpoint/nearest/all \
+API-et krever autentisering gjennom https://id.barentswatch.no/connect/token
+
+#### OceanForecast
+Vi bruker METs API OceanForecast for å hente bølgeretning og bølgeperiode.
+API-et hentes gjennom en proxy hos IFI ved UIO.
+
+#### LocationForecast
+Vi bruker METs API LocationForecast (*complete* varianten) for å hente vindretning, vindhastighet, vindkast, temperatur og værsymboler.
+API-et hentes gjennom en proxy hos IFI ved UIO. 
+
+#### MetAlerts
+Vi bruker METs API MetAlerts på GeoJSON-format for å hente aktuelle farevarsel.
+API-et er hentet gjennom XXXXX grunnet trøbbel med proxy.
 
 
 
