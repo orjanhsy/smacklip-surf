@@ -270,18 +270,26 @@ fun AllInfoCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
+                //Time group
+                Box(
+                    modifier = Modifier
+                        .size(26.dp) // Set size with shorter height
+                        .padding(top = 4.dp) // Add padding to the top
+
+                ) {
                     Text(
                         text = timestamp,
                         style = AppTypography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.weight(1f) // places all the way left
+                        //modifier = Modifier.weight(1f) // places all the way left
                     )
+                    }
 
                 // Wind Group
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = "  ")
+                    //Air icon
                     Icon(
                         imageVector = Icons.Outlined.Air,
                         contentDescription = "Air",
@@ -290,7 +298,7 @@ fun AllInfoCard(
                     )
 
                     Spacer(modifier = Modifier.width(6.dp))
-
+                    //wind text
                     Box(
                         modifier = Modifier
                             .size(width = 50.dp, height = 30.dp) // Set size with shorter height
@@ -305,8 +313,8 @@ fun AllInfoCard(
                         )
                     }
 
-                    //Spacer(modifier = Modifier.width(6.dp))
 
+                    //wind direction arrow
                     Icon(
                         imageVector = Icons.Outlined.CallMade,
                         contentDescription = "Arrow",
@@ -323,6 +331,7 @@ fun AllInfoCard(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    //wave icon
                     Icon(
                         imageVector = Icons.Outlined.Tsunami,
                         contentDescription = "Tsunami",
@@ -332,6 +341,7 @@ fun AllInfoCard(
 
                     Spacer(modifier = Modifier.width(8.dp))
 
+                    //wave height text
                     Box(    //set size box to avoid distortion
                         modifier = Modifier
                             .size(40.dp)
@@ -344,8 +354,9 @@ fun AllInfoCard(
                         )
                     }
 
-                    Spacer(modifier = Modifier.width(14.dp))
+                    Spacer(modifier = Modifier.width(10.dp))
 
+                    //wave period text
                     if (wavePeriod != null && wavePeriod >= 0) {
                         Text(
                             text = "${wavePeriod.toInt()} sek",
@@ -360,8 +371,8 @@ fun AllInfoCard(
                         )
                     }
 
-                    Spacer(modifier = Modifier.width(5.dp))
 
+                    //wave direction arrow
                     Icon(
                         imageVector = Icons.Outlined.CallMade,
                         contentDescription = "Arrow",
@@ -372,14 +383,14 @@ fun AllInfoCard(
                     )
                 }
 
-                Spacer(modifier = Modifier.width(14.dp))
+                Spacer(modifier = Modifier.width(5.dp))
 
-                // Temp
+                // Weather group
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-
-                    Box(    //set size box to avoid distortion
+                    //temperature
+                     Box(    //set size box to avoid distortion
                         modifier = Modifier
                             .size(width = 30.dp, height = 30.dp)
                             .padding(top = 6.dp)
@@ -405,7 +416,7 @@ fun AllInfoCard(
                             modifier = Modifier.padding(end = 1.dp)
                         )
                     }
-
+                    //Weather icon
                     Image(
                         painter = painterResource(id = recourseUtils.findWeatherSymbol(icon.toString())),
                         contentDescription = "Weather Icon",
@@ -422,7 +433,7 @@ fun AllInfoCard(
                     ConditionStatus.BLANK -> ConditionStatus.BLANK.surfBoard
                     null -> R.drawable.spm
                 }
-
+                //condition status
                 Image(
                     painter = painterResource(id = surfBoard),
                     contentDescription = "Weather Icon",
