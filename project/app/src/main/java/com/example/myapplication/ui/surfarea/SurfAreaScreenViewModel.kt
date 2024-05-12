@@ -38,9 +38,9 @@ class SurfAreaScreenViewModel(
         repo.areaInFocus
     ) { oflf, alerts, wavePeriods, sa ->
         // TODO: !! ?
-        val newOfLf         = try {oflf.next7Days[sa]!! } catch(e: NullPointerException) {Forecast7DaysOFLF()}
-        val newAlerts       = try {alerts[sa]!!} catch (e: NullPointerException) {listOf()}
-        val newWavePeriods  = try {wavePeriods.wavePeriods[sa]!!} catch(e: NullPointerException) {mapOf()}
+        val newOfLf: Forecast7DaysOFLF = oflf.next7Days[sa] ?: Forecast7DaysOFLF()
+        val newAlerts: List<Alert> = alerts[sa] ?: listOf()
+        val newWavePeriods: Map<Int, List<Double?>>  = wavePeriods.wavePeriods[sa] ?: mapOf()
         val conditionUtil = ConditionUtils()
 
         val newMaxWaveHeights = newOfLf.forecast.map {
@@ -57,7 +57,7 @@ class SurfAreaScreenViewModel(
                 dayForecasts.data.entries.map { (time, dataAtTime) ->
                     val conditionStatus = try {
                         conditionUtil.getConditionStatus(
-                            location = sa!!,
+                            location = sa,
                             wavePeriod = newWavePeriods[time.dayOfMonth]?.get(availableTimes.indexOf(time)),
                             windSpeed = dataAtTime.windSpeed,
                             windDir = dataAtTime.windDir,
