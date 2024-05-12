@@ -10,6 +10,7 @@ import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.smacklip.DayForecast
 import com.example.myapplication.model.surfareas.SurfArea
+import com.example.myapplication.utils.ConditionUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -52,11 +53,16 @@ class DailySurfAreaScreenViewModel(
         val times = newDataAtDay.data.map {it.key}.sortedBy { it.hour }
         val newConditionStatuses = newDataAtDay.data.mapValues {(time, dataAtTime) ->
             try {
-                val conditionStatus =
-                    GetConditionStatusUseCase(sa!!, dataAtTime, newWavePeriods[times.indexOf(time)])
-                val cs = conditionStatus()
-                Log.d("DSVM", "Conditions: $dataAtTime and tp: ${newWavePeriods[times.indexOf(time)]} resulted in $cs for $sa")
-                cs
+                val conditionStatus = ConditionUtils().getConditionStatus(
+                    location = sa!!,
+                    wavePeriod = newWavePeriods[times.indexOf(time)],
+                    windSpeed = dataAtTime.windSpeed,
+                    windDir =  dataAtTime.windDir,
+                    waveHeight = dataAtTime.waveHeight,
+                    waveDir = dataAtTime.waveDir,
+                )
+                Log.d("DSVM", "Conditions: $dataAtTime and tp: ${newWavePeriods[times.indexOf(time)]} resulted in $conditionStatus for $sa")
+                conditionStatus
             } catch (e: IndexOutOfBoundsException) {
                 ConditionStatus.BLANK
             }
