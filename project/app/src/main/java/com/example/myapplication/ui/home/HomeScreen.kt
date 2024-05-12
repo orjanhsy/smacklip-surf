@@ -608,7 +608,10 @@ private fun PreviewSurfAreaCard() {
 private fun PreviewHomeScreen() {
     val hsvm = viewModel<HomeScreenViewModel>(
         factory = viewModelFactory {
-            HomeScreenViewModel(SmackLipApplication.container.stateFulRepo)
+            HomeScreenViewModel(
+                SmackLipApplication.container.stateFulRepo,
+                SmackLipApplication.container.alertsRepo
+            )
         }
     )
     AppTheme {
