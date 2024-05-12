@@ -9,6 +9,7 @@ import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.smacklip.Forecast7DaysOFLF
 import com.example.myapplication.model.surfareas.SurfArea
+import com.example.myapplication.utils.ConditionUtils
 import io.ktor.client.utils.EmptyContent.status
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
@@ -43,6 +44,7 @@ class SurfAreaScreenViewModel(
         val newOfLf         = try {oflf.next7Days[sa]!! } catch(e: NullPointerException) {Forecast7DaysOFLF()}
         val newAlerts       = try {alerts[sa]!!} catch (e: NullPointerException) {listOf()}
         val newWavePeriods  = try {wavePeriods.wavePeriods[sa]!!} catch(e: NullPointerException) {mapOf()}
+        val conditionUtil = ConditionUtils()
 
         val newMaxWaveHeights = newOfLf.forecast.map {
             it.data.values.maxOf {dataAtTime -> dataAtTime.waveHeight }
@@ -57,13 +59,15 @@ class SurfAreaScreenViewModel(
 
                 dayForecasts.data.entries.map { (time, dataAtTime) ->
                     val conditionStatus = try {
-                        val cs = GetConditionStatusUseCase(
-                            sa!!,
-                            dataAtTime,
-                            newWavePeriods[time.dayOfMonth]?.get(availableTimes.indexOf(time))
+                        conditionUtil.getConditionStatus(
+                            location = sa!!,
+                            wavePeriod = newWavePeriods[time.dayOfMonth]?.get(availableTimes.indexOf(time)),
+                            windSpeed = dataAtTime.windSpeed,
+                            windDir = dataAtTime.windDir,
+                            waveHeight = dataAtTime.waveHeight,
+                            waveDir = dataAtTime.waveDir
                         )
-                        Log.d("SAVM", "Adding ${cs()} for $sa at $time")
-                        cs()
+
                     } catch (e: IndexOutOfBoundsException) {
                         ConditionStatus.BLANK
                     }
