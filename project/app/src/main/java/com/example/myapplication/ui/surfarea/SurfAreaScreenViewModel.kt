@@ -42,7 +42,7 @@ class SurfAreaScreenViewModel(
         val wavePeriodsInArea: Map<Int, List<Double?>>  = wavePeriods.wavePeriods[sa] ?: mapOf()
         val conditionUtil = ConditionUtils()
 
-        // gets min-max waveheights for display
+        // gets min-max waveheights per day for display
         val newMaxWaveHeights = newOfLf.forecast.map {
             it.data.values.maxOf {dataAtTime -> dataAtTime.waveHeight }
         }
