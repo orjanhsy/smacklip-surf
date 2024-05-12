@@ -33,7 +33,6 @@ class MetAlertsRepositoryImpl (
 
 ) : MetAlertsRepository {
 
-    private val _allAlerts: List<Alert> = listOf()
 
     // holds relevant alerts
     private val _alerts: MutableStateFlow<Map<SurfArea, List<Alert>>> = MutableStateFlow(mapOf())
@@ -73,18 +72,17 @@ class MetAlertsRepositoryImpl (
     }
 
     override suspend fun loadAllRelevantAlerts() {
-        if (_allAlerts.isEmpty()) {
-            getAlerts()
-        }
+
         _alerts.update {
-            SurfArea.entries.associateWith { getRelevantAlertsFor(it) }
+            val allAlerts = getAlerts()
+            SurfArea.entries.associateWith { getRelevantAlertsFor(it, allAlerts) }
         }
     }
 
     // retrieves all alerts for an area that are within ALERT_RADIUS distance
-    private fun getRelevantAlertsFor(surfArea: SurfArea): List<Alert> {
+    private fun getRelevantAlertsFor(surfArea: SurfArea, allAlerts: List<Alert>): List<Alert> {
         val relevantAlerts: MutableList<Alert> = mutableListOf()
-        _allAlerts.forEach {alert ->
+        allAlerts.forEach {alert ->
             val coordinates = alert.geometry?.coordinates
             if (alert.geometry?.type == "Polygon") {
                 coordinates?.forEach {i ->
