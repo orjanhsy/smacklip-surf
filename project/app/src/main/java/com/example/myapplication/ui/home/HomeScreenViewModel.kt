@@ -7,7 +7,7 @@ import com.example.myapplication.R
 import com.example.myapplication.Settings
 import com.example.myapplication.SmackLipApplication.Companion.container
 import com.example.myapplication.data.metalerts.MetAlertsRepository
-import com.example.myapplication.data.smackLip.Repository
+import com.example.myapplication.data.weatherForecast.WeatherForecastRepository
 import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
@@ -26,7 +26,7 @@ data class HomeScreenUiState(
 )
 
 class HomeScreenViewModel(
-    private val forecastRepo: Repository,
+    private val forecastRepo: WeatherForecastRepository,
     private val alertsRepo: MetAlertsRepository
 
 ) : ViewModel() {

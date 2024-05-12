@@ -3,7 +3,7 @@ package com.example.myapplication.ui.surfarea
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.metalerts.MetAlertsRepository
-import com.example.myapplication.data.smackLip.Repository
+import com.example.myapplication.data.weatherForecast.WeatherForecastRepository
 import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.smacklip.Forecast7DaysOFLF
@@ -27,7 +27,7 @@ data class SurfAreaScreenUiState(
 
 
 class SurfAreaScreenViewModel(
-    private val forecastRepo: Repository,
+    private val forecastRepo: WeatherForecastRepository,
     private val alertsRepo: MetAlertsRepository
 ): ViewModel() {
 

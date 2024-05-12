@@ -9,8 +9,8 @@ import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
 import com.example.myapplication.data.settings.SettingsRepository
 import com.example.myapplication.data.settings.SettingsRepositoryImpl
 import com.example.myapplication.data.settings.SettingsSerializer
-import com.example.myapplication.data.smackLip.Repository
-import com.example.myapplication.data.smackLip.RepositoryImpl
+import com.example.myapplication.data.weatherForecast.WeatherForecastRepository
+import com.example.myapplication.data.weatherForecast.WeatherForecastRepositoryImpl
 import com.example.myapplication.ui.info.InfoScreenViewModel
 
 
@@ -18,7 +18,7 @@ private const val DATA_STORE_FILE_NAME = "settings.pb"
 interface AppContainer {
     val infoViewModel: InfoScreenViewModel
     val settingsRepository: SettingsRepository
-    val stateFulRepo: Repository
+    val stateFulRepo: WeatherForecastRepository
     val alertsRepo: MetAlertsRepository
 }
 class DefaultAppContainer(
@@ -32,8 +32,8 @@ class DefaultAppContainer(
         SettingsRepositoryImpl(settingsStore)
     }
 
-    override val stateFulRepo: Repository by lazy {
-        RepositoryImpl()
+    override val stateFulRepo: WeatherForecastRepository by lazy {
+        WeatherForecastRepositoryImpl()
     }
 
     override val alertsRepo: MetAlertsRepository by lazy {
