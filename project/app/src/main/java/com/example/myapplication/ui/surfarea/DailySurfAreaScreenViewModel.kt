@@ -1,6 +1,7 @@
 package com.example.myapplication.ui.surfarea
 
 import android.util.Log
+import androidx.compose.ui.tooling.data.EmptyGroup.location
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.smackLip.Repository
@@ -36,6 +37,7 @@ class DailySurfAreaScreenViewModel(
         repo.dayInFocus
     ) { oflf, wavePeriods, sa, day ->
         //TODO: !!
+        val conditionUtil = ConditionUtils()
         val today = LocalDateTime.now().dayOfMonth
         val newDataAtDay: DayForecast = try { oflf.next7Days[sa]!!.forecast[day!! - today] }
         catch(e: NullPointerException) {DayForecast()}
@@ -47,7 +49,7 @@ class DailySurfAreaScreenViewModel(
         val times = newDataAtDay.data.map {it.key}.sortedBy { it.hour }
         val newConditionStatuses = newDataAtDay.data.mapValues {(time, dataAtTime) ->
             try {
-                val conditionStatus = ConditionUtils().getConditionStatus(
+                val conditionStatus = conditionUtil.getConditionStatus(
                     location = sa!!,
                     wavePeriod = newWavePeriods[times.indexOf(time)],
                     windSpeed = dataAtTime.windSpeed,
