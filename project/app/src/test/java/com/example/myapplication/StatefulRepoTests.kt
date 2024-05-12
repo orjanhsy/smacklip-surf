@@ -52,17 +52,6 @@ class StatefulRepoTests {
         println(state)
     }
 
-    @Test
-    fun pointForecastsFilterTime()= runBlocking{
-
-        val time1 = measureTimeMillis {
-            WaveForecastRepositoryImpl().allWavePeriodsNext3Days()
-        }
-
-
-        println("$time1")
-
-    }
 
     @Test
     fun waveForecastXd(): Unit = runBlocking{

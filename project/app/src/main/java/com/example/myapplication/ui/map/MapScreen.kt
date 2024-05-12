@@ -515,15 +515,16 @@ fun SearchBar(
                 }
             )
         )
-        if (expanded && searchQuery.isNotEmpty()) {
+        val filteredSurfAreas =
+            surfAreas.filter { it.locationName.startsWith(searchQuery, ignoreCase = true) }
+
+        if (expanded && searchQuery.isNotEmpty() && filteredSurfAreas.isNotEmpty()) {
             LazyColumn(
                 modifier = Modifier
                     .padding(start = 12.dp, top = 0.dp, end = 12.dp, bottom = 12.dp)
                     .background(Color.White),
                 contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
             ) {
-                val filteredSurfAreas =
-                    surfAreas.filter { it.locationName.startsWith(searchQuery, ignoreCase = true) }
                 items(filteredSurfAreas) { surfArea ->
                     Column(modifier = Modifier.clickable {
                         searchQuery = ""

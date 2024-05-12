@@ -71,6 +71,7 @@ import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.ui.theme.AppTypography
 import com.example.myapplication.ui.theme.outlineLight
 import com.example.myapplication.utils.RecourseUtils
+import com.example.myapplication.utils.DateUtils
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -117,7 +118,7 @@ fun SurfAreaScreen(
                             Icon(
                                 Icons.Default.ArrowBack,
                                 contentDescription = "Back",
-                                tint = Color.Black,
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier
                                     .width(42.dp)
                                     .height(42.dp)
@@ -261,11 +262,11 @@ fun SurfAreaScreen(
 
 
 
-
 @Composable
 fun ShowAlert(alerts : List<Alert>, surfArea: SurfArea, action : () -> Unit){
-
+    val dateFormatter: DateUtils = DateUtils();
     val alert = alerts.first()
+    val time = dateFormatter.formatTimeInterval(alert.timeInterval?.interval)
     val alertMessage = alert.properties?.description ?: "No description available"
     val awarenessLevel = alert.properties?.awarenessLevel
     val icon = awarenessLevel?.let { getIconBasedOnAwarenessLevel(it) }
@@ -276,6 +277,7 @@ fun ShowAlert(alerts : List<Alert>, surfArea: SurfArea, action : () -> Unit){
         message = alertMessage,
         actionText = "OK",
         warningIcon = icon,
+        time = time,
         data = null,
         showAlert = remember { mutableStateOf(true) },
         //actionWithValue = null,

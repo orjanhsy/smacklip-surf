@@ -10,65 +10,21 @@ import java.time.LocalDate
 
 interface OceanforecastRepository{
     suspend fun getTimeSeries(surfArea: SurfArea): List<Pair<String, DataOF>>
-    suspend fun getWaveHeights(surfArea: SurfArea): List<Pair<String, Double>>
-
-    suspend fun getTimeSeriesDayByDay(surfArea: SurfArea): List<List<Pair<String, DataOF>>>
 }
 
 class OceanforecastRepositoryImpl(
     private val dataSource: OceanforecastDataSource = OceanforecastDataSource()
 ): OceanforecastRepository {
-    //vet ikke hva som er best practice: ha datasource som argument eller ha det inni klassen
-
-    private var timeSeries: List<Pair<String, DataOF>> = emptyList()
 
     override suspend fun getTimeSeries(surfArea: SurfArea): List<Pair<String, DataOF>> {
-        //henter timeSeries som er en liste av TimeSerie-objekter som består av de to variablene time og data
-
-        val timeSeries: List<TimeserieOF> =
-            dataSource.fetchOceanforecast(surfArea).properties.timeseries
-
-
-        //returnerer en map som mapper time til data, dermed ser man data for hver tidspunkt
-        return timeSeries.map { it.time to it.data }
-    }
-
-
-    override suspend fun getTimeSeriesDayByDay(surfArea: SurfArea): List<List<Pair<String, DataOF>>> {
-        //henter timeSeries som er en liste av TimeSerie-objekter som består av de to variablene time og data
-        val timeSeries: List<TimeserieOF> =
-            dataSource.fetchOceanforecast(surfArea).properties.timeseries
-
-        // grupperer dag for dag
-        val groupedData = timeSeries.groupBy { LocalDate.parse(it.time).dayOfWeek }
-//lager 7 lister for 7 dager
-        val resultList = mutableListOf<List<Pair<String, DataOF>>>()
-
-        // Legger til data for hver dag i listen
-        for (dayOfWeek in DayOfWeek.values()) {
-            val dayData = groupedData[dayOfWeek] ?: emptyList()
-            resultList.add(dayData.map { it.time to it.data })
+        //gets list of timeseries objects, containing time and data
+        val timeSeries: List<TimeserieOF> = try { dataSource.fetchOceanforecast(surfArea).properties.timeseries }
+        catch (e: Exception) {
+            // handles http exceptions from data source
+            listOf()
         }
 
-        return resultList
+        //returns a list of time mapped to data
+        return timeSeries.map { it.time to it.data }
     }
-
-
-    private fun findWaveHeightFromData(dataOF: DataOF): Double {
-        return dataOF.instant.details.sea_surface_wave_height
-    }
-
-    private fun findWaveDirectionFromData(dataOF: DataOF): Double {
-        return dataOF.instant.details.sea_water_to_direction
-    }
-
-
-    override suspend fun getWaveHeights(surfArea: SurfArea): List<Pair<String, Double>> {
-        // Hent timeSeries for det spesifikke surfArea-området
-        val timeSeriesForArea = getTimeSeries(surfArea)
-        // Map og konverter timeSeries-dataene til bølgehøyder
-        return timeSeriesForArea.map { it.first to findWaveHeightFromData(it.second) } ?: emptyList()
-
-    }
-
 }

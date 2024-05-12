@@ -260,19 +260,22 @@ fun AllInfoCard(
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimary),
 
             ) {
-            Spacer(modifier = Modifier.height(8.dp))
+
+            Spacer(modifier = Modifier.height(7.dp)) //aligns text mid screen
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp, vertical = 4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = timestamp,
-                    style = AppTypography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.weight(1f)
-                )
+
+                    Text(
+                        text = timestamp,
+                        style = AppTypography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.weight(1f) // places all the way left
+                    )
 
                 // Wind Group
                 Row(
@@ -281,21 +284,27 @@ fun AllInfoCard(
                     Icon(
                         imageVector = Icons.Outlined.Air,
                         contentDescription = "Air",
-                        tint= MaterialTheme.colorScheme.onSurfaceVariant,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(20.dp)
                     )
 
                     Spacer(modifier = Modifier.width(6.dp))
 
-                    Text(
-                        text = if (windGust as Double > windSpeed as Double) "${(windSpeed).toInt()} (${(windGust).toInt()})"
-                        else "${(windSpeed).toInt()}",
-                        style = AppTypography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    Box(
+                        modifier = Modifier
+                            .size(width = 50.dp, height = 30.dp) // Set size with shorter height
+                            .padding(top = 6.dp) // Add padding to the top
+                    ) {
+                        Text(
+                            text = if (windGust as Double > windSpeed as Double) "${(windSpeed).toInt()} (${(windGust).toInt()})"
+                            else "${(windSpeed).toInt()}",
+                            style = AppTypography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
 
-                    )
+                        )
+                    }
 
-                    Spacer(modifier = Modifier.width(6.dp))
+                    //Spacer(modifier = Modifier.width(6.dp))
 
                     Icon(
                         imageVector = Icons.Outlined.CallMade,
@@ -322,13 +331,18 @@ fun AllInfoCard(
 
                     Spacer(modifier = Modifier.width(8.dp))
 
-                    Text(
-                        text = "$waveHeight m",
-                        style = AppTypography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    Box(    //set size box to avoid distortion
+                        modifier = Modifier.size(40.dp)
+                            .padding(top = 8.dp)
+                    ) {
+                        Text(
+                            text = "$waveHeight m",
+                            style = AppTypography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
 
-                    Spacer(modifier = Modifier.width(6.dp))
+                    Spacer(modifier = Modifier.width(14.dp))
 
                     if (wavePeriod != null && wavePeriod >= 0) {
                         Text(
@@ -344,7 +358,7 @@ fun AllInfoCard(
                         )
                     }
 
-                    Spacer(modifier = Modifier.width(6.dp))
+                    Spacer(modifier = Modifier.width(5.dp))
 
                     Icon(
                         imageVector = Icons.Outlined.CallMade,
@@ -362,16 +376,33 @@ fun AllInfoCard(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = if (temp is Double) {
-                            temp.toInt().toString()
-                        } else {
-                            temp.toString()
-                        },
-                        style = AppTypography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(end = 4.dp)
-                    )
+
+                    Box(    //set size box to avoid distortion
+                        modifier = Modifier
+                            .size(width = 30.dp, height = 30.dp)
+                            .padding(top = 6.dp)
+                    ) {
+                        Text(
+                            text = if (temp is Double) {
+                                val temperature = temp.toInt()
+                                if (temperature < 10) {
+                                    "  $temperature" // Add space before temperature
+                                } else {
+                                    "$temperature"
+                                }
+                            } else {
+                                val temperature = temp.toString()
+                                if (temperature.toInt() < 10) {
+                                    "  $temperature" // Add space before temperature
+                                } else {
+                                    temperature
+                                }
+                            } + "\u00B0",
+                            style = AppTypography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(end = 1.dp)
+                        )
+                    }
 
                     Image(
                         painter = painterResource(id = recourseUtils.findWeatherSymbol(icon.toString())),
