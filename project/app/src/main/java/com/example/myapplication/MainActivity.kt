@@ -111,7 +111,10 @@ fun SmackLipNavigation() {
 
     val savm = viewModel<SurfAreaScreenViewModel>(
         factory = viewModelFactory {
-            SurfAreaScreenViewModel(SmackLipApplication.container.stateFulRepo)
+            SurfAreaScreenViewModel(
+                SmackLipApplication.container.stateFulRepo,
+                SmackLipApplication.container.alertsRepo
+            )
         }
     )
 
