@@ -68,15 +68,6 @@ class RepositoryImpl(
     override val dayInFocus: StateFlow<Int?> = _dayInFocus.asStateFlow()
 
 
-    init {
-        CoroutineScope(Dispatchers.IO).launch{
-            loadOFlF()
-            loadAlerts()
-            loadWavePeriods()
-        }
-    }
-
-
     override fun updateAreaInFocus(surfArea: SurfArea) {
         _areaInFocus.update {
             surfArea
