@@ -22,16 +22,24 @@ import kotlinx.coroutines.launch
 data class HomeScreenUiState(
     val ofLfNow: Map<SurfArea, DataAtTime> = mapOf(),
     val allRelevantAlerts: Map<SurfArea, List<Alert>> = emptyMap(),
-    val loading: Boolean = true
 )
 
 class HomeScreenViewModel(
     private val repo: Repository
 
 ) : ViewModel() {
+
+    init {
+        viewModelScope.launch(Dispatchers.IO) {
+            updateOfLF()
+            updateWavePeriods()
+            updateAlerts()
+        }
+    }
     private val _favoriteSurfAreas = MutableStateFlow<List<SurfArea>>(emptyList())
-    val favoriteSurfAreas: StateFlow<List<SurfArea>> = _favoriteSurfAreas // TODO: asStateFlow()?
+    val favoriteSurfAreas: StateFlow<List<SurfArea>> = _favoriteSurfAreas
     val settings: Flow<Settings> = container.settingsRepository.settingsFlow
+
 
 
     val homeScreenUiState: StateFlow<HomeScreenUiState> = combine(
@@ -45,7 +53,6 @@ class HomeScreenViewModel(
         HomeScreenUiState(
             ofLfNow = oflfNow,
             allRelevantAlerts = allRelevantAlerts,
-            loading = false
         )
 
     }.stateIn(
@@ -54,12 +61,23 @@ class HomeScreenViewModel(
         HomeScreenUiState()
     )
 
-    suspend fun updateOfLF() {
+    private suspend fun updateOfLF() {
         viewModelScope.launch(Dispatchers.IO) {
             repo.loadOFlF()
         }
     }
 
+    private suspend fun updateWavePeriods() {
+        viewModelScope.launch {
+            repo.loadWavePeriods()
+        }
+    }
+
+    private suspend fun updateAlerts() {
+        viewModelScope.launch {
+            repo.loadAlerts()
+        }
+    }
 
 
     fun getIconBasedOnAwarenessLevel(awarenessLevel: String): Int {
@@ -80,6 +98,7 @@ class HomeScreenViewModel(
             R.drawable.icon_awareness_default
         }
     }
+
     fun getSurfAreaByLocationName(locationName: String): SurfArea? {
         return SurfArea.entries.firstOrNull{ it.locationName.equals(locationName, ignoreCase = true)}
     }

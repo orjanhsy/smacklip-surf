@@ -68,24 +68,13 @@ class RepositoryImpl(
     override val dayInFocus: StateFlow<Int?> = _dayInFocus.asStateFlow()
 
 
-    init {
-        CoroutineScope(Dispatchers.IO).launch{
-            loadOFlF()
-            loadAlerts()
-            loadWavePeriods()
-        }
-    }
-
-
     override fun updateAreaInFocus(surfArea: SurfArea) {
-        Log.d("REPO", "Updating areaInFocus to $surfArea")
         _areaInFocus.update {
             surfArea
         }
     }
 
     override fun updateDayInFocus(day: Int) {
-        Log.d("REPO", "Updating dayInFocus to $day")
         _dayInFocus.update {
             day
         }
@@ -95,13 +84,11 @@ class RepositoryImpl(
             Funksjonen henter all oflf data for hvert sted, som resulterer i en 9-dagers forecast (den tar med dager der windGust er 0.0  forelopig)
              */
     override suspend fun loadOFlF() {
-        Log.d("REPO", "Updating OFLF")
         withContext(Dispatchers.IO) {// burde context bli sendt ned fra vm?
             _ofLfNext7Days.update {
                 val all7DayForecasts: Map<SurfArea, Deferred<MutableList<DayForecast>>> = SurfArea.entries.associateWith { sa ->
                     async { getOFLFForArea(sa) }
                 }
-                Log.d("REPO", "Loading oflf is complete")
                 AllSurfAreasOFLF(
                     next7Days = all7DayForecasts.keys.associateWith {
                         Forecast7DaysOFLF(all7DayForecasts[it]!!.await())
@@ -119,8 +106,8 @@ class RepositoryImpl(
 
         val allDayForecasts: MutableList<DayForecast> = mutableListOf()
 
+
         for (day in lf.keys) {
-            val dayForecasts: MutableMap<LocalDateTime, DataAtTime> = mutableMapOf()
             // TODO: !!
             val lfAtDay = lf[day]!!
             val ofAtDay = try {of[day]!!} catch(e: NullPointerException) {continue} // skips iteration if there is not data for both lf and of
@@ -161,6 +148,7 @@ class RepositoryImpl(
                     )
                     dayForecast.put(time, dataAtTime)
                 } catch(_: NullPointerException) {
+                    // continues iteration if of is missing data at time
                 }
             }
             allDayForecasts.add(
@@ -187,7 +175,6 @@ class RepositoryImpl(
     }
 
     override suspend fun loadWavePeriods() {
-//        Log.d("REPO", "Updating waveperiods")
 
         _wavePeriods.update {
             waveForecastRepository.getAllWavePeriods()
@@ -195,7 +182,6 @@ class RepositoryImpl(
     }
 
     override suspend fun loadAlerts() {
-//        Log.d("REPO", "Updating Alerts")
 
         _alerts.update {
             metAlertsRepository.getAllRelevantAlerts()
