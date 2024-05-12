@@ -2,6 +2,7 @@
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -267,29 +268,28 @@ fun AllInfoCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp, vertical = 4.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween //evenly spaced
             ) {
 
                 //Time group
                 Box(
                     modifier = Modifier
-                        .size(26.dp) // Set size with shorter height
-                        .padding(top = 4.dp) // Add padding to the top
-
+                        .size(26.dp)
+                        .padding(top = 4.dp) // add padding for alignment
                 ) {
                     Text(
                         text = timestamp,
                         style = AppTypography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        //modifier = Modifier.weight(1f) // places all the way left
-                    )
+                        )
                     }
 
-                // Wind Group
+                // wind Group
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    //Air icon
+                    //air icon
                     Icon(
                         imageVector = Icons.Outlined.Air,
                         contentDescription = "Air",
@@ -298,6 +298,7 @@ fun AllInfoCard(
                     )
 
                     Spacer(modifier = Modifier.width(6.dp))
+
                     //wind text
                     Box(
                         modifier = Modifier
@@ -309,10 +310,8 @@ fun AllInfoCard(
                             else "${(windSpeed).toInt()}",
                             style = AppTypography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
-
                         )
                     }
-
 
                     //wind direction arrow
                     Icon(
@@ -321,13 +320,13 @@ fun AllInfoCard(
                         tint=  MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier
                             .size(17.dp)
-                            .rotate(rotationAngleWind - 135)
+                            .rotate(rotationAngleWind - 135) //adjust angle (180-45)
                     )
                 }
 
                 Spacer(modifier = Modifier.width(14.dp))
 
-                // Wave Group
+                // wave Group
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -342,7 +341,7 @@ fun AllInfoCard(
                     Spacer(modifier = Modifier.width(8.dp))
 
                     //wave height text
-                    Box(    //set size box to avoid distortion
+                    Box(
                         modifier = Modifier
                             .size(40.dp)
                             .padding(top = 8.dp)
@@ -371,7 +370,6 @@ fun AllInfoCard(
                         )
                     }
 
-
                     //wave direction arrow
                     Icon(
                         imageVector = Icons.Outlined.CallMade,
@@ -390,7 +388,7 @@ fun AllInfoCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     //temperature
-                     Box(    //set size box to avoid distortion
+                     Box(
                         modifier = Modifier
                             .size(width = 30.dp, height = 30.dp)
                             .padding(top = 6.dp)
@@ -399,18 +397,18 @@ fun AllInfoCard(
                             text = if (temp is Double) {
                                 val temperature = temp.toInt()
                                 if (temperature < 10) {
-                                    "  $temperature" // Add space before temperature
+                                    "  $temperature" //align single digit with 0 position
                                 } else {
                                     "$temperature"
                                 }
                             } else {
                                 val temperature = temp.toString()
                                 if (temperature.toInt() < 10) {
-                                    "  $temperature" // Add space before temperature
+                                    "  $temperature" //align single digit with 0 position
                                 } else {
                                     temperature
                                 }
-                            } + "\u00B0",
+                            } + "\u00B0", //degrees symbol
                             style = AppTypography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(end = 1.dp)
