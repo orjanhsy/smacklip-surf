@@ -6,7 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.myapplication.R
 import com.example.myapplication.Settings
 import com.example.myapplication.SmackLipApplication.Companion.container
-import com.example.myapplication.data.smackLip.Repository
+import com.example.myapplication.data.metalerts.MetAlertsRepository
+import com.example.myapplication.data.weatherForecast.WeatherForecastRepository
 import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
@@ -25,7 +26,8 @@ data class HomeScreenUiState(
 )
 
 class HomeScreenViewModel(
-    private val repo: Repository
+    private val forecastRepo: WeatherForecastRepository,
+    private val alertsRepo: MetAlertsRepository
 
 ) : ViewModel() {
 
@@ -43,8 +45,8 @@ class HomeScreenViewModel(
 
 
     val homeScreenUiState: StateFlow<HomeScreenUiState> = combine(
-        repo.ofLfNext7Days,
-        repo.alerts
+        forecastRepo.ofLfNext7Days,
+        alertsRepo.alerts
     ) { oflf, alerts ->
         val oflfNow: Map<SurfArea, DataAtTime> = oflf.next7Days.entries.associate {
             it.key to it.value.forecast[0].data.entries.sortedBy {timeToData -> timeToData.key.hour }[0].value
@@ -63,19 +65,19 @@ class HomeScreenViewModel(
 
     private suspend fun updateOfLF() {
         viewModelScope.launch(Dispatchers.IO) {
-            repo.loadOFlF()
+            forecastRepo.loadOFlF()
         }
     }
 
     private suspend fun updateWavePeriods() {
         viewModelScope.launch {
-            repo.loadWavePeriods()
+            forecastRepo.loadWavePeriods()
         }
     }
 
     private suspend fun updateAlerts() {
         viewModelScope.launch {
-            repo.loadAlerts()
+            alertsRepo.loadAllRelevantAlerts()
         }
     }
 
