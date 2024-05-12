@@ -48,7 +48,7 @@ class DailySurfAreaScreenViewModel(
         val newConditionStatuses = newDataAtDay.data.mapValues {(time, dataAtTime) ->
             try {
                 val conditionStatus = conditionUtil.getConditionStatus(
-                    location = sa!!,
+                    location = sa,
                     wavePeriod = newWavePeriods[times.indexOf(time)],
                     windSpeed = dataAtTime.windSpeed,
                     windDir =  dataAtTime.windDir,

@@ -10,14 +10,14 @@ import kotlin.math.abs
 class ConditionUtils {
 
      fun getConditionStatus(
-        location: SurfArea,
+        location: SurfArea?,
         wavePeriod: Double?,
         windSpeed: Double,
         windDir: Double,
         waveHeight: Double,
         waveDir: Double,
     ): ConditionStatus {
-        if (wavePeriod == null) {
+        if (wavePeriod == null || location == null) {
             return ConditionStatus.BLANK
         }
 
