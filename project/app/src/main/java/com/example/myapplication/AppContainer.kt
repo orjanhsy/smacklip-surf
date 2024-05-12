@@ -33,8 +33,9 @@ class DefaultAppContainer(
     override val settingsRepository: SettingsRepository by lazy {
         SettingsRepositoryImpl(settingsStore)
     }
+
     override val infoViewModel: InfoScreenViewModel by lazy{
-        InfoScreenViewModel(this)
+        InfoScreenViewModel(settingsRepository)
     }
 
 
