@@ -22,7 +22,6 @@ import kotlinx.coroutines.launch
 data class HomeScreenUiState(
     val ofLfNow: Map<SurfArea, DataAtTime> = mapOf(),
     val allRelevantAlerts: Map<SurfArea, List<Alert>> = emptyMap(),
-    val loading: Boolean = true
 )
 
 class HomeScreenViewModel(
@@ -54,7 +53,6 @@ class HomeScreenViewModel(
         HomeScreenUiState(
             ofLfNow = oflfNow,
             allRelevantAlerts = allRelevantAlerts,
-            loading = false
         )
 
     }.stateIn(
