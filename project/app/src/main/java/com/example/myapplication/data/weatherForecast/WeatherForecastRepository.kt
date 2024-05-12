@@ -1,16 +1,12 @@
-package com.example.myapplication.data.smackLip
+package com.example.myapplication.data.weatherForecast
 
-import android.util.Log
 import com.example.myapplication.data.locationForecast.LocationForecastRepository
 import com.example.myapplication.data.locationForecast.LocationForecastRepositoryImpl
-import com.example.myapplication.data.metalerts.MetAlertsRepository
-import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
 import com.example.myapplication.data.oceanforecast.OceanforecastRepository
 import com.example.myapplication.data.oceanforecast.OceanforecastRepositoryImpl
 import com.example.myapplication.data.waveforecast.WaveForecastRepository
 import com.example.myapplication.data.waveforecast.WaveForecastRepositoryImpl
 import com.example.myapplication.model.locationforecast.DataLF
-import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.oceanforecast.DataOF
 import com.example.myapplication.model.smacklip.AllSurfAreasOFLF
 import com.example.myapplication.model.smacklip.DataAtTime
@@ -18,23 +14,17 @@ import com.example.myapplication.model.smacklip.DayForecast
 import com.example.myapplication.model.smacklip.Forecast7DaysOFLF
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.waveforecast.AllWavePeriods
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import kotlin.coroutines.CoroutineContext
 
-interface Repository {
+interface WeatherForecastRepository {
     val ofLfNext7Days: StateFlow<AllSurfAreasOFLF>
     val wavePeriods: StateFlow<AllWavePeriods>
     val areaInFocus: StateFlow<SurfArea?>
@@ -46,11 +36,11 @@ interface Repository {
     suspend fun loadWavePeriods()
 }
 
-class RepositoryImpl(
+class WeatherForecastRepositoryImpl(
     private val waveForecastRepository: WaveForecastRepository = WaveForecastRepositoryImpl(),
     private val oceanForecastRepository: OceanforecastRepository = OceanforecastRepositoryImpl(),
     private val locationForecastRepository: LocationForecastRepository = LocationForecastRepositoryImpl(),
-): Repository {
+): WeatherForecastRepository {
 
     private val _ofLfNext7Days: MutableStateFlow<AllSurfAreasOFLF> = MutableStateFlow(AllSurfAreasOFLF())
     private val _wavePeriods: MutableStateFlow<AllWavePeriods> = MutableStateFlow(AllWavePeriods())
