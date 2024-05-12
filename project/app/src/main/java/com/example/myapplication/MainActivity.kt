@@ -109,11 +109,6 @@ fun SmackLipNavigation() {
         }
     )
 
-    val infoVm = viewModel<InfoScreenViewModel>(
-        factory = viewModelFactory {
-            InfoScreenViewModel(SmackLipApplication.container)
-        }
-    )
     val savm = viewModel<SurfAreaScreenViewModel>(
         factory = viewModelFactory {
             SurfAreaScreenViewModel(SmackLipApplication.container.stateFulRepo)
@@ -149,7 +144,7 @@ fun SmackLipNavigation() {
         }
         composable("InfoScreen") {
 
-            InfoScreen(infoVm, navController)
+            InfoScreen(SmackLipApplication.container.infoViewModel, navController)
         }
     }
 }
