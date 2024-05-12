@@ -22,6 +22,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -74,11 +76,8 @@ class RepositoryImpl(
         }
     }
 
-    /*
-            Funksjonen henter all oflf data for hvert sted, som resulterer i en 9-dagers forecast (den tar med dager der windGust er 0.0  forelopig)
-             */
     override suspend fun loadOFlF() {
-        withContext(Dispatchers.IO) {// burde context bli sendt ned fra vm?
+        coroutineScope {// wrap in coroutine scope to allow for async calls
             _ofLfNext7Days.update {
                 val all7DayForecasts: Map<SurfArea, Deferred<MutableList<DayForecast>>> = SurfArea.entries.associateWith { sa ->
                     async { getOFLFForArea(sa) }
@@ -99,7 +98,6 @@ class RepositoryImpl(
         val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
 
         val allDayForecasts: MutableList<DayForecast> = mutableListOf()
-
 
         for (day in lf.keys) {
             val lfAtDay = lf[day]!! // always exists as day is derived from lf.keys
@@ -166,7 +164,6 @@ class RepositoryImpl(
     }
 
     override suspend fun loadWavePeriods() {
-
         _wavePeriods.update {
             waveForecastRepository.getAllWavePeriods()
         }
