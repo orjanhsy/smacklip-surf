@@ -118,7 +118,7 @@ fun SurfAreaScreen(
                             Icon(
                                 Icons.Default.ArrowBack,
                                 contentDescription = "Back",
-                                tint = Color.Black,
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier
                                     .width(42.dp)
                                     .height(42.dp)
