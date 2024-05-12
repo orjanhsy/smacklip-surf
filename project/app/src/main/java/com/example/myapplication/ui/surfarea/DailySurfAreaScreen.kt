@@ -281,6 +281,7 @@ fun AllInfoCard(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    Text(text = "  ")
                     Icon(
                         imageVector = Icons.Outlined.Air,
                         contentDescription = "Air",
@@ -332,7 +333,8 @@ fun AllInfoCard(
                     Spacer(modifier = Modifier.width(8.dp))
 
                     Box(    //set size box to avoid distortion
-                        modifier = Modifier.size(40.dp)
+                        modifier = Modifier
+                            .size(40.dp)
                             .padding(top = 8.dp)
                     ) {
                         Text(
