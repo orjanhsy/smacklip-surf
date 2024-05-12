@@ -1,5 +1,7 @@
 package com.example.myapplication
 
+import com.example.myapplication.data.waveforecast.WaveForecastDataSource
+import com.example.myapplication.data.waveforecast.WaveForecastRepositoryImpl
 import com.example.myapplication.data.metalerts.MetAlertsDataSource
 import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
 import com.example.myapplication.data.utils.HTTPServiceHandler.METALERTS_URL
