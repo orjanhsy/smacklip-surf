@@ -340,15 +340,22 @@ fun InfoCard(surfArea: SurfArea) {
                     style = AppTypography.titleSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(bottom = 10.dp)
                 )
                 Image(
                     painter = painterResource(id = surfArea.image),
                     contentDescription = "Image",
-                    contentScale = ContentScale.FillWidth,
+                    contentScale = ContentScale.FillBounds,
                     modifier = Modifier
                         .width(250.dp)
-                        .height(150.dp)
-                        .clip(RoundedCornerShape(8.dp))
+                        .height(130.dp)
+                        .clip(shape = RoundedCornerShape(
+                            topStart = 12.dp,
+                            topEnd = 12.dp,
+                            bottomStart = 12.dp,
+                            bottomEnd = 12.dp)
+                        )
+
                 )
             }
         }
