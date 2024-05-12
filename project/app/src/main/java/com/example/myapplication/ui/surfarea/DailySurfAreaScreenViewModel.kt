@@ -19,10 +19,8 @@ import java.time.LocalDateTime
 data class DailySurfAreaScreenUiState(
     val alerts: List<Alert> = emptyList(),
     val wavePeriods: List<Double?> = emptyList(),
-
     val conditionStatuses: Map<LocalDateTime, ConditionStatus> = emptyMap(),
     val dataAtDay: DayForecast = DayForecast(),
-    val loading: Boolean = false
 )
 
 class DailySurfAreaScreenViewModel(
