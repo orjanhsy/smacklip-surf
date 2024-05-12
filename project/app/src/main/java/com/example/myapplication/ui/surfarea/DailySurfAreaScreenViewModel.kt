@@ -34,6 +34,7 @@ class DailySurfAreaScreenViewModel(
         repo.dayInFocus
     ) { oflf, wavePeriods, sa, day ->
         val today = LocalDateTime.now().dayOfMonth
+
         // gets oflf data from area at day
         val newDataAtDay: DayForecast = oflf.next7Days[sa]?.forecast?.get(day?.minus(today) ?: 0) ?: DayForecast()
 

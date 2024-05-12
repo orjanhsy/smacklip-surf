@@ -36,11 +36,11 @@ class SurfAreaScreenViewModel(
         repo.wavePeriods,
         repo.areaInFocus
     ) { oflf, alerts, wavePeriods, sa ->
-        // TODO: !! ?
+
+        // gets forecast data and alerts relevant to certain surf area
         val newOfLf: Forecast7DaysOFLF = oflf.next7Days[sa] ?: Forecast7DaysOFLF()
         val newAlerts: List<Alert> = alerts[sa] ?: listOf()
         val wavePeriodsInArea: Map<Int, List<Double?>>  = wavePeriods.wavePeriods[sa] ?: mapOf()
-        val conditionUtil = ConditionUtils()
 
         // gets min-max waveheights per day for display
         val newMaxWaveHeights = newOfLf.forecast.map {
@@ -50,6 +50,8 @@ class SurfAreaScreenViewModel(
             it.data.values.minOf {dataAtTime -> dataAtTime.waveHeight }
         }
 
+        // creates list of the best conditions per day
+        val conditionUtil = ConditionUtils()
         val newBestConditions = newOfLf.forecast.map {dayForecasts ->
             val availableTimes = dayForecasts.data.keys.sortedBy {time -> time.hour }
 
