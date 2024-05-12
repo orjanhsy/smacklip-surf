@@ -1,12 +1,10 @@
 # Arkitektur
-
-Denne filen skal gi innsikt i SmackLip Surfs arkitektur og tilrettelegge for videre drift, vedlikehold og viddereutvikling. 
+Denne filen skal gi innsikt i SmackLip Surfs arkitektur og tilrettelegge for videre drift, vedlikehold og utvikling. 
 Den vil gjennomgå det fulgte arkitekturmønsteret, samt redegjøre for hvilke verktøy og teknologier som er tatt i nytte.
 
 ![Arkitektur-skisse](image-2.png)
 
 ## Model-View-Viewmodel
-
 Gjennom prosjektet har vi fulgt arkitekturmønsteret Model-View-Viewmodel, MVVM.
 Motivasjonen bak MVVM er å flytte mest mulig logikk ut av UI-koden, og ha et tydelig skille i ansvar, oppsummert av prinsippet Separation of Concerns, SOC.
 Et annet sentralt prinsipp i MVVM vi har tatt hensyn til er Unidirectional Data Flow, UDF.
