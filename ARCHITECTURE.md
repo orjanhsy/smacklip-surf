@@ -1,47 +1,51 @@
 # Arkitektur
 
-Denne filen skal tilrettelegge for videre drift, vedlikehold og viddereutvikling av applikasjonen, og gi innsikt i hvordan den fungerer. 
-Den vil gjennomgå arkitekturen vi har brukt så langt, samt redegjøre for hvilke verktøy og teknologier som er tatt i nytte.
+Denne filen skal gi innsikt i SmackLip Surfs arkitektur og tilrettelegge for videre drift, vedlikehold og viddereutvikling. 
+Den vil gjennomgå det fulgte arkitekturmønsteret, samt redegjøre for hvilke verktøy og teknologier som er tatt i nytte.
 
-## Modern App Architecture
 ![Arkitektur-skisse](image-2.png)
 
-Gjennom prosjektet har vi fulgt androids anbefalinger i *Modern App Architecture*.
-Den foreslår mange prinsipper for Android Utvikling, blant annet en reaktiv og lagdelt arkitektur, dependency injection og UDF.
+## Model-View-Viewmodel
 
+Gjennom prosjektet har vi fulgt arkitekturmønsteret Model-View-Viewmodel, MVVM.
+Motivasjonen bak MVVM er å flytte mest mulig logikk ut av UI-koden, og ha et tydelig skille i ansvar, oppsummert av prinsippet Separation of Concerns, SOC.
+Et annet sentralt prinsipp i MVVM vi har tatt hensyn til er Unidirectional Data Flow, UDF.
+Lagdelingen i MVVM kan beskrives slik: 
+*Model* er en samling av komponenter som gjennomfører hoveddelen av det som kalles *forretningslogikk*. Her gjøres API-kall, lagring og tyngre prosessering av data.
+*ViewModel* eksponerer dataen fra Model videre til Viewet - det brukeren ser - som en ui-tilstand. Også her må en viss forrentlingslogikk tas i bruk for å omdanne dataen slik Viewet ønsker den.
+*View* er det brukeren ser. Jetpack Compose brukes til å lage @Composable funksjoner som skal fremstille tilstanden i Model (via ViewModel).
 
-Måten vi har utformet en lagdelt arkitektur på har vært å følge prinsippene bak arkitekturmønsteret Model-View-Viewmodel, MVVM.
-Et av disse prinsippene er *Unidirectional Data Flow*, UDF, som beskriver en anbefalt flyt av data gjennom applikasjonens lag.
-Det går ut på at *state* eller det som vises til brukeren kun flyter en vei,
-og *eventene* som skal utløse endringer i denne staten - ofte som konsekvens av en interaksjon med brukeren - flyter motsatt vei (Android developers, 2023). 
-Et viktig begrep i UDF er single source of truth, SSOT, altså at all forrandring av en bestemt type data skjer på ett sted. 
-Applikasjonen vår gir utrykk for UDF på flere måter.
-Vi har ivaretatt SSOT ved å ha ett reposiotory for hvert API, som gjennom en data source (også spesifikk til APIet) henter dataene appen vår tar i bruk. I tillegg har vi én viewmodel per skjerm.
-Dataflyten oppfører seg som UDF foreslår ved at *StateFlows* eksponeres til UI-laget. Disse tas i bruk av viewmodels som lager en UI-state (som også er en StateFlow) som til slutt konsumeres av 
-viewet eller skjermen og presenteres til en bruker gjennom Compose-biblioteket. For å ivareta SSOT har ingen deler av UI-laget mulighet til å endre denne dataen direkte, kun presentere den. Dataen som presenteres
+### Separation of Concerns
+MVVM anbefaler et tydelig skille i ansvar fordi det bidrar til oversikt, testbarhet og skalerbarhet. Appen vår gir utrykk for dette på flere måter.
+Vi har en tydelig inndelt mappestruktur hvor klasser eller filer plasseres utifra ansvarsområde. 
+Data-mappen, tilsvarende *Model* i MVVM inneholder klasser som henter, lagerer eller gjør tyngre prosessering av data. Her finner man *DataSource*- og *Repository*-klasser.
+Model-mappen er forbeholdt dataklasser som brukes til deserialisering av API-data. Her vil man også finne dataklasser som generelt bidrar til applikasjonens kode, både som støtte til funksjonalitet og lesbarhet. 
+UI-mappen inneholder skjermfunksjoner som er @Composable og skal vises frem til en bruker, samt *ViewModel* (funksjon beskrevet over).
 
-vil endres av brukere gjennom å interagere med viewet. Viewet sender da en event ned motsatt vei dataen kom fra, og datalaget reagerer på eventen. For appen vår gjenspeiles dette blant annet i use-caset hvor en bruker la til et surfsted i *favoritter* fra "HomeScreen". Dette sendes som en event fra UIet ned til datalaget, hvor databasen oppdateres med en ny favoritt, som sendes opp igjen til UIet og presenteres som en ny state.
+En annen måte vi ivaretar SOC er ved bruk av *Dependency Injection*, spesifikt *Constructor injection*. Klasser er ofte avhengige av referanser til andre klasser, dette kalles 'dependency', eller på norsk, avhengighet. Målet med DI, som gjenspeiles av det objektorienterte prinsippet *lav kobling*, er at klasser i minst mulig grad skal opprette sine egne instanser av avhengighetene sine. Gjennom Constructor Injection mottar de avhengighetene sine som argumenter (KILDE, Android, 2023). Dette bidrar til testbarhet og SOCs andre fordeler ved at man lett kan endre og ha kontroll over instansen en klasse tar i bruk. Vi har tatt ekstra hensyn til det objektorienterte prinsippet *Dependency Inversion*, som er en del av SOLID prinsippene (KILDE), ved at høynivå klasser aldri oppretter sine egne avhengigheter. View mottar Viewmodel-er som argumenter, og ViewModel-er mottar repoisory-er gjennom konstruktøren. I noen lavnivåklasser - som repository-er - har vi tatt en vurdering på at vi ikke bruker DI da avhengighetene deres ikke deles med andre klasser.
 
-Et annet viktig prinsipp i MVVM er *separation of concerns*, SOC. Dette går ut på at hver komponent i appens struktur har et tydelig, avgrenset ansvarsområde. Appen vår gir utrykk for dette gjennom en mappestruktur hvor filer plasseres enten i en data-, model- eller ui-mappe utifra hvilken funksjon de har. Henting og lagring av data (utenfor applikasjonens livssykel) er forbeholdt data-mappen, fremstilling av data gjøres ved hjelp av dataklasser i model-mappen, og @Composable- eller skjermfunksjoner ligger i ui-mappen. Viewmodels, som også er en del av ui-mappen, gjør den siste delen av forretningsloggikken som er nødvendig for å presentere en state til skjermen den er koblet til. Vi har også veklagt bruk av *dependency injection*, spesifikt *constructor injection* som går ut på at en komponent mottar andre komponenter den er avhengig av gjennom konstruktøren fremfor å opprette en instans selv. Dette gjør at man kan ha én instans av et objekt flere komponenter er avhengig av, istendenfor at alle oppretter sin egen instans, som også bidrar til å opprettholde SSOT. I tilleg gjør dette koden mer testbar siden man enklere kan endre hvilke objekter komponenten tar inn. Vi har gjennomfør dependency injection manuelt fremfor å bruke eksterne rammeverk som Dagger-Hilt.
+Et viktig begrep innen SOC er kohesjon. Høy kohesjon betyr at komponenter har samhørighet i dataen og funksjonene den tilbyr. Dette gir appen uttrykk for ved at den har ett overrordnet Repoitory per kategori av data som eksponeres til ViewModels. I WeatherForecastReposiory har vi samlet data fra 3 API-er som henter værdata, vi argumenterer likevell for at dette ivaretar SOC siden kohesjonen holdes høy da dataen ikke bare er stort sett lik i format, men også bruksområde i appen. Ellers er det en datakilde per API, et reposiory for hver datakilde, en ViewModel per skjerm osv.
 
+### Unidirectional Data Flow
+Et annet viktig prinsipp i MVVM er Unidirectional Data Flow, UDF. Dette går ut på at flyten av data gjennom applikasjonen går én retning om gangen. Datalaget sender *state* (tilstand) oppover, og UI-laget sender en *event* (hendelse) nedover. Appen vår gir utrykk for dette ved at datalaget eksponerer en state til ViewModel-er som videre eksponerer en mer tilpasset state til sin brukergrensesnittet hvor den konsumeres. Eventer, som konsekvens av interaksjon med en bruker, sendes ned til ViewModel (eller lengre om nødvendig), hvor staten som presenteres til UI-endres og utspilles i brukergrensesnittet. Dette kan utspillet i appen vår blant annet i Use-caset hvor en bruker legger til et surfeområde i *favoritter*. HomeScreen sier ifra til HomescreenViewModel om eventen, som sendes videre ned til SettingsReposiotry og deretter endrer kildefilene hvor favoritter lagres gjennom Proto Data Store. Endringen sendes da opp igjen der den kom fra til den når skjermen som en endring i tilstand, og oppdaterer skjermen med en ny favoritt.
 
-## Objektorienterte prinsipper
+Et viktig begrep i UDF er *Single Source of Truth*, SSOT. SSOT handler om at all forranding av en bestemt data skjer på ett sted. Dette gjengår i appen vår ved at den aldri oppretter flere enn én instans om gangen av samme ViewModel-klasse eller lignende hvor data oppbevares. I tillegg vil appen aldri direkte endre data utenfor kilden den er lagret i, men sendes nedover til kilden som en event, som beskrevet i eksempelet over. 
 
-### Lav kobling, høy kohesjon
-Kobling beskriver i hvilken grad komponenter har direkte avhengigheter av hverandre. Gjennom dependency injection har vi senket kobling betraktelig, siden komponentene ikke selv trenger å opprette avhengighetene sine. Kohesjon, som beskriver i hvilken grad det er samhørighet i funksjonene en komponent har, har vi forsøkt å holde så høy som mulig. At én viewmodel kun har ansvar for én skjerm, og at én data source henter fra ett API, bidrar til et modulært system hvor komponentene har tydelige roller. Den nevnte mappestrukturen vår bidrar også på å holde oversikt over hvilke komponenter som gjør hva.
-
-### Dependency Inversion Principle
-Handler om at høyere nivåmoduler ikke bør avhenge av en instans av et objekt men heller grensesnittet (dette også håndteres med dependecy injection). Bland disse inn over. Det gjør koden mer fleksibel, skalerbar og testbar siden man enkelt kan bytte ut hvilken implementasjon man sender inn som argument (også nevnt over).
 
 
 ## Verktøy og API-nivå
+Vi har brukt en del verktøy som bør tas hensyn til videre i utvikling og vedlikehold av appen:
 
-* Proto-data-store
-* Kotlinx-serializer, Gson
-* LocalDateTime
-* MapBox
+#### Proto Data Store
 
-Vi har valgt API-nivå 26 for å kunne ta bruk av X.
+#### Gson
+
+#### LocalDateTime
+Vi har gjennomgående brukt Java Time sitt LocalDateTime API til å behandle tidspunkt i UI-laget. Om appen senere skal tilbys på andre plattformer enn Android må tidspunkt enten håndteres manuelt eller av ett annet tredjepartsbibliotek.
+
+#### MapBox
+
+### 
 
 
 
