@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -39,6 +40,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -91,6 +93,8 @@ fun SurfAreaScreen(
         it.locationName == surfAreaName
     }!!
 
+    var firstTimeHere by rememberSaveable { mutableStateOf(true) }
+
     if (surfArea != SmackLipApplication.container.stateFulRepo.areaInFocus.collectAsState().value) {
         surfAreaScreenViewModel.updateLocation(surfArea)
     }
@@ -129,12 +133,19 @@ fun SurfAreaScreen(
                 actions = {
                     if (alerts.isNotEmpty()) {
                         IconButton(onClick = {
-                            showAlert = true
-                        }) {
-                            Image(
-                                painter = painterResource(id = R.drawable.icon_awareness_yellow_outlined),
-                                contentDescription = "alert"
-                            )
+                            showAlert = true },
+                            modifier = Modifier.fillMaxHeight()
+                            ) {
+                            alerts.first().properties?.awarenessLevel?.let {
+                                getIconBasedOnAwarenessLevel(
+                                    it
+                                )
+                            }?.let { painterResource(id = it) }?.let {
+                                Image(
+                                    painter = it,
+                                    contentDescription = "alert"
+                                )
+                            }
                         }
                     }
                 },
@@ -242,13 +253,16 @@ fun SurfAreaScreen(
                 InfoCard(surfArea)
             }
         }
-        if (alerts.isNotEmpty()) {
+        if (alerts.isNotEmpty() && firstTimeHere) {
             ShowAlert(alerts = alerts,
                 surfArea = surfArea,
-                action = {})
+                action = {
+                    firstTimeHere = false
+                    if (showAlert) {showAlert = false} //sikrer at det ikke blir to alertCards hvis bruker trykker på alert-ikonet mens den første alerter
+                })
         }
 
-        if (showAlert) { //knappen i topappbar synes kun når det er farevarsel, demred er alerts ikke tom
+        else if (showAlert) { //knappen i topappbar synes kun når det er farevarsel, demred er alerts ikke tom
             ShowAlert(alerts = alerts,
                 surfArea = surfArea,
                 action = {
