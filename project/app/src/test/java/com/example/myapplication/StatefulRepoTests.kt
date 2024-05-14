@@ -14,7 +14,7 @@ class StatefulRepoTests {
     @Test
     fun daysOfAvaliabelForecastIsX(): Unit = runBlocking{
         repo.loadOFlF()
-        val state = repo.ofLfNext7Days.value
+        val state = repo.ofLfForecast.value
         state.next7Days.entries.map {
             println("${it.key} -> ${it.value.forecast[it.value.forecast.size]}")
         }
@@ -23,7 +23,7 @@ class StatefulRepoTests {
     @Test
     fun sizeOfOneDayForecastIsInRangeXY(): Unit = runBlocking {
         repo.loadOFlF()
-        val state = repo.ofLfNext7Days.value
+        val state = repo.ofLfForecast.value
         state.next7Days[SurfArea.HODDEVIK]!!.forecast.map {
             println(it.data.size)
         }

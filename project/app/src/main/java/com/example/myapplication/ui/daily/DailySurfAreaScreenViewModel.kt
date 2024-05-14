@@ -28,20 +28,20 @@ class DailySurfAreaScreenViewModel(
 ): ViewModel() {
 
     val dailySurfAreaScreenUiState: StateFlow<DailySurfAreaScreenUiState> = combine(
-        forecastRepo.ofLfNext7Days,
+        forecastRepo.ofLfForecast,
         forecastRepo.wavePeriods,
         forecastRepo.areaInFocus,
         forecastRepo.dayInFocus
-    ) { oflf, wavePeriods, sa, day ->
+    ) { ofLf, wavePeriods, sa, day ->
         val today = LocalDateTime.now().dayOfMonth
 
-        // gets oflf data from area at day
-        val newDataAtDay: DayForecast = oflf.next7Days[sa]?.forecast?.get(day?.minus(today) ?: 0) ?: DayForecast()
+        // gets ofLf data from area at day
+        val newDataAtDay: DayForecast = ofLf.next7Days[sa]?.forecast?.get(day?.minus(today) ?: 0) ?: DayForecast()
 
         // get wavePeriods for area at day
         val newWavePeriods: List<Double?> = wavePeriods.wavePeriods[sa]?.get(day) ?: listOf()
 
-        Log.d("DSVM", "Updated waveperiods with $newWavePeriods for $sa at $day")
+        Log.d("DSVM", "Updated wavePeriods with $newWavePeriods for $sa at $day")
 
         // gets conditions for each forecast interval for area at day
         val times = newDataAtDay.data.map {it.key}.sortedBy { it.hour }
