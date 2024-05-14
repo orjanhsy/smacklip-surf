@@ -81,27 +81,7 @@ class HomeScreenViewModel(
         }
     }
 
-
-    fun getIconBasedOnAwarenessLevel(awarenessLevel: String): Int {
-        return try {
-            if (awarenessLevel.isNotEmpty()) {
-                val firstChar = awarenessLevel.firstOrNull()?.toString()
-
-                when (firstChar) {
-                    "2" -> R.drawable.icon_awareness_yellow_outlined
-                    "3" -> R.drawable.icon_awareness_orange
-                    "4" -> R.drawable.icon_awareness_red
-                    else -> R.drawable.icon_awareness_default // Hvis awarenessLevel ikke er 2, 3 eller 4
-                }
-            } else {
-                R.drawable.icon_awareness_default // Hvis awarenessLevel er en tom String
-            }
-        } catch (e: Exception) {
-            R.drawable.icon_awareness_default
-        }
-    }
-
-    fun getSurfAreaByLocationName(locationName: String): SurfArea? {
+    private fun getSurfAreaByLocationName(locationName: String): SurfArea? {
         return SurfArea.entries.firstOrNull{ it.locationName.equals(locationName, ignoreCase = true)}
     }
     fun loadFavoriteSurfAreas(){
@@ -109,7 +89,6 @@ class HomeScreenViewModel(
             settingsRepo.settingsFlow.collect{
                 Log.d("LogFavorites", "loaded favorite surf areas: ${it.favoriteSurfAreaNamesList}")
                 val favoriteAreas = it.favoriteSurfAreaNamesList.mapNotNull { areaName ->
-                    //konverter locationname ti surfAreaObjekt
                     val favSurfArea = getSurfAreaByLocationName(areaName)
                     if (favSurfArea == null){
                         Log.d("FavoriteList", "Failed to fetch saved Favorites $areaName")

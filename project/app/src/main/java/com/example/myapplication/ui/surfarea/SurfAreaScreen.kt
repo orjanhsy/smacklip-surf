@@ -72,6 +72,7 @@ import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.ui.theme.AppTypography
 import com.example.myapplication.ui.theme.outlineLight
+import com.example.myapplication.utils.AlertsUtils
 import com.example.myapplication.utils.RecourseUtils
 import com.example.myapplication.utils.DateUtils
 import java.time.LocalDateTime
@@ -103,6 +104,7 @@ fun SurfAreaScreen(
     val surfAreaScreenUiState: SurfAreaScreenUiState by surfAreaScreenViewModel.surfAreaScreenUiState.collectAsState()
 
     val alerts = surfAreaScreenUiState.alertsSurfArea
+    val alertsUtils = AlertsUtils()
 
     val formatter = DateTimeFormatter.ofPattern("EEE", Locale("no", "NO"))
 
@@ -137,7 +139,7 @@ fun SurfAreaScreen(
                             modifier = Modifier.fillMaxHeight()
                             ) {
                             alerts.first().properties?.awarenessLevel?.let {
-                                getIconBasedOnAwarenessLevel(
+                                alertsUtils.getIconBasedOnAwarenessLevel(
                                     it
                                 )
                             }?.let { painterResource(id = it) }?.let {
@@ -245,6 +247,7 @@ fun SurfAreaScreen(
         if (alerts.isNotEmpty() && firstTimeHere) {
             ShowAlert(alerts = alerts,
                 surfArea = surfArea,
+                alertsUtils = alertsUtils,
                 action = {
                     firstTimeHere = false
                     if (showAlert) {showAlert = false} //sikrer at det ikke blir to alertCards hvis bruker trykker på alert-ikonet mens den første alerter
@@ -254,6 +257,7 @@ fun SurfAreaScreen(
         else if (showAlert) { //knappen i topappbar synes kun når det er farevarsel, demred er alerts ikke tom
             ShowAlert(alerts = alerts,
                 surfArea = surfArea,
+                alertsUtils = alertsUtils,
                 action = {
                     showAlert = false
                 })
@@ -264,13 +268,13 @@ fun SurfAreaScreen(
 
 
 @Composable
-fun ShowAlert(alerts : List<Alert>, surfArea: SurfArea, action : () -> Unit){
+fun ShowAlert(alerts : List<Alert>, surfArea: SurfArea, action : () -> Unit, alertsUtils: AlertsUtils){
     val dateFormatter: DateUtils = DateUtils();
     val alert = alerts.first()
     val time = dateFormatter.formatTimeInterval(alert.timeInterval?.interval)
     val alertMessage = alert.properties?.description ?: "No description available"
     val awarenessLevel = alert.properties?.awarenessLevel
-    val icon = awarenessLevel?.let { getIconBasedOnAwarenessLevel(it) }
+    val icon = awarenessLevel?.let { alertsUtils.getIconBasedOnAwarenessLevel(it) }
         ?: R.drawable.icon_awareness_default
 
     CustomAlert(
@@ -283,26 +287,6 @@ fun ShowAlert(alerts : List<Alert>, surfArea: SurfArea, action : () -> Unit){
         showAlert = remember { mutableStateOf(true) },
         action = action,
     )
-}
-
-
-fun getIconBasedOnAwarenessLevel(awarenessLevel: String): Int {
-    return try {
-        if (awarenessLevel.isNotEmpty()) {
-            val firstChar = awarenessLevel.firstOrNull()?.toString()
-
-            when (firstChar) {
-                "2" -> R.drawable.icon_warning_yellow
-                "3" -> R.drawable.icon_warning_orange
-                "4" -> R.drawable.icon_warning_red
-                else -> R.drawable.icon_awareness_default // If awarenessLevel is not 2, 3, or 4
-            }
-        } else {
-            R.drawable.icon_awareness_default
-        }
-    } catch (e: Exception) {
-        R.drawable.icon_awareness_default
-    }
 }
 
 
