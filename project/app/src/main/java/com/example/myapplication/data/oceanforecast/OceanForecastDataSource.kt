@@ -16,7 +16,7 @@ import io.ktor.serialization.gson.gson
 import io.ktor.util.appendIfNameAbsent
 
 private const val TAG = "OFDS"
-public class OceanforecastDataSource(
+class OceanForecastDataSource(
     private val path: String = OCEAN_FORECAST_URL
 ) {
 

@@ -38,13 +38,6 @@ class StatefulRepoTests {
         }
     }
 
-    @Test
-    fun alertsAreX(): Unit = runBlocking{
-        repo.loadAlerts()
-
-        val state = repo.alerts.value
-        println(state)
-    }
 
 
     @Test
