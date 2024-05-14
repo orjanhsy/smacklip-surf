@@ -104,7 +104,6 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel, navController: NavContr
         Column(
             modifier = Modifier
                 .padding(innerPadding)
-            //.verticalScroll(rememberScrollState())
         ) {
             SearchBar(
                 onQueryChange = {},
