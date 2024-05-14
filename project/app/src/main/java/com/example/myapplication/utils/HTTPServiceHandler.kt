@@ -9,7 +9,7 @@ object HTTPServiceHandler {
     const val LOCATION_FORECAST_URL = "https://gw-uio.intark.uh-it.no/in2000/weatherapi/locationforecast/2.0/complete"
 
     //MetAlerts
-    const val METALERTS_URL = "https://in2000.api.met.no/weatherapi/metalerts/2.0/current.json"
+    const val METALERTS_URL = "https://api.met.no/weatherapi/metalerts/2.0/current.json"
 
     //Oceanforecast
     const val OCEAN_FORECAST_URL = "https://gw-uio.intark.uh-it.no/in2000/weatherapi/oceanforecast/2.0/complete"
