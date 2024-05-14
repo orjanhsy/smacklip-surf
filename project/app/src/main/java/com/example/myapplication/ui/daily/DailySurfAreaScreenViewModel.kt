@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.surfarea
+package com.example.myapplication.ui.daily
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
