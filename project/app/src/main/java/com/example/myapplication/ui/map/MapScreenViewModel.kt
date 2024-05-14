@@ -1,25 +1,14 @@
 package com.example.myapplication.ui.map
 
-import android.health.connect.datatypes.units.Temperature
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapplication.data.map.MapRepositoryImpl
 import com.example.myapplication.data.smackLip.Repository
-import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
-import com.example.myapplication.ui.home.HomeScreenUiState
-import com.mapbox.geojson.Point
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 data class MapScreenUiState(
     /*
