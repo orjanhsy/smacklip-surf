@@ -1,8 +1,7 @@
 package com.example.myapplication
 
-//import androidx.datastore.preferences.createDataStore
 
-import DailySurfAreaScreen
+import com.example.myapplication.ui.daily.DailySurfAreaScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,17 +23,18 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.myapplication.presentation.viewModelFactory
+import com.example.myapplication.utils.viewModelFactory
 import com.example.myapplication.ui.home.HomeScreen
 import com.example.myapplication.ui.home.HomeScreenViewModel
 import com.example.myapplication.ui.info.InfoScreen
-import com.example.myapplication.ui.info.InfoScreenViewModel
 import com.example.myapplication.ui.map.MapScreen
 import com.example.myapplication.ui.map.MapScreenViewModel
-import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
+import com.example.myapplication.ui.daily.DailySurfAreaScreenViewModel
 import com.example.myapplication.ui.surfarea.SurfAreaScreen
 import com.example.myapplication.ui.surfarea.SurfAreaScreenViewModel
 import com.example.myapplication.ui.theme.AppTheme
+import com.example.myapplication.utils.NavigationManager
+import com.example.myapplication.utils.NetworkConnectivityObserver
 
 
 class MainActivity : ComponentActivity() {
@@ -105,13 +105,19 @@ fun SmackLipNavigation() {
 
     val hsvm = viewModel<HomeScreenViewModel>(
         factory = viewModelFactory {
-            HomeScreenViewModel(SmackLipApplication.container.stateFulRepo)
+            HomeScreenViewModel(
+                SmackLipApplication.container.stateFulRepo,
+                SmackLipApplication.container.alertsRepo
+            )
         }
     )
 
     val savm = viewModel<SurfAreaScreenViewModel>(
         factory = viewModelFactory {
-            SurfAreaScreenViewModel(SmackLipApplication.container.stateFulRepo)
+            SurfAreaScreenViewModel(
+                SmackLipApplication.container.stateFulRepo,
+                SmackLipApplication.container.alertsRepo
+            )
         }
     )
 

@@ -1,7 +1,8 @@
-
+package com.example.myapplication.ui.daily
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -43,11 +44,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.R
 import com.example.myapplication.SmackLipApplication
 import com.example.myapplication.model.conditions.ConditionStatus
-import com.example.myapplication.model.smacklip.DataAtTime
+import com.example.myapplication.model.weatherforecast.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
-import com.example.myapplication.presentation.viewModelFactory
+import com.example.myapplication.utils.viewModelFactory
 import com.example.myapplication.ui.common.composables.BottomBar
-import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
 import com.example.myapplication.ui.surfarea.HeaderCard
 import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.ui.theme.AppTypography
@@ -267,20 +267,28 @@ fun AllInfoCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp, vertical = 4.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween //evenly spaced
             ) {
 
+                //Time group
+                Box(
+                    modifier = Modifier
+                        .size(26.dp)
+                        .padding(top = 4.dp) // add padding for alignment
+                ) {
                     Text(
                         text = timestamp,
                         style = AppTypography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.weight(1f) // places all the way left
-                    )
+                        )
+                    }
 
-                // Wind Group
+                // wind Group
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    //air icon
                     Icon(
                         imageVector = Icons.Outlined.Air,
                         contentDescription = "Air",
@@ -290,6 +298,7 @@ fun AllInfoCard(
 
                     Spacer(modifier = Modifier.width(6.dp))
 
+                    //wind text
                     Box(
                         modifier = Modifier
                             .size(width = 50.dp, height = 30.dp) // Set size with shorter height
@@ -300,28 +309,27 @@ fun AllInfoCard(
                             else "${(windSpeed).toInt()}",
                             style = AppTypography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
-
                         )
                     }
 
-                    //Spacer(modifier = Modifier.width(6.dp))
-
+                    //wind direction arrow
                     Icon(
                         imageVector = Icons.Outlined.CallMade,
                         contentDescription = "Arrow",
                         tint=  MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier
                             .size(17.dp)
-                            .rotate(rotationAngleWind - 135)
+                            .rotate(rotationAngleWind - 135) //adjust angle (180-45)
                     )
                 }
 
                 Spacer(modifier = Modifier.width(14.dp))
 
-                // Wave Group
+                // wave Group
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    //wave icon
                     Icon(
                         imageVector = Icons.Outlined.Tsunami,
                         contentDescription = "Tsunami",
@@ -331,8 +339,10 @@ fun AllInfoCard(
 
                     Spacer(modifier = Modifier.width(8.dp))
 
-                    Box(    //set size box to avoid distortion
-                        modifier = Modifier.size(40.dp)
+                    //wave height text
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp)
                             .padding(top = 8.dp)
                     ) {
                         Text(
@@ -342,8 +352,9 @@ fun AllInfoCard(
                         )
                     }
 
-                    Spacer(modifier = Modifier.width(14.dp))
+                    Spacer(modifier = Modifier.width(10.dp))
 
+                    //wave period text
                     if (wavePeriod != null && wavePeriod >= 0) {
                         Text(
                             text = "${wavePeriod.toInt()} sek",
@@ -358,8 +369,7 @@ fun AllInfoCard(
                         )
                     }
 
-                    Spacer(modifier = Modifier.width(5.dp))
-
+                    //wave direction arrow
                     Icon(
                         imageVector = Icons.Outlined.CallMade,
                         contentDescription = "Arrow",
@@ -370,14 +380,14 @@ fun AllInfoCard(
                     )
                 }
 
-                Spacer(modifier = Modifier.width(14.dp))
+                Spacer(modifier = Modifier.width(5.dp))
 
-                // Temp
+                // Weather group
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-
-                    Box(    //set size box to avoid distortion
+                    //temperature
+                     Box(
                         modifier = Modifier
                             .size(width = 30.dp, height = 30.dp)
                             .padding(top = 6.dp)
@@ -386,24 +396,24 @@ fun AllInfoCard(
                             text = if (temp is Double) {
                                 val temperature = temp.toInt()
                                 if (temperature < 10) {
-                                    "  $temperature" // Add space before temperature
+                                    "  $temperature" //align single digit with 0 position
                                 } else {
                                     "$temperature"
                                 }
                             } else {
                                 val temperature = temp.toString()
                                 if (temperature.toInt() < 10) {
-                                    "  $temperature" // Add space before temperature
+                                    "  $temperature" //align single digit with 0 position
                                 } else {
                                     temperature
                                 }
-                            } + "\u00B0",
+                            } + "\u00B0", //degrees symbol
                             style = AppTypography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(end = 1.dp)
                         )
                     }
-
+                    //Weather icon
                     Image(
                         painter = painterResource(id = recourseUtils.findWeatherSymbol(icon.toString())),
                         contentDescription = "Weather Icon",
@@ -420,7 +430,7 @@ fun AllInfoCard(
                     ConditionStatus.BLANK -> ConditionStatus.BLANK.surfBoard
                     null -> R.drawable.spm
                 }
-
+                //condition status
                 Image(
                     painter = painterResource(id = surfBoard),
                     contentDescription = "Weather Icon",

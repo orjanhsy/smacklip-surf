@@ -2,13 +2,9 @@ package com.example.myapplication.utils
 
 import com.example.myapplication.R
 
-class RecourseUtils() {
+class RecourseUtils {
 
-    //For å bruke denne må du lage en instans av klassen der den skal brukes
-    //(klassen RecourseUtils må imorteres slik: import com.example.myapplication.utils.RecourseUtils)
-    // deretter kalle <instans>.findWeatherSymbol(<symbol_code>)
-
-    public fun findWeatherSymbol(symbolCode: String): Int {
+    fun findWeatherSymbol(symbolCode: String): Int {
 
         return when (symbolCode) {
             "clearsky_day" -> R.drawable.clearsky_day
@@ -94,7 +90,7 @@ class RecourseUtils() {
             "heavysleet" -> R.drawable.heavysleet
             "lightsnow" -> R.drawable.lightsnow
             "heavysnow" -> R.drawable.heavysnow
-            else -> R.drawable.spm //TODO: bytte til termometerikon kanskje?
+            else -> R.drawable.spm
         }
     }
 }
