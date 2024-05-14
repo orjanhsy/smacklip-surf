@@ -76,7 +76,6 @@ import com.example.myapplication.utils.AlertsUtils
 import com.example.myapplication.utils.RecourseUtils
 import com.example.myapplication.utils.DateUtils
 import java.time.LocalDateTime
-import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -207,10 +206,10 @@ fun SurfAreaScreen(
                 LazyRow(
                     modifier = Modifier.padding(5.dp)
                 ) {
-                        val today = LocalDateTime.now()
+                        val currentTime = LocalDateTime.now()
 
                         items(surfAreaScreenUiState.forecastNext7Days.forecast.size) { dayIndex ->
-                            val date = today.plusDays(dayIndex.toLong())
+                            val date = currentTime.plusDays(dayIndex.toLong())
                             var formattedDate = formatter.format(date)
 
 
