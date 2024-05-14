@@ -143,7 +143,7 @@ fun DailySurfAreaScreen(
                     modifier = Modifier
                         .padding(5.dp)
                 ) {
-                    if (surfAreaDataForDay.isNotEmpty()) {
+
                         items(times.size) { index ->
                             val time = times[index]
                             val hour = time.hour
@@ -188,11 +188,6 @@ fun DailySurfAreaScreen(
                                 conditionStatus = conditionStatus
                             )
                         }
-                    } else {
-                        item(1) {
-                            AllInfoCard(surfArea = surfArea)
-                        }
-                    }
                 }
             }
         }
