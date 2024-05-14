@@ -108,13 +108,13 @@ fun MapScreen(mapScreenViewModel : MapScreenViewModel, navController: NavControl
                     rememberPoint = rememberPoint
                 )
                 SearchBar(
+                    surfAreas = SurfArea.entries.toList(),
                     onQueryChange = {},
                     isSearchActive = isSearchActive.value,
                     onActiveChanged = { isActive ->
                         isSearchActive.value = isActive
                     },
                     resultsColor = Color.White,
-                    surfAreas = SurfArea.entries.toList(),
                     onZoomToLocation = { point -> rememberPoint.value = point },
                     onItemClick = {}
                 )

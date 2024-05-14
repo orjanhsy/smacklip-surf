@@ -93,13 +93,13 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel, navController: NavContr
                 .padding(innerPadding)
         ) {
             SearchBar(
+                surfAreas = SurfArea.entries.toList(),
                 onQueryChange = {},
                 isSearchActive = isSearchActive.value,
                 onActiveChanged = { isActive ->
                     isSearchActive.value = isActive
                 },
                 resultsColor = MaterialTheme.colorScheme.background,
-                surfAreas = SurfArea.entries.toList(),
                 onItemClick = { surfArea ->
                     navController.navigate("SurfAreaScreen/${surfArea.locationName}")
                 }
