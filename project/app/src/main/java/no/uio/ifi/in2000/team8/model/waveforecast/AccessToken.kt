@@ -1,4 +1,4 @@
-package com.example.myapplication.model.waveforecast
+package no.uio.ifi.in2000.team8.model.waveforecast
 
 import com.google.gson.annotations.SerializedName
 

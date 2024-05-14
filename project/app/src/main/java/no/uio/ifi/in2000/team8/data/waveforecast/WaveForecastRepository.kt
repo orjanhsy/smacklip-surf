@@ -1,7 +1,7 @@
 package no.uio.ifi.in2000.team8.data.waveforecast
 
-import com.example.myapplication.model.surfareas.SurfArea
-import com.example.myapplication.model.waveforecast.AllWavePeriods
+import no.uio.ifi.in2000.team8.model.surfareas.SurfArea
+import no.uio.ifi.in2000.team8.model.waveforecast.AllWavePeriods
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import java.time.LocalDateTime

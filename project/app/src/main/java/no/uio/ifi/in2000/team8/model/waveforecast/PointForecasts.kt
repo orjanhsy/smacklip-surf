@@ -1,4 +1,4 @@
-package com.example.myapplication.model.waveforecast
+package no.uio.ifi.in2000.team8.model.waveforecast
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor

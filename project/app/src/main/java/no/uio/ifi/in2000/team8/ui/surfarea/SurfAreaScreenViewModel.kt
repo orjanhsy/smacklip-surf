@@ -1,14 +1,14 @@
-package com.example.myapplication.ui.surfarea
+package no.uio.ifi.in2000.team8.ui.surfarea
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapplication.data.metalerts.MetAlertsRepository
-import com.example.myapplication.data.weatherforecast.WeatherForecastRepository
-import com.example.myapplication.model.conditions.ConditionStatus
-import com.example.myapplication.model.metalerts.Alert
-import com.example.myapplication.model.weatherforecast.Forecast7DaysOFLF
-import com.example.myapplication.model.surfareas.SurfArea
-import com.example.myapplication.utils.ConditionUtils
+import no.uio.ifi.in2000.team8.data.metalerts.MetAlertsRepository
+import no.uio.ifi.in2000.team8.data.weatherforecast.WeatherForecastRepository
+import no.uio.ifi.in2000.team8.model.conditions.ConditionStatus
+import no.uio.ifi.in2000.team8.model.metalerts.Alert
+import no.uio.ifi.in2000.team8.model.weatherforecast.Forecast7DaysOFLF
+import no.uio.ifi.in2000.team8.model.surfareas.SurfArea
+import no.uio.ifi.in2000.team8.utils.ConditionUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

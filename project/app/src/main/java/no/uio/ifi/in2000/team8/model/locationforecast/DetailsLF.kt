@@ -1,4 +1,4 @@
-package com.example.myapplication.model.locationforecast
+package no.uio.ifi.in2000.team8.model.locationforecast
 
 data class DetailsLF(
     val air_pressure_at_sea_level: Double,

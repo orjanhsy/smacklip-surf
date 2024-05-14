@@ -1,6 +1,6 @@
-package com.example.myapplication.utils
+package no.uio.ifi.in2000.team8.utils
 
-import com.example.myapplication.R
+import no.uio.ifi.in2000.team8.R
 
 class RecourseUtils {
 

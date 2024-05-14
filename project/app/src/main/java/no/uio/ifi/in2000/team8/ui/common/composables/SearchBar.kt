@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.common.composables
+package no.uio.ifi.in2000.team8.ui.common.composables
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -43,8 +43,8 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import com.example.myapplication.model.surfareas.SurfArea
-import com.example.myapplication.ui.theme.AppTypography
+import no.uio.ifi.in2000.team8.model.surfareas.SurfArea
+import no.uio.ifi.in2000.team8.ui.theme.AppTypography
 import com.mapbox.geojson.Point
 
 @Composable

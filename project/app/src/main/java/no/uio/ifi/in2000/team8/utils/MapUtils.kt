@@ -1,6 +1,6 @@
-package com.example.myapplication.utils
+package no.uio.ifi.in2000.team8.utils
 
-import com.example.myapplication.model.surfareas.SurfArea
+import no.uio.ifi.in2000.team8.model.surfareas.SurfArea
 import com.mapbox.geojson.Point
 
 class MapUtils {

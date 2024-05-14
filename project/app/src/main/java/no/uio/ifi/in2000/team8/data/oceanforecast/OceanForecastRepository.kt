@@ -1,8 +1,8 @@
 package no.uio.ifi.in2000.team8.data.oceanforecast
 
-import com.example.myapplication.model.oceanforecast.DataOF
-import com.example.myapplication.model.oceanforecast.TimeserieOF
-import com.example.myapplication.model.surfareas.SurfArea
+import no.uio.ifi.in2000.team8.model.oceanforecast.DataOF
+import no.uio.ifi.in2000.team8.model.oceanforecast.TimeserieOF
+import no.uio.ifi.in2000.team8.model.surfareas.SurfArea
 
 interface OceanForecastRepository{
     suspend fun getTimeSeries(surfArea: SurfArea): List<Pair<String, DataOF>>

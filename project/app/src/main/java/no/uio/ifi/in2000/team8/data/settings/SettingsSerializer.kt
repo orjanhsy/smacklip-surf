@@ -2,7 +2,7 @@ package no.uio.ifi.in2000.team8.data.settings
 
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
-import com.example.myapplication.Settings
+import no.uio.ifi.in2000.team8.Settings
 import com.google.protobuf.InvalidProtocolBufferException
 import java.io.InputStream
 import java.io.OutputStream

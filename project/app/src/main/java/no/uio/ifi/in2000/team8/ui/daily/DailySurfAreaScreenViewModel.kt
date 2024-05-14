@@ -1,13 +1,13 @@
-package com.example.myapplication.ui.daily
+package no.uio.ifi.in2000.team8.ui.daily
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapplication.data.weatherforecast.WeatherForecastRepository
-import com.example.myapplication.model.conditions.ConditionStatus
-import com.example.myapplication.model.metalerts.Alert
-import com.example.myapplication.model.weatherforecast.DayForecast
-import com.example.myapplication.utils.ConditionUtils
+import no.uio.ifi.in2000.team8.data.weatherforecast.WeatherForecastRepository
+import no.uio.ifi.in2000.team8.model.conditions.ConditionStatus
+import no.uio.ifi.in2000.team8.model.metalerts.Alert
+import no.uio.ifi.in2000.team8.model.weatherforecast.DayForecast
+import no.uio.ifi.in2000.team8.utils.ConditionUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

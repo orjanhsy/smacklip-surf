@@ -1,10 +1,10 @@
-//package com.example.myapplication
+//package no.uio.ifi.in2000.team8
 //
 //
-//import com.example.myapplication.model.conditions.ConditionStatus
-//import com.example.myapplication.model.metalerts.Alert
-//import com.example.myapplication.model.surfareas.SurfArea
-//import com.example.myapplication.ui.surfarea.SurfAreaScreenViewModel
+//import no.uio.ifi.in2000.team8.model.conditions.ConditionStatus
+//import no.uio.ifi.in2000.team8.model.metalerts.Alert
+//import no.uio.ifi.in2000.team8.model.surfareas.SurfArea
+//import no.uio.ifi.in2000.team8.ui.surfarea.SurfAreaScreenViewModel
 //import org.junit.Test
 //
 //class TDDRepo {

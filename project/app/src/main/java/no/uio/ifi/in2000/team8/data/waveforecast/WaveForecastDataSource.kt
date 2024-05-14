@@ -1,12 +1,12 @@
 package no.uio.ifi.in2000.team8.data.waveforecast
 
 import android.util.Log
-import com.example.myapplication.data.config.Client
-import com.example.myapplication.utils.HTTPServiceHandler.WF_ACCESS_TOKEN_URL
-import com.example.myapplication.utils.HTTPServiceHandler.WF_BASE_URL
-import com.example.myapplication.utils.HTTPServiceHandler.WF_CLOSEST_ALL_TIME_URL
-import com.example.myapplication.model.waveforecast.AccessToken
-import com.example.myapplication.model.waveforecast.NewPointForecast
+import no.uio.ifi.in2000.team8.data.config.Client
+import no.uio.ifi.in2000.team8.utils.HTTPServiceHandler.WF_ACCESS_TOKEN_URL
+import no.uio.ifi.in2000.team8.utils.HTTPServiceHandler.WF_BASE_URL
+import no.uio.ifi.in2000.team8.utils.HTTPServiceHandler.WF_CLOSEST_ALL_TIME_URL
+import no.uio.ifi.in2000.team8.model.waveforecast.AccessToken
+import no.uio.ifi.in2000.team8.model.waveforecast.NewPointForecast
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.DefaultRequest

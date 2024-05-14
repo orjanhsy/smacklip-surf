@@ -1,11 +1,11 @@
 package no.uio.ifi.in2000.team8.data.locationforecast
 
 import android.util.Log
-import com.example.myapplication.utils.HTTPServiceHandler.API_HEADER
-import com.example.myapplication.utils.HTTPServiceHandler.API_KEY
-import com.example.myapplication.utils.HTTPServiceHandler.LOCATION_FORECAST_URL
-import com.example.myapplication.model.locationforecast.LocationForecast
-import com.example.myapplication.model.surfareas.SurfArea
+import no.uio.ifi.in2000.team8.utils.HTTPServiceHandler.API_HEADER
+import no.uio.ifi.in2000.team8.utils.HTTPServiceHandler.API_KEY
+import no.uio.ifi.in2000.team8.utils.HTTPServiceHandler.LOCATION_FORECAST_URL
+import no.uio.ifi.in2000.team8.model.locationforecast.LocationForecast
+import no.uio.ifi.in2000.team8.model.surfareas.SurfArea
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation

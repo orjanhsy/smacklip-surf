@@ -1,6 +1,6 @@
-package com.example.myapplication.model.weatherforecast
+package no.uio.ifi.in2000.team8.model.weatherforecast
 
-import com.example.myapplication.model.surfareas.SurfArea
+import no.uio.ifi.in2000.team8.model.surfareas.SurfArea
 
 data class AllSurfAreasOFLF (
     val next7Days: Map<SurfArea, Forecast7DaysOFLF> = mapOf()

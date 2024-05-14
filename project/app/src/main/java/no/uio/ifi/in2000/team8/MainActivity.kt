@@ -1,7 +1,7 @@
-package com.example.myapplication
+package no.uio.ifi.in2000.team8
 
 
-import com.example.myapplication.ui.daily.DailySurfAreaScreen
+import no.uio.ifi.in2000.team8.ui.daily.DailySurfAreaScreen
 import android.os.Bundle
 import android.os.CountDownTimer
 import androidx.activity.ComponentActivity
@@ -25,18 +25,18 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.myapplication.utils.viewModelFactory
-import com.example.myapplication.ui.home.HomeScreen
-import com.example.myapplication.ui.home.HomeScreenViewModel
-import com.example.myapplication.ui.info.InfoScreen
-import com.example.myapplication.ui.map.MapScreen
-import com.example.myapplication.ui.map.MapScreenViewModel
-import com.example.myapplication.ui.daily.DailySurfAreaScreenViewModel
-import com.example.myapplication.ui.surfarea.SurfAreaScreen
-import com.example.myapplication.ui.surfarea.SurfAreaScreenViewModel
-import com.example.myapplication.ui.theme.AppTheme
-import com.example.myapplication.utils.NavigationManager
-import com.example.myapplication.utils.NetworkConnectivityObserver
+import no.uio.ifi.in2000.team8.utils.viewModelFactory
+import no.uio.ifi.in2000.team8.ui.home.HomeScreen
+import no.uio.ifi.in2000.team8.ui.home.HomeScreenViewModel
+import no.uio.ifi.in2000.team8.ui.info.InfoScreen
+import no.uio.ifi.in2000.team8.ui.map.MapScreen
+import no.uio.ifi.in2000.team8.ui.map.MapScreenViewModel
+import no.uio.ifi.in2000.team8.ui.daily.DailySurfAreaScreenViewModel
+import no.uio.ifi.in2000.team8.ui.surfarea.SurfAreaScreen
+import no.uio.ifi.in2000.team8.ui.surfarea.SurfAreaScreenViewModel
+import no.uio.ifi.in2000.team8.ui.theme.AppTheme
+import no.uio.ifi.in2000.team8.utils.NavigationManager
+import no.uio.ifi.in2000.team8.utils.NetworkConnectivityObserver
 
 
 class MainActivity : ComponentActivity() {

@@ -1,4 +1,4 @@
-package com.example.myapplication.model.metalerts
+package no.uio.ifi.in2000.team8.model.metalerts
 
 import com.google.gson.annotations.SerializedName
 

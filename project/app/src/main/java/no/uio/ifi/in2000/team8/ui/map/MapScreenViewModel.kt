@@ -1,10 +1,10 @@
-package com.example.myapplication.ui.map
+package no.uio.ifi.in2000.team8.ui.map
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapplication.data.weatherforecast.WeatherForecastRepository
-import com.example.myapplication.model.weatherforecast.DataAtTime
-import com.example.myapplication.model.surfareas.SurfArea
+import no.uio.ifi.in2000.team8.data.weatherforecast.WeatherForecastRepository
+import no.uio.ifi.in2000.team8.model.weatherforecast.DataAtTime
+import no.uio.ifi.in2000.team8.model.surfareas.SurfArea
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map

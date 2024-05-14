@@ -1,9 +1,9 @@
 package no.uio.ifi.in2000.team8
 
-import com.example.myapplication.data.weatherforecast.WeatherForecastRepository
-import com.example.myapplication.data.weatherforecast.WeatherForecastRepositoryImpl
-import com.example.myapplication.data.waveforecast.WaveForecastRepositoryImpl
-import com.example.myapplication.model.surfareas.SurfArea
+import no.uio.ifi.in2000.team8.data.weatherforecast.WeatherForecastRepository
+import no.uio.ifi.in2000.team8.data.weatherforecast.WeatherForecastRepositoryImpl
+import no.uio.ifi.in2000.team8.data.waveforecast.WaveForecastRepositoryImpl
+import no.uio.ifi.in2000.team8.model.surfareas.SurfArea
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 

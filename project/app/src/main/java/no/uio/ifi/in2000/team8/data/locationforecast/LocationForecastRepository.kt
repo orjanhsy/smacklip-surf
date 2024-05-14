@@ -1,8 +1,8 @@
 package no.uio.ifi.in2000.team8.data.locationforecast
 
-import com.example.myapplication.model.surfareas.SurfArea
-import com.example.myapplication.model.locationforecast.DataLF
-import com.example.myapplication.model.locationforecast.TimeserieLF
+import no.uio.ifi.in2000.team8.model.surfareas.SurfArea
+import no.uio.ifi.in2000.team8.model.locationforecast.DataLF
+import no.uio.ifi.in2000.team8.model.locationforecast.TimeserieLF
 
 interface LocationForecastRepository {
     suspend fun getTimeSeries(surfArea: SurfArea): List<Pair<String, DataLF>>
