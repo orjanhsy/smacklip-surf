@@ -21,3 +21,6 @@ Se mer i ARCHITECTURE.md
 * MapBox
 * Jetpack Compose
 * Material3
+
+## Redegjørelse for varsler
+
