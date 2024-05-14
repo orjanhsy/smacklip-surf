@@ -134,7 +134,7 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel, navController: NavContr
                     ){
                         Text(
                             modifier = Modifier
-                                .padding(vertical = 15.dp),
+                                .padding(vertical = 3.dp),
                             text = "Alle lokasjoner",
                             style = AppTypography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
