@@ -152,7 +152,7 @@ class WeatherForecastRepositoryImpl(
         return oceanForecastRepository.getTimeSeries(surfArea)
             .filter {
                 val time = LocalDateTime.parse(it.first, dateFormatter)
-                time.isAfter(currentTime) || time.isEqual(currentTime)
+                time.isAfter(currentTime) || time.hour == currentTime.hour
             }
             .groupBy({ LocalDateTime.parse(it.first, dateFormatter).dayOfMonth }, { it }
         )
@@ -164,7 +164,7 @@ class WeatherForecastRepositoryImpl(
         return locationForecastRepository.getTimeSeries(surfArea)
             .filter {
                 val time = LocalDateTime.parse(it.first, dateFormatter)
-                time.isAfter(currentTime) || time.isEqual(currentTime)
+                time.isAfter(currentTime) || time.hour == currentTime.hour
             }
             .groupBy({ LocalDateTime.parse(it.first, dateFormatter).dayOfMonth }, { it })
     }
