@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.myapplication.utils
 
 
 import android.content.Context
@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
 
-//kilde - lik som oblig2 agneshb
 interface ConnectivityObserver {
     fun observe(): Flow<Boolean>
 
