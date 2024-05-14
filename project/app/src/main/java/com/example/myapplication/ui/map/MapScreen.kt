@@ -92,15 +92,14 @@ import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 
 
+//MapScreen er der selve skjermen lages, inkludert bottombar, kartet og searchbar på toppen
 @Composable
-
 fun MapScreen(mapScreenViewModel : MapScreenViewModel, navController: NavController) {
 
     val mapScreenUiState : MapScreenUiState by mapScreenViewModel.mapScreenUiState.collectAsState()
     val isSearchActive = remember { mutableStateOf(false) }
     val rememberPoint : MutableState<Point?> = remember { mutableStateOf(null) }
     val mapUtils = MapUtils()
-    // TODO: sjekke (maprepository) ut at dette er ok.
 
 
     Scaffold(
@@ -113,6 +112,8 @@ fun MapScreen(mapScreenViewModel : MapScreenViewModel, navController: NavControl
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
+            //Med Box legges hver del oppå hverandre, den nederste metoden som kalles legges fremst
+            //dermed synes searchbaren
             Box(modifier = Modifier.weight(1f)) {
                 MapBoxMap(
                     modifier = Modifier
@@ -136,7 +137,7 @@ fun MapScreen(mapScreenViewModel : MapScreenViewModel, navController: NavControl
     }
 }
 
-
+//i MapBoxMap() lages kartet fra MapBox
 @Composable
 fun MapBoxMap(
     modifier: Modifier = Modifier,
@@ -145,7 +146,7 @@ fun MapBoxMap(
     navController: NavController,
     rememberPoint: MutableState<Point?>
 ) {
-    val startPosition = Point.fromLngLat(13.0, 65.1)
+    val startPosition = Point.fromLngLat(13.0, 65.1) //koordinater for startpunktet i kartet - omtrent midt i Norge
     val context = LocalContext.current
     val marker = remember(context) {
         context.getDrawable(R.drawable.marker )!!.toBitmap()
@@ -163,6 +164,7 @@ fun MapBoxMap(
         contentAlignment = Alignment.Center
     ){
         AndroidView(
+            //factory kjøres initielt
             factory = {
 
                 MapView(it).also { mapView ->
@@ -172,6 +174,7 @@ fun MapBoxMap(
                     pointAnnotationManager = annotationApi.createPointAnnotationManager()
                 }
             },
+            //update oppdaterer visningen på skjermen hver gang brukeren interagerer med skjermen
             update = { mapView ->
                 //initiell cameraoptions - altså startPosition
                 if (rememberPoint.value == null && rememberCameraState.value == null){
@@ -191,15 +194,10 @@ fun MapBoxMap(
 
                 pointAnnotationManager?.let {
                     it.addClickListener { pointAnnotation ->
-                        // Handle the click event:
+                        // Håndterer click event:
                         val clickedPoint = pointAnnotation.point
                         val cameraState = mapView.mapboxMap.cameraState
                         rememberCameraState.value = CameraOptions.Builder().zoom(cameraState.zoom).center(cameraState.center).build() //huske hvor på kartet brukeren er når marker klikkes
-
-                        Log.d(
-                            "pointAnnotation point: ",
-                            clickedPoint.toString() + " " + clickedPoint.longitude() + " " + clickedPoint.latitude()
-                        )
 
                         try {
                             val loc = locations.first { location ->
@@ -210,28 +208,25 @@ fun MapBoxMap(
                             }
                             selectedMarker.value = loc.first
 
-                        } catch (_: NoSuchElementException) { //first-metode utløser unntak og appen krasjer dersom den ikke finner like koordinater
+                        } catch (_: NoSuchElementException) { //first-metode utløser unntak dersom den ikke finner matchende koordinater
                             selectedMarker.value = null
                         }
-                        true // Return true to indicate that the click event has been handled
+                        true
                     }
 
                     //legger til markers for hvert sted
                     locations.forEach { (location, point) ->
-                        Log.d("PointsList", location.locationName + " " + point.toString())
-
                         val pointAnnotationOptions = PointAnnotationOptions()
                             .withPoint(point)
                             .withIconImage(marker)
                         it.create(pointAnnotationOptions)
-
                     }
                 }
-
                 NoOpUpdate
             },
             modifier = modifier
         )
+        //Viser SurfAreaCard dersom brukeren har trykket på en marker
         if (selectedMarker.value != null) {
             SurfAreaCard(
                 surfArea = selectedMarker.value!!,
@@ -241,11 +236,10 @@ fun MapBoxMap(
             )
             Modifier.padding(16.dp)
         }
-            //Modifier.padding(horizontal = 16.dp)
     }
 }
 
-//TODO: må hoistes
+//TODO: må hoistes?
 //hjelpemetode for å sjekke at to koordinater er tilnærmet like ved bruk av verdien threshold
 fun isMatchingCoordinates(point1: Point, point2: Point): Boolean {
     val threshold = 0.001
@@ -262,7 +256,6 @@ fun SurfAreaCard(
     resourceUtils: RecourseUtils = RecourseUtils(),
     navController: NavController
 ) {
-
 
     //current data for surfArea som sendes inn:
     val windSpeed: Double = uiState.oflfNow[surfArea]?.windSpeed ?: 0.0
@@ -402,11 +395,7 @@ fun SurfAreaCard(
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.inverseOnSurface
                     )
-                    /*colors = ButtonDefaults.buttonColors(Color.Transparent),
-                    modifier = Modifier
-                        .fillMaxWidth()
 
-                     */
                 ) {
                     Text(
                         text = "   Gå til ${surfArea.locationName}   ",
@@ -430,7 +419,10 @@ fun SurfAreaCard(
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+//Searchbar-en på toppen av mapscreen git brukeren mulighet til å søke etter surelokasjoner
+//ved å trykke på en lokasjon i searchbar-en flytter kartkameraet seg til ønsket lokasjon.
+//dette skjer ved parameteret onZoomToLocation som er en lambda-funksjon.
+//Det er altså ikke funksjonalitet for å flytte kamera i SearchBar-metoden som er i tråd med objektorienterte prinsipper.
 @Composable
 fun SearchBar(
     surfAreas: List<SurfArea>,
@@ -559,9 +551,6 @@ fun SearchBar(
         }
     }
 }
-
-
-
 
 @Preview
 @Composable
