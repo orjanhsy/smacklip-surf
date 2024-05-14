@@ -70,13 +70,14 @@ fun DailySurfAreaScreen(
 
     val dailySurfAreaScreenUiState by dailySurfAreaScreenViewModel.dailySurfAreaScreenUiState.collectAsState()
 
+    //update dayInFocus in WeatherForecastRepository
     if (dayOfMonth != SmackLipApplication.container.stateFulRepo.dayInFocus.collectAsState().value) {
         dailySurfAreaScreenViewModel.updateDayInFocus(dayOfMonth)
     }
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { /*TODO*/ },
+            TopAppBar(title = { },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Column(
@@ -96,9 +97,7 @@ fun DailySurfAreaScreen(
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.inversePrimary)
-
             )
-
         },
         bottomBar = {
             BottomBar(navController = navController)
@@ -117,12 +116,7 @@ fun DailySurfAreaScreen(
                 val formattedCurrentHour = String.format("%02d", currentHour)
                 var headerIcon = "default_icon"
 
-                val surfAreaDataForDay: Map<LocalDateTime, DataAtTime> = try { // TODO: IndexOutOfBounds vil aldri skje
-                    dailySurfAreaScreenUiState.dataAtDay.data
-                } catch (e: IndexOutOfBoundsException) {
-                    mapOf()
-                }
-
+                val surfAreaDataForDay: Map<LocalDateTime, DataAtTime> = dailySurfAreaScreenUiState.dataAtDay.data
 
                 var times = surfAreaDataForDay.keys.sortedWith(
                     compareBy<LocalDateTime> { it.month }.thenBy { it.dayOfMonth }
@@ -150,15 +144,12 @@ fun DailySurfAreaScreen(
                         .padding(5.dp)
                 ) {
 
-                    // [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]
                         items(times.size) { index ->
                             val time = times[index]
                             val hour = time.hour
                             val formattedHour = String.format("%02d", hour)
 
-                            // TODO: ?
                             val surfAreaDataForHour: DataAtTime? = surfAreaDataForDay[time]
-                            //henter objektet for timen som er en liste med Pair<List<Int>, Double>
 
                             val windSpeed = surfAreaDataForHour?.windSpeed ?: 0.0
                             val windGust = surfAreaDataForHour?.windGust ?: 0.0
@@ -170,18 +161,11 @@ fun DailySurfAreaScreen(
 
                             val wavePeriod = try {
                                 val waveIndex = times.indexOf(times.find { it.hour == hour})
-                                Log.d(
-                                    "DSVM",
-                                    "Got waveperiod ${dailySurfAreaScreenUiState.wavePeriods[waveIndex]} from hour $hour at index $waveIndex from ${dailySurfAreaScreenUiState.wavePeriods}"
-                                )
+
                                 dailySurfAreaScreenUiState.wavePeriods[waveIndex]
 
                             } catch (e: IndexOutOfBoundsException) {
-                                Log.d(
-                                    "DSAscreen",
-                                    "Waveperiods ${hour} out of bounds for waveperiods of size ${dailySurfAreaScreenUiState.wavePeriods.size}"
-                                )
-                                -1.0
+                                -1.0 //gives < 0 value to deal with no waveperiod in UI
                             }
 
                             val conditionStatus: ConditionStatus? = try {
@@ -205,14 +189,11 @@ fun DailySurfAreaScreen(
                             )
                         }
                 }
-
             }
-            // ProgressIndicator(isDisplayed = dailySurfAreaScreenUiState.loading)
         }
     }
 }
 
-// TODO: tror type kan være noe annet enn default, og de kan ha andre default values
 @Composable
 fun AllInfoCard(
     timestamp: String = "x",
@@ -255,14 +236,14 @@ fun AllInfoCard(
 
             ) {
 
-            Spacer(modifier = Modifier.height(7.dp)) //aligns text mid screen
+            Spacer(modifier = Modifier.height(7.dp))
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp, vertical = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween //evenly spaced
+                horizontalArrangement = Arrangement.SpaceBetween //evenly spaced. also on tablet
             ) {
 
                 //Time group
@@ -295,14 +276,15 @@ fun AllInfoCard(
                     //wind text
                     Box(
                         modifier = Modifier
-                            .size(width = 50.dp, height = 30.dp) // Set size with shorter height
-                            .padding(top = 6.dp) // Add padding to the top
+                            .size(width = 50.dp, height = 30.dp)
+                            .padding(top = 6.dp)
                     ) {
                         Text(
                             text = if (windGust as Double > windSpeed as Double) "${(windSpeed).toInt()} (${(windGust).toInt()})"
                             else "${(windSpeed).toInt()}",
                             style = AppTypography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
+                            //handles wind and wind + gust
                         )
                     }
 
@@ -397,7 +379,7 @@ fun AllInfoCard(
                             } else {
                                 val temperature = temp.toString()
                                 if (temperature.toInt() < 10) {
-                                    "  $temperature" //align single digit with 0 position
+                                    "  $temperature" //align single digit with 1 position
                                 } else {
                                     temperature
                                 }
