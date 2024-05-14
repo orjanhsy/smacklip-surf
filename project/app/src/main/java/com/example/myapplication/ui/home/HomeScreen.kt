@@ -251,7 +251,7 @@ fun SearchBar(
             )
         )
         val filteredSurfAreas =
-            surfAreas.filter { it.locationName.contains(searchQuery, ignoreCase = true) }
+            surfAreas.filter { it.locationName.startsWith(searchQuery, ignoreCase = true) }
 
         if (expanded && searchQuery.isNotEmpty() && filteredSurfAreas.isNotEmpty()) {
             LazyColumn(
@@ -286,9 +286,6 @@ fun SearchBar(
                     }
                 }
             }
-            /* if (searchQuery.isNotEmpty() && filteredSurfAreas.isEmpty() && expanded) {
-            Text("Ingen samsvarende resultater")
-        } */
         }
     }
 }
@@ -609,7 +606,8 @@ private fun PreviewHomeScreen() {
         factory = viewModelFactory {
             HomeScreenViewModel(
                 SmackLipApplication.container.stateFulRepo,
-                SmackLipApplication.container.alertsRepo
+                SmackLipApplication.container.alertsRepo,
+                SmackLipApplication.container.settingsRepo
             )
         }
     )

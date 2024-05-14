@@ -49,14 +49,11 @@ import com.example.myapplication.R
 import com.example.myapplication.Settings
 import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.theme.AppTheme
-import com.example.myapplication.ui.theme.AppTypography
 
 
 @OptIn(ExperimentalMaterial3Api::class)
-//@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun InfoScreen(infoScreenViewModel: InfoScreenViewModel, navController: NavController) {
-    //val infoUiState by infoScreenViewModel.infoUiState.collectAsState()
     val isDarkThemeEnabled by infoScreenViewModel.isDarkThemEnabled.collectAsState()
 
 
@@ -143,7 +140,7 @@ fun InfoScreen(infoScreenViewModel: InfoScreenViewModel, navController: NavContr
                                                     .wrapContentHeight(),
                                                 horizontalArrangement = Arrangement.SpaceBetween
                                             ) {
-                                                Text(text = if (isDarkThemeEnabled) "Switch for light mode" else "switch for dark mode")
+                                                Text(text = if (isDarkThemeEnabled) "Bytt til Light Mode " else "Bytt til Dark Mode")
                                                 Switch(
                                                     checked = isDarkThemeEnabled,
                                                     onCheckedChange = { isChecked ->
@@ -229,7 +226,6 @@ fun InformationCard(title: String, content: String) {
 
                 )
             }
-            //ekspandert innhold
             if (expanded) {
                 Text(
                     text = content,
