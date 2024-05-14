@@ -28,7 +28,7 @@ class DailySurfAreaScreenViewModel(
 ): ViewModel() {
 
     val dailySurfAreaScreenUiState: StateFlow<DailySurfAreaScreenUiState> = combine(
-        forecastRepo.ofLfNext7Days,
+        forecastRepo.ofLfForecast,
         forecastRepo.wavePeriods,
         forecastRepo.areaInFocus,
         forecastRepo.dayInFocus

@@ -45,7 +45,7 @@ class HomeScreenViewModel(
 
 
     val homeScreenUiState: StateFlow<HomeScreenUiState> = combine(
-        forecastRepo.ofLfNext7Days,
+        forecastRepo.ofLfForecast,
         alertsRepo.alerts
     ) { oflf, alerts ->
         val oflfNow: Map<SurfArea, DataAtTime> = oflf.next7Days.entries.associate {
