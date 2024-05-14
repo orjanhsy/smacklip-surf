@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities.Local
 
 interface WeatherForecastRepository {
     val ofLfForecast: StateFlow<AllSurfAreasOFLF>
@@ -87,8 +88,9 @@ class WeatherForecastRepositoryImpl(
 
     // returns a list of all days of forecast, of and lf data combined into same object DataAtTime
     private suspend fun getOFLFForArea(sa: SurfArea): MutableList<DayForecast> {
-        val lf = getLFTimeSeries(sa)
-        val of = getOFTimeSeries(sa)
+        val currentTime = LocalDateTime.now()
+        val lf = getLFTimeSeries(sa, currentTime)
+        val of = getOFTimeSeries(sa, currentTime)
 
         val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
 
@@ -145,19 +147,26 @@ class WeatherForecastRepositoryImpl(
     }
 
     // returns ocean forecast time series mapped to day of month
-    private suspend fun getOFTimeSeries(surfArea: SurfArea): Map<Int, List<Pair<String, DataOF>>> {
+    private suspend fun getOFTimeSeries(surfArea: SurfArea, currentTime: LocalDateTime): Map<Int, List<Pair<String, DataOF>>> {
         val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-        return oceanForecastRepository.getTimeSeries(surfArea).groupBy(
-            { LocalDateTime.parse(it.first, dateFormatter).dayOfMonth }, { it }
+        return oceanForecastRepository.getTimeSeries(surfArea)
+            .filter {
+                val time = LocalDateTime.parse(it.first, dateFormatter)
+                time.isAfter(currentTime) || time.hour == currentTime.hour
+            }
+            .groupBy({ LocalDateTime.parse(it.first, dateFormatter).dayOfMonth }, { it }
         )
     }
 
     // returns location forecast time series mapped to day of month
-    private suspend fun getLFTimeSeries(surfArea: SurfArea): Map<Int, List<Pair<String, DataLF>>> {
+    private suspend fun getLFTimeSeries(surfArea: SurfArea, currentTime: LocalDateTime): Map<Int, List<Pair<String, DataLF>>> {
         val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-        return locationForecastRepository.getTimeSeries(surfArea).groupBy(
-            { LocalDateTime.parse(it.first, dateFormatter).dayOfMonth }, { it }
-        )
+        return locationForecastRepository.getTimeSeries(surfArea)
+            .filter {
+                val time = LocalDateTime.parse(it.first, dateFormatter)
+                time.isAfter(currentTime) || time.hour == currentTime.hour
+            }
+            .groupBy({ LocalDateTime.parse(it.first, dateFormatter).dayOfMonth }, { it })
     }
 
     override suspend fun loadWavePeriods() {
