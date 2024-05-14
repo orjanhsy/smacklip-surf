@@ -43,21 +43,21 @@ class LocationForecastDataSource(
         }
         catch(e: RedirectResponseException) {
             // 3xx
-            Log.e(TAG, "Failed get timeSeries for $surfArea. 3xx-error. Cause: ${e.message}")
+            Log.e(TAG, "Failed get data for $surfArea. 3xx-error. Cause: ${e.message}")
             throw e
         }
         catch (e: ClientRequestException) {
             // 4xx
-            Log.e(TAG, "Failed get timeSeries for $surfArea. 4xx-error. Cause: ${e.message}")
+            Log.e(TAG, "Failed get data for $surfArea. 4xx-error. Cause: ${e.message}")
             throw e
         }
         catch(e: ServerResponseException) {
             // 5xx
-            Log.e(TAG, "Failed get timeSeries for $surfArea. 5xx-error. Cause: ${e.message}")
+            Log.e(TAG, "Failed get data for $surfArea. 5xx-error. Cause: ${e.message}")
             throw e
         }
         catch (e: Exception) {
-            Log.e(TAG, "Failed get timeSeries for $surfArea. Unknown error. Cause: ${e.message}")
+            Log.e(TAG, "Failed get data for $surfArea. Unknown error. Cause: ${e.message}")
             throw e
         }
 
