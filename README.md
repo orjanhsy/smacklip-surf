@@ -19,5 +19,5 @@ Se mer i ARCHITECTURE.md
 * KTOR
 * LocalDateTime
 * MapBox
-* JetpackCompose
+* Jetpack Compose
 * Material3
