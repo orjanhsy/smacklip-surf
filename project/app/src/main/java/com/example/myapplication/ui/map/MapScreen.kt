@@ -26,7 +26,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -253,11 +252,11 @@ fun SurfAreaCard(
 ) {
 
     //current data for surfArea:
-    val windSpeed: Double = uiState.oflfNow[surfArea]?.windSpeed ?: 0.0
-    val windGust: Double = uiState.oflfNow[surfArea]?.windGust ?: 0.0
-    val airTemperature: Double = uiState.oflfNow[surfArea]?.airTemp ?: 0.0
-    val symbolCode: String = uiState.oflfNow[surfArea]?.symbolCode ?: ""
-    val waveHeight: Double = uiState.oflfNow[surfArea]?.waveHeight ?: 0.0
+    val windSpeed: Double = uiState.ofLfNow[surfArea]?.windSpeed ?: 0.0
+    val windGust: Double = uiState.ofLfNow[surfArea]?.windGust ?: 0.0
+    val airTemperature: Double = uiState.ofLfNow[surfArea]?.airTemp ?: 0.0
+    val symbolCode: String = uiState.ofLfNow[surfArea]?.symbolCode ?: ""
+    val waveHeight: Double = uiState.ofLfNow[surfArea]?.waveHeight ?: 0.0
 
     Card(
         modifier = Modifier

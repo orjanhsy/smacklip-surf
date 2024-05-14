@@ -41,18 +41,6 @@ class MetAlertsRepositoryImpl (
     private suspend fun getAlerts(): List<Alert> {
         return try {
             metAlertsDataSource.fetchMetAlertsData().features
-        } catch (e: ClientRequestException) {
-            val statusCode = e.response.status.value
-            val message = e.response.bodyAsText()
-            Log.e(TAG, "Client side error occurred while loading alerts. Status code: $statusCode, Message: $message")
-
-            emptyList()
-        } catch (e: ServerResponseException) {
-            val statusCode = e.response.status.value
-            val message = e.response.bodyAsText()
-            Log.e(TAG, "Server side error occurred while loading alerts. Status code: $statusCode, Message: $message")
-
-            emptyList()
         } catch (e: Exception) {
             Log.e(TAG, "An unexpected error occurred while loading alerts: $e")
 

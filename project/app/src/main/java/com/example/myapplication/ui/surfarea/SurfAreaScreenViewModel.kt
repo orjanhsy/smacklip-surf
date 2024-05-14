@@ -32,7 +32,7 @@ class SurfAreaScreenViewModel(
 ): ViewModel() {
 
     val surfAreaScreenUiState: StateFlow<SurfAreaScreenUiState> = combine(
-        forecastRepo.ofLfNext7Days,
+        forecastRepo.ofLfForecast,
         forecastRepo.wavePeriods,
         forecastRepo.areaInFocus,
         alertsRepo.alerts
@@ -43,7 +43,7 @@ class SurfAreaScreenViewModel(
         val newAlerts: List<Alert> = alerts[sa] ?: listOf()
         val wavePeriodsInArea: Map<Int, List<Double?>>  = wavePeriods.wavePeriods[sa] ?: mapOf()
 
-        // gets min-max waveheights per day for display
+        // gets min-max waveHeights per day for display
         val newMaxWaveHeights = newOfLf.forecast.map {
             it.data.values.maxOf {dataAtTime -> dataAtTime.waveHeight }
         }
