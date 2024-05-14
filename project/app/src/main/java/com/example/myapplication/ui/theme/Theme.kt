@@ -30,7 +30,7 @@ private val lightScheme = lightColorScheme(
     secondaryContainer = secondaryContainerLight,
     onSecondaryContainer = onSecondaryContainerLight,
     tertiary = tertiaryLight,
-    onTertiary = onTertiaryLight,
+    onTertiary = logoLight,
     tertiaryContainer = tertiaryContainerLight,
     onTertiaryContainer = onTertiaryContainerLight,
     error = errorLight,
@@ -49,7 +49,6 @@ private val lightScheme = lightColorScheme(
     inverseSurface = inverseSurfaceLight,
     inverseOnSurface = inverseOnSurfaceLight,
     inversePrimary = inversePrimaryLight,
-
     )
 
 private val darkScheme = darkColorScheme(
@@ -62,7 +61,7 @@ private val darkScheme = darkColorScheme(
     secondaryContainer = secondaryContainerDark,
     onSecondaryContainer = onSecondaryContainerDark,
     tertiary = tertiaryDark,
-    onTertiary = onTertiaryDark,
+    onTertiary = logoDark,
     tertiaryContainer = tertiaryContainerDark,
     onTertiaryContainer = onTertiaryContainerDark,
     error = errorDark,

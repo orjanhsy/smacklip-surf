@@ -2,6 +2,7 @@ package com.example.myapplication.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+val logoLight = Color(0xFF2F3032)
 val primaryLight = Color(0xFF294861)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFF4E6C86)
@@ -110,6 +111,7 @@ val surfaceContainerLightHighContrast = Color(0xFFEEEDF0)
 val surfaceContainerHighLightHighContrast = Color(0xFFE9E8EA)
 val surfaceContainerHighestLightHighContrast = Color(0xFFE3E2E4)
 
+val logoDark = Color(0xFFE4F0FF)
 val darkModeBackground = Color(0xFF4f5d75)
 val primaryDark = Color(0xFFABCAE8)
 val onPrimaryDark = Color(0xFF12334B)
