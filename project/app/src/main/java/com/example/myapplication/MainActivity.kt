@@ -6,13 +6,11 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Surface
@@ -20,13 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -62,13 +54,16 @@ class MainActivity : ComponentActivity() {
             }
         }.start()
 
+        //show splashscreen until data for oflfNext7Days is loaded or 10 seconds has passed
         installSplashScreen().apply {
             setKeepOnScreenCondition{
                 SmackLipApplication.container.stateFulRepo.ofLfNext7Days.value.next7Days.isEmpty() && !countDownFinished
             }
         }
-        var connectetAtOnePoint = false
-        val connectivityObserver = NetworkConnectivityObserver(applicationContext)
+
+        var connectedAtOnePoint = false //true if app has been connected to internet at some point during the session
+        val connectivityObserver = NetworkConnectivityObserver(applicationContext) //check internet connection
+
         setContent {
             val isDarkTheme by SmackLipApplication.container.infoViewModel.isDarkThemEnabled.collectAsState(initial = false)
             AppTheme( useDarkTheme = isDarkTheme) {
@@ -81,13 +76,18 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    //if the device is connected to internet, call SmackLipNavigation and update connectedAtOnePoint to true
                     if (isConnected) {
                         SmackLipNavigation()
-                        connectetAtOnePoint = true
+                        connectedAtOnePoint = true
                     }else{
-                        if (connectetAtOnePoint){
-                            showSnackBarAndNavigation()
+                        //if the app has been connected to internet, but then lost the connection
+                        //a snack bar will show, but also the app with the loaded data can be used
+                        if (connectedAtOnePoint){
+                            ShowSnackBarAndNavigation()
                         }else{
+                            //if the app has not been connected to internet, data has not been loaded to
+                            //the app and only the snack bar will show
                             ShowSnackBar()
                         }
                     }
@@ -97,8 +97,9 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+//Snack bar is shown on top of the current screen
 @Composable
-fun showSnackBarAndNavigation(){
+fun ShowSnackBarAndNavigation(){
     Column(){
         Row{
             ShowSnackBar()
@@ -109,6 +110,8 @@ fun showSnackBarAndNavigation(){
 
     }
 }
+
+//Snack bar for when internet connection is missing
 @Composable
 fun ShowSnackBar() {
     Column(modifier = Modifier
