@@ -251,7 +251,7 @@ fun SearchBar(
             )
         )
         val filteredSurfAreas =
-            surfAreas.filter { it.locationName.contains(searchQuery, ignoreCase = true) }
+            surfAreas.filter { it.locationName.startsWith(searchQuery, ignoreCase = true) }
 
         if (expanded && searchQuery.isNotEmpty() && filteredSurfAreas.isNotEmpty()) {
             LazyColumn(
