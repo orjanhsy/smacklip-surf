@@ -90,6 +90,7 @@ import com.mapbox.maps.plugin.annotation.annotations
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
+import com.example.myapplication.ui.common.composables.SearchBar
 
 
 @Composable
@@ -130,6 +131,7 @@ fun MapScreen(mapScreenViewModel : MapScreenViewModel, navController: NavControl
                     },
                     surfAreas = SurfArea.entries.toList(),
                     onZoomToLocation = { point -> rememberPoint.value = point },
+                    navController = navController
                 )
             }
         }
@@ -430,7 +432,7 @@ fun SurfAreaCard(
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+/*@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(
     surfAreas: List<SurfArea>,
@@ -558,7 +560,7 @@ fun SearchBar(
             }
         }
     }
-}
+}*/
 
 
 
