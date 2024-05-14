@@ -95,6 +95,7 @@ fun SurfAreaScreen(
 
     var firstTimeHere by rememberSaveable { mutableStateOf(true) }
 
+    //update areaInFocus in WeatherForecastRepository
     if (surfArea != SmackLipApplication.container.stateFulRepo.areaInFocus.collectAsState().value) {
         surfAreaScreenViewModel.updateLocation(surfArea)
     }
@@ -106,13 +107,11 @@ fun SurfAreaScreen(
     val formatter = DateTimeFormatter.ofPattern("EEE", Locale("no", "NO"))
 
     var showAlert by remember { mutableStateOf(false) }
-    //var alertShowingNow by remember { mutableStateOf(false) }
-
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { /*TODO*/ },
+                title = { },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Column(
@@ -121,7 +120,7 @@ fun SurfAreaScreen(
                         ) {
                             Icon(
                                 Icons.Default.ArrowBack,
-                                contentDescription = "Back",
+                                contentDescription = "Back button",
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier
                                     .width(42.dp)
@@ -130,6 +129,7 @@ fun SurfAreaScreen(
                         }
                     }
                 },
+                //alert icon if alert is active
                 actions = {
                     if (alerts.isNotEmpty()) {
                         IconButton(onClick = {
@@ -143,7 +143,7 @@ fun SurfAreaScreen(
                             }?.let { painterResource(id = it) }?.let {
                                 Image(
                                     painter = it,
-                                    contentDescription = "alert"
+                                    contentDescription = "Alert symbol"
                                 )
                             }
                         }
@@ -174,11 +174,10 @@ fun SurfAreaScreen(
                 }
 
                 val currentHour =
-                    LocalTime.now().hour // klokken er 10 så får ikke sjekket om det står 09 eller 9. Sto tidligere "08", "09" med .toString().padStart(2, '0')
+                    LocalTime.now().hour
                 var headerIcon = ""
 
                 if (surfAreaDataForDay.isNotEmpty()) {
-                    // siden mappet ikke er sortert henter vi ut alle aktuelle tidspunketer og sorterer dem
 
                     val times = surfAreaDataForDay.keys.sortedWith(
                         compareBy<LocalDateTime> { it.month }.thenBy { it.dayOfMonth }
@@ -190,7 +189,10 @@ fun SurfAreaScreen(
                             headerIcon = surfAreaDataForDay[time]!!.symbolCode
                         }
                     }
-                    HeaderCard(surfArea = surfArea, icon = headerIcon, LocalDateTime.now())
+                    HeaderCard(
+                        surfArea = surfArea,
+                        icon = headerIcon,
+                        LocalDateTime.now())
                 } else {
                     HeaderCard(
                         surfArea = surfArea,
@@ -203,7 +205,6 @@ fun SurfAreaScreen(
                 LazyRow(
                     modifier = Modifier.padding(5.dp)
                 ) {
-                    if (surfAreaScreenUiState.forecastNext7Days.forecast.isNotEmpty()) {
                         val today = LocalDateTime.now()
 
                         items(surfAreaScreenUiState.forecastNext7Days.forecast.size) { dayIndex ->
@@ -235,18 +236,6 @@ fun SurfAreaScreen(
                                 navController
                             )
                         }
-                    } else {
-                        items(6) { dayIndex ->
-                            DayPreviewCard(
-                                surfArea,
-                                "man",
-                                Pair("0.2", "1.3"),
-                                ConditionStatus.BLANK,
-                                LocalDateTime.now(),
-                                null
-                            )
-                        }
-                    }
                 }
             }
             item {
@@ -269,8 +258,6 @@ fun SurfAreaScreen(
                     showAlert = false
                 })
         }
-        //ProgressIndicator(isDisplayed = surfAreaScreenUiState.loading)
-        // ProgressIndicator(isDisplayed = surfAreaScreenUiState.loading)
     }
 }
 
@@ -294,7 +281,6 @@ fun ShowAlert(alerts : List<Alert>, surfArea: SurfArea, action : () -> Unit){
         time = time,
         data = null,
         showAlert = remember { mutableStateOf(true) },
-        //actionWithValue = null,
         action = action,
     )
 }
@@ -329,7 +315,7 @@ fun InfoCard(surfArea: SurfArea) {
             .height(350.dp)
             .padding(8.dp),
         shape = RoundedCornerShape(16.dp),
-        border = BorderStroke(2.dp, outlineLight) //BorderStroke(0.dp, Color.Transparent) //BorderStroke(2.dp, Color(0xFFBEC8CA))
+        border = BorderStroke(2.dp, outlineLight)
     ) {
         Box(
             modifier = Modifier
