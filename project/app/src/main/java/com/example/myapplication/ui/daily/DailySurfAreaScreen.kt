@@ -120,13 +120,7 @@ fun DailySurfAreaScreen(
 
                 val surfAreaDataForDay: Map<LocalDateTime, DataAtTime> = dailySurfAreaScreenUiState.dataAtDay.data
 
-                var times = surfAreaDataForDay.keys.sortedWith(
-                    compareBy<LocalDateTime> { it.month }.thenBy { it.dayOfMonth }
-                )
-
-                if (times.any{it.month == currentTime.month && it.dayOfMonth == currentTime.dayOfMonth}) {
-                    times = times.filter { it.hour >= currentHour }
-                }
+                val times = surfAreaDataForDay.keys.sortedBy { it.hour }
 
                 // icon for current hour for today
                 if (surfAreaDataForDay.isNotEmpty()){
