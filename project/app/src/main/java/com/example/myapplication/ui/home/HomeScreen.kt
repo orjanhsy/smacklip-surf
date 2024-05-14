@@ -309,14 +309,13 @@ fun FavoritesList(
     Row(
         modifier = Modifier
             .padding(horizontal = 10.dp, vertical = 0.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.Bottom
     ) {
         Text(
             text = "Favoritter",
             style = AppTypography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-
-            modifier = Modifier
+                    modifier = Modifier
                 .weight(1f, true)
         )
         Button(
