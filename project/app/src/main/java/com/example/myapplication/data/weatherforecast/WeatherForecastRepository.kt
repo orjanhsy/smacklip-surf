@@ -1,17 +1,17 @@
-package com.example.myapplication.data.weatherForecast
+package com.example.myapplication.data.weatherforecast
 
-import com.example.myapplication.data.locationForecast.LocationForecastRepository
-import com.example.myapplication.data.locationForecast.LocationForecastRepositoryImpl
+import com.example.myapplication.data.locationforecast.LocationForecastRepository
+import com.example.myapplication.data.locationforecast.LocationForecastRepositoryImpl
 import com.example.myapplication.data.oceanforecast.OceanforecastRepository
 import com.example.myapplication.data.oceanforecast.OceanforecastRepositoryImpl
 import com.example.myapplication.data.waveforecast.WaveForecastRepository
 import com.example.myapplication.data.waveforecast.WaveForecastRepositoryImpl
 import com.example.myapplication.model.locationforecast.DataLF
 import com.example.myapplication.model.oceanforecast.DataOF
-import com.example.myapplication.model.smacklip.AllSurfAreasOFLF
-import com.example.myapplication.model.smacklip.DataAtTime
-import com.example.myapplication.model.smacklip.DayForecast
-import com.example.myapplication.model.smacklip.Forecast7DaysOFLF
+import com.example.myapplication.model.weatherforecast.AllSurfAreasOFLF
+import com.example.myapplication.model.weatherforecast.DataAtTime
+import com.example.myapplication.model.weatherforecast.DayForecast
+import com.example.myapplication.model.weatherforecast.Forecast7DaysOFLF
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.waveforecast.AllWavePeriods
 import kotlinx.coroutines.Deferred

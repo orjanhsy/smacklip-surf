@@ -1,6 +1,5 @@
-package com.example.myapplication.model.smacklip
+package com.example.myapplication.model.weatherforecast
 import com.example.myapplication.model.surfareas.SurfArea
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class AllSurfAreasOFLF (

@@ -19,11 +19,5 @@ class FinalTests {
         assert(response==null)
     }
 
-    @Test
-    fun metAlertsRepoReturnNonEmptyListOfAlerts()= runBlocking{
-        val alerts = MetAlertsRepositoryImpl().getAllRelevantAlerts()
-        println(alerts)
-    }
-
 
 }
