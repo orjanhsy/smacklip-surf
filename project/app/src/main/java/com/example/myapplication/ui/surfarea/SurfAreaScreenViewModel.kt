@@ -3,10 +3,10 @@ package com.example.myapplication.ui.surfarea
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.metalerts.MetAlertsRepository
-import com.example.myapplication.data.weatherForecast.WeatherForecastRepository
+import com.example.myapplication.data.weatherforecast.WeatherForecastRepository
 import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.metalerts.Alert
-import com.example.myapplication.model.smacklip.Forecast7DaysOFLF
+import com.example.myapplication.model.weatherforecast.Forecast7DaysOFLF
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.utils.ConditionUtils
 import kotlinx.coroutines.Dispatchers

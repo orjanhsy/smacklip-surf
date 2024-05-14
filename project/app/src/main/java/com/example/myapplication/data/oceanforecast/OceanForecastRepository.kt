@@ -1,20 +1,16 @@
 package com.example.myapplication.data.oceanforecast
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.example.myapplication.model.oceanforecast.DataOF
 import com.example.myapplication.model.oceanforecast.TimeserieOF
 import com.example.myapplication.model.surfareas.SurfArea
-import java.time.DayOfWeek
-import java.time.LocalDate
 
-interface OceanforecastRepository{
+interface OceanForecastRepository{
     suspend fun getTimeSeries(surfArea: SurfArea): List<Pair<String, DataOF>>
 }
 
-class OceanforecastRepositoryImpl(
-    private val dataSource: OceanforecastDataSource = OceanforecastDataSource()
-): OceanforecastRepository {
+class OceanForecastRepositoryImpl(
+    private val dataSource: OceanForecastDataSource = OceanForecastDataSource()
+): OceanForecastRepository {
 
     override suspend fun getTimeSeries(surfArea: SurfArea): List<Pair<String, DataOF>> {
         //gets list of timeseries objects, containing time and data
