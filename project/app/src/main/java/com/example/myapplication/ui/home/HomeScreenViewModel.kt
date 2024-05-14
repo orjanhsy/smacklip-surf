@@ -45,15 +45,15 @@ class HomeScreenViewModel(
 
 
     val homeScreenUiState: StateFlow<HomeScreenUiState> = combine(
-        forecastRepo.ofLfNext7Days,
+        forecastRepo.ofLfForecast,
         alertsRepo.alerts
-    ) { oflf, alerts ->
-        val oflfNow: Map<SurfArea, DataAtTime> = oflf.next7Days.entries.associate {
-            it.key to it.value.forecast[0].data.entries.sortedBy {timeToData -> timeToData.key.hour }[0].value
+    ) { ofLf, alerts ->
+        val ofLfNow: Map<SurfArea, DataAtTime> = ofLf.next7Days.entries.associate { (sa, forecast) ->
+            sa to forecast.forecast[0].data.entries.sortedBy {timeToData -> timeToData.key.hour }[0].value
         }
         val allRelevantAlerts: Map<SurfArea, List<Alert>> = alerts
         HomeScreenUiState(
-            ofLfNow = oflfNow,
+            ofLfNow = ofLfNow,
             allRelevantAlerts = allRelevantAlerts,
         )
 
@@ -81,27 +81,7 @@ class HomeScreenViewModel(
         }
     }
 
-
-    fun getIconBasedOnAwarenessLevel(awarenessLevel: String): Int {
-        return try {
-            if (awarenessLevel.isNotEmpty()) {
-                val firstChar = awarenessLevel.firstOrNull()?.toString()
-
-                when (firstChar) {
-                    "2" -> R.drawable.icon_awareness_yellow_outlined
-                    "3" -> R.drawable.icon_awareness_orange
-                    "4" -> R.drawable.icon_awareness_red
-                    else -> R.drawable.icon_awareness_default // Hvis awarenessLevel ikke er 2, 3 eller 4
-                }
-            } else {
-                R.drawable.icon_awareness_default // Hvis awarenessLevel er en tom String
-            }
-        } catch (e: Exception) {
-            R.drawable.icon_awareness_default
-        }
-    }
-
-    fun getSurfAreaByLocationName(locationName: String): SurfArea? {
+    private fun getSurfAreaByLocationName(locationName: String): SurfArea? {
         return SurfArea.entries.firstOrNull{ it.locationName.equals(locationName, ignoreCase = true)}
     }
     fun loadFavoriteSurfAreas(){
@@ -109,7 +89,6 @@ class HomeScreenViewModel(
             settingsRepo.settingsFlow.collect{
                 Log.d("LogFavorites", "loaded favorite surf areas: ${it.favoriteSurfAreaNamesList}")
                 val favoriteAreas = it.favoriteSurfAreaNamesList.mapNotNull { areaName ->
-                    //konverter locationname ti surfAreaObjekt
                     val favSurfArea = getSurfAreaByLocationName(areaName)
                     if (favSurfArea == null){
                         Log.d("FavoriteList", "Failed to fetch saved Favorites $areaName")

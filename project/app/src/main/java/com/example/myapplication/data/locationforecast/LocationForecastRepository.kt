@@ -16,7 +16,7 @@ class LocationForecastRepositoryImpl(
         val timeSeries : List<TimeserieLF> = try {
             locationForecastDataSource.fetchLocationForecastData(surfArea).properties.timeseries
         } catch (e: Exception) {
-            // handles http exceptions thrown by data source
+            // does not handle exceptions differently
             listOf()
         }
         return timeSeries.map { it.time to it.data }

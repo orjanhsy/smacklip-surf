@@ -8,6 +8,9 @@ import com.example.myapplication.model.locationforecast.LocationForecast
 import com.example.myapplication.model.surfareas.SurfArea
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.RedirectResponseException
+import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.get
@@ -37,8 +40,24 @@ class LocationForecastDataSource(
             ) {
                 header(API_HEADER, API_KEY)
             }.body()
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to GET data ${e.stackTraceToString()}")
+        }
+        catch(e: RedirectResponseException) {
+            // 3xx
+            Log.e(TAG, "Failed get data for $surfArea. 3xx-error. Cause: ${e.message}")
+            throw e
+        }
+        catch (e: ClientRequestException) {
+            // 4xx
+            Log.e(TAG, "Failed get data for $surfArea. 4xx-error. Cause: ${e.message}")
+            throw e
+        }
+        catch(e: ServerResponseException) {
+            // 5xx
+            Log.e(TAG, "Failed get data for $surfArea. 5xx-error. Cause: ${e.message}")
+            throw e
+        }
+        catch (e: Exception) {
+            Log.e(TAG, "Failed get data for $surfArea. Unknown error. Cause: ${e.message}")
             throw e
         }
 
