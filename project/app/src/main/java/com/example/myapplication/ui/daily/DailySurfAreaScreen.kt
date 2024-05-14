@@ -142,18 +142,14 @@ fun DailySurfAreaScreen(
                 LazyColumn(
                     modifier = Modifier
                         .padding(5.dp)
-                ) {//vent dette er feil, dette er jo bare for i dag, må fikses med onclick
-
-                    // [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]
+                ) {
                     if (surfAreaDataForDay.isNotEmpty()) {
                         items(times.size) { index ->
                             val time = times[index]
                             val hour = time.hour
                             val formattedHour = String.format("%02d", hour)
 
-                            // TODO: ?
                             val surfAreaDataForHour: DataAtTime? = surfAreaDataForDay[time]
-                            //henter objektet for timen som er en liste med Pair<List<Int>, Double>
 
                             val windSpeed = surfAreaDataForHour?.windSpeed ?: 0.0
                             val windGust = surfAreaDataForHour?.windGust ?: 0.0
@@ -165,18 +161,11 @@ fun DailySurfAreaScreen(
 
                             val wavePeriod = try {
                                 val waveIndex = times.indexOf(times.find { it.hour == hour})
-                                Log.d(
-                                    "DSVM",
-                                    "Got waveperiod ${dailySurfAreaScreenUiState.wavePeriods[waveIndex]} from hour $hour at index $waveIndex from ${dailySurfAreaScreenUiState.wavePeriods}"
-                                )
+
                                 dailySurfAreaScreenUiState.wavePeriods[waveIndex]
 
                             } catch (e: IndexOutOfBoundsException) {
-                                Log.d(
-                                    "DSAscreen",
-                                    "Waveperiods ${hour} out of bounds for waveperiods of size ${dailySurfAreaScreenUiState.wavePeriods.size}"
-                                )
-                                -1.0
+                                -1.0 //prints -- to indicate no waveperiod
                             }
 
                             val conditionStatus: ConditionStatus? = try {
