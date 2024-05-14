@@ -2,8 +2,8 @@ package com.example.myapplication.data.weatherforecast
 
 import com.example.myapplication.data.locationforecast.LocationForecastRepository
 import com.example.myapplication.data.locationforecast.LocationForecastRepositoryImpl
-import com.example.myapplication.data.oceanforecast.OceanforecastRepository
-import com.example.myapplication.data.oceanforecast.OceanforecastRepositoryImpl
+import com.example.myapplication.data.oceanforecast.OceanForecastRepository
+import com.example.myapplication.data.oceanforecast.OceanForecastRepositoryImpl
 import com.example.myapplication.data.waveforecast.WaveForecastRepository
 import com.example.myapplication.data.waveforecast.WaveForecastRepositoryImpl
 import com.example.myapplication.model.locationforecast.DataLF
@@ -38,7 +38,7 @@ interface WeatherForecastRepository {
 
 class WeatherForecastRepositoryImpl(
     private val waveForecastRepository: WaveForecastRepository = WaveForecastRepositoryImpl(),
-    private val oceanForecastRepository: OceanforecastRepository = OceanforecastRepositoryImpl(),
+    private val oceanForecastRepository: OceanForecastRepository = OceanForecastRepositoryImpl(),
     private val locationForecastRepository: LocationForecastRepository = LocationForecastRepositoryImpl(),
 ): WeatherForecastRepository {
 

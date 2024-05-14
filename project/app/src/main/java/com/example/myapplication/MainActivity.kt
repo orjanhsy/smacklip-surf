@@ -1,6 +1,5 @@
 package com.example.myapplication
 
-//import androidx.datastore.preferences.createDataStore
 
 import com.example.myapplication.ui.daily.DailySurfAreaScreen
 import android.os.Bundle
@@ -36,7 +35,6 @@ import com.example.myapplication.ui.surfarea.SurfAreaScreenViewModel
 import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.utils.NavigationManager
 import com.example.myapplication.utils.NetworkConnectivityObserver
-import com.example.myapplication.data.weatherforecast.WeatherForecastRepository
 
 
 class MainActivity : ComponentActivity() {
