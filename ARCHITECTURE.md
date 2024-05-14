@@ -73,7 +73,11 @@ API-et hentes gjennom en proxy hos IFI ved UIO.
 Vi bruker METs API MetAlerts på GeoJSON-format for å hente aktuelle farevarsel.
 API-et er hentet gjennom XXXXX grunnet trøbbel med proxy.
 
+#### Jetpack Compose
+Jetpack Compose er UI-vektøysett for å bygge brukergrensesnitt. Vi har benyttet compose for å bygge et dynamisk og responsivt grensesnitt i appen.
 
+#### Material3
+Metrial3 er nyeste versjonen av Material Design, designprinsipper utviklet av Google. Vi har benyttet Material3 komponenter, fargepaletter og ikoner.
 
 
 
