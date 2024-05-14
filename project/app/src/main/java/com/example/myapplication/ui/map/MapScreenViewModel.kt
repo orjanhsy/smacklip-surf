@@ -11,13 +11,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
 data class MapScreenUiState(
-    /*
-    val windSpeed: Map<SurfArea, List<Pair<List<Int>, Double>>> = emptyMap(),
-    val windGust: Map<SurfArea, List<Pair<List<Int>, Double>>> = emptyMap(),
-    val airTemperature: Map<SurfArea,List<Pair<List<Int>, Double>>> = emptyMap(),
-    val symbolCode: Map<SurfArea,List<Pair<List<Int>, String>>> = emptyMap(),
-    val waveHeight: Map<SurfArea, List<Pair<List<Int>, Double>>> = emptyMap(),
-     */
     val oflfNow : Map<SurfArea, DataAtTime> = emptyMap()
 )
 
@@ -26,6 +19,7 @@ class MapScreenViewModel(
     private val repo: Repository
 ) : ViewModel() {
 
+    //setter oflfnow til å data fra oceanforecast og locationforecast gjennom Repository
     val mapScreenUiState: StateFlow<MapScreenUiState> =
         repo.ofLfNext7Days.map{ oflf->
         val oflfNow: Map<SurfArea, DataAtTime> = oflf.next7Days.entries.associate {
