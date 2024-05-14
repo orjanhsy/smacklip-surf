@@ -610,7 +610,8 @@ private fun PreviewHomeScreen() {
         factory = viewModelFactory {
             HomeScreenViewModel(
                 SmackLipApplication.container.stateFulRepo,
-                SmackLipApplication.container.alertsRepo
+                SmackLipApplication.container.alertsRepo,
+                SmackLipApplication.container.settingsRepo
             )
         }
     )

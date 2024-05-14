@@ -28,7 +28,6 @@ import com.example.myapplication.presentation.viewModelFactory
 import com.example.myapplication.ui.home.HomeScreen
 import com.example.myapplication.ui.home.HomeScreenViewModel
 import com.example.myapplication.ui.info.InfoScreen
-import com.example.myapplication.ui.info.InfoScreenViewModel
 import com.example.myapplication.ui.map.MapScreen
 import com.example.myapplication.ui.map.MapScreenViewModel
 import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
@@ -107,7 +106,8 @@ fun SmackLipNavigation() {
         factory = viewModelFactory {
             HomeScreenViewModel(
                 SmackLipApplication.container.stateFulRepo,
-                SmackLipApplication.container.alertsRepo
+                SmackLipApplication.container.alertsRepo,
+                SmackLipApplication.container.settingsRepo
             )
         }
     )
