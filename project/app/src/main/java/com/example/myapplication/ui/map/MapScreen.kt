@@ -131,7 +131,7 @@ fun MapScreen(mapScreenViewModel : MapScreenViewModel, navController: NavControl
                     },
                     surfAreas = SurfArea.entries.toList(),
                     onZoomToLocation = { point -> rememberPoint.value = point },
-                    navController = navController
+                    onItemClick = {}
                 )
             }
         }
