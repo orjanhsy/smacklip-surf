@@ -39,8 +39,11 @@ Vi bruker API-nivå XXXXX. Dette er fordi XXXX.
 ### Verktøy
 
 #### Proto Data Store
-Vi bruker Proto Data Store til å generere filer som lagrer favorites og valg av theme slik at dette ikke forsvinner hver gang appen lukkes.
-
+Vi bruker Proto Data Store til å generere filer som lagrer favorites og valg av theme slik at dette ikke forsvinner hver gang appen lukkes. 
+Først har vi definert en protobuf-fil som lar oss definere strukturen til dataene og tillater generering av kode for serialisere og deserialisere effektivt. 
+Deretter bruker vi en settingsSerializer som sikrer effektiv og strukturert lagring av dataene fra protobuf. 
+Vi bruker SettingsRepository som en mellommann mellom grensesnittet til appen og Proto Data Store. Det er repository som henter, lagrer og behandler dataene fra Settings. 
+For å implementere Proto Data Store, har vi fulgt denne [dokumentasjonen](https://developer.android.com/topic/libraries/architecture/datastore). 
 #### Ktor
 Ktor brukes til å håndtere HTTP-forespørsler til de brukte API-ene. 
 ContentNegotiation brukes for å tillatte mottakelse av data på JSON-format. GSON er brukt til å deserialisere JSON-objekter til kotlink-klasser.
