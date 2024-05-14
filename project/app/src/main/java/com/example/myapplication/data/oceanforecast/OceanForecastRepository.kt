@@ -1,9 +1,11 @@
 package com.example.myapplication.data.oceanforecast
 
+import android.util.Log
 import com.example.myapplication.model.oceanforecast.DataOF
 import com.example.myapplication.model.oceanforecast.TimeserieOF
 import com.example.myapplication.model.surfareas.SurfArea
 
+private const val TAG = "OFREPO"
 interface OceanForecastRepository{
     suspend fun getTimeSeries(surfArea: SurfArea): List<Pair<String, DataOF>>
 }
@@ -13,11 +15,13 @@ class OceanForecastRepositoryImpl(
 ): OceanForecastRepository {
 
     override suspend fun getTimeSeries(surfArea: SurfArea): List<Pair<String, DataOF>> {
-        //gets list of timeseries objects, containing time and data
-        val timeSeries: List<TimeserieOF> = try { dataSource.fetchOceanforecast(surfArea).properties.timeseries }
+        //gets list of timeSeries objects, containing time and data
+        val timeSeries: List<TimeserieOF> = try {
+            dataSource.fetchOceanForecast(surfArea).properties.timeseries
+        }
         catch (e: Exception) {
-            // handles http exceptions from data source
-            listOf()
+            // does not handle errors differently
+            emptyList()
         }
 
         //returns a list of time mapped to data

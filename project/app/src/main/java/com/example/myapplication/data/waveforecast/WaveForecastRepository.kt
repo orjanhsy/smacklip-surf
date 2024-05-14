@@ -22,18 +22,19 @@ class WaveForecastRepositoryImpl(
         return coroutineScope {
             val mappedForecasts = SurfArea.entries.associateWith {
                 async {
-                    try {
-                        waveForecastDataSource.fetchNearestPointForecast(
-                            it.lat,
-                            it.lon
-                        )
-                    } catch (e: Exception) {
-                        emptyList()
-                    }
+                    waveForecastDataSource.fetchNearestPointForecast(
+                        it.lat,
+                        it.lon
+                    )
                 }
             }
-            val mappedForecastsByDay = mappedForecasts.entries.associate { (area, pointForecasts) ->
-                area to pointForecasts.await().groupBy {forecast ->
+            val mappedForecastsByDay = mappedForecasts.entries.associate { (area, pf) ->
+                val pointForecasts = try {
+                    pf.await()
+                } catch (e: Exception) {
+                    emptyList()
+                }
+                area to pointForecasts.groupBy {forecast ->
                     LocalDateTime.parse(forecast.forecastTime, dateFormatter).dayOfMonth
                 }.mapValues { (_, forecasts) ->
                     forecasts.flatMap { listOf(it.totalPeakPeriod, it.totalPeakPeriod, it.totalPeakPeriod) }
