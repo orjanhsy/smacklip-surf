@@ -1,6 +1,5 @@
 package com.example.myapplication.ui.daily
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -38,20 +37,20 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.R
 import com.example.myapplication.SmackLipApplication
 import com.example.myapplication.model.conditions.ConditionStatus
-import com.example.myapplication.model.weatherforecast.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
-import com.example.myapplication.utils.viewModelFactory
+import com.example.myapplication.model.weatherforecast.DataAtTime
 import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.surfarea.HeaderCard
 import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.ui.theme.AppTypography
 import com.example.myapplication.utils.RecourseUtils
+import com.example.myapplication.utils.viewModelFactory
 import java.time.LocalDateTime
 
 @SuppressLint("SuspiciousIndentation", "DefaultLocale")
@@ -112,9 +111,12 @@ fun DailySurfAreaScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 val currentTime = LocalDateTime.now()
-                val currentHour = LocalDateTime.now().hour
-                val formattedCurrentHour = String.format("%02d", currentHour)
+                val currentDay = currentTime.toLocalDate()
+                val currentHour = currentTime.hour
+
+
                 var headerIcon = "default_icon"
+                val headerTime: LocalDateTime
 
                 val surfAreaDataForDay: Map<LocalDateTime, DataAtTime> = dailySurfAreaScreenUiState.dataAtDay.data
 
@@ -126,18 +128,26 @@ fun DailySurfAreaScreen(
                     times = times.filter { it.hour >= currentHour }
                 }
 
-                if (surfAreaDataForDay.isNotEmpty()) {
-                    // siden mappet ikke er sortert henter vi ut alle aktuelle tidspunketer og sorterer dem
-                    for (time in times) {
-                        val hour = time.hour
-                        if (hour == formattedCurrentHour.toInt()) {
-                            headerIcon = surfAreaDataForDay[time]!!.symbolCode //TODO: !!
-                            break
-                        }
+                // icon for current hour for today
+                if (surfAreaDataForDay.isNotEmpty()){
+                    val timesForToday = times.filter {
+                        it.toLocalDate() == currentDay
                     }
+                    if (timesForToday.isNotEmpty()){
+                        headerTime = timesForToday.find { it.hour >= currentHour } ?: timesForToday.first()
+                        headerIcon = surfAreaDataForDay[headerTime]?.symbolCode ?: headerIcon
+                    // icon for time in the middle of the day for remaining days
+                    } else{
+                        val futureDaysMap = surfAreaDataForDay.keys.groupBy { it.toLocalDate() }
+                            .filterKeys { it.isAfter(currentDay) }
+                        val nextDayTimes = futureDaysMap.entries.firstOrNull()?.value?.sorted() ?: emptyList()
+                        // checking if more than 1 hour is remaining and then finding icon for middle hour
+                        headerTime = if (nextDayTimes.size > 1) nextDayTimes[nextDayTimes.size / 2] else nextDayTimes.firstOrNull() ?: currentTime
+                        headerIcon = surfAreaDataForDay[headerTime]?.symbolCode ?: headerIcon
+                    }
+                } else {
+                    headerTime = currentTime
                 }
-                val headerTime = try { times[0] }
-                catch (e: IndexOutOfBoundsException) { LocalDateTime.now() } // TODO: bedre catch?
 
                 HeaderCard(surfArea = surfArea, icon = headerIcon, headerTime)
                 LazyColumn(
