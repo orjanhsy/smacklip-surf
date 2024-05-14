@@ -35,6 +35,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -77,7 +80,9 @@ fun InfoScreen(infoScreenViewModel: InfoScreenViewModel, navController: NavContr
                             painter = painterResource(id = R.drawable.smacklip_logo),
                             contentDescription = "app logo",
                             contentScale = ContentScale.FillBounds,
-                            modifier = Modifier
+                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onTertiary),
+
+                                    modifier = Modifier
                                 .width(307.dp)
                                 .height(259.dp)
                                 .padding(16.dp)
