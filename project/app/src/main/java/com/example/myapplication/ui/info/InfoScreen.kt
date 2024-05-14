@@ -107,7 +107,7 @@ fun InfoScreen(infoScreenViewModel: InfoScreenViewModel, navController: NavContr
                             item {
                                 Card(
                                     modifier = Modifier
-                                        .width(265.dp)
+                                        .width(300.dp)
                                         .heightIn(min = 57.dp)
                                         .animateContentSize(),
                                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimary),
@@ -125,6 +125,8 @@ fun InfoScreen(infoScreenViewModel: InfoScreenViewModel, navController: NavContr
                                             style = AppTypography.titleMedium,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                                             modifier = Modifier.fillMaxWidth()
+                                                .padding(top = 4.dp)
+
                                         )
                                          IconButton(
                                              onClick = { expandedThemeCard = !expandedThemeCard },
@@ -146,11 +148,20 @@ fun InfoScreen(infoScreenViewModel: InfoScreenViewModel, navController: NavContr
                                                 modifier = Modifier
                                                     .fillMaxWidth()
                                                     .wrapContentHeight(),
-                                                horizontalArrangement = Arrangement.SpaceBetween
+                                                horizontalArrangement = Arrangement.Center
                                             ) {
-                                                Text(text = if (isDarkThemeEnabled) "Bytt til Light Mode " else "Bytt til Dark Mode")
+                                                Text(text = if (isDarkThemeEnabled) "Bytt til Light Mode " else "Bytt til Dark Mode",
+                                                    textAlign = TextAlign.Center,
+                                                )
+                                            }
+                                            Row(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .wrapContentHeight(),
+                                                horizontalArrangement = Arrangement.Center
+                                            ){
                                                 Switch(
-                                                    checked = isDarkThemeEnabled,
+                                                            checked = isDarkThemeEnabled,
                                                     onCheckedChange = { isChecked ->
                                                         infoScreenViewModel.updateTheme(if (isChecked) Settings.Theme.DARK else Settings.Theme.LIGHT)
                                                     }
@@ -197,7 +208,7 @@ fun InformationCard(title: String, content: String) {
     var expanded by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier
-            .width(265.dp)
+            .width(300.dp)
             .heightIn(min = 57.dp)
             .animateContentSize(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimary),
@@ -214,6 +225,7 @@ fun InformationCard(title: String, content: String) {
                 style = AppTypography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.fillMaxWidth()
+                    .padding(top=6.dp)
             )
             IconButton(
                 onClick = { expanded = !expanded },
@@ -234,6 +246,7 @@ fun InformationCard(title: String, content: String) {
                     text = content,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
                     modifier = Modifier.padding(top = 4.dp)
                 )
 
