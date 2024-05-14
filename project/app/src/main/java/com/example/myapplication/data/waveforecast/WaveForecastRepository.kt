@@ -28,8 +28,13 @@ class WaveForecastRepositoryImpl(
                     )
                 }
             }
-            val mappedForecastsByDay = mappedForecasts.entries.associate { (area, pointForecasts) ->
-                area to pointForecasts.await().groupBy {forecast ->
+            val mappedForecastsByDay = mappedForecasts.entries.associate { (area, pf) ->
+                val pointForecasts = try {
+                    pf.await()
+                } catch (e: Exception) {
+                    emptyList()
+                }
+                area to pointForecasts.groupBy {forecast ->
                     LocalDateTime.parse(forecast.forecastTime, dateFormatter).dayOfMonth
                 }.mapValues { (_, forecasts) ->
                     forecasts.flatMap { listOf(it.totalPeakPeriod, it.totalPeakPeriod, it.totalPeakPeriod) }
