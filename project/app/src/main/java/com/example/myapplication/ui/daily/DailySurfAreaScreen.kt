@@ -44,7 +44,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.R
 import com.example.myapplication.SmackLipApplication
 import com.example.myapplication.model.conditions.ConditionStatus
-import com.example.myapplication.model.smacklip.DataAtTime
+import com.example.myapplication.model.weatherforecast.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.utils.viewModelFactory
 import com.example.myapplication.ui.common.composables.BottomBar

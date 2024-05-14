@@ -3,7 +3,6 @@ package com.example.myapplication.utils
 
 import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.conditions.Conditions
-import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
 import kotlin.math.abs
 

@@ -1,4 +1,4 @@
-package com.example.myapplication.data.locationForecast
+package com.example.myapplication.data.locationforecast
 
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.locationforecast.DataLF

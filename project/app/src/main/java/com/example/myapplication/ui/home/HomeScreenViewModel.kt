@@ -7,9 +7,9 @@ import com.example.myapplication.R
 import com.example.myapplication.Settings
 import com.example.myapplication.SmackLipApplication.Companion.container
 import com.example.myapplication.data.metalerts.MetAlertsRepository
-import com.example.myapplication.data.weatherForecast.WeatherForecastRepository
+import com.example.myapplication.data.weatherforecast.WeatherForecastRepository
 import com.example.myapplication.model.metalerts.Alert
-import com.example.myapplication.model.smacklip.DataAtTime
+import com.example.myapplication.model.weatherforecast.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

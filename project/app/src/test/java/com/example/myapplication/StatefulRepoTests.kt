@@ -1,7 +1,7 @@
 package com.example.myapplication
 
-import com.example.myapplication.data.weatherForecast.WeatherForecastRepository
-import com.example.myapplication.data.weatherForecast.WeatherForecastRepositoryImpl
+import com.example.myapplication.data.weatherforecast.WeatherForecastRepository
+import com.example.myapplication.data.weatherforecast.WeatherForecastRepositoryImpl
 import com.example.myapplication.data.waveforecast.WaveForecastRepositoryImpl
 import com.example.myapplication.model.surfareas.SurfArea
 import kotlinx.coroutines.runBlocking

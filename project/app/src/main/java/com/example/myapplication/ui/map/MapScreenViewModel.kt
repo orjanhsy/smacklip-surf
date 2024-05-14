@@ -2,8 +2,8 @@ package com.example.myapplication.ui.map
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapplication.data.weatherForecast.WeatherForecastRepository
-import com.example.myapplication.model.smacklip.DataAtTime
+import com.example.myapplication.data.weatherforecast.WeatherForecastRepository
+import com.example.myapplication.model.weatherforecast.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

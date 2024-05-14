@@ -75,7 +75,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.R
 import com.example.myapplication.SmackLipApplication
 import com.example.myapplication.model.metalerts.Alert
-import com.example.myapplication.model.smacklip.DataAtTime
+import com.example.myapplication.model.weatherforecast.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.utils.viewModelFactory
 import com.example.myapplication.ui.common.composables.BottomBar
