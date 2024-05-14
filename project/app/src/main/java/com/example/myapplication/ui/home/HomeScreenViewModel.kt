@@ -47,10 +47,15 @@ class HomeScreenViewModel(
     val homeScreenUiState: StateFlow<HomeScreenUiState> = combine(
         forecastRepo.ofLfForecast,
         alertsRepo.alerts
-    ) { ofLf, alerts ->
-        val ofLfNow: Map<SurfArea, DataAtTime> = ofLf.next7Days.entries.associate { (sa, forecast) ->
-            sa to forecast.forecast[0].data.entries.sortedBy {timeToData -> timeToData.key.hour }[0].value
+    ) { oflf, alerts ->
+        val oflfNow: Map<SurfArea, DataAtTime> = try {
+            oflf.next7Days.entries.associate {
+                it.key to it.value.forecast[0].data.entries.sortedBy {timeToData -> timeToData.key.hour }[0].value
+            }
+        } catch (e: IndexOutOfBoundsException) {
+            mapOf()
         }
+
         val allRelevantAlerts: Map<SurfArea, List<Alert>> = alerts
         HomeScreenUiState(
             ofLfNow = ofLfNow,
