@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
 
-//kilde - lik som oblig2 agneshb
 interface ConnectivityObserver {
     fun observe(): Flow<Boolean>
 
