@@ -1,7 +1,6 @@
-package com.example.myapplication
+package no.uio.ifi.in2000.team8
 
 import com.example.myapplication.data.metalerts.MetAlertsDataSource
-import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 

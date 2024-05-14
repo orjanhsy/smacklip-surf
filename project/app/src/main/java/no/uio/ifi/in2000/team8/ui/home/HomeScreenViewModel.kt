@@ -1,5 +1,4 @@
 package com.example.myapplication.ui.home
-
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,6 +18,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import no.uio.ifi.in2000.team8.R
 
 data class HomeScreenUiState(
     val ofLfNow: Map<SurfArea, DataAtTime> = mapOf(),

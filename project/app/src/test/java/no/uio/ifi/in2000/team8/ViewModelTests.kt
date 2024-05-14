@@ -1,14 +1,4 @@
-package com.example.myapplication
-
-import com.example.myapplication.model.surfareas.SurfArea
-import com.example.myapplication.ui.surfarea.SurfAreaScreenViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.advanceUntilIdle
-import kotlinx.coroutines.test.runBlockingTest
-import org.junit.Test
-import java.lang.Thread.yield
+package no.uio.ifi.in2000.team8
 
 //class ViewModelTests {
 //
