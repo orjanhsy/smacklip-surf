@@ -2,12 +2,11 @@ package com.example.myapplication.data.waveforecast
 
 import android.util.Log
 import com.example.myapplication.data.config.Client
-import com.example.myapplication.data.utils.HTTPServiceHandler.WF_ACCESS_TOKEN_URL
-import com.example.myapplication.data.utils.HTTPServiceHandler.WF_BASE_URL
-import com.example.myapplication.data.utils.HTTPServiceHandler.WF_CLOSEST_ALL_TIME_URL
+import com.example.myapplication.utils.HTTPServiceHandler.WF_ACCESS_TOKEN_URL
+import com.example.myapplication.utils.HTTPServiceHandler.WF_BASE_URL
+import com.example.myapplication.utils.HTTPServiceHandler.WF_CLOSEST_ALL_TIME_URL
 import com.example.myapplication.model.waveforecast.AccessToken
 import com.example.myapplication.model.waveforecast.NewPointForecast
-import com.mapbox.common.MapboxOptions.accessToken
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.DefaultRequest

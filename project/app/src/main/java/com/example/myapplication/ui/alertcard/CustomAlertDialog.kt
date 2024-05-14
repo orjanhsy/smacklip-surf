@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.AlertCard
+package com.example.myapplication.ui.alertcard
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState

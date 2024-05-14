@@ -9,8 +9,8 @@ import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
 import com.example.myapplication.data.settings.SettingsRepository
 import com.example.myapplication.data.settings.SettingsRepositoryImpl
 import com.example.myapplication.data.settings.SettingsSerializer
-import com.example.myapplication.data.weatherForecast.WeatherForecastRepository
-import com.example.myapplication.data.weatherForecast.WeatherForecastRepositoryImpl
+import com.example.myapplication.data.weatherforecast.WeatherForecastRepository
+import com.example.myapplication.data.weatherforecast.WeatherForecastRepositoryImpl
 import com.example.myapplication.ui.info.InfoScreenViewModel
 
 

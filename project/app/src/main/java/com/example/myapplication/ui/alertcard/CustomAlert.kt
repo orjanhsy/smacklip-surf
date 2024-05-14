@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.AlertCard
+package com.example.myapplication.ui.alertcard
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
