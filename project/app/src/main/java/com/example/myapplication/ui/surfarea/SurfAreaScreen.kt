@@ -203,7 +203,6 @@ fun SurfAreaScreen(
                 LazyRow(
                     modifier = Modifier.padding(5.dp)
                 ) {
-                    if (surfAreaScreenUiState.forecastNext7Days.forecast.isNotEmpty()) {
                         val today = LocalDateTime.now()
 
                         items(surfAreaScreenUiState.forecastNext7Days.forecast.size) { dayIndex ->
@@ -235,18 +234,6 @@ fun SurfAreaScreen(
                                 navController
                             )
                         }
-                    } else {
-                        items(6) { dayIndex ->
-                            DayPreviewCard(
-                                surfArea,
-                                "man",
-                                Pair("0.2", "1.3"),
-                                ConditionStatus.BLANK,
-                                LocalDateTime.now(),
-                                null
-                            )
-                        }
-                    }
                 }
             }
             item {
@@ -269,8 +256,6 @@ fun SurfAreaScreen(
                     showAlert = false
                 })
         }
-        //ProgressIndicator(isDisplayed = surfAreaScreenUiState.loading)
-        // ProgressIndicator(isDisplayed = surfAreaScreenUiState.loading)
     }
 }
 

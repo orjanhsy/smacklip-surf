@@ -148,10 +148,9 @@ fun DailySurfAreaScreen(
                 LazyColumn(
                     modifier = Modifier
                         .padding(5.dp)
-                ) {//vent dette er feil, dette er jo bare for i dag, må fikses med onclick
+                ) {
 
                     // [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]
-                    if (surfAreaDataForDay.isNotEmpty()) {
                         items(times.size) { index ->
                             val time = times[index]
                             val hour = time.hour
@@ -205,11 +204,6 @@ fun DailySurfAreaScreen(
                                 conditionStatus = conditionStatus
                             )
                         }
-                    } else {
-                        item(1) {
-                            AllInfoCard(surfArea = surfArea)
-                        }
-                    }
                 }
 
             }
