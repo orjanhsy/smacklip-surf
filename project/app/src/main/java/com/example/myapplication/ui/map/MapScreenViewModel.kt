@@ -16,12 +16,12 @@ data class MapScreenUiState(
 
 
 class MapScreenViewModel(
-    private val repo: WeatherForecastRepository
+    private val weatherForecastRepository: WeatherForecastRepository
 ) : ViewModel() {
 
-    //setter oflfnow til å data fra oceanforecast og locationforecast gjennom Repository
+    //add data from weatherForecastRepository to oflfnow
     val mapScreenUiState: StateFlow<MapScreenUiState> =
-        repo.ofLfNext7Days.map{ oflf->
+        weatherForecastRepository.ofLfNext7Days.map{ oflf->
         val oflfNow: Map<SurfArea, DataAtTime> = oflf.next7Days.entries.associate {
             it.key to it.value.forecast[0].data.entries.sortedBy {timeToData -> timeToData.key.hour }[0].value
         }

@@ -37,7 +37,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -146,6 +145,7 @@ fun MapBoxMap(
     navController: NavController,
     rememberPoint: MutableState<Point?>
 ) {
+    val mapUtils = MapUtils()
     val startPosition = Point.fromLngLat(13.0, 65.1) //koordinater for startpunktet i kartet - omtrent midt i Norge
     val context = LocalContext.current
     val marker = remember(context) {
@@ -201,7 +201,7 @@ fun MapBoxMap(
 
                         try {
                             val loc = locations.first { location ->
-                                isMatchingCoordinates(
+                                mapUtils.isMatchingCoordinates(
                                     location.second,
                                     clickedPoint
                                 )
@@ -239,13 +239,6 @@ fun MapBoxMap(
     }
 }
 
-//TODO: må hoistes?
-//hjelpemetode for å sjekke at to koordinater er tilnærmet like ved bruk av verdien threshold
-fun isMatchingCoordinates(point1: Point, point2: Point): Boolean {
-    val threshold = 0.001
-    return kotlin.math.abs(point1.latitude() - point2.latitude()) <= threshold &&
-            kotlin.math.abs(point1.longitude() - point2.longitude()) <= threshold
-}
 
 
 @Composable
