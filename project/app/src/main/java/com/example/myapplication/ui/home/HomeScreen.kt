@@ -111,6 +111,7 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel, navController: NavContr
                 onActiveChanged = { isActive ->
                     isSearchActive.value = isActive
                 },
+                resultsColor = MaterialTheme.colorScheme.background,
                 surfAreas = SurfArea.entries.toList(),
                 onItemClick = { surfArea ->
                     navController.navigate("SurfAreaScreen/${surfArea.locationName}")

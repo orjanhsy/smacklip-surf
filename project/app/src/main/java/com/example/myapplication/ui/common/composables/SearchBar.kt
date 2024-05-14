@@ -56,6 +56,7 @@ fun SearchBar(
     isSearchActive: Boolean,
     onActiveChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
+    resultsColor: Color = Color.White,
     onSearch: ((String) -> Unit)? = null,
     onZoomToLocation: ((Point) -> Unit)? = null,
     onItemClick: (SurfArea) -> Unit
@@ -142,6 +143,7 @@ fun SearchBar(
             LazyColumn(
                 modifier = Modifier
                     .padding(start = 12.dp, top = 0.dp, end = 12.dp, bottom = 12.dp)
+                    .background(resultsColor)
                     .fillMaxWidth(),
                 contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
             ) {
