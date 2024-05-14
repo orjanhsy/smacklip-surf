@@ -79,6 +79,7 @@ import com.example.myapplication.model.weatherforecast.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.utils.viewModelFactory
 import com.example.myapplication.ui.common.composables.BottomBar
+import com.example.myapplication.ui.common.composables.SearchBar
 import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.ui.theme.AppTypography
 
@@ -169,126 +170,6 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel, navController: NavContr
                 // ProgressIndicator(isDisplayed = homeScreenUiState.loading)
 
             }
-        }
-    }
-}
-
-@OptIn(ExperimentalComposeUiApi::class)
-@Composable
-fun SearchBar(
-    surfAreas: List<SurfArea>,
-    onQueryChange: (String) -> Unit,
-    isSearchActive: Boolean,
-    onActiveChanged: (Boolean) -> Unit,
-    modifier: Modifier = Modifier,
-    onSearch: ((String) -> Unit)? = null,
-    navController: NavController
-) {
-    var searchQuery by remember { mutableStateOf("") }
-    var expanded by remember { mutableStateOf(false) }
-    val keyboardController = LocalSoftwareKeyboardController.current
-    val focusManager = LocalFocusManager.current
-
-    val activeChanged: (Boolean) -> Unit = { active ->
-        if (!active) {
-            searchQuery = ""
-            onQueryChange("")
-        }
-        onActiveChanged(active)
-    }
-
-    Column(modifier = modifier) {
-        OutlinedTextField(
-            modifier = modifier
-                .padding(12.dp)
-                .height(56.dp)
-                .background(color = MaterialTheme.colorScheme.onPrimary, shape = RoundedCornerShape(50.dp))
-                .fillMaxWidth(),
-            shape = CircleShape,
-            value = searchQuery,
-            onValueChange = { query ->
-                searchQuery = query
-                onQueryChange(query)
-                activeChanged(true)
-                expanded = true
-            },
-            placeholder = { Text(text="Søk etter surfeområde", style = AppTypography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Rounded.Search,
-                    contentDescription = "Search icon",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            },
-            trailingIcon = {
-                if (isSearchActive) {
-                    IconButton(
-                        onClick = {
-                            searchQuery = ""
-                            onQueryChange("")
-                            onActiveChanged(false)
-                            focusManager.clearFocus()
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Clear,
-                            contentDescription = "Clear searchbar"
-                        )
-                    }
-                }
-            },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions.Default.copy(
-                imeAction = ImeAction.Search
-            ),
-            keyboardActions = KeyboardActions(
-                onSearch = {
-                    onSearch?.invoke(searchQuery)
-                    activeChanged(false)
-                    keyboardController?.hide()
-                    focusManager.clearFocus()
-                }
-            )
-        )
-        val filteredSurfAreas =
-            surfAreas.filter { it.locationName.contains(searchQuery, ignoreCase = true) }
-
-        if (expanded && searchQuery.isNotEmpty() && filteredSurfAreas.isNotEmpty()) {
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth(),
-                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
-            ) {
-                items(filteredSurfAreas) { surfArea ->
-                    Column(modifier = Modifier.clickable {
-                        navController.navigate("SurfAreaScreen/${surfArea.locationName}")
-                    }) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .padding(vertical = 8.dp)
-                        ) {
-                            Text(
-                                text = surfArea.locationName,
-                                style = AppTypography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier.weight(1f)
-                            )
-                            Spacer(modifier = Modifier.width(12.dp))
-                            Image(
-                                painter = painterResource(id = surfArea.image),
-                                contentDescription = "SurfArea image",
-                                modifier = Modifier.size(48.dp),
-                                contentScale = ContentScale.Crop,
-                                alignment = Alignment.CenterEnd
-                            )
-                        }
-                        Divider(modifier = Modifier.padding(horizontal = 12.dp))
-                    }
-                }
-            }
-            /* if (searchQuery.isNotEmpty() && filteredSurfAreas.isEmpty() && expanded) {
-            Text("Ingen samsvarende resultater")
-        } */
         }
     }
 }
