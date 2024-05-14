@@ -175,15 +175,15 @@ fun SurfAreaScreen(
                     mapOf()
                 }
 
-                val currentHour =
-                    LocalTime.now().hour
+                val currentTime = LocalDateTime.now()
+                val currentHour = currentTime.hour
                 var headerIcon = ""
 
                 if (surfAreaDataForDay.isNotEmpty()) {
 
-                    val times = surfAreaDataForDay.keys.sortedWith(
-                        compareBy<LocalDateTime> { it.month }.thenBy { it.dayOfMonth }
-                    )
+                    val times = surfAreaDataForDay.keys
+                        .filter {it.isAfter(currentTime) || it.isEqual(currentTime)}
+                        .sortedWith(compareBy<LocalDateTime> { it.month }.thenBy { it.dayOfMonth })
 
                     for (time in times) {
                         val hour = time.hour
