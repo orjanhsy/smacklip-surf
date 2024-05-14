@@ -1,8 +1,6 @@
 package com.example.myapplication.ui.map
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,20 +15,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.outlined.Air
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Tsunami
-import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -39,8 +30,6 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -56,12 +45,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -74,6 +60,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.R
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.common.composables.BottomBar
+import com.example.myapplication.ui.common.composables.SearchBar
 import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.ui.theme.AppTypography
 import com.example.myapplication.ui.theme.onSurfaceVariantLight
@@ -93,6 +80,15 @@ import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 //MapScreen er der selve skjermen lages, inkludert bottombar, kartet og searchbar på toppen
 //MapScreen-method is where the screen itself is created, including the bottom bar,
 // the map, and the search bar at the top.
+
+/*
+The search bar at the top of the map screen gives the user the ability to search for
+surf area. By pressing a location in the search bar, the map camera moves to the desired
+location. This is achieved using the parameter "onZoomToLocation," which is a lambda function.
+There is no functionality to move the camera in the SearchBar-method itself which
+adheres to object-oriented principles.
+ */
+
 @Composable
 fun MapScreen(mapScreenViewModel : MapScreenViewModel, navController: NavController) {
 
@@ -126,13 +122,15 @@ fun MapScreen(mapScreenViewModel : MapScreenViewModel, navController: NavControl
                 )
                 //the search bar
                 SearchBar(
+                    surfAreas = SurfArea.entries.toList(),
                     onQueryChange = {},
                     isSearchActive = isSearchActive.value,
                     onActiveChanged = { isActive ->
                         isSearchActive.value = isActive
                     },
-                    surfAreas = SurfArea.entries.toList(),
+                    resultsColor = Color.White,
                     onZoomToLocation = { point -> rememberPoint.value = point },
+                    onItemClick = {}
                 )
             }
         }
@@ -407,143 +405,6 @@ fun SurfAreaCard(
     }
 }
 
-
-/*
-The search bar at the top of the map screen gives the user the ability to search for
-surf area. By pressing a location in the search bar, the map camera moves to the desired
-location. This is achieved using the parameter "onZoomToLocation," which is a lambda function.
-There is no functionality to move the camera in the SearchBar-method itself which
-adheres to object-oriented principles.
- */
-@Composable
-fun SearchBar(
-    surfAreas: List<SurfArea>,
-    onQueryChange: (String) -> Unit,
-    isSearchActive: Boolean,
-    onActiveChanged: (Boolean) -> Unit,
-    modifier: Modifier = Modifier,
-    onSearch: ((String) -> Unit)? = null,
-    onZoomToLocation: (Point) -> Unit
-) {
-    var searchQuery by remember { mutableStateOf("") }
-    var expanded by remember { mutableStateOf(false) }
-    val keyboardController = LocalSoftwareKeyboardController.current
-    val focusManager = LocalFocusManager.current
-
-    val activeChanged: (Boolean) -> Unit = { active ->
-        if (!active) {
-            searchQuery = ""
-            onQueryChange("")
-        }
-        onActiveChanged(active)
-    }
-
-    Column(modifier = modifier.clip(RoundedCornerShape(50.dp))) {
-        OutlinedTextField(
-            modifier = modifier
-                .padding(12.dp)
-                .fillMaxWidth()
-                .background(color = Color.Transparent),
-            shape = CircleShape,
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = MaterialTheme.colorScheme.surface,
-                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
-                disabledContainerColor = MaterialTheme.colorScheme.surface,
-                cursorColor = MaterialTheme.colorScheme.onBackground,
-                focusedBorderColor = Color.Gray,
-                unfocusedBorderColor = Color.Gray,
-            ),
-            value = searchQuery,
-            onValueChange = { query ->
-                searchQuery = query
-                onQueryChange(query)
-                activeChanged(true)
-                expanded = true
-            },
-            placeholder = { Text("Søk etter surfeområde", style = AppTypography.titleMedium) },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Rounded.Search,
-                    contentDescription = "Search icon",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            },
-            trailingIcon = {
-                if (isSearchActive) {
-                    IconButton(
-                        onClick = {
-                            searchQuery = ""
-                            onQueryChange("")
-                            onActiveChanged(false)
-                            focusManager.clearFocus()
-                            keyboardController?.hide()
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Clear,
-                            contentDescription = "Clear searchbar"
-                        )
-                    }
-                }
-            },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions.Default.copy(
-                imeAction = ImeAction.Search
-            ),
-            keyboardActions = KeyboardActions(
-                onSearch = {
-                    onSearch?.invoke(searchQuery)
-                    activeChanged(false)
-                    keyboardController?.hide()
-                    focusManager.clearFocus()
-                }
-            )
-        )
-        //show available locations matching the user input
-        val filteredSurfAreas =
-            surfAreas.filter { it.locationName.startsWith(searchQuery, ignoreCase = true) }
-
-        if (expanded && searchQuery.isNotEmpty() && filteredSurfAreas.isNotEmpty()) {
-            LazyColumn(
-                modifier = Modifier
-                    .padding(start = 12.dp, top = 0.dp, end = 12.dp, bottom = 12.dp)
-                    .background(Color.White),
-                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
-            ) {
-                items(filteredSurfAreas) { surfArea ->
-                    Column(modifier = Modifier.clickable {
-                        searchQuery = ""
-                        onQueryChange("")
-                        onActiveChanged(false)
-                        focusManager.clearFocus()
-                        keyboardController?.hide()
-                        onZoomToLocation(Point.fromLngLat(surfArea.lon, surfArea.lat)) //send the coordinates as argument to onZoomToLocation
-                    }) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .padding(vertical = 8.dp)
-                        ) {
-                            Text(
-                                text = surfArea.locationName,
-                                modifier = Modifier.weight(1f)
-                            )
-                            Spacer(modifier = Modifier.width(12.dp))
-                            Image(
-                                painter = painterResource(id = surfArea.image),
-                                contentDescription = "SurfArea image",
-                                modifier = Modifier.size(48.dp),
-                                contentScale = ContentScale.Crop,
-                                alignment = Alignment.CenterEnd
-                            )
-                        }
-                        Divider(modifier = Modifier.padding(horizontal = 12.dp))
-                    }
-                }
-            }
-        }
-    }
-}
 
 @Preview
 @Composable
