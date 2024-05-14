@@ -1,4 +1,4 @@
-
+package com.example.myapplication.ui.daily
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -48,7 +48,6 @@ import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.utils.viewModelFactory
 import com.example.myapplication.ui.common.composables.BottomBar
-import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
 import com.example.myapplication.ui.surfarea.HeaderCard
 import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.ui.theme.AppTypography

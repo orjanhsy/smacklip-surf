@@ -2,7 +2,7 @@ package com.example.myapplication
 
 //import androidx.datastore.preferences.createDataStore
 
-import DailySurfAreaScreen
+import com.example.myapplication.ui.daily.DailySurfAreaScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -30,7 +30,7 @@ import com.example.myapplication.ui.home.HomeScreenViewModel
 import com.example.myapplication.ui.info.InfoScreen
 import com.example.myapplication.ui.map.MapScreen
 import com.example.myapplication.ui.map.MapScreenViewModel
-import com.example.myapplication.ui.surfarea.DailySurfAreaScreenViewModel
+import com.example.myapplication.ui.daily.DailySurfAreaScreenViewModel
 import com.example.myapplication.ui.surfarea.SurfAreaScreen
 import com.example.myapplication.ui.surfarea.SurfAreaScreenViewModel
 import com.example.myapplication.ui.theme.AppTheme
