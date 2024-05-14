@@ -9,8 +9,11 @@ import com.example.myapplication.model.waveforecast.AccessToken
 import com.example.myapplication.model.waveforecast.NewPointForecast
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.HttpRequestRetry
+import io.ktor.client.plugins.RedirectResponseException
+import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.client.plugins.auth.*
@@ -21,9 +24,6 @@ import io.ktor.serialization.gson.gson
 
 private const val TAG = "WFDS"
 
-/* TODO:
-create a way to refresh tokens (redirect?), bw do not provide refresh-tokens
- */
 class WaveForecastDataSource {
 
     private val tokenClient = HttpClient {
@@ -79,8 +79,24 @@ class WaveForecastDataSource {
         return try {
             val response = client.get("$WF_CLOSEST_ALL_TIME_URL?x=$lon&y=$lat")
             response.body()
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to fetch point forecast at $lat, $lon. Cause: ${e.message}")
+        }
+        catch(e: RedirectResponseException) {
+            // 3xx
+            Log.e(TAG, "Failed to fetch point forecast at $lat, $lon. 3xx-error. Cause: ${e.message}")
+            throw e
+        }
+        catch (e: ClientRequestException) {
+            // 4xx
+            Log.e(TAG, "Failed to fetch point forecast at $lat, $lon. 4xx-error. Cause: ${e.message}")
+            throw e
+        }
+        catch(e: ServerResponseException) {
+            // 5xx
+            Log.e(TAG, "Failed to fetch point forecast at $lat, $lon. 5xx-error. Cause: ${e.message}")
+            throw e
+        }
+        catch (e: Exception) {
+            Log.e(TAG, "Failed to fetch point forecast at $lat, $lon. Unknown error. Cause: ${e.message}")
             throw e
         }
     }
@@ -100,7 +116,7 @@ class WaveForecastDataSource {
                 setBody(requestBody.formUrlEncode())
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Access token not acquiered. Cause: ${e.message}")
+            Log.e(TAG, "Could not acquire accessToken. Cause: ${e.stackTrace}")
             throw e
         }
         return Pair(accessToken.body<AccessToken>().accessToken, accessToken.body<AccessToken>().refreshToken)
