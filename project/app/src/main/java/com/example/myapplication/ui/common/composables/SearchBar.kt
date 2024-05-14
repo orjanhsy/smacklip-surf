@@ -142,7 +142,6 @@ fun SearchBar(
             LazyColumn(
                 modifier = Modifier
                     .padding(start = 12.dp, top = 0.dp, end = 12.dp, bottom = 12.dp)
-                    .background(Color.White)
                     .fillMaxWidth(),
                 contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
             ) {
@@ -176,7 +175,7 @@ fun SearchBar(
                                 alignment = Alignment.CenterEnd
                             )
                         }
-                        Divider(modifier = Modifier.padding(horizontal = 12.dp))
+                        Divider(modifier = Modifier.padding(horizontal = 12.dp), color = Color.Gray)
                     }
                 }
             }
