@@ -70,7 +70,7 @@ fun DailySurfAreaScreen(
 
     val dailySurfAreaScreenUiState by dailySurfAreaScreenViewModel.dailySurfAreaScreenUiState.collectAsState()
 
-    //update day in focus WeatherForecastRepository
+    //update dayInFocus in WeatherForecastRepository
     if (dayOfMonth != SmackLipApplication.container.stateFulRepo.dayInFocus.collectAsState().value) {
         dailySurfAreaScreenViewModel.updateDayInFocus(dayOfMonth)
     }
