@@ -1,9 +1,9 @@
-package com.example.myapplication.presentation
+package com.example.myapplication.utils
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.ViewModelInitializer
 
+// use to instantiate viewModels with parameters
 fun <VM: ViewModel> viewModelFactory(initializer: () -> VM): ViewModelProvider.Factory {
     return object: ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

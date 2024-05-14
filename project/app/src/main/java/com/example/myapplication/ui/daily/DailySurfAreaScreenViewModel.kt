@@ -1,12 +1,12 @@
-package com.example.myapplication.ui.surfarea
+package com.example.myapplication.ui.daily
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapplication.data.smackLip.Repository
+import com.example.myapplication.data.weatherforecast.WeatherForecastRepository
 import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.metalerts.Alert
-import com.example.myapplication.model.smacklip.DayForecast
+import com.example.myapplication.model.weatherforecast.DayForecast
 import com.example.myapplication.utils.ConditionUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,14 +24,14 @@ data class DailySurfAreaScreenUiState(
 )
 
 class DailySurfAreaScreenViewModel(
-    val repo: Repository
+    private val forecastRepo: WeatherForecastRepository
 ): ViewModel() {
 
     val dailySurfAreaScreenUiState: StateFlow<DailySurfAreaScreenUiState> = combine(
-        repo.ofLfNext7Days,
-        repo.wavePeriods,
-        repo.areaInFocus,
-        repo.dayInFocus
+        forecastRepo.ofLfNext7Days,
+        forecastRepo.wavePeriods,
+        forecastRepo.areaInFocus,
+        forecastRepo.dayInFocus
     ) { oflf, wavePeriods, sa, day ->
         val today = LocalDateTime.now().dayOfMonth
 
@@ -78,7 +78,7 @@ class DailySurfAreaScreenViewModel(
 
     fun updateDayInFocus(day: Int) {
         viewModelScope.launch(Dispatchers.Default) {
-            repo.updateDayInFocus(day)
+            forecastRepo.updateDayInFocus(day)
         }
     }
 

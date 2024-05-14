@@ -3,12 +3,12 @@ package com.example.myapplication.utils
 
 import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.conditions.Conditions
-import com.example.myapplication.model.smacklip.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
 import kotlin.math.abs
 
 class ConditionUtils {
 
+    // measures conditionStatus as the mean "value" of conditions
      fun getConditionStatus(
         location: SurfArea?,
         wavePeriod: Double?,
@@ -17,10 +17,13 @@ class ConditionUtils {
         waveHeight: Double,
         waveDir: Double,
     ): ConditionStatus {
+
+         // does not report conditionStatus when wavePeriods are not forecast
         if (wavePeriod == null || location == null) {
             return ConditionStatus.BLANK
         }
 
+        // always poor if:
         if (wavePeriod <= Conditions.WAVE_PERIOD_LOWER_BOUND.value || windSpeed >= Conditions.WIND_SPEED_UPPER_BOUND.value ||
             waveHeight <= Conditions.WAVE_HEIGHT_LOWER_BOUND.value || waveHeight >= Conditions.WAVE_HEIGHT_UPPER_BOUND.value
         ) {
@@ -63,7 +66,7 @@ class ConditionUtils {
             else -> ConditionStatus.POOR
         }
     }
-
+    
     private fun withinDir(optimalDir: Double, actualDir: Double, acceptedOffset: Double): Boolean {
 
         return abs(optimalDir - actualDir) !in acceptedOffset .. 360 - acceptedOffset

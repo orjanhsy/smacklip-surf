@@ -1,12 +1,12 @@
 package com.example.myapplication.ui.surfarea
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapplication.data.smackLip.Repository
+import com.example.myapplication.data.metalerts.MetAlertsRepository
+import com.example.myapplication.data.weatherforecast.WeatherForecastRepository
 import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.metalerts.Alert
-import com.example.myapplication.model.smacklip.Forecast7DaysOFLF
+import com.example.myapplication.model.weatherforecast.Forecast7DaysOFLF
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.utils.ConditionUtils
 import kotlinx.coroutines.Dispatchers
@@ -27,15 +27,16 @@ data class SurfAreaScreenUiState(
 
 
 class SurfAreaScreenViewModel(
-    private val repo: Repository
+    private val forecastRepo: WeatherForecastRepository,
+    private val alertsRepo: MetAlertsRepository
 ): ViewModel() {
 
     val surfAreaScreenUiState: StateFlow<SurfAreaScreenUiState> = combine(
-        repo.ofLfNext7Days,
-        repo.alerts,
-        repo.wavePeriods,
-        repo.areaInFocus
-    ) { oflf, alerts, wavePeriods, sa ->
+        forecastRepo.ofLfNext7Days,
+        forecastRepo.wavePeriods,
+        forecastRepo.areaInFocus,
+        alertsRepo.alerts
+    ) { oflf, wavePeriods, sa, alerts ->
 
         // gets forecast data and alerts relevant to certain surf area
         val newOfLf: Forecast7DaysOFLF = oflf.next7Days[sa] ?: Forecast7DaysOFLF()
@@ -90,7 +91,7 @@ class SurfAreaScreenViewModel(
 
     fun updateLocation(surfArea: SurfArea) {
         viewModelScope.launch(Dispatchers.IO){
-            repo.updateAreaInFocus(surfArea)
+            forecastRepo.updateAreaInFocus(surfArea)
         }
     }
 

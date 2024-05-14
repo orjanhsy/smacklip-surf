@@ -38,22 +38,23 @@ sequenceDiagram
     else Tilkoblet til Internett
     App->>App: Laster Splash Screen
         App->>App: Sjekker for tilkobling til Internett
-        App->>Repository: Henter data fra Repository
+        App->>ViewModel: Opretter ViewModel
+        ViewModel->>Repository: Oppdaterer data fra Repository
         Repository->>API: Henter data fra API
         API-->>Repository: Sender data
         Repository-->>ViewModel: Oppdaterer ViewModel
         ViewModel -->>App: Oppdaterer state
         App->>User: Viser HomeScreen
         User->>App: Velger ett surf location card fra listen
-        App ->>ViewModel: Oppdaterer viewmodel
-        ViewModel->>Repository: "Lytter"
-        Repository-->>ViewModel: Oppdaterer ViewModel
+        App ->>ViewModel: Gir beskjed til viewmodel
+        ViewModel->>Repository: Oppdater 'areaInFocus'
+        Repository-->>ViewModel: Sender state til ViewModel
         ViewModel -->>App: Oppdaterer state
         App->>User: Viser AreaScreen med lokasjonsdetaljer
         User->>App: Trykker på en dag
-        App ->>ViewModel: Oppdaterer viewmodel
-        ViewModel->>Repository: "Lytter"
-        Repository-->>ViewModel: Oppdaterer ViewModel
+        App ->>ViewModel: Gir beskjed til viewmodel
+        ViewModel->>Repository: Oppdaterer 'dayInFocus'
+        Repository-->>ViewModel: Sender state til ViewModel
         ViewModel -->>App: Oppdaterer state
         App->>User: Viser TodayScreen med prognose time for time
     end
@@ -116,7 +117,8 @@ sequenceDiagram
         App->User: Viser popup med melding om å koble til Internett
     else Tilkoblet til Internett
     App->>App: Laster Splash Screen
-         App->>Repository: Henter data fra Repository
+        App->>ViewModel: Opretter ViewModel
+        ViewModel->>Repository: Oppdaterer data fra Repository
         Repository->>API: Henter data fra API
         API-->>Repository: Sender data
         Repository-->>ViewModel: Oppdaterer ViewModel
@@ -124,22 +126,22 @@ sequenceDiagram
         App->>User: Viser HomeScreen
         User->>App: Naviger til MapScreen via BottomBar
         App->>MapBox: Henter kart fra MapBox
-        MapBox-->>App: Viser map
+        MapBox-->>App: Viser kart
         App->>User: Viser MapScreen
         User->>App: Søker etter SurfArea i SearchBar
         App->>User: Viser lokasjoner i søkefeltet
         User->>App: Velger SurfArea og trykker
-        App ->>ViewModel: Oppdaterer viewModel
-        ViewModel->>Repository: "Lytter"
+        App ->>ViewModel: Gir beskjed til ViewModel
+        ViewModel->>Repository: Oppdaterer 'areaInFocus'
         Repository-->>ViewModel: Oppdaterer ViewModel
         ViewModel -->>App: Oppdaterer state
-        App->>User: Viser AreaScreen med lokasjonsdetaljer
+        App->>User: Viser SurfAreaScreen med lokasjonsdetaljer
         User->>App: Trykker på en dag
-        App ->>ViewModel: Oppdaterer viewmodel
-        ViewModel->>Repository: "Lytter"
+        App ->>ViewModel: Gir beskjed til viewmodel
+        ViewModel->>Repository: Oppdaterer 'dayInFocus'
         Repository-->>ViewModel: Oppdaterer ViewModel
         ViewModel -->>App: Oppdaterer state
-        App->>User: Viser TodayScreen med prognose time for time
+        App->>User: Viser DailyScreen med prognose time for time
     end
 ```
 

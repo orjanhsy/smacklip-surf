@@ -1,21 +1,15 @@
 package com.example.myapplication
 
-import androidx.compose.runtime.collectAsState
-import com.example.myapplication.data.smackLip.Repository
-import com.example.myapplication.data.smackLip.RepositoryImpl
-import com.example.myapplication.data.waveforecast.WaveForecastDataSource
+import com.example.myapplication.data.weatherforecast.WeatherForecastRepository
+import com.example.myapplication.data.weatherforecast.WeatherForecastRepositoryImpl
 import com.example.myapplication.data.waveforecast.WaveForecastRepositoryImpl
 import com.example.myapplication.model.surfareas.SurfArea
-import com.example.myapplication.ui.home.HomeScreenViewModel
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
-import kotlin.system.measureTimeMillis
 
 class StatefulRepoTests {
 
-    private val repo: Repository = RepositoryImpl()
+    private val repo: WeatherForecastRepository = WeatherForecastRepositoryImpl()
 
     @Test
     fun daysOfAvaliabelForecastIsX(): Unit = runBlocking{
@@ -44,13 +38,6 @@ class StatefulRepoTests {
         }
     }
 
-    @Test
-    fun alertsAreX(): Unit = runBlocking{
-        repo.loadAlerts()
-
-        val state = repo.alerts.value
-        println(state)
-    }
 
 
     @Test

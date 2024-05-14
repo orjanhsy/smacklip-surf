@@ -64,10 +64,10 @@ import com.example.myapplication.R
 import com.example.myapplication.SmackLipApplication
 import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.metalerts.Alert
-import com.example.myapplication.model.smacklip.DataAtTime
+import com.example.myapplication.model.weatherforecast.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
-import com.example.myapplication.presentation.viewModelFactory
-import com.example.myapplication.ui.AlertCard.CustomAlert
+import com.example.myapplication.utils.viewModelFactory
+import com.example.myapplication.ui.alertcard.CustomAlert
 import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.ui.theme.AppTypography
@@ -354,15 +354,22 @@ fun InfoCard(surfArea: SurfArea) {
                     style = AppTypography.titleSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(bottom = 10.dp)
                 )
                 Image(
                     painter = painterResource(id = surfArea.image),
                     contentDescription = "Image",
-                    contentScale = ContentScale.FillWidth,
+                    contentScale = ContentScale.FillBounds,
                     modifier = Modifier
                         .width(250.dp)
-                        .height(150.dp)
-                        .clip(RoundedCornerShape(8.dp))
+                        .height(130.dp)
+                        .clip(shape = RoundedCornerShape(
+                            topStart = 12.dp,
+                            topEnd = 12.dp,
+                            bottomStart = 12.dp,
+                            bottomEnd = 12.dp)
+                        )
+
                 )
             }
         }
@@ -586,7 +593,10 @@ fun DayPreviewCard(
 private fun PreviewSurfAreaScreen() {
     val savm = viewModel<SurfAreaScreenViewModel>(
         factory = viewModelFactory {
-            SurfAreaScreenViewModel(SmackLipApplication.container.stateFulRepo)
+            SurfAreaScreenViewModel(
+                SmackLipApplication.container.stateFulRepo,
+                SmackLipApplication.container.alertsRepo
+            )
         }
     )
     AppTheme {

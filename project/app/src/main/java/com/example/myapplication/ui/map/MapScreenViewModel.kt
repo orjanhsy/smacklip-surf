@@ -2,8 +2,8 @@ package com.example.myapplication.ui.map
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapplication.data.smackLip.Repository
-import com.example.myapplication.model.smacklip.DataAtTime
+import com.example.myapplication.data.weatherforecast.WeatherForecastRepository
+import com.example.myapplication.model.weatherforecast.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +16,7 @@ data class MapScreenUiState(
 
 
 class MapScreenViewModel(
-    private val repo: Repository
+    private val repo: WeatherForecastRepository
 ) : ViewModel() {
 
     //setter oflfnow til å data fra oceanforecast og locationforecast gjennom Repository

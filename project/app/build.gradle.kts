@@ -4,7 +4,6 @@ plugins {
     kotlin("plugin.serialization") version "1.4.21"
     id("com.google.protobuf") version "0.9.4"
 }
-//
 
 android {
     namespace = "com.example.myapplication"
