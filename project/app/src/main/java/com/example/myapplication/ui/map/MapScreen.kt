@@ -401,17 +401,7 @@ fun SurfAreaCard(
                         text = "   Gå til ${surfArea.locationName}   ",
                         style = AppTypography.bodySmall,
                         color =MaterialTheme.colorScheme.onSurfaceVariant
-                        //modifier = Modifier.weight(1f)
                     )
-                    /*Icon(
-                        imageVector = Icons.Default.ArrowForward,
-                        contentDescription = "Arrow Forward",
-                        tint = onSurfaceVariantLight,
-                        modifier = Modifier
-                            .size(20.dp)
-                    )
-
-                     */
                 }
             }
         }
