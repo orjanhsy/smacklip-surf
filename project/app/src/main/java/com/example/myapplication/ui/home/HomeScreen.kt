@@ -112,7 +112,9 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel, navController: NavContr
                     isSearchActive.value = isActive
                 },
                 surfAreas = SurfArea.entries.toList(),
-                navController = navController
+                onItemClick = { surfArea ->
+                    navController.navigate("SurfAreaScreen/${surfArea.locationName}")
+                }
             )
             Box(modifier = Modifier.fillMaxSize()){
                 Column (modifier = Modifier

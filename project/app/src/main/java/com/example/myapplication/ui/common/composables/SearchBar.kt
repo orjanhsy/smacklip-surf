@@ -58,7 +58,7 @@ fun SearchBar(
     modifier: Modifier = Modifier,
     onSearch: ((String) -> Unit)? = null,
     onZoomToLocation: ((Point) -> Unit)? = null,
-    navController: NavController
+    onItemClick: (SurfArea) -> Unit
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
@@ -154,7 +154,7 @@ fun SearchBar(
                         focusManager.clearFocus()
                         keyboardController?.hide()
                         onZoomToLocation?.invoke(Point.fromLngLat(surfArea.lon, surfArea.lat))
-                        navController.navigate("SurfAreaScreen/${surfArea.locationName}")
+                        onItemClick(surfArea)
                     }) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -163,8 +163,8 @@ fun SearchBar(
                         ) {
                             Text(
                                 text = surfArea.locationName,
-                                //style = AppTypography.bodySmall,
-                                //color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                style = AppTypography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.weight(1f)
                             )
                             Spacer(modifier = Modifier.width(12.dp))
