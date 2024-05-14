@@ -35,6 +35,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -42,13 +45,22 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.R
 import com.example.myapplication.Settings
+import com.example.myapplication.SmackLipApplication
 import com.example.myapplication.ui.common.composables.BottomBar
+import com.example.myapplication.ui.surfarea.SurfAreaScreen
+import com.example.myapplication.ui.surfarea.SurfAreaScreenViewModel
 import com.example.myapplication.ui.theme.AppTheme
+import com.example.myapplication.ui.theme.AppTypography
+import com.example.myapplication.utils.NavigationManager.navController
+import com.example.myapplication.utils.viewModelFactory
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,10 +89,12 @@ fun InfoScreen(infoScreenViewModel: InfoScreenViewModel, navController: NavContr
                             painter = painterResource(id = R.drawable.smacklip_logo),
                             contentDescription = "app logo",
                             contentScale = ContentScale.FillBounds,
-                            modifier = Modifier
-                                .width(307.dp)
-                                .height(259.dp)
-                                .padding(16.dp)
+                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onTertiary),
+
+                                    modifier = Modifier
+                                        .width(307.dp)
+                                        .height(259.dp)
+                                        .padding(16.dp)
                         )
                         Spacer(modifier = Modifier.height(14.dp))
 
@@ -93,7 +107,7 @@ fun InfoScreen(infoScreenViewModel: InfoScreenViewModel, navController: NavContr
                             item {
                                 Card(
                                     modifier = Modifier
-                                        .width(265.dp)
+                                        .width(300.dp)
                                         .heightIn(min = 57.dp)
                                         .animateContentSize(),
                                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimary),
@@ -108,15 +122,11 @@ fun InfoScreen(infoScreenViewModel: InfoScreenViewModel, navController: NavContr
                                      {
                                         Text(
                                             text = "Velg appmodus",
-                                            style = TextStyle(
-                                                fontSize = 16.sp,
-                                                fontFamily =
-                                                FontFamily.Default,
-                                                fontWeight = FontWeight(400),
-                                                //color = Color(0xFF4D5E6F),
-                                                textAlign = TextAlign.Center
-                                            ),
+                                            style = AppTypography.titleMedium,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                                             modifier = Modifier.fillMaxWidth()
+                                                .padding(top = 4.dp)
+
                                         )
                                          IconButton(
                                              onClick = { expandedThemeCard = !expandedThemeCard },
@@ -138,11 +148,20 @@ fun InfoScreen(infoScreenViewModel: InfoScreenViewModel, navController: NavContr
                                                 modifier = Modifier
                                                     .fillMaxWidth()
                                                     .wrapContentHeight(),
-                                                horizontalArrangement = Arrangement.SpaceBetween
+                                                horizontalArrangement = Arrangement.Center
                                             ) {
-                                                Text(text = if (isDarkThemeEnabled) "Bytt til Light Mode " else "Bytt til Dark Mode")
+                                                Text(text = if (isDarkThemeEnabled) "Bytt til Light Mode " else "Bytt til Dark Mode",
+                                                    textAlign = TextAlign.Center,
+                                                )
+                                            }
+                                            Row(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .wrapContentHeight(),
+                                                horizontalArrangement = Arrangement.Center
+                                            ){
                                                 Switch(
-                                                    checked = isDarkThemeEnabled,
+                                                            checked = isDarkThemeEnabled,
                                                     onCheckedChange = { isChecked ->
                                                         infoScreenViewModel.updateTheme(if (isChecked) Settings.Theme.DARK else Settings.Theme.LIGHT)
                                                     }
@@ -189,7 +208,7 @@ fun InformationCard(title: String, content: String) {
     var expanded by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier
-            .width(265.dp)
+            .width(300.dp)
             .heightIn(min = 57.dp)
             .animateContentSize(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimary),
@@ -203,13 +222,10 @@ fun InformationCard(title: String, content: String) {
 
             Text(
                 text = title,
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight(400),
-                    textAlign = TextAlign.Center
-                ),
+                style = AppTypography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.fillMaxWidth()
+                    .padding(top=6.dp)
             )
             IconButton(
                 onClick = { expanded = !expanded },
@@ -222,7 +238,6 @@ fun InformationCard(title: String, content: String) {
                     else
                         Icons.Filled.ExpandMore,
                     contentDescription = if (expanded) "Skjul" else "Utvid",
-                    modifier = Modifier.rotate(if (expanded) 180f else 0f)
 
                 )
             }
@@ -231,6 +246,7 @@ fun InformationCard(title: String, content: String) {
                     text = content,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
                     modifier = Modifier.padding(top = 4.dp)
                 )
 
@@ -242,5 +258,6 @@ fun InformationCard(title: String, content: String) {
     }
 
 }
+
 
 
