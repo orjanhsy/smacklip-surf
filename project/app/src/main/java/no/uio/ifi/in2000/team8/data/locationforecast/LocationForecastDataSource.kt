@@ -1,4 +1,4 @@
-package com.example.myapplication.data.locationforecast
+package no.uio.ifi.in2000.team8.data.locationforecast
 
 import android.util.Log
 import com.example.myapplication.utils.HTTPServiceHandler.API_HEADER

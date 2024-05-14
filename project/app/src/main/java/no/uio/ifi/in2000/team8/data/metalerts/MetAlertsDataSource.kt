@@ -1,4 +1,4 @@
-package com.example.myapplication.data.metalerts
+package no.uio.ifi.in2000.team8.data.metalerts
 
 import android.util.Log
 import com.example.myapplication.utils.HTTPServiceHandler.METALERTS_URL

@@ -1,4 +1,4 @@
-package com.example.myapplication.data.waveforecast
+package no.uio.ifi.in2000.team8.data.waveforecast
 
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.waveforecast.AllWavePeriods

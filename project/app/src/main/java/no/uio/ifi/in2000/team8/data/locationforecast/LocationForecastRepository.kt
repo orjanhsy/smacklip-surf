@@ -1,4 +1,4 @@
-package com.example.myapplication.data.locationforecast
+package no.uio.ifi.in2000.team8.data.locationforecast
 
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.locationforecast.DataLF

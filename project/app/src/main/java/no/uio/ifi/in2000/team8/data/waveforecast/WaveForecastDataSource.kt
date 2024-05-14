@@ -1,4 +1,4 @@
-package com.example.myapplication.data.waveforecast
+package no.uio.ifi.in2000.team8.data.waveforecast
 
 import android.util.Log
 import com.example.myapplication.data.config.Client

@@ -1,4 +1,4 @@
-package com.example.myapplication.data.weatherforecast
+package no.uio.ifi.in2000.team8.data.weatherforecast
 
 import com.example.myapplication.data.locationforecast.LocationForecastRepository
 import com.example.myapplication.data.locationforecast.LocationForecastRepositoryImpl

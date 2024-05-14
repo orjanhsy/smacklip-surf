@@ -1,4 +1,4 @@
-package com.example.myapplication.data.settings
+package no.uio.ifi.in2000.team8.data.settings
 
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer

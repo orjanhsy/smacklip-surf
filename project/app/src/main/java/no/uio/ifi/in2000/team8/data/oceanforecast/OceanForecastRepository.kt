@@ -1,4 +1,4 @@
-package com.example.myapplication.data.oceanforecast
+package no.uio.ifi.in2000.team8.data.oceanforecast
 
 import com.example.myapplication.model.oceanforecast.DataOF
 import com.example.myapplication.model.oceanforecast.TimeserieOF
