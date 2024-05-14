@@ -48,7 +48,7 @@ class HomeScreenViewModel(
         forecastRepo.ofLfForecast,
         alertsRepo.alerts
     ) { oflf, alerts ->
-        val oflfNow: Map<SurfArea, DataAtTime> = try {
+        val ofLfNow: Map<SurfArea, DataAtTime> = try {
             oflf.next7Days.entries.associate {
                 it.key to it.value.forecast[0].data.entries.sortedBy {timeToData -> timeToData.key.hour }[0].value
             }
