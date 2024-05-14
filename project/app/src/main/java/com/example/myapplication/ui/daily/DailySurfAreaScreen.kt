@@ -70,13 +70,14 @@ fun DailySurfAreaScreen(
 
     val dailySurfAreaScreenUiState by dailySurfAreaScreenViewModel.dailySurfAreaScreenUiState.collectAsState()
 
+    //update day in focus WeatherForecastRepository
     if (dayOfMonth != SmackLipApplication.container.stateFulRepo.dayInFocus.collectAsState().value) {
         dailySurfAreaScreenViewModel.updateDayInFocus(dayOfMonth)
     }
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { /*TODO*/ },
+            TopAppBar(title = { },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Column(
@@ -96,9 +97,7 @@ fun DailySurfAreaScreen(
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.inversePrimary)
-
             )
-
         },
         bottomBar = {
             BottomBar(navController = navController)
@@ -117,12 +116,7 @@ fun DailySurfAreaScreen(
                 val formattedCurrentHour = String.format("%02d", currentHour)
                 var headerIcon = "default_icon"
 
-                val surfAreaDataForDay: Map<LocalDateTime, DataAtTime> = try { // TODO: IndexOutOfBounds vil aldri skje
-                    dailySurfAreaScreenUiState.dataAtDay.data
-                } catch (e: IndexOutOfBoundsException) {
-                    mapOf()
-                }
-
+                val surfAreaDataForDay: Map<LocalDateTime, DataAtTime> = dailySurfAreaScreenUiState.dataAtDay.data
 
                 var times = surfAreaDataForDay.keys.sortedWith(
                     compareBy<LocalDateTime> { it.month }.thenBy { it.dayOfMonth }
