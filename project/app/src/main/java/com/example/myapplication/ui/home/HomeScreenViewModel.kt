@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.R
 import com.example.myapplication.Settings
-import com.example.myapplication.SmackLipApplication.Companion.container
 import com.example.myapplication.data.metalerts.MetAlertsRepository
+import com.example.myapplication.data.settings.SettingsRepository
 import com.example.myapplication.data.weatherForecast.WeatherForecastRepository
 import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.smacklip.DataAtTime
@@ -27,7 +27,8 @@ data class HomeScreenUiState(
 
 class HomeScreenViewModel(
     private val forecastRepo: WeatherForecastRepository,
-    private val alertsRepo: MetAlertsRepository
+    private val alertsRepo: MetAlertsRepository,
+    private val settingsRepo: SettingsRepository
 
 ) : ViewModel() {
 
@@ -40,8 +41,7 @@ class HomeScreenViewModel(
     }
     private val _favoriteSurfAreas = MutableStateFlow<List<SurfArea>>(emptyList())
     val favoriteSurfAreas: StateFlow<List<SurfArea>> = _favoriteSurfAreas
-    val settings: Flow<Settings> = container.settingsRepository.settingsFlow
-
+    val settings: Flow<Settings> = settingsRepo.settingsFlow
 
 
     val homeScreenUiState: StateFlow<HomeScreenUiState> = combine(
@@ -106,7 +106,7 @@ class HomeScreenViewModel(
     }
     fun loadFavoriteSurfAreas(){
         viewModelScope.launch {
-            container.settingsRepository.settingsFlow.collect{
+            settingsRepo.settingsFlow.collect{
                 Log.d("LogFavorites", "loaded favorite surf areas: ${it.favoriteSurfAreaNamesList}")
                 val favoriteAreas = it.favoriteSurfAreaNamesList.mapNotNull { areaName ->
                     //konverter locationname ti surfAreaObjekt
@@ -126,11 +126,11 @@ class HomeScreenViewModel(
             val currentFavorites = _favoriteSurfAreas.value
             val isFavorite = currentFavorites.contains(surfArea)
             val updatedFavorites: List<SurfArea> = if (isFavorite) {
-                container.settingsRepository.removeFavoriteSurfArea(surfArea.locationName)
+                settingsRepo.removeFavoriteSurfArea(surfArea.locationName)
                 currentFavorites - surfArea
             } else{
                 try{
-                    container.settingsRepository.addFavoriteSurfArea(surfArea.locationName)
+                    settingsRepo.addFavoriteSurfArea(surfArea.locationName)
                     Log.d("CorrectAddFavorites", "Passed add to favorites")
                     currentFavorites + surfArea
                 } catch(e: IllegalArgumentException){
@@ -152,7 +152,7 @@ class HomeScreenViewModel(
 
     fun clearAllFavorites(){
         viewModelScope.launch {
-            container.settingsRepository.clearFavoriteSurfAreas()
+            settingsRepo.clearFavoriteSurfAreas()
             _favoriteSurfAreas.value = emptyList()
         }
     }

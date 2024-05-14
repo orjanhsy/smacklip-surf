@@ -17,7 +17,7 @@ import com.example.myapplication.ui.info.InfoScreenViewModel
 private const val DATA_STORE_FILE_NAME = "settings.pb"
 interface AppContainer {
     val infoViewModel: InfoScreenViewModel
-    val settingsRepository: SettingsRepository
+    val settingsRepo: SettingsRepository
     val stateFulRepo: WeatherForecastRepository
     val alertsRepo: MetAlertsRepository
 }
@@ -28,7 +28,7 @@ class DefaultAppContainer(
         DataStoreFactory.create(SettingsSerializer){
             context.dataStoreFile(DATA_STORE_FILE_NAME)
         }
-    override val settingsRepository: SettingsRepository by lazy {
+    override val settingsRepo: SettingsRepository by lazy {
         SettingsRepositoryImpl(settingsStore)
     }
 
@@ -41,7 +41,7 @@ class DefaultAppContainer(
     }
 
     override val infoViewModel: InfoScreenViewModel by lazy {
-        InfoScreenViewModel(settingsRepository)
+        InfoScreenViewModel(settingsRepo)
     }
 
 
