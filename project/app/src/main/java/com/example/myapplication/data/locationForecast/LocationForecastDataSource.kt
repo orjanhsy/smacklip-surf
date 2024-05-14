@@ -1,9 +1,9 @@
 package com.example.myapplication.data.locationForecast
 
 import android.util.Log
-import com.example.myapplication.data.utils.HTTPServiceHandler.API_HEADER
-import com.example.myapplication.data.utils.HTTPServiceHandler.API_KEY
-import com.example.myapplication.data.utils.HTTPServiceHandler.LOCATION_FORECAST_URL
+import com.example.myapplication.utils.HTTPServiceHandler.API_HEADER
+import com.example.myapplication.utils.HTTPServiceHandler.API_KEY
+import com.example.myapplication.utils.HTTPServiceHandler.LOCATION_FORECAST_URL
 import com.example.myapplication.model.locationforecast.LocationForecast
 import com.example.myapplication.model.surfareas.SurfArea
 import io.ktor.client.HttpClient

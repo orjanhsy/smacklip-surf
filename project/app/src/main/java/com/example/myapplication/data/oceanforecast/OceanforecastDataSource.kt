@@ -1,9 +1,9 @@
 package com.example.myapplication.data.oceanforecast
 
 import android.util.Log
-import com.example.myapplication.data.utils.HTTPServiceHandler.API_HEADER
-import com.example.myapplication.data.utils.HTTPServiceHandler.API_KEY
-import com.example.myapplication.data.utils.HTTPServiceHandler.OCEAN_FORECAST_URL
+import com.example.myapplication.utils.HTTPServiceHandler.API_HEADER
+import com.example.myapplication.utils.HTTPServiceHandler.API_KEY
+import com.example.myapplication.utils.HTTPServiceHandler.OCEAN_FORECAST_URL
 import com.example.myapplication.model.oceanforecast.OceanForecast
 import com.example.myapplication.model.surfareas.SurfArea
 import io.ktor.client.HttpClient
