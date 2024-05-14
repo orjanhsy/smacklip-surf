@@ -165,7 +165,7 @@ fun DailySurfAreaScreen(
                                 dailySurfAreaScreenUiState.wavePeriods[waveIndex]
 
                             } catch (e: IndexOutOfBoundsException) {
-                                -1.0 //prints -- to indicate no waveperiod
+                                -1.0 //gives < 0 value to deal with no waveperiod in UI
                             }
 
                             val conditionStatus: ConditionStatus? = try {
@@ -194,14 +194,11 @@ fun DailySurfAreaScreen(
                         }
                     }
                 }
-
             }
-            // ProgressIndicator(isDisplayed = dailySurfAreaScreenUiState.loading)
         }
     }
 }
 
-// TODO: tror type kan være noe annet enn default, og de kan ha andre default values
 @Composable
 fun AllInfoCard(
     timestamp: String = "x",
@@ -244,14 +241,14 @@ fun AllInfoCard(
 
             ) {
 
-            Spacer(modifier = Modifier.height(7.dp)) //aligns text mid screen
+            Spacer(modifier = Modifier.height(7.dp))
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp, vertical = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween //evenly spaced
+                horizontalArrangement = Arrangement.SpaceBetween //evenly spaced. also on tablet
             ) {
 
                 //Time group
@@ -284,14 +281,15 @@ fun AllInfoCard(
                     //wind text
                     Box(
                         modifier = Modifier
-                            .size(width = 50.dp, height = 30.dp) // Set size with shorter height
-                            .padding(top = 6.dp) // Add padding to the top
+                            .size(width = 50.dp, height = 30.dp)
+                            .padding(top = 6.dp)
                     ) {
                         Text(
                             text = if (windGust as Double > windSpeed as Double) "${(windSpeed).toInt()} (${(windGust).toInt()})"
                             else "${(windSpeed).toInt()}",
                             style = AppTypography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
+                            //handles wind and wind + gust
                         )
                     }
 
@@ -386,7 +384,7 @@ fun AllInfoCard(
                             } else {
                                 val temperature = temp.toString()
                                 if (temperature.toInt() < 10) {
-                                    "  $temperature" //align single digit with 0 position
+                                    "  $temperature" //align single digit with 1 position
                                 } else {
                                     temperature
                                 }
