@@ -286,9 +286,6 @@ fun SearchBar(
                     }
                 }
             }
-            /* if (searchQuery.isNotEmpty() && filteredSurfAreas.isEmpty() && expanded) {
-            Text("Ingen samsvarende resultater")
-        } */
         }
     }
 }
