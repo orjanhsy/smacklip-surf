@@ -80,6 +80,7 @@ import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.ui.theme.AppTypography
 import com.example.myapplication.ui.theme.onSurfaceVariantLight
+import com.example.myapplication.utils.MapUtils
 import com.example.myapplication.utils.RecourseUtils
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
@@ -97,9 +98,9 @@ import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 fun MapScreen(mapScreenViewModel : MapScreenViewModel, navController: NavController) {
 
     val mapScreenUiState : MapScreenUiState by mapScreenViewModel.mapScreenUiState.collectAsState()
-    val mapRepository : MapRepositoryImpl = MapRepositoryImpl() //bruker direkte maprepository fordi mapbox har sin egen viewmodel? -
     val isSearchActive = remember { mutableStateOf(false) }
     val rememberPoint : MutableState<Point?> = remember { mutableStateOf(null) }
+    val mapUtils = MapUtils()
     // TODO: sjekke (maprepository) ut at dette er ok.
 
 
@@ -117,7 +118,7 @@ fun MapScreen(mapScreenViewModel : MapScreenViewModel, navController: NavControl
                 MapBoxMap(
                     modifier = Modifier
                         .fillMaxSize(),
-                    locations = mapRepository.locationToPoint(),
+                    locations = mapUtils.locationToPoint(),
                     uiState = mapScreenUiState,
                     navController = navController,
                     rememberPoint = rememberPoint
