@@ -8,6 +8,9 @@ import com.example.myapplication.model.oceanforecast.OceanForecast
 import com.example.myapplication.model.surfareas.SurfArea
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.RedirectResponseException
+import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.get
@@ -30,18 +33,32 @@ class OceanForecastDataSource(
         }
     }
 
-    suspend fun fetchOceanforecast(surfArea: SurfArea): OceanForecast {
-        val oceanForecast: OceanForecast = try {
+    suspend fun fetchOceanForecast(surfArea: SurfArea): OceanForecast {
+        return try {
             client.get("$path?lat=${surfArea.lat}&lon=${surfArea.lon}"){
                 header(
                     API_HEADER, API_KEY
                 )
             }.body()
-        } catch (e: Exception) {
-            // Does not handle http exceptions differently
-            Log.e(TAG, "Failed to GET data. ${e.stackTraceToString()}")
+        }
+        catch(e: RedirectResponseException) {
+            // 3xx
+            Log.e(TAG, "Failed get timeSeries for $surfArea. 3xx-error. Cause: ${e.message}")
             throw e
         }
-        return oceanForecast
+        catch (e: ClientRequestException) {
+            // 4xx
+            Log.e(TAG, "Failed get timeSeries for $surfArea. 4xx-error. Cause: ${e.message}")
+            throw e
+        }
+        catch(e: ServerResponseException) {
+            // 5xx
+            Log.e(TAG, "Failed get timeSeries for $surfArea. 5xx-error. Cause: ${e.message}")
+            throw e
+        }
+        catch (e: Exception) {
+            Log.e(TAG, "Failed get timeSeries for $surfArea. Unknown error. Cause: ${e.message}")
+            throw e
+        }
     }
 }
