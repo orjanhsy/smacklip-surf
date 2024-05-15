@@ -26,7 +26,7 @@ interface MetAlertsRepository{
     val alerts: StateFlow<Map<SurfArea, List<Alert>>>
 }
 
-const val ALERT_RADIUS = 50.0 // km
+const val ALERT_RADIUS = 15.0 // km
 class MetAlertsRepositoryImpl (
 
     private val metAlertsDataSource : MetAlertsDataSource = MetAlertsDataSource()
