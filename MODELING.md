@@ -2,9 +2,9 @@
 
 ## Klassediagram
 Dette er et forenklet klassediagram som viser hva som skjer når bruker åpner appen. Under er informasjon om valg vi har tatt vedrørende klassediagrammet: 
-* Vi har abstrahert bort alle data-klasser (inkludert surfareas som inm\neholder informasjonen om surfelokasjonene).
+* Vi har abstrahert bort alle data-klasser (inkludert SurfAreas som inneholder informasjonen om surfelokasjonene)
 * Vi har abstrahert bort DataSources
-* Vi har abstrahert bor OceanForecastrepository, LocationForecastrepository og WaveForecastRepository som bli inisialisert i WeatherForecastRepository og ikke har direkte sammenheng med en ViewModel
+* Vi har abstrahert bor OceanForecastrepository, LocationForecastrepository og WaveForecastRepository som bli initialisert i WeatherForecastRepository og ikke har direkte sammenheng med en ViewModel
 
 ![Class diagram Smacklip Surf](<Skjermbilde 2024-05-15 213325.png>)
 
