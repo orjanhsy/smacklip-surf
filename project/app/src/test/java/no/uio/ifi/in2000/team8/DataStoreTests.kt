@@ -1,71 +1,56 @@
 package no.uio.ifi.in2000.team8
 
-import android.content.Context
 import androidx.datastore.core.DataStore
-import androidx.datastore.core.DataStoreFactory
-import androidx.datastore.dataStoreFile
-import androidx.test.core.app.ApplicationProvider
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import no.uio.ifi.in2000.team8.Settings
-import no.uio.ifi.in2000.team8.data.settings.SettingsRepositoryImpl
-import no.uio.ifi.in2000.team8.data.settings.SettingsSerializer
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.TestCoroutineScheduler
-import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
-import org.junit.After
+import no.uio.ifi.in2000.team8.data.settings.SettingsRepositoryImpl
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import java.io.File
 
 
-const val TEST_DATA_STORE_FILE_NAME = "testSettings.pb"
-
-
-private val scheduler = TestCoroutineScheduler()
-private val testScope = TestScope(scheduler)
-private var testContext: Context = ApplicationProvider.getApplicationContext()
-
-@RunWith(AndroidJUnit4::class)
 class DataStoreTests {
     //Making a test data store
     private lateinit var dataStore: DataStore<Settings>
     private lateinit var settingsRepo: SettingsRepositoryImpl
 
-    private fun createDataStore(){
-        dataStore = DataStoreFactory.create(
-            produceFile = {
-                testContext.dataStoreFile(TEST_DATA_STORE_FILE_NAME)
-            },
-            serializer = SettingsSerializer
-        )
-        settingsRepo = SettingsRepositoryImpl(dataStore)
+    private fun createDataStore(): DataStore<Settings>{
+        val settings = Settings.getDefaultInstance()
+        val settingsFlow = MutableStateFlow(settings)
+        return object : DataStore<Settings> {
+            override suspend fun updateData(transform: suspend (t: Settings) -> Settings): Settings {
+                val updatedSettings = transform(settingsFlow.value)
+                settingsFlow.value = updatedSettings
+                return updatedSettings
+            }
+
+            override val data: Flow<Settings> = settingsFlow
+
+        }
     }
 
 
     @Before
     fun setup(){
-        createDataStore()
+        dataStore = createDataStore()
+        settingsRepo = SettingsRepositoryImpl(dataStore)
     }
 
     @Test
     fun testAddFavorites(){
         runTest {
-            testScope.launch {
-                val favorite = "HODDEVIK"
-                settingsRepo.addFavoriteSurfArea(favorite)
-                val settings = dataStore.data.first()
-                assertTrue(settings.favoriteSurfAreaNamesList.contains(favorite))
-
+            val favorite = "HODDEVIK"
+            settingsRepo.addFavoriteSurfArea(favorite)
+            settingsRepo.settingsFlow.first { settings ->
+                settings.favoriteSurfAreaNamesList.contains(favorite)
             }
+            val settings = dataStore.data.first()
+            assertTrue(settings.favoriteSurfAreaNamesList.contains(favorite))
         }
     }
 
-    @After
-    fun cleanup(){
-        File(testContext.filesDir, "datastore").deleteRecursively()
-    }
+
+
 }
