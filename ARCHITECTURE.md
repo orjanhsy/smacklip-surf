@@ -19,6 +19,7 @@ Vi har en tydelig inndelt mappestruktur hvor klasser eller filer plasseres utifr
 Data-mappen, tilsvarende *Model* i MVVM inneholder klasser som henter, lagerer eller gjør tyngre prosessering av data. Her finner man *DataSource*- og *Repository*-klasser.
 Model-mappen er forbeholdt dataklasser som brukes til deserialisering av API-data. Her vil man også finne dataklasser som generelt bidrar til applikasjonens kode, både som støtte til funksjonalitet og lesbarhet. 
 UI-mappen inneholder skjermfunksjoner som er @Composable og skal vises frem til en bruker, samt *ViewModel* (funksjon beskrevet over).
+For større applikasjoner som følger MVVM er det normalt å inkludere et domenelag hvor data presenteres fra repository til viewmodel gjennom en *use-case-klasse*. Målet med dette laget er å redusere gjenbruk av kode og tydeliggjøre funksjonalitet. Vi har heller valgt å inkludere en utils-mappe hvor funksjoner som gjengår i koden er samlet.
 
 En annen måte vi ivaretar SOC er ved bruk av *Dependency Injection*, spesifikt *Constructor injection*. Klasser er ofte avhengige av referanser til andre klasser, dette kalles 'dependency', eller på norsk, avhengighet. Målet med DI, som gjenspeiles av det objektorienterte prinsippet *lav kobling*, er at klasser i minst mulig grad skal opprette sine egne instanser av avhengighetene sine. Gjennom Constructor Injection mottar de avhengighetene sine som argumenter (KILDE, Android, 2023). Dette bidrar til testbarhet og SOCs andre fordeler ved at man lett kan endre og ha kontroll over instansen en klasse tar i bruk. Vi har tatt ekstra hensyn til det objektorienterte prinsippet *Dependency Inversion*, som er en del av SOLID prinsippene (KILDE), ved at høynivå klasser aldri oppretter sine egne avhengigheter. View mottar Viewmodel-er som argumenter, og ViewModel-er mottar repoisory-er gjennom konstruktøren. I noen lavnivåklasser - som repository-er - har vi tatt en vurdering på at vi ikke bruker DI da avhengighetene deres ikke deles med andre klasser.
 
@@ -39,13 +40,15 @@ Applikasjonen har minimum API-nivå 26, grunnet bruk av java.time biblioteket. V
 ### Verktøy
 
 #### Kotlin
+Vi har brukt kotlin som primært programeringsspråk i applikasjonen. \
+Dokumentasjon: https://kotlinlang.org/docs/home.html
 
 #### Proto Data Store
 Vi bruker Proto Data Store til å generere filer som lagrer favorites og valg av theme slik at dette ikke forsvinner hver gang appen lukkes. 
 Først har vi definert en protobuf-fil som lar oss definere strukturen til dataene og tillater generering av kode for serialisere og deserialisere effektivt. 
 Deretter bruker vi en settingsSerializer som sikrer effektiv og strukturert lagring av dataene fra protobuf. 
-Vi bruker SettingsRepository som en mellommann mellom grensesnittet til appen og Proto Data Store. Det er repository som henter, lagrer og behandler dataene fra Settings. 
-For å implementere Proto Data Store, har vi fulgt denne [dokumentasjonen](https://developer.android.com/topic/libraries/architecture/datastore).
+Vi bruker SettingsRepository som en mellommann mellom grensesnittet til appen og Proto Data Store. Det er repository som henter, lagrer og behandler dataene fra Settings. \
+Dokumentasjon: (https://developer.android.com/topic/libraries/architecture/datastore).
 
 #### Ktor
 Ktor brukes til å håndtere HTTP-forespørsler til de brukte API-ene. 
@@ -58,33 +61,44 @@ Vi bruker Java Time sitt LocalDateTime API til å behandle tidspunkt i UI-laget.
 Dokumentasjon: https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html
 
 #### MapBox
-Hva bruker vi det til, gjerne clarify det med viewmodel og sånn så det ikke ser random ut i skissen.
+Vi bruker Mapbox som karttjeneste. Vi har ikke MapBox-funksjonalitet i en egenlaget viewmodel og repository ettersom MapBox SDK 
+direkte tilbyr metoder  for kartvisning og interaksjon med kartet fra UI-et. \
+Dokumentasjon for installering: https://docs.mapbox.com/android/maps/guides/install/ \
+Dokumentasjon MapBox SDK for Android: https://docs.mapbox.com/android/maps/guides/
 
 #### Barentswatch
 Vi bruker barentswatch sitt WaveForecast API for å hente bølgeperioder.\
 URL: https://www.barentswatch.no/bwapi \
 Path: /v1/waveforecastpoint/nearest/all \
-API-et krever autentisering gjennom https://id.barentswatch.no/connect/token
+API-et krever autentisering gjennom https://id.barentswatch.no/connect/token \
+Dokumentasjon: https://www.barentswatch.no/bwapi/openapi/index.html?urls.primaryName=Waveforecast%20API
 
 #### OceanForecast
 Vi bruker METs API OceanForecast for å hente bølgeretning og bølgeperiode.
 API-et hentes gjennom en proxy hos IFI ved UIO.\
-
+URL ved videre bruk: https://api.met.no/weatherapi/oceanforecast/2.0/complete \
 Dokumentasjon: https://api.met.no/weatherapi/oceanforecast/2.0/documentation
 
 #### LocationForecast
 Vi bruker METs API LocationForecast (*complete* varianten) for å hente vindretning, vindhastighet, vindkast, temperatur og værsymboler.
-API-et hentes gjennom en proxy hos IFI ved UIO. 
+API-et hentes gjennom en proxy hos IFI ved UIO. \
+URL ved videre bruk: https://api.met.no/weatherapi/locationforecast/2.0/complete \
+Dokumentasjon: https://api.met.no/weatherapi/locationforecast/2.0/documentation
 
 #### MetAlerts
 Vi bruker METs API MetAlerts på GeoJSON-format for å hente aktuelle farevarsel.
-API-et er hentet gjennom XXXXX grunnet trøbbel med proxy.
+API-et er hentet gjennom https://in2000.api.met.no/weatherapi/metalerts/2.0/current.json grunnet trøbbel med proxy. \
+URL ved videre bruk: https://api.met.no/weatherapi/metalerts/2.0/current.json \
+Dokumentasjon: https://api.met.no/weatherapi/metalerts/2.0/documentation
 
 #### Jetpack Compose
-Jetpack Compose er UI-vektøysett for å bygge brukergrensesnitt. Vi har benyttet compose for å bygge et dynamisk og responsivt grensesnitt i appen.
+Jetpack Compose er UI-vektøysett for å bygge brukergrensesnitt. Vi har benyttet compose for å bygge et dynamisk og responsivt grensesnitt i appen.\
+Dokumentasjon: https://developer.android.com/develop/ui/compose/documentation
 
 #### Material3
-Metrial3 er nyeste versjonen av Material Design, designprinsipper utviklet av Google. Vi har benyttet Material3 komponenter, fargepaletter og ikoner.
+Metrial3 er nyeste versjonen av Material Design, designprinsipper utviklet av Google. Vi har benyttet Material3 komponenter, fargepaletter og ikoner. \
+Dokumentasjon: https://m3.material.io/
+
 
 
 
