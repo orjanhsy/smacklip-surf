@@ -39,7 +39,7 @@ class SurfAreaScreenViewModel(
     ) { oflf, wavePeriods, sa, alerts ->
 
         // gets forecast data and alerts relevant to certain surf area
-        val newOfLf: Forecast7DaysOFLF = oflf.next7Days[sa] ?: Forecast7DaysOFLF()
+        val newOfLf: Forecast7DaysOFLF = oflf.forecasts[sa] ?: Forecast7DaysOFLF()
         val newAlerts: List<Alert> = alerts[sa] ?: listOf()
         val wavePeriodsInArea: Map<Int, List<Double?>>  = wavePeriods.wavePeriods[sa] ?: mapOf()
 

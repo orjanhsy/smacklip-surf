@@ -75,7 +75,7 @@ class WeatherForecastRepositoryImpl(
                     async { getOFLFForArea(sa) }
                 }
                 AllSurfAreasOFLF(
-                    next7Days = all7DayForecasts.keys.associateWith {
+                    forecasts = all7DayForecasts.keys.associateWith {
                         Forecast7DaysOFLF(
                             all7DayForecasts[it]?.await() ?: listOf()
                         )
