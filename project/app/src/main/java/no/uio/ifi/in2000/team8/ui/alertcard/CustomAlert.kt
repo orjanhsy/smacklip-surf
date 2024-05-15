@@ -142,7 +142,6 @@ fun PreviewCustomAlert() {
             actionText = "OK",
             warningIcon = R.drawable.icon_warning_orange,
             showAlert = remember { mutableStateOf(true) },
-            //actionWithValue = null,
             action = null
         )
     }
