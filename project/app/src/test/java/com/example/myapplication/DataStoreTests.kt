@@ -1,84 +1,70 @@
 package com.example.myapplication
 
+import android.content.Context
 import androidx.datastore.core.DataStore
-import com.example.myapplication.data.settings.SettingsRepository
+import androidx.datastore.core.DataStoreFactory
+import androidx.datastore.dataStoreFile
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.myapplication.data.settings.SettingsRepositoryImpl
-import junit.framework.TestCase
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import com.example.myapplication.data.settings.SettingsSerializer
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.TestCoroutineScheduler
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
+import org.junit.After
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
+import org.junit.runner.RunWith
+import java.io.File
 
+
+const val TEST_DATA_STORE_FILE_NAME = "testSettings.pb"
+
+
+private val scheduler = TestCoroutineScheduler()
+private val testScope = TestScope(scheduler)
+private var testContext: Context = ApplicationProvider.getApplicationContext()
+
+@RunWith(AndroidJUnit4::class)
 class DataStoreTests {
-    //tester protobuf-filen
-    private lateinit var settingsStore: DataStore<Settings>
-    private lateinit var settingsRepository: SettingsRepository
+    //Making a test data store
+    private lateinit var dataStore: DataStore<Settings>
+    private lateinit var settingsRepo: SettingsRepositoryImpl
 
-//    @Before
-//    fun setUp(){
-//        settingsStore = createDataStore()
-//        settingsRepository = SettingsRepositoryImpl(settingsStore)
-//    }
-//    private fun createDataStore(): DataStore<Settings> {
-//        val settings = Settings.newBuilder().setTest(0.0).setDarkMode(false).build()
-//        val settingsFlow = MutableStateFlow(settings)
-//        return object : DataStore<Settings> {
-//            override suspend fun updateData(transform: suspend (t: Settings) -> Settings):Settings {
-//                val updatedSettings = transform(settingsFlow.value)
-//                settingsFlow.value = updatedSettings
-//                return updatedSettings
-//            }
-//
-//            override val data: Flow<Settings> = settingsFlow
-//        }
-//
-//    }
-//
-//
-//
-//    @Test
-//    fun testSetTest() = runBlocking {
-//        val testValue = 10.0
-//        settingsRepository.setTest(testValue)
-//
-//        val updatedSettings = settingsStore.data.first()
-//        TestCase.assertEquals(testValue, updatedSettings.test, 0.0)
-//    }
-//
-//    @Test
-//    fun testSetDarkMode() = runBlocking{
-//        val darkModeValue = true
-//        settingsRepository.setDarkMode(darkModeValue)
-//
-//        val updatedSettings = settingsStore.data.first()
-//        TestCase.assertEquals(darkModeValue, updatedSettings.darkMode)
-//    }
-//    @Test
-//    fun testSerialization() = runBlocking{
-//        val settingsSerializer = SettingsSerializer()
-//        val testValue = 42.0
-//        val originalSettings = Settings.newBuilder().setTest(testValue).build()
-//        val outputStream = ByteArrayOutputStream()
-//        settingsSerializer.writeTo(originalSettings, outputStream)
-//        val serializedSettings = outputStream.toByteArray()
-//
-//        val inputStream = ByteArrayInputStream(serializedSettings)
-//        val deserializedSettings = settingsSerializer.readFrom(inputStream)
-//
-//        assertEquals(originalSettings, deserializedSettings)
-//
-//    }
-//
-//    @Test
-//    fun testAddFavorite() = runBlocking {
-//        val favorite = "HODDEVIK"
-//        settingsRepository.addFavoriteSurfArea(favorite)
-//
-//        val updatedSettings = settingsStore.data.first()
-//        TestCase.assertTrue(updatedSettings.favoriteSurfAreasList.contains(favorite))
-//    }
+    private fun createDataStore(){
+        dataStore = DataStoreFactory.create(
+            produceFile = {
+                testContext.dataStoreFile(TEST_DATA_STORE_FILE_NAME)
+            },
+            serializer = SettingsSerializer
+        )
+        settingsRepo = SettingsRepositoryImpl(dataStore)
+    }
+
+
+    @Before
+    fun setup(){
+        createDataStore()
+    }
+
+    @Test
+    fun testAddFavorites(){
+        runTest {
+            testScope.launch {
+                val favorite = "HODDEVIK"
+                settingsRepo.addFavoriteSurfArea(favorite)
+                val settings = dataStore.data.first()
+                assertTrue(settings.favoriteSurfAreaNamesList.contains(favorite))
+
+            }
+        }
+    }
+
+    @After
+    fun cleanup(){
+        File(testContext.filesDir, "datastore").deleteRecursively()
+    }
 }
