@@ -53,6 +53,7 @@ android {
 
 dependencies {
     implementation("com.google.android.gms:play-services-auth:21.0.0")
+    implementation("androidx.test:core-ktx:1.5.0")
     //ktor
     val ktor_version = "2.3.8"
     implementation("io.ktor:ktor-client-core:$ktor_version")
