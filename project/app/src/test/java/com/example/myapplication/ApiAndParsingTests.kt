@@ -10,9 +10,8 @@ import com.example.myapplication.model.metalerts.Alert
 import com.example.myapplication.model.surfareas.SurfArea
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
-import java.time.LocalDateTime
 
-class ApiTests {
+class ApiAndParsingTests {
 
 
     //WaveForecast
