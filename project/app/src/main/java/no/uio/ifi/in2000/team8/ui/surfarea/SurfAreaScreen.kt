@@ -276,10 +276,12 @@ fun ShowAlert(alerts : List<Alert>, action : () -> Unit, alertsUtils: AlertsUtil
         ?: R.drawable.icon_awareness_default
 
     CustomAlert(
+        title = surfArea.name,
         message = alertMessage,
         actionText = "OK",
         warningIcon = icon,
         time = time,
+        data = null,
         showAlert = remember { mutableStateOf(true) },
         action = action,
     )
