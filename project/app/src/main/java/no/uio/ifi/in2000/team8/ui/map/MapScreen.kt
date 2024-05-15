@@ -76,7 +76,6 @@ import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 
 
-//MapScreen er der selve skjermen lages, inkludert bottombar, kartet og searchbar på toppen
 //MapScreen-method is where the screen itself is created, including the bottom bar,
 // the map, and the search bar at the top.
 
@@ -181,7 +180,7 @@ fun MapBoxMap(
                 if (rememberPoint.value == null && rememberCameraState.value == null){
                     mapView.mapboxMap.flyTo(CameraOptions.Builder().zoom(3.8).center(startPosition).build())
                 }
-                //update camera state when the user clickes on a locations in the searchbar
+                //update camera state when the user clicks on a locations in the searchbar
                 else if (rememberPoint.value != null){
                     mapView.mapboxMap.flyTo(CameraOptions.Builder().zoom(10.0).center(rememberPoint.value).build())
                     rememberCameraState.value = CameraOptions.Builder().zoom(10.0).center(rememberPoint.value).build()
@@ -198,7 +197,7 @@ fun MapBoxMap(
                         // Handle click event:
                         val clickedPoint = pointAnnotation.point
                         val cameraState = mapView.mapboxMap.cameraState
-                        rememberCameraState.value = CameraOptions.Builder().zoom(cameraState.zoom).center(cameraState.center).build() //remember the camera state when the user clickes on marker
+                        rememberCameraState.value = CameraOptions.Builder().zoom(cameraState.zoom).center(cameraState.center).build() //remember the camera state when the user clicks on marker
 
                         try {
                             val loc = locations.first { location ->
@@ -216,7 +215,7 @@ fun MapBoxMap(
                     }
 
                     //add markers for each location
-                    locations.forEach { (location, point) ->
+                    locations.forEach { (_, point) ->
                         val pointAnnotationOptions = PointAnnotationOptions()
                             .withPoint(point)
                             .withIconImage(marker)
