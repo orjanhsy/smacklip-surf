@@ -1,5 +1,4 @@
 package no.uio.ifi.in2000.team8.ui.daily
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,9 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.CallMade
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Air
-import androidx.compose.material.icons.outlined.CallMade
 import androidx.compose.material.icons.outlined.Tsunami
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -37,7 +34,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -218,7 +214,7 @@ fun AllInfoCard(
 
     if (timestamp != "x") {
 
-        val resourceUtils: ResourceUtils = ResourceUtils()
+        val resourceUtils = ResourceUtils()
 
         // winddir
         val rotationAngleWind = when (windDir) {
@@ -354,7 +350,7 @@ fun AllInfoCard(
 
                     //wave direction arrow
                     Icon(
-                        imageVector = Icons.Outlined.CallMade,
+                        imageVector = Icons.AutoMirrored.Outlined.CallMade,
                         contentDescription = "Arrow",
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier
