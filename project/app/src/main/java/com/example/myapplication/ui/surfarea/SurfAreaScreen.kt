@@ -73,7 +73,7 @@ import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.ui.theme.AppTypography
 import com.example.myapplication.ui.theme.outlineLight
 import com.example.myapplication.utils.AlertsUtils
-import com.example.myapplication.utils.RecourseUtils
+import com.example.myapplication.utils.ResourceUtils
 import com.example.myapplication.utils.DateUtils
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -366,7 +366,7 @@ fun HeaderCard(surfArea: SurfArea, icon : String, date: LocalDateTime) {
     val formattedDate1 = formatter1.format(date)
 
     //to get icon
-    val recourseUtils : RecourseUtils = RecourseUtils()
+    val resourceUtils : ResourceUtils = ResourceUtils()
 
 
     Box(
@@ -425,7 +425,7 @@ fun HeaderCard(surfArea: SurfArea, icon : String, date: LocalDateTime) {
                         .padding(1.24752.dp)
                 ) {
                     Image(
-                        painter = painterResource(id = recourseUtils.findWeatherSymbol(icon)),
+                        painter = painterResource(id = resourceUtils.findWeatherSymbol(icon)),
                         contentDescription = "image description",
                         modifier = Modifier
                             .width(126.dp)

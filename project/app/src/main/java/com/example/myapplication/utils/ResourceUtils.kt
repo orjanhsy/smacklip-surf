@@ -2,7 +2,7 @@ package com.example.myapplication.utils
 
 import com.example.myapplication.R
 
-class RecourseUtils {
+class ResourceUtils {
 
     fun findWeatherSymbol(symbolCode: String): Int {
 

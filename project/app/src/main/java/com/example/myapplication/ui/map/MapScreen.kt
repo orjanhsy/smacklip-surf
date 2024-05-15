@@ -64,7 +64,7 @@ import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.ui.theme.AppTypography
 import com.example.myapplication.ui.theme.onSurfaceVariantLight
 import com.example.myapplication.utils.MapUtils
-import com.example.myapplication.utils.RecourseUtils
+import com.example.myapplication.utils.ResourceUtils
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.MapView
@@ -247,7 +247,7 @@ fun SurfAreaCard(
     surfArea: SurfArea,
     onCloseClick: () -> Unit,
     uiState: MapScreenUiState,
-    resourceUtils: RecourseUtils = RecourseUtils(),
+    resourceUtils: ResourceUtils = ResourceUtils(),
     navController: NavController
 ) {
 
@@ -409,7 +409,7 @@ fun SurfAreaCard(
 @Composable
 fun SurfAreaPreview(){
     AppTheme {
-        SurfAreaCard(surfArea = SurfArea.STAVASANDEN, {}, MapScreenUiState(), RecourseUtils(), rememberNavController())
+        SurfAreaCard(surfArea = SurfArea.STAVASANDEN, {}, MapScreenUiState(), ResourceUtils(), rememberNavController())
     }
 }
 
