@@ -52,7 +52,7 @@ class ApiAndParsingTests {
         weatherRepo.loadOFlF()
         val state = weatherRepo.ofLfForecast.value
         state.forecasts.values.map{
-            it.forecast.map {day ->
+            it.dayForecasts.map { day ->
                 assert(day.data.size in 1..24)
             }
         }

@@ -36,7 +36,7 @@ class DailySurfAreaScreenViewModel(
         val today = LocalDateTime.now().dayOfMonth
 
         // gets ofLf data from area at day
-        val newDataAtDay: DayForecast = ofLf.forecasts[sa]?.forecast?.get(day?.minus(today) ?: 0) ?: DayForecast()
+        val newDataAtDay: DayForecast = ofLf.forecasts[sa]?.dayForecasts?.get(day?.minus(today) ?: 0) ?: DayForecast()
 
         // get wavePeriods for area at day
         val newWavePeriods: List<Double?> = wavePeriods.wavePeriods[sa]?.get(day) ?: listOf()
