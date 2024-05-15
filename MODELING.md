@@ -1,5 +1,10 @@
 # Modellering
 
+## Klassediagram
+### Abstraksjoner
+
+![alt text](<Skjermbilde 2024-05-15 213325.png>)
+
 ## Use-case
 * Brukeren skal sjekke forholdene på en gitt lokasjon på et gitt tidspunkt
 #### Primæraktør
@@ -163,3 +168,5 @@ graph TD;
     Logg_på_nett -->|Ikke_logget_på| Slutt;
 
 ```
+
+
