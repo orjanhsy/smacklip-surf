@@ -31,7 +31,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -46,12 +45,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
@@ -64,21 +60,20 @@ import com.example.myapplication.R
 import com.example.myapplication.SmackLipApplication
 import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.metalerts.Alert
-import com.example.myapplication.model.weatherforecast.DataAtTime
 import com.example.myapplication.model.surfareas.SurfArea
-import com.example.myapplication.utils.viewModelFactory
+import com.example.myapplication.model.weatherforecast.DataAtTime
 import com.example.myapplication.ui.alertcard.CustomAlert
 import com.example.myapplication.ui.common.composables.BottomBar
+import com.example.myapplication.ui.common.composables.HeaderCard
 import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.ui.theme.AppTypography
 import com.example.myapplication.ui.theme.outlineLight
 import com.example.myapplication.utils.AlertsUtils
-import com.example.myapplication.utils.RecourseUtils
 import com.example.myapplication.utils.DateUtils
+import com.example.myapplication.utils.viewModelFactory
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -360,82 +355,6 @@ fun calculateFontSizeForText(text: String): TextUnit {
     }
 }
 
-@Composable
-fun HeaderCard(surfArea: SurfArea, icon : String, date: LocalDateTime) {
-    val formatter1 = DateTimeFormatter.ofPattern("E d. MMM", Locale("no", "NO"))
-    val formattedDate1 = formatter1.format(date)
-
-    //to get icon
-    val recourseUtils : RecourseUtils = RecourseUtils()
-
-
-    Box(
-        modifier = Modifier
-            .width(317.dp)
-            .height(150.dp)
-    ) {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = Color.Transparent,
-            shape = RoundedCornerShape(size = 12.dp)
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(0.dp, Alignment.CenterHorizontally),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Column(
-                    modifier = Modifier
-                        .padding(horizontal = 12.dp)
-                ) {
-                    Row {
-                        Text(
-                            text = surfArea.locationName + "," + "\n " + surfArea.areaName, //+surfArea.areaName //hadde vært fint med Stadt
-                            style = TextStyle(
-                                fontSize = calculateFontSizeForText(surfArea.locationName),
-                                fontWeight = FontWeight(500),
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            ),
-                            modifier = Modifier
-                                .padding(16.dp)
-                        )
-                    }
-                    Row(
-                        modifier = Modifier
-                            .padding(horizontal = 12.dp)
-                    ) {
-                        Text(
-                            text = formattedDate1,
-                            style = AppTypography.titleSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-
-                            modifier = Modifier
-                                .padding(5.dp)
-                                .width(73.dp)
-                                .height(16.dp)
-                        )
-                    }
-                }
-                Column(
-                    modifier = Modifier
-                        .shadow(
-                            elevation = 37.425743103027344.dp,
-                            spotColor = Color(0x0D000000),
-                            ambientColor = Color(0x0D000000)
-                        )
-                        .padding(1.24752.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = recourseUtils.findWeatherSymbol(icon)),
-                        contentDescription = "image description",
-                        modifier = Modifier
-                            .width(126.dp)
-                            .height(126.dp)
-                    )
-                }
-            }
-        }
-    }
-}
 
 @Composable
 fun DayPreviewCard(

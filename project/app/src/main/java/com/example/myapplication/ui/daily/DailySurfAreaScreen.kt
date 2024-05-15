@@ -46,7 +46,7 @@ import com.example.myapplication.model.conditions.ConditionStatus
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.model.weatherforecast.DataAtTime
 import com.example.myapplication.ui.common.composables.BottomBar
-import com.example.myapplication.ui.surfarea.HeaderCard
+import com.example.myapplication.ui.common.composables.HeaderCard
 import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.ui.theme.AppTypography
 import com.example.myapplication.utils.RecourseUtils
