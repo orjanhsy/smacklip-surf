@@ -51,7 +51,7 @@ class ApiAndParsingTests {
     fun sizeOfOneDayForecastIsInRange1To24(): Unit = runBlocking {
         weatherRepo.loadOFlF()
         val state = weatherRepo.ofLfForecast.value
-        state.next7Days.values.map{
+        state.forecasts.values.map{
             it.forecast.map {day ->
                 assert(day.data.size in 1..24)
             }

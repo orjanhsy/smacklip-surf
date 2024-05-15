@@ -57,7 +57,7 @@ class MainActivity : ComponentActivity() {
         //show splashscreen until data for oflfNext7Days is loaded or 10 seconds has passed
         installSplashScreen().apply {
             setKeepOnScreenCondition{
-                SmackLipApplication.container.stateFulRepo.ofLfForecast.value.next7Days.isEmpty() && !countDownFinished
+                SmackLipApplication.container.stateFulRepo.ofLfForecast.value.forecasts.isEmpty() && !countDownFinished
             }
         }
 
