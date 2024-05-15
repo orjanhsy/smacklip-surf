@@ -1,4 +1,4 @@
-package com.example.myapplication
+package no.uio.ifi.in2000.team8
 
 
 import com.example.myapplication.model.conditions.ConditionStatus
@@ -68,7 +68,7 @@ class ConditionsTests {
         // while some conditions are great, it should be poor if the rest are bad
 
         val status = conditionsUtils.getConditionStatus(
-            location =  splitConditions.location,
+            location = splitConditions.location,
             windSpeed = splitConditions.windSpeed,
             windDir = splitConditions.windDir,
             waveHeight = splitConditions.waveHeight,
@@ -81,11 +81,11 @@ class ConditionsTests {
     fun conditionsAreGreatWhenConsideredGreat() {
         val status = conditionsUtils.getConditionStatus(
             location = greatConditionsWithoutAlert.location,
-            windSpeed =  greatConditionsWithoutAlert.windSpeed,
-            windDir =  greatConditionsWithoutAlert.windDir,
+            windSpeed = greatConditionsWithoutAlert.windSpeed,
+            windDir = greatConditionsWithoutAlert.windDir,
             waveHeight = greatConditionsWithoutAlert.waveHeight,
-            waveDir =  greatConditionsWithoutAlert.waveDir,
-            wavePeriod =  greatConditionsWithoutAlert.wavePeriod,
+            waveDir = greatConditionsWithoutAlert.waveDir,
+            wavePeriod = greatConditionsWithoutAlert.wavePeriod,
         )
         assert(status == ConditionStatus.GREAT) {"Status should be Utmerket but was $status"}
     }

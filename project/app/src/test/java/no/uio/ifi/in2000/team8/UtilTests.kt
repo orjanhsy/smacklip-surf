@@ -1,5 +1,6 @@
-package com.example.myapplication
+package no.uio.ifi.in2000.team8
 
+import com.example.myapplication.R
 import com.example.myapplication.data.weatherforecast.WeatherForecastRepositoryImpl
 import com.example.myapplication.utils.DateUtils
 import com.example.myapplication.utils.ResourceUtils

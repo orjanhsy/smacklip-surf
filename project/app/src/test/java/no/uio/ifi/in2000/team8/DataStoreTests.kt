@@ -1,4 +1,4 @@
-package com.example.myapplication
+package no.uio.ifi.in2000.team8
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -6,6 +6,7 @@ import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.example.myapplication.Settings
 import com.example.myapplication.data.settings.SettingsRepositoryImpl
 import com.example.myapplication.data.settings.SettingsSerializer
 import kotlinx.coroutines.flow.first
