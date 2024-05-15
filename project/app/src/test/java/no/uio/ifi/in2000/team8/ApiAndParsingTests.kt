@@ -1,13 +1,13 @@
 package no.uio.ifi.in2000.team8
 
 
-import com.example.myapplication.data.metalerts.MetAlertsDataSource
-import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
-import com.example.myapplication.data.waveforecast.WaveForecastRepository
-import com.example.myapplication.data.waveforecast.WaveForecastRepositoryImpl
-import com.example.myapplication.data.weatherforecast.WeatherForecastRepositoryImpl
-import com.example.myapplication.model.metalerts.Alert
-import com.example.myapplication.model.surfareas.SurfArea
+import no.uio.ifi.in2000.team8.data.metalerts.MetAlertsDataSource
+import no.uio.ifi.in2000.team8.data.metalerts.MetAlertsRepositoryImpl
+import no.uio.ifi.in2000.team8.data.waveforecast.WaveForecastRepository
+import no.uio.ifi.in2000.team8.data.waveforecast.WaveForecastRepositoryImpl
+import no.uio.ifi.in2000.team8.data.weatherforecast.WeatherForecastRepositoryImpl
+import no.uio.ifi.in2000.team8.model.metalerts.Alert
+import no.uio.ifi.in2000.team8.model.surfareas.SurfArea
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 

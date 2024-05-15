@@ -1,4 +1,4 @@
-package com.example.myapplication.model.oceanforecast
+package no.uio.ifi.in2000.team8.model.oceanforecast
 
 data class DetailsOF(
     val sea_surface_wave_from_direction: Double,

@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.alertcard
+package no.uio.ifi.in2000.team8.ui.alertcard
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -29,8 +29,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.myapplication.R
-import com.example.myapplication.ui.theme.AppTypography
+import no.uio.ifi.in2000.team8.R
+import no.uio.ifi.in2000.team8.ui.theme.AppTypography
 
 @Composable
 fun <T> CustomAlert(

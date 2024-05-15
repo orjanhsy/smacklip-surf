@@ -1,4 +1,4 @@
-package com.example.myapplication.model.weatherforecast
+package no.uio.ifi.in2000.team8.model.weatherforecast
 
 data class DataAtTime (
     // [windSpeed, windSpeedOfGust, windDirection, airTemperature, symbolCode, Waveheight, waveDirection]

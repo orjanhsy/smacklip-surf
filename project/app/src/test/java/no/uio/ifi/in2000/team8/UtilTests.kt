@@ -1,9 +1,9 @@
 package no.uio.ifi.in2000.team8
 
-import com.example.myapplication.R
-import com.example.myapplication.data.weatherforecast.WeatherForecastRepositoryImpl
-import com.example.myapplication.utils.DateUtils
-import com.example.myapplication.utils.ResourceUtils
+import no.uio.ifi.in2000.team8.R
+import no.uio.ifi.in2000.team8.data.weatherforecast.WeatherForecastRepositoryImpl
+import no.uio.ifi.in2000.team8.utils.DateUtils
+import no.uio.ifi.in2000.team8.utils.ResourceUtils
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 

@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.common.composables
+package no.uio.ifi.in2000.team8.ui.common.composables
 
 import android.annotation.SuppressLint
 import androidx.compose.material.icons.Icons
@@ -18,7 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.myapplication.ui.theme.AppTheme
+import no.uio.ifi.in2000.team8.ui.theme.AppTheme
 
 data class BottomNavigationItem(
     val title: String,

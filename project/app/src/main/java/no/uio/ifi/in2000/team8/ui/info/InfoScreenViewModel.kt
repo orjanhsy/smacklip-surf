@@ -1,9 +1,9 @@
-package com.example.myapplication.ui.info
+package no.uio.ifi.in2000.team8.ui.info
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapplication.Settings
-import com.example.myapplication.data.settings.SettingsRepository
+import no.uio.ifi.in2000.team8.Settings
+import no.uio.ifi.in2000.team8.data.settings.SettingsRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted

@@ -1,9 +1,9 @@
-package com.example.myapplication.utils
+package no.uio.ifi.in2000.team8.utils
 
 
-import com.example.myapplication.model.conditions.ConditionStatus
-import com.example.myapplication.model.conditions.Conditions
-import com.example.myapplication.model.surfareas.SurfArea
+import no.uio.ifi.in2000.team8.model.conditions.ConditionStatus
+import no.uio.ifi.in2000.team8.model.conditions.Conditions
+import no.uio.ifi.in2000.team8.model.surfareas.SurfArea
 import kotlin.math.abs
 
 class ConditionUtils {

@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.info
+package no.uio.ifi.in2000.team8.ui.info
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
@@ -51,16 +51,16 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.myapplication.R
-import com.example.myapplication.Settings
-import com.example.myapplication.SmackLipApplication
-import com.example.myapplication.ui.common.composables.BottomBar
-import com.example.myapplication.ui.surfarea.SurfAreaScreen
-import com.example.myapplication.ui.surfarea.SurfAreaScreenViewModel
-import com.example.myapplication.ui.theme.AppTheme
-import com.example.myapplication.ui.theme.AppTypography
-import com.example.myapplication.utils.NavigationManager.navController
-import com.example.myapplication.utils.viewModelFactory
+import no.uio.ifi.in2000.team8.R
+import no.uio.ifi.in2000.team8.Settings
+import no.uio.ifi.in2000.team8.SmackLipApplication
+import no.uio.ifi.in2000.team8.ui.common.composables.BottomBar
+import no.uio.ifi.in2000.team8.ui.surfarea.SurfAreaScreen
+import no.uio.ifi.in2000.team8.ui.surfarea.SurfAreaScreenViewModel
+import no.uio.ifi.in2000.team8.ui.theme.AppTheme
+import no.uio.ifi.in2000.team8.ui.theme.AppTypography
+import no.uio.ifi.in2000.team8.utils.NavigationManager.navController
+import no.uio.ifi.in2000.team8.utils.viewModelFactory
 
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -1,9 +1,9 @@
-package com.example.myapplication.data.oceanforecast
+package no.uio.ifi.in2000.team8.data.oceanforecast
 
 import android.util.Log
-import com.example.myapplication.model.oceanforecast.DataOF
-import com.example.myapplication.model.oceanforecast.TimeserieOF
-import com.example.myapplication.model.surfareas.SurfArea
+import no.uio.ifi.in2000.team8.model.oceanforecast.DataOF
+import no.uio.ifi.in2000.team8.model.oceanforecast.TimeserieOF
+import no.uio.ifi.in2000.team8.model.surfareas.SurfArea
 
 private const val TAG = "OFREPO"
 interface OceanForecastRepository{

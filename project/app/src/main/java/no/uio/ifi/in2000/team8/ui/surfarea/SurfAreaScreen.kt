@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.surfarea
+package no.uio.ifi.in2000.team8.ui.surfarea
 
 //import androidx.compose.material.icons.outlined.Tsunami
 import android.util.Log
@@ -56,24 +56,24 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.myapplication.R
-import com.example.myapplication.SmackLipApplication
-import com.example.myapplication.model.conditions.ConditionStatus
-import com.example.myapplication.model.metalerts.Alert
-import com.example.myapplication.model.surfareas.SurfArea
-import com.example.myapplication.model.weatherforecast.DataAtTime
-import com.example.myapplication.ui.alertcard.CustomAlert
-import com.example.myapplication.ui.common.composables.BottomBar
-import com.example.myapplication.ui.common.composables.HeaderCard
-import com.example.myapplication.ui.theme.AppTheme
-import com.example.myapplication.ui.theme.AppTypography
-import com.example.myapplication.ui.theme.outlineLight
-import com.example.myapplication.utils.AlertsUtils
+import no.uio.ifi.in2000.team8.R
+import no.uio.ifi.in2000.team8.SmackLipApplication
+import no.uio.ifi.in2000.team8.model.conditions.ConditionStatus
+import no.uio.ifi.in2000.team8.model.metalerts.Alert
+import no.uio.ifi.in2000.team8.model.surfareas.SurfArea
+import no.uio.ifi.in2000.team8.model.weatherforecast.DataAtTime
+import no.uio.ifi.in2000.team8.ui.alertcard.CustomAlert
+import no.uio.ifi.in2000.team8.ui.common.composables.BottomBar
+import no.uio.ifi.in2000.team8.ui.common.composables.HeaderCard
+import no.uio.ifi.in2000.team8.ui.theme.AppTheme
+import no.uio.ifi.in2000.team8.ui.theme.AppTypography
+import no.uio.ifi.in2000.team8.ui.theme.outlineLight
+import no.uio.ifi.in2000.team8.utils.AlertsUtils
 
-import com.example.myapplication.utils.ResourceUtils
+import no.uio.ifi.in2000.team8.utils.ResourceUtils
 
-import com.example.myapplication.utils.DateUtils
-import com.example.myapplication.utils.viewModelFactory
+import no.uio.ifi.in2000.team8.utils.DateUtils
+import no.uio.ifi.in2000.team8.utils.viewModelFactory
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale

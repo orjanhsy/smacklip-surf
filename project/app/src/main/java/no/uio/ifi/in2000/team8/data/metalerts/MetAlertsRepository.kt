@@ -1,10 +1,10 @@
-package com.example.myapplication.data.metalerts
+package no.uio.ifi.in2000.team8.data.metalerts
 
 
 import android.util.Log
-import com.example.myapplication.model.surfareas.SurfArea
-import com.example.myapplication.model.metalerts.Alert
-import com.example.myapplication.model.metalerts.MetAlerts
+import no.uio.ifi.in2000.team8.model.surfareas.SurfArea
+import no.uio.ifi.in2000.team8.model.metalerts.Alert
+import no.uio.ifi.in2000.team8.model.metalerts.MetAlerts
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.statement.bodyAsText

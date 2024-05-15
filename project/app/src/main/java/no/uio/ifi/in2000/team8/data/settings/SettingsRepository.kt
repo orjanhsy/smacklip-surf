@@ -1,9 +1,9 @@
-package com.example.myapplication.data.settings
+package no.uio.ifi.in2000.team8.data.settings
 
 import androidx.datastore.core.DataStore
-import com.example.myapplication.Settings
-import com.example.myapplication.Settings.Theme
-import com.example.myapplication.model.surfareas.SurfArea
+import no.uio.ifi.in2000.team8.Settings
+import no.uio.ifi.in2000.team8.Settings.Theme
+import no.uio.ifi.in2000.team8.model.surfareas.SurfArea
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
