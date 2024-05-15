@@ -241,20 +241,24 @@ fun SurfAreaScreen(
             }
         }
         if (alerts.isNotEmpty() && firstTimeHere) {
-            ShowAlert(alerts = alerts,
+            ShowAlert(
+                alerts = alerts,
                 alertsUtils = alertsUtils,
                 action = {
                     firstTimeHere = false
-                    if (showAlert) {showAlert = false} //sikrer at det ikke blir to alertCards hvis bruker trykker på alert-ikonet mens den første alerter
-                })
+                    if (showAlert) {showAlert = false} //ensures only one instance of alertCard
+                }
+            )
         }
 
-        else if (showAlert) { //knappen i topappbar synes kun når det er farevarsel, demred er alerts ikke tom
-            ShowAlert(alerts = alerts,
+        else if (showAlert) { //shows alert button if alerts is not empty
+            ShowAlert(
+                alerts = alerts,
                 alertsUtils = alertsUtils,
                 action = {
                     showAlert = false
-                })
+                }
+            )
         }
     }
 }
@@ -486,8 +490,5 @@ private fun PreviewSurfAreaScreen() {
     )
     AppTheme {
         SurfAreaScreen("Solastranden", savm, rememberNavController())
-        //DayPreviewCard()
-        //HeaderCard()
-        //InfoCard()
     }
 }
