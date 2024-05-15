@@ -1,6 +1,6 @@
 package no.uio.ifi.in2000.team8.model.waveforecast
 
-data class NewPointForecast(
+data class PointForecast(
     val totalSignificantWaveHeight: Double,
     val expectedMaximumWaveHeight: Double,
     val totalMeanWaveDirection: Long,
