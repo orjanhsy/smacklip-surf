@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter
 
 class DateUtils {
     fun formatTimeInterval(interval:List<String>?): String {
-        if (interval == null || interval.isEmpty()) return "Time not available"
+        if (interval.isNullOrEmpty()) return "Time not available"
 
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX")
         val firstDate = LocalDateTime.parse(interval.firstOrNull(), formatter)

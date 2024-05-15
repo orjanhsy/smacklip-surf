@@ -69,6 +69,9 @@ import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.ui.theme.AppTypography
 import com.example.myapplication.ui.theme.outlineLight
 import com.example.myapplication.utils.AlertsUtils
+
+import com.example.myapplication.utils.ResourceUtils
+
 import com.example.myapplication.utils.DateUtils
 import com.example.myapplication.utils.viewModelFactory
 import java.time.LocalDateTime
@@ -354,7 +357,6 @@ fun calculateFontSizeForText(text: String): TextUnit {
         defaultFontSize
     }
 }
-
 
 @Composable
 fun DayPreviewCard(

@@ -49,7 +49,7 @@ import com.example.myapplication.ui.common.composables.BottomBar
 import com.example.myapplication.ui.common.composables.HeaderCard
 import com.example.myapplication.ui.theme.AppTheme
 import com.example.myapplication.ui.theme.AppTypography
-import com.example.myapplication.utils.RecourseUtils
+import com.example.myapplication.utils.ResourceUtils
 import com.example.myapplication.utils.viewModelFactory
 import java.time.LocalDateTime
 
@@ -216,7 +216,7 @@ fun AllInfoCard(
 
     if (timestamp != "x") {
 
-        val recourseUtils: RecourseUtils = RecourseUtils()
+        val resourceUtils: ResourceUtils = ResourceUtils()
 
         // winddir
         val rotationAngleWind = when (windDir) {
@@ -396,7 +396,7 @@ fun AllInfoCard(
                     }
                     //Weather icon
                     Image(
-                        painter = painterResource(id = recourseUtils.findWeatherSymbol(icon.toString())),
+                        painter = painterResource(id = resourceUtils.findWeatherSymbol(icon.toString())),
                         contentDescription = "Weather Icon",
                         modifier = Modifier.size(24.dp)
                     )
