@@ -100,7 +100,7 @@ class MainActivity : ComponentActivity() {
 //Snack bar is shown on top of the current screen
 @Composable
 fun ShowSnackBarAndNavigation(){
-    Column(){
+    Column{
         Row{
             ShowSnackBar()
         }
@@ -136,7 +136,7 @@ fun SmackLipNavigation() {
         }
     )
 
-    val hsvm = viewModel<HomeScreenViewModel>(
+    val hsVm = viewModel<HomeScreenViewModel>(
         factory = viewModelFactory {
             HomeScreenViewModel(
                 SmackLipApplication.container.stateFulRepo,
@@ -146,7 +146,7 @@ fun SmackLipNavigation() {
         }
     )
 
-    val savm = viewModel<SurfAreaScreenViewModel>(
+    val saVm = viewModel<SurfAreaScreenViewModel>(
         factory = viewModelFactory {
             SurfAreaScreenViewModel(
                 SmackLipApplication.container.stateFulRepo,
@@ -168,11 +168,11 @@ fun SmackLipNavigation() {
 
         ){
         composable("HomeScreen"){
-            HomeScreen(hsvm, navController)
+            HomeScreen(hsVm, navController)
         }
         composable("SurfAreaScreen/{surfArea}") { backStackEntry ->
             val surfArea = backStackEntry.arguments?.getString("surfArea") ?: ""
-            SurfAreaScreen(surfAreaName = surfArea, savm, navController)
+            SurfAreaScreen(surfAreaName = surfArea, saVm, navController)
         }
         composable("DailySurfAreaScreen/{surfArea}/{dayIndex}") { backStackEntry ->
             val surfArea = backStackEntry.arguments?.getString("surfArea") ?: ""

@@ -18,9 +18,9 @@ class ApiAndParsingTests {
     private val waveForecastRepository: WaveForecastRepository = WaveForecastRepositoryImpl()
 
     @Test
-    fun waveForecastIsBetween57And63HoursLong()= runBlocking{
+    fun waveForecastIsBetween57And63HoursLong(): Unit = runBlocking{
         val allForecasts = waveForecastRepository.getAllWavePeriods()
-        allForecasts.wavePeriods.entries.forEach { (sa, forecast) ->
+        allForecasts.wavePeriods.entries.forEach { (_, forecast) ->
             val forecastNumber = forecast.entries.sumOf { it.value.size }
             assert(forecastNumber in 57 .. 63)
         }
@@ -32,7 +32,7 @@ class ApiAndParsingTests {
     private val metAlertsDataSource: MetAlertsDataSource = MetAlertsDataSource()
 
     @Test
-    fun locationNameIsNotInAnyAlertIfRelevantAlertsIsEmptyForThatArea()= runBlocking {
+    fun locationNameIsNotInAnyAlertIfRelevantAlertsIsEmptyForThatArea(): Unit = runBlocking {
         metAlertsRepository.loadAllRelevantAlerts()
         val allAlerts = metAlertsDataSource.fetchMetAlertsData()
         println(allAlerts)
