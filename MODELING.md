@@ -8,12 +8,13 @@ Dette er et forenklet klassediagram som viser hva som skjer når bruker åpner a
 
 ![Class diagram Smacklip Surf](<Skjermbilde 2024-05-15 213325.png>)
 
-## Use-case
+## Use-case 1 for Sekvens- og Aktivitetsdiagram
 * Brukeren skal sjekke forholdene på en gitt lokasjon på et gitt tidspunkt
 #### Primæraktør
 * Bølgesurfer
 #### Pre-betingelser
 * Brukeren har appen lastet ned
+* Brukeren må ha muligheten til å koble seg på internett
 #### Post-betingelser 
 * Lokasjonen brukeren ønsker å sjekke er tilgjengelig i appen
 ### Hovedflyt
@@ -30,7 +31,7 @@ Dette er et forenklet klassediagram som viser hva som skjer når bruker åpner a
 2. Appen viser at hen ikke er pålogget internett
 3. Aktør logger på og går videre, eller sjekker ikke forhold
 
-### Sekvensdiagram - her må teksten omformuleres
+### Sekvensdiagram 1
 
 ```mermaid
 sequenceDiagram
@@ -70,7 +71,8 @@ sequenceDiagram
 
 
 
-### Aktivitetsdiagram
+### Aktivitetsdiagram 1
+
 ```mermaid
 graph TD;
     Start((Start)) --> Åpner_appen;
@@ -85,12 +87,13 @@ graph TD;
 
 ```
 
-## Use-case
+## Use-case 2 for Sekvens- og Aktivitetsdiagram
 * Brukeren sjekker forhold fra SearchBar i MapSreen
 #### Primæraktør
 * Bølgesurfer
 #### Pre-betingelser
 * Brukeren har appen lastet ned
+* Brukeren må ha muligheten til å koble seg på internett
 #### Post-betingelser
 * Lokasjonen brukeren ønsker å sjekke er tilgjengelig i appen
 ### Hovedflyt
@@ -110,6 +113,9 @@ graph TD;
 1. Aktør åpner appen
 2. Appen viser at hen ikke er pålogget internett
 3. Aktør logger på og går videre, eller sjekker ikke forhold
+
+
+### Sekvensdiagram 2
 
 ```mermaid
 sequenceDiagram
@@ -153,8 +159,8 @@ sequenceDiagram
     end
 ```
 
+### Aktivitetsdiagram 1
 
-### Aktivitetsdiagram
 ```mermaid
 graph TD;
     Start((Start)) --> Åpner_appen;
@@ -172,4 +178,7 @@ graph TD;
 
 ```
 
+## Use-case diagram
+Use-caset tar for seg begge use-casene forklart over
 
+![Use-case diagram Smacklip surf](<Skjermbilde 2024-05-15 222829.png>)
