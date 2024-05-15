@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.example.myapplication.model.surfareas.SurfArea
 import com.example.myapplication.ui.surfarea.calculateFontSizeForText
 import com.example.myapplication.ui.theme.AppTypography
-import com.example.myapplication.utils.RecourseUtils
+import com.example.myapplication.utils.ResourceUtils
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -36,7 +36,7 @@ fun HeaderCard(surfArea: SurfArea, icon : String, date: LocalDateTime) {
     val formattedDate1 = formatter1.format(date)
 
     //to get icon
-    val recourseUtils = RecourseUtils()
+    val resourceUtils = ResourceUtils()
 
 
     Box(
@@ -95,7 +95,7 @@ fun HeaderCard(surfArea: SurfArea, icon : String, date: LocalDateTime) {
                         .padding(1.24752.dp)
                 ) {
                     Image(
-                        painter = painterResource(id = recourseUtils.findWeatherSymbol(icon)),
+                        painter = painterResource(id = resourceUtils.findWeatherSymbol(icon)),
                         contentDescription = "image description",
                         modifier = Modifier
                             .width(126.dp)
