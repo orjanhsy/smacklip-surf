@@ -12,8 +12,6 @@ enum class SurfArea(
     val optimalWaveDir: Double,
     val optimalWindDir: Double,
     val description: Int,
-    val modelName: String,
-    val pointId: Int
 
     //nye = Sola, hellestø, Brusand, Sandvesand, Mjølhussand
 ) {
@@ -26,8 +24,6 @@ enum class SurfArea(
         optimalWaveDir = 300.0,
         optimalWindDir = (300.0 + 180.0) % 360.0,
         description = R.string.description_hoddevik,
-        modelName = "stad20143x2v",
-        pointId = 2
     ),
 
     ERVIKA(
@@ -39,8 +35,6 @@ enum class SurfArea(
         optimalWaveDir = 310.0 ,
         optimalWindDir = (310.0 + 180.0) % 360.0,
         description = R.string.description_ervika,
-        modelName = "stad20143x2v",
-        pointId = 2
     ),
 
     //Lofoten
@@ -53,8 +47,6 @@ enum class SurfArea(
         optimalWaveDir = 300.0,
         optimalWindDir = (300.0 + 180.0) % 360.0,
         description = R.string.description_skagsanden,
-        modelName = "lofoten2v",
-        pointId = 9
     ),
 
     UNSTAD(
@@ -66,8 +58,6 @@ enum class SurfArea(
         optimalWaveDir = 320.0,
         optimalWindDir = (320.0 + 180.0) % 360.0,
         description = R.string.description_unstad,
-        modelName = "lofoten2v",
-        pointId = 10
     ),
 
     //Sør-vest
@@ -80,8 +70,6 @@ enum class SurfArea(
         optimalWaveDir = 270.0,
         optimalWindDir = (270.0 + 180.0) % 360.0,
         description = R.string.description_jaeren,
-        modelName = "rogaland2v",
-        pointId = 36
     ),
 
     SOLA(
@@ -93,8 +81,6 @@ enum class SurfArea(
         optimalWaveDir = 270.0,
         optimalWindDir = (270 + 180.0) % 360.0,
         description = R.string.description_sola,
-        modelName = "rogaland2v",
-        pointId = 35
     ),
 
     HELLESTO(
@@ -106,8 +92,6 @@ enum class SurfArea(
         optimalWaveDir = 285.0,
         optimalWindDir = (285.0 + 180.0) % 360.0,
         description = R.string.description_hellesto,
-        modelName = "rogaland2v",
-        pointId = 35
     ),
 
     BRUSAND(
@@ -119,8 +103,6 @@ enum class SurfArea(
         optimalWaveDir = 215.0,
         optimalWindDir = (215.0 + 180.0) % 360.0,
         description = R.string.description_brusand,
-        modelName = "jaren2v",
-        pointId = 25
     ),
 
     STAVASANDEN(
@@ -132,8 +114,6 @@ enum class SurfArea(
         optimalWaveDir = 320.0,
         optimalWindDir = (320.0 + 180.0) % 360.0,
         description = R.string.description_stavasanden,
-        modelName = "rogaland2v",
-        pointId = 55
     ),
 
     SANDVESAND(
@@ -145,8 +125,6 @@ enum class SurfArea(
         optimalWaveDir = 230.0,
         optimalWindDir = (230.0 + 180.0) % 360.0,
         description = R.string.description_sandvesand,
-        modelName = "rogaland2v",
-        pointId = 34
     ),
 
     MJOLHUSSAND(
@@ -158,8 +136,6 @@ enum class SurfArea(
         optimalWaveDir = 275.0,
         optimalWindDir = (275.0 + 180.0) % 360.0,
         description = R.string.description_mjolhussand,
-        modelName = "rogaland2v",
-        pointId = 34
     ),
 
     //Østlandet
@@ -172,8 +148,6 @@ enum class SurfArea(
         optimalWaveDir = 190.0,
         optimalWindDir = (190.0 + 180.0) % 360.0,
         description = R.string.description_saltstein,
-        modelName = "ytre_oslofjord2v",
-        pointId = 1
     )
 }
 
