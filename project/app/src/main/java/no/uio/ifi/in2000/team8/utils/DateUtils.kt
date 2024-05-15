@@ -1,4 +1,4 @@
-package com.example.myapplication.utils
+package no.uio.ifi.in2000.team8.utils
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

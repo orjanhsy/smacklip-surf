@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.myapplication"
+    namespace = "no.uio.ifi.in2000.team8"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.myapplication"
+        applicationId = "no.uio.ifi.in2000.team8"
         minSdk = 26
         targetSdk = 34
         versionCode = 1

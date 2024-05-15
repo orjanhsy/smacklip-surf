@@ -1,6 +1,6 @@
-package com.example.myapplication.model.conditions
+package no.uio.ifi.in2000.team8.model.conditions
 
-import com.example.myapplication.R
+import no.uio.ifi.in2000.team8.R
 
 enum class ConditionStatus(val description: String, val surfBoard: Int, val value: Int) {
     GREAT("Utmerket", R.drawable.greenboard, 0),

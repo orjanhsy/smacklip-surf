@@ -1,6 +1,6 @@
-package com.example.myapplication.model.surfareas
+package no.uio.ifi.in2000.team8.model.surfareas
 
-import com.example.myapplication.R
+import no.uio.ifi.in2000.team8.R
 
 
 enum class SurfArea(

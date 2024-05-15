@@ -1,9 +1,9 @@
-package com.example.myapplication.data.metalerts
+package no.uio.ifi.in2000.team8.data.metalerts
 
 import android.util.Log
-import com.example.myapplication.utils.HTTPServiceHandler.METALERTS_URL
-import com.example.myapplication.model.metalerts.MetAlerts
-import com.example.myapplication.utils.HTTPServiceHandler
+import no.uio.ifi.in2000.team8.utils.HTTPServiceHandler.METALERTS_URL
+import no.uio.ifi.in2000.team8.model.metalerts.MetAlerts
+import no.uio.ifi.in2000.team8.utils.HTTPServiceHandler
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException

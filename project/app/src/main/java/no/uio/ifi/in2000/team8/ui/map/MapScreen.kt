@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.map
+package no.uio.ifi.in2000.team8.ui.map
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -56,15 +56,15 @@ import androidx.compose.ui.viewinterop.NoOpUpdate
 import androidx.core.graphics.drawable.toBitmap
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.myapplication.R
-import com.example.myapplication.model.surfareas.SurfArea
-import com.example.myapplication.ui.common.composables.BottomBar
-import com.example.myapplication.ui.common.composables.SearchBar
-import com.example.myapplication.ui.theme.AppTheme
-import com.example.myapplication.ui.theme.AppTypography
-import com.example.myapplication.ui.theme.onSurfaceVariantLight
-import com.example.myapplication.utils.MapUtils
-import com.example.myapplication.utils.ResourceUtils
+import no.uio.ifi.in2000.team8.R
+import no.uio.ifi.in2000.team8.model.surfareas.SurfArea
+import no.uio.ifi.in2000.team8.ui.common.composables.BottomBar
+import no.uio.ifi.in2000.team8.ui.common.composables.SearchBar
+import no.uio.ifi.in2000.team8.ui.theme.AppTheme
+import no.uio.ifi.in2000.team8.ui.theme.AppTypography
+import no.uio.ifi.in2000.team8.ui.theme.onSurfaceVariantLight
+import no.uio.ifi.in2000.team8.utils.MapUtils
+import no.uio.ifi.in2000.team8.utils.ResourceUtils
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.MapView

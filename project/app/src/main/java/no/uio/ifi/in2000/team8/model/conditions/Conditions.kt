@@ -1,4 +1,4 @@
-package com.example.myapplication.model.conditions
+package no.uio.ifi.in2000.team8.model.conditions
 
 enum class Conditions(val value: Double) {
     // always poor if:

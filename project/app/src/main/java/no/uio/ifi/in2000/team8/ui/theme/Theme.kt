@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.theme
+package no.uio.ifi.in2000.team8.ui.theme
 
 import android.app.Activity
 import android.os.Build

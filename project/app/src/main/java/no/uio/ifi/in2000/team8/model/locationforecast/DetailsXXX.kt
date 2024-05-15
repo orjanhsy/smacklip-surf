@@ -1,4 +1,4 @@
-package com.example.myapplication.model.locationforecast
+package no.uio.ifi.in2000.team8.model.locationforecast
 
 data class DetailsXXX(
     val air_temperature_max: Double,

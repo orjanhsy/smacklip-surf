@@ -1,17 +1,17 @@
-package com.example.myapplication
+package no.uio.ifi.in2000.team8
 
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
-import com.example.myapplication.data.metalerts.MetAlertsRepository
-import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
-import com.example.myapplication.data.settings.SettingsRepository
-import com.example.myapplication.data.settings.SettingsRepositoryImpl
-import com.example.myapplication.data.settings.SettingsSerializer
-import com.example.myapplication.data.weatherforecast.WeatherForecastRepository
-import com.example.myapplication.data.weatherforecast.WeatherForecastRepositoryImpl
-import com.example.myapplication.ui.info.InfoScreenViewModel
+import no.uio.ifi.in2000.team8.data.metalerts.MetAlertsRepository
+import no.uio.ifi.in2000.team8.data.metalerts.MetAlertsRepositoryImpl
+import no.uio.ifi.in2000.team8.data.settings.SettingsRepository
+import no.uio.ifi.in2000.team8.data.settings.SettingsRepositoryImpl
+import no.uio.ifi.in2000.team8.data.settings.SettingsSerializer
+import no.uio.ifi.in2000.team8.data.weatherforecast.WeatherForecastRepository
+import no.uio.ifi.in2000.team8.data.weatherforecast.WeatherForecastRepositoryImpl
+import no.uio.ifi.in2000.team8.ui.info.InfoScreenViewModel
 
 
 private const val DATA_STORE_FILE_NAME = "settings.pb"
