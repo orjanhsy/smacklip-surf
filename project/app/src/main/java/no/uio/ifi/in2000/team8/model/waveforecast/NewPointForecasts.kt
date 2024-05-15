@@ -1,8 +1,5 @@
 package no.uio.ifi.in2000.team8.model.waveforecast
 
-
-typealias NewPointForecasts = List<NewPointForecast>;
-
 data class NewPointForecast(
     val totalSignificantWaveHeight: Double,
     val expectedMaximumWaveHeight: Double,

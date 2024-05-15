@@ -13,7 +13,6 @@ enum class SurfArea(
     val optimalWindDir: Double,
     val description: Int,
 
-    //nye = Sola, hellestø, Brusand, Sandvesand, Mjølhussand
 ) {
     HODDEVIK(
         locationName = "Hoddevik",
