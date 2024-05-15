@@ -33,14 +33,16 @@ import no.uio.ifi.in2000.team8.R
 import no.uio.ifi.in2000.team8.ui.theme.AppTypography
 
 @Composable
-fun CustomAlert(
-    modifier: Modifier = Modifier,
+fun <T> CustomAlert(
+    title: String,
     message: String,
     actionText: String,
     warningIcon: Int,
+    data: T?,
     time: String,
     showAlert: MutableState<Boolean>,
     action: (() -> Unit)? = null,
+    modifier: Modifier = Modifier
 ) {
     if (showAlert.value) {
         Box(
@@ -138,9 +140,11 @@ fun PreviewCustomAlert() {
     ) {
         CustomAlert(
             time = "1.jan - 3.jan",
+            title = "Farevarsel",
             message = "STOOORM incoming, søk dekning søk dekning søk dekning søk dekning",
             actionText = "OK",
             warningIcon = R.drawable.icon_warning_orange,
+            data = null,
             showAlert = remember { mutableStateOf(true) },
             action = null
         )
