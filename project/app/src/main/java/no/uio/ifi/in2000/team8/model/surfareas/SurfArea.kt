@@ -19,7 +19,7 @@ enum class SurfArea(
 ) {
     HODDEVIK(
         locationName = "Hoddevik",
-        areaName = "Stadt",
+        areaName = "Stad",
         lat = 62.12503333,
         lon = 5.1493,
         image = R.drawable.cover___hoddevik,
@@ -32,7 +32,7 @@ enum class SurfArea(
 
     ERVIKA(
         locationName = "Ervika",
-        areaName = "Stadt",
+        areaName = "Stad",
         lat = 62.17145,
         lon = 5.0993833,
         image = R.drawable.cover__ervika ,

@@ -23,7 +23,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities.Local
 
 interface WeatherForecastRepository {
     val ofLfForecast: StateFlow<AllSurfAreasOFLF>

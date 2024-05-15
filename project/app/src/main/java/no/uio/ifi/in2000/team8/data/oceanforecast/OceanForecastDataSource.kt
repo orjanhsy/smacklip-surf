@@ -23,7 +23,7 @@ class OceanForecastDataSource(
     private val path: String = OCEAN_FORECAST_URL
 ) {
 
-    private val client = HttpClient() {
+    private val client = HttpClient {
         defaultRequest {
             url(OCEAN_FORECAST_URL)
             headers.appendIfNameAbsent(API_KEY, API_HEADER)

@@ -3,7 +3,7 @@ package no.uio.ifi.in2000.team8.model.metalerts
 import com.google.gson.annotations.SerializedName
 
 data class Properties (
-    @SerializedName("MunicipalityId"       ) var MunicipalityId       : String?              = null,
+    @SerializedName("MunicipalityId"       ) var municipalityId       : String?              = null,
     @SerializedName("administrativeId"     ) var administrativeId     : String?              = null,
     @SerializedName("area"                 ) var area                 : String?              = null,
     @SerializedName("awarenessResponse"    ) var awarenessResponse    : String?              = null,

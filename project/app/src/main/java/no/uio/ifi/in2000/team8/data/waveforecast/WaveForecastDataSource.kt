@@ -36,7 +36,7 @@ class WaveForecastDataSource {
 
     private val bearerTokenStorage = mutableListOf<BearerTokens>()
 
-    private val client = HttpClient() {
+    private val client = HttpClient {
         install(DefaultRequest) {
             url(WF_BASE_URL)
         }
@@ -48,7 +48,7 @@ class WaveForecastDataSource {
         install(HttpRequestRetry) {
             //handles 401 exceptions, retries getting access tokens
             maxRetries = 3
-            retryIf{request, response ->
+            retryIf{ _, response ->
                 response.status.value == 401
             }
             delayMillis { retry ->
