@@ -34,23 +34,28 @@ Et viktig begrep i UDF er *Single Source of Truth*, SSOT. SSOT handler om at all
 ## API-nivå og verktøy
 
 ### API-nivå
-Vi bruker API-nivå XXXXX. Dette er fordi XXXX.
+Applikasjonen har minimum API-nivå 26, grunnet bruk av java.time biblioteket. Valgt API-nivå er 34.
 
 ### Verktøy
+
+#### Kotlin
 
 #### Proto Data Store
 Vi bruker Proto Data Store til å generere filer som lagrer favorites og valg av theme slik at dette ikke forsvinner hver gang appen lukkes. 
 Først har vi definert en protobuf-fil som lar oss definere strukturen til dataene og tillater generering av kode for serialisere og deserialisere effektivt. 
 Deretter bruker vi en settingsSerializer som sikrer effektiv og strukturert lagring av dataene fra protobuf. 
 Vi bruker SettingsRepository som en mellommann mellom grensesnittet til appen og Proto Data Store. Det er repository som henter, lagrer og behandler dataene fra Settings. 
-For å implementere Proto Data Store, har vi fulgt denne [dokumentasjonen](https://developer.android.com/topic/libraries/architecture/datastore). 
+For å implementere Proto Data Store, har vi fulgt denne [dokumentasjonen](https://developer.android.com/topic/libraries/architecture/datastore).
+
 #### Ktor
 Ktor brukes til å håndtere HTTP-forespørsler til de brukte API-ene. 
 ContentNegotiation brukes for å tillatte mottakelse av data på JSON-format. GSON er brukt til å deserialisere JSON-objekter til kotlink-klasser.
-Versjon må jevnlig vedlikeholdes i build.gradle.
+Versjon må jevnlig vedlikeholdes i build.gradle.\
+Dokumentasjon: https://ktor.io/docs/client-create-new-application.html
 
 #### LocalDateTime
-Vi bruker Java Time sitt LocalDateTime API til å behandle tidspunkt i UI-laget. Om appen senere skal tilbys på andre plattformer enn Android må tidspunkt enten håndteres manuelt eller av ett annet tredjepartsbibliotek.
+Vi bruker Java Time sitt LocalDateTime API til å behandle tidspunkt i UI-laget. Om appen senere skal tilbys på andre plattformer enn Android må tidspunkt enten håndteres manuelt eller av ett annet tredjepartsbibliotek.\
+Dokumentasjon: https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html
 
 #### MapBox
 Hva bruker vi det til, gjerne clarify det med viewmodel og sånn så det ikke ser random ut i skissen.
@@ -63,7 +68,9 @@ API-et krever autentisering gjennom https://id.barentswatch.no/connect/token
 
 #### OceanForecast
 Vi bruker METs API OceanForecast for å hente bølgeretning og bølgeperiode.
-API-et hentes gjennom en proxy hos IFI ved UIO.
+API-et hentes gjennom en proxy hos IFI ved UIO.\
+
+Dokumentasjon: https://api.met.no/weatherapi/oceanforecast/2.0/documentation
 
 #### LocationForecast
 Vi bruker METs API LocationForecast (*complete* varianten) for å hente vindretning, vindhastighet, vindkast, temperatur og værsymboler.
@@ -78,6 +85,7 @@ Jetpack Compose er UI-vektøysett for å bygge brukergrensesnitt. Vi har benytte
 
 #### Material3
 Metrial3 er nyeste versjonen av Material Design, designprinsipper utviklet av Google. Vi har benyttet Material3 komponenter, fargepaletter og ikoner.
+
 
 
 
