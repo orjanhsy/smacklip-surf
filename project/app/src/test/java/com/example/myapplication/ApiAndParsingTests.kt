@@ -35,7 +35,10 @@ class ApiAndParsingTests {
     fun locationNameIsNotInAnyAlertIfRelevantAlertsIsEmptyForThatArea()= runBlocking {
         metAlertsRepository.loadAllRelevantAlerts()
         val allAlerts = metAlertsDataSource.fetchMetAlertsData()
+        println(allAlerts)
         val relevantAlerts: Map<SurfArea, List<Alert>> = metAlertsRepository.alerts.value
+        println(relevantAlerts)
+
         SurfArea.entries.forEach {
             if (relevantAlerts[it]?.isEmpty() == true) {
                 assert(it.locationName !in allAlerts.features.map {alert -> alert.properties?.area })
