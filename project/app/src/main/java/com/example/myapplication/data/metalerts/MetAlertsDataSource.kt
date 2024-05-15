@@ -20,10 +20,6 @@ private const val TAG = "MetAlertsDS"
 class MetAlertsDataSource(private val metAlertsUrl: String = METALERTS_URL) {
 
     private val client = HttpClient {
-        defaultRequest {
-            url(metAlertsUrl)
-            headers.appendIfNameAbsent(HTTPServiceHandler.API_KEY, HTTPServiceHandler.API_HEADER)
-        }
         install(ContentNegotiation) {
             gson()
         }
