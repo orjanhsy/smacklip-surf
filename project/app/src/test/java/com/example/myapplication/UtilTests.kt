@@ -1,12 +1,10 @@
 package com.example.myapplication
 
-import com.example.myapplication.data.metalerts.MetAlertsRepositoryImpl
 import com.example.myapplication.data.weatherforecast.WeatherForecastRepositoryImpl
 import com.example.myapplication.utils.DateUtils
-import com.example.myapplication.utils.RecourseUtils
+import com.example.myapplication.utils.ResourceUtils
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
-import java.time.format.DateTimeFormatter
 
 class UtilTests {
 
@@ -14,7 +12,7 @@ class UtilTests {
     fun symbolCodeIsInResourceUtils(): Unit = runBlocking{
         val repo = WeatherForecastRepositoryImpl()
         repo.loadOFlF()
-        val resourceUtils = RecourseUtils()
+        val resourceUtils = ResourceUtils()
         val ofLfForecast = repo.ofLfForecast.value
         ofLfForecast.next7Days.values.map {week ->
             week.forecast.map {day ->
