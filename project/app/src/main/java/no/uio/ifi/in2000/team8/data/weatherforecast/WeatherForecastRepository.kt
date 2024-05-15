@@ -11,7 +11,7 @@ import no.uio.ifi.in2000.team8.model.oceanforecast.DataOF
 import no.uio.ifi.in2000.team8.model.weatherforecast.AllSurfAreasOFLF
 import no.uio.ifi.in2000.team8.model.weatherforecast.DataAtTime
 import no.uio.ifi.in2000.team8.model.weatherforecast.DayForecast
-import no.uio.ifi.in2000.team8.model.weatherforecast.Forecast7DaysOFLF
+import no.uio.ifi.in2000.team8.model.weatherforecast.ForecastOFLF
 import no.uio.ifi.in2000.team8.model.surfareas.SurfArea
 import no.uio.ifi.in2000.team8.model.waveforecast.AllWavePeriods
 import kotlinx.coroutines.Deferred
@@ -76,7 +76,7 @@ class WeatherForecastRepositoryImpl(
                 }
                 AllSurfAreasOFLF(
                     forecasts = all7DayForecasts.keys.associateWith {
-                        Forecast7DaysOFLF(
+                        ForecastOFLF(
                             all7DayForecasts[it]?.await() ?: listOf()
                         )
                     }

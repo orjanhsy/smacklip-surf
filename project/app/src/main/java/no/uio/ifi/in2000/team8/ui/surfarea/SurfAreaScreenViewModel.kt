@@ -6,7 +6,7 @@ import no.uio.ifi.in2000.team8.data.metalerts.MetAlertsRepository
 import no.uio.ifi.in2000.team8.data.weatherforecast.WeatherForecastRepository
 import no.uio.ifi.in2000.team8.model.conditions.ConditionStatus
 import no.uio.ifi.in2000.team8.model.metalerts.Alert
-import no.uio.ifi.in2000.team8.model.weatherforecast.Forecast7DaysOFLF
+import no.uio.ifi.in2000.team8.model.weatherforecast.ForecastOFLF
 import no.uio.ifi.in2000.team8.model.surfareas.SurfArea
 import no.uio.ifi.in2000.team8.utils.ConditionUtils
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 data class SurfAreaScreenUiState(
-    val forecastNext7Days: Forecast7DaysOFLF = Forecast7DaysOFLF(),
+    val forecastNext7Days: ForecastOFLF = ForecastOFLF(),
     val alertsSurfArea: List<Alert> = emptyList(),
     val maxWaveHeights: List<Double> = emptyList(),
     val minWaveHeights: List<Double> = emptyList(),
@@ -39,21 +39,21 @@ class SurfAreaScreenViewModel(
     ) { oflf, wavePeriods, sa, alerts ->
 
         // gets forecast data and alerts relevant to certain surf area
-        val newOfLf: Forecast7DaysOFLF = oflf.forecasts[sa] ?: Forecast7DaysOFLF()
+        val newOfLf: ForecastOFLF = oflf.forecasts[sa] ?: ForecastOFLF()
         val newAlerts: List<Alert> = alerts[sa] ?: listOf()
         val wavePeriodsInArea: Map<Int, List<Double?>>  = wavePeriods.wavePeriods[sa] ?: mapOf()
 
         // gets min-max waveHeights per day for display
-        val newMaxWaveHeights = newOfLf.forecast.map {
+        val newMaxWaveHeights = newOfLf.dayForecasts.map {
             it.data.values.maxOf {dataAtTime -> dataAtTime.waveHeight }
         }
-        val newMinWaveHeights = newOfLf.forecast.map {
+        val newMinWaveHeights = newOfLf.dayForecasts.map {
             it.data.values.minOf {dataAtTime -> dataAtTime.waveHeight }
         }
 
         // creates list of the best conditions per day
         val conditionUtil = ConditionUtils()
-        val newBestConditions = newOfLf.forecast.map {dayForecasts ->
+        val newBestConditions = newOfLf.dayForecasts.map { dayForecasts ->
             val availableTimes = dayForecasts.data.keys.sortedBy {time -> time.hour }
 
             dayForecasts.data.entries.map { (time, dataAtTime) ->

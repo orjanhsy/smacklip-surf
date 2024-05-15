@@ -15,7 +15,7 @@ class UtilTests {
         val resourceUtils = ResourceUtils()
         val ofLfForecast = repo.ofLfForecast.value
         ofLfForecast.forecasts.values.map { week ->
-            week.forecast.map {day ->
+            week.dayForecasts.map { day ->
                 day.data.values.map {
                     assert(resourceUtils.findWeatherSymbol(it.symbolCode) != R.drawable.spm)
                 }
