@@ -4,11 +4,6 @@ package no.uio.ifi.in2000.team8.data.metalerts
 import android.util.Log
 import no.uio.ifi.in2000.team8.model.surfareas.SurfArea
 import no.uio.ifi.in2000.team8.model.metalerts.Alert
-import no.uio.ifi.in2000.team8.model.metalerts.MetAlerts
-import io.ktor.client.plugins.ClientRequestException
-import io.ktor.client.plugins.ServerResponseException
-import io.ktor.client.statement.bodyAsText
-import io.ktor.client.statement.readText
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

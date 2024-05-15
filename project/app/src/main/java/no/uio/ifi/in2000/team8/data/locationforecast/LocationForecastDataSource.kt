@@ -17,13 +17,14 @@ import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.serialization.gson.gson
 import io.ktor.util.appendIfNameAbsent
+
 private const val TAG = "LFDS"
 class LocationForecastDataSource(
     private val locationForecastUrl: String = LOCATION_FORECAST_URL
 
 ) {
 
-    private val client = HttpClient(){
+    private val client = HttpClient{
         defaultRequest {
             url(LOCATION_FORECAST_URL)
             headers.appendIfNameAbsent(API_KEY, API_HEADER)
