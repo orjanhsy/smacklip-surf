@@ -28,7 +28,7 @@ data class SurfAreaScreenUiState(
 
 class SurfAreaScreenViewModel(
     private val forecastRepo: WeatherForecastRepository,
-    private val alertsRepo: MetAlertsRepository
+    alertsRepo: MetAlertsRepository
 ): ViewModel() {
 
     val surfAreaScreenUiState: StateFlow<SurfAreaScreenUiState> = combine(
@@ -36,10 +36,10 @@ class SurfAreaScreenViewModel(
         forecastRepo.wavePeriods,
         forecastRepo.areaInFocus,
         alertsRepo.alerts
-    ) { oflf, wavePeriods, sa, alerts ->
+    ) { ofLf, wavePeriods, sa, alerts ->
 
         // gets forecast data and alerts relevant to certain surf area
-        val newOfLf: ForecastOFLF = oflf.forecasts[sa] ?: ForecastOFLF()
+        val newOfLf: ForecastOFLF = ofLf.forecasts[sa] ?: ForecastOFLF()
         val newAlerts: List<Alert> = alerts[sa] ?: listOf()
         val wavePeriodsInArea: Map<Int, List<Double?>>  = wavePeriods.wavePeriods[sa] ?: mapOf()
 
