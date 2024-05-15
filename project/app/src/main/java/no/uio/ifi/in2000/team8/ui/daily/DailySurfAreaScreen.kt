@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.CallMade
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Air
 import androidx.compose.material.icons.outlined.CallMade
@@ -184,7 +185,6 @@ fun DailySurfAreaScreen(
 
                             AllInfoCard(
                                 timestamp = formattedHour,
-                                surfArea = surfArea,
                                 waveHeight = waveHeight,
                                 windSpeed = windSpeed,
                                 windGust = windGust,
@@ -205,7 +205,6 @@ fun DailySurfAreaScreen(
 @Composable
 fun AllInfoCard(
     timestamp: String = "x",
-    surfArea: SurfArea,
     waveHeight: Any = 0.0,
     windSpeed: Any = 0.0,
     windGust: Any = 0.0,
@@ -298,7 +297,7 @@ fun AllInfoCard(
 
                     //wind direction arrow
                     Icon(
-                        imageVector = Icons.Outlined.CallMade,
+                        imageVector = Icons.AutoMirrored.Outlined.CallMade,
                         contentDescription = "Arrow",
                         tint=  MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier
