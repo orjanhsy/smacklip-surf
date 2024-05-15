@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Air
 import androidx.compose.material.icons.outlined.CallMade
@@ -35,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -52,8 +54,8 @@ import no.uio.ifi.in2000.team8.ui.theme.AppTypography
 import no.uio.ifi.in2000.team8.utils.ResourceUtils
 import no.uio.ifi.in2000.team8.utils.viewModelFactory
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
-@SuppressLint("SuspiciousIndentation", "DefaultLocale")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DailySurfAreaScreen(
@@ -84,7 +86,7 @@ fun DailySurfAreaScreen(
                                 .height(50.dp)
                         ) {
                             Icon(
-                                Icons.Default.ArrowBack,
+                                Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = "Back",
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier
@@ -148,11 +150,12 @@ fun DailySurfAreaScreen(
                     modifier = Modifier
                         .padding(5.dp)
                 ) {
-
+                        val hourFormatter = DateTimeFormatter.ofPattern("HH")
                         items(times.size) { index ->
                             val time = times[index]
                             val hour = time.hour
-                            val formattedHour = String.format("%02d", hour)
+
+                            val formattedHour = time.format(hourFormatter)
 
                             val surfAreaDataForHour: DataAtTime? = surfAreaDataForDay[time]
 
