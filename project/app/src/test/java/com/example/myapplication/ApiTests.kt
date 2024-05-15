@@ -59,7 +59,7 @@ class ApiTests {
         val allAlerts = metAlertsDataSource.fetchMetAlertsData()
         val relevantAlerts: Map<SurfArea, List<Alert>> = metAlertsRepository.alerts.value
         SurfArea.entries.forEach {
-            if (relevantAlerts[it]?.isNotEmpty() == true) {
+            if (relevantAlerts[it]?.isEmpty() == true) {
                 assert(it.locationName !in allAlerts.features.map {alert -> alert.properties?.area })
             }
         }
