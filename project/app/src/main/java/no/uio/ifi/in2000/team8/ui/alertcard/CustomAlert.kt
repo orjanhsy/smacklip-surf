@@ -67,7 +67,7 @@ fun CustomAlert(
                     // warning icon
                     Image(
                         painter = painterResource(id = warningIcon),
-                        contentDescription = "Image",
+                        contentDescription = "Farevarsel",
                         modifier = Modifier
                             .size(100.dp)
                             .align(Alignment.CenterHorizontally)
