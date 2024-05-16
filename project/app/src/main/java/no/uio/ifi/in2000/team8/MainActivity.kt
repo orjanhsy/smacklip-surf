@@ -176,7 +176,7 @@ fun SmackLipNavigation() {
         }
         composable("DailySurfAreaScreen/{surfArea}/{dayIndex}") { backStackEntry ->
             val surfArea = backStackEntry.arguments?.getString("surfArea") ?: ""
-            val dayIndex = backStackEntry.arguments?.getString("dayIndex")?.toInt() ?: 0 // TODO: Handle differently
+            val dayIndex = backStackEntry.arguments?.getString("dayIndex")?.toInt() ?: 0
             DailySurfAreaScreen(surfAreaName = surfArea, dayOfMonth = dayIndex, dsvm, navController)
         }
         composable("MapScreen"){
