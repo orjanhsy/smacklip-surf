@@ -1,6 +1,7 @@
 package no.uio.ifi.in2000.team8.ui.surfarea
 
 //import androidx.compose.material.icons.outlined.Tsunami
+
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -49,13 +50,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import no.uio.ifi.in2000.team8.R
 import no.uio.ifi.in2000.team8.SmackLipApplication
 import no.uio.ifi.in2000.team8.model.conditions.ConditionStatus
@@ -65,13 +63,10 @@ import no.uio.ifi.in2000.team8.model.weatherforecast.DataAtTime
 import no.uio.ifi.in2000.team8.ui.alertcard.CustomAlert
 import no.uio.ifi.in2000.team8.ui.common.composables.BottomBar
 import no.uio.ifi.in2000.team8.ui.common.composables.HeaderCard
-import no.uio.ifi.in2000.team8.ui.theme.AppTheme
 import no.uio.ifi.in2000.team8.ui.theme.AppTypography
 import no.uio.ifi.in2000.team8.ui.theme.outlineLight
 import no.uio.ifi.in2000.team8.utils.AlertsUtils
-
 import no.uio.ifi.in2000.team8.utils.DateUtils
-import no.uio.ifi.in2000.team8.utils.viewModelFactory
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -464,25 +459,5 @@ fun DayPreviewCard(
                 }
             }
         }
-    }
-}
-
-
-
-
-
-@Preview(showBackground = true)
-@Composable
-private fun PreviewSurfAreaScreen() {
-    val savm = viewModel<SurfAreaScreenViewModel>(
-        factory = viewModelFactory {
-            SurfAreaScreenViewModel(
-                SmackLipApplication.container.stateFulRepo,
-                SmackLipApplication.container.alertsRepo
-            )
-        }
-    )
-    AppTheme {
-        SurfAreaScreen("Solastranden", savm, rememberNavController())
     }
 }
