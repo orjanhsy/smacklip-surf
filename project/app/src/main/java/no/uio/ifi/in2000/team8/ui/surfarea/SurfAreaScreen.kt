@@ -146,6 +146,10 @@ fun SurfAreaScreen(
                         }
                     }
                 },
+                /*
+                This causes IDE-warning as smallTopAppBarColors is deprecated.
+                We made the decision to keep it as there was no alternative worth our time.
+                 */
                 colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.inversePrimary)
             )
         },
