@@ -128,10 +128,10 @@ fun SurfAreaScreen(
                 //alert icon if alert is active
                 actions = {
                     if (alerts.isNotEmpty()) {
-                        IconButton(onClick = {
-                            showAlert = true },
+                        IconButton(
+                            onClick = { showAlert = true },
                             modifier = Modifier.fillMaxHeight()
-                            ) {
+                        ) {
                             alerts.first().properties?.awarenessLevel?.let {
                                 alertsUtils.getIconBasedOnAwarenessLevel(
                                     it
@@ -179,23 +179,23 @@ fun SurfAreaScreen(
                 val currentHour = currentTime.hour
                 var headerIcon = ""
 
-                    val times = surfAreaDataForDay.keys.sortedWith(
-                        compareBy<LocalDateTime> {
-                            it.month }.thenBy { it.dayOfMonth }
-                    )
+                val times = surfAreaDataForDay.keys.sortedWith(
+                    compareBy<LocalDateTime> {
+                        it.month }.thenBy { it.dayOfMonth }
+                )
 
-                    //getting weather icon for headercard
-                    for (time in times) {
-                        val hour = time.hour
-                        if (hour == currentHour) {
-                            headerIcon = surfAreaDataForDay[time]!!.symbolCode
-                        }
+                //getting weather icon for headercard
+                for (time in times) {
+                    val hour = time.hour
+                    if (hour == currentHour) {
+                        headerIcon = surfAreaDataForDay[time]!!.symbolCode
                     }
-                    HeaderCard(
-                        surfArea = surfArea,
-                        icon = headerIcon,
-                        LocalDateTime.now())
-
+                }
+                HeaderCard(
+                    surfArea = surfArea,
+                    icon = headerIcon,
+                    LocalDateTime.now()
+                )
             }
             item {
                 LazyRow(
