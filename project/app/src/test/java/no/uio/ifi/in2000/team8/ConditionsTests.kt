@@ -14,38 +14,38 @@ class ConditionsTests {
     private val conditionsUtils = ConditionUtils()
 
 
-    private object greatConditionsWithoutAlert {
+    private object GreatConditionsWithoutAlert {
         val location = SurfArea.HODDEVIK
-        val windSpeed = 2.0
+        const val WIND_SPEED = 2.0
         val windDir = location.optimalWindDir
-        val waveHeight = 2.0
+        const val WAVE_HEIGHT = 2.0
         val waveDir = location.optimalWaveDir
-        val wavePeriod = 12.0
+        const val WAVE_PERIOD = 12.0
     }
-    private object greatConditionsWithoutAlertOpositWind {
+    private object GreatConditionsWithoutAlertOppositeWind {
         val location = SurfArea.HODDEVIK
-        val windSpeed = 2.0
+        const val WIND_SPEED = 2.0
         val windDir = (location.optimalWindDir + 180) % 360
-        val waveHeight = 2.0
+        const val WAVE_HEIGHT = 2.0
         val waveDir = location.optimalWaveDir
-        val wavePeriod = 12.0
+        const val WAVE_PERIOD = 12.0
     }
 
-    private object decentConditionsHoddevik {
+    private object DecentConditionsHoddevik {
         val location = SurfArea.HODDEVIK
-        val windSpeed = 6.0
+        const val WIND_SPEED = 6.0
         val windDir = location.optimalWindDir
-        val waveHeight = 3.0
+        const val WAVE_HEIGHT = 3.0
         val waveDir = location.optimalWaveDir - 25 % 360
-        val wavePeriod = 9.0
+        const val WAVE_PERIOD = 9.0
     }
-    private object splitConditions {
+    private object SplitConditions {
         val location = SurfArea.HODDEVIK
-        val windSpeed = 15.0
+        const val WIND_SPEED = 15.0
         val windDir = SurfArea.HODDEVIK.optimalWindDir - 90 % 360
-        val waveHeight = 2.0
+        const val WAVE_HEIGHT = 2.0
         val waveDir = SurfArea.HODDEVIK.optimalWaveDir - 45 % 360
-        val wavePeriod = 10.6
+        const val WAVE_PERIOD = 10.6
     }
 
 
@@ -53,12 +53,12 @@ class ConditionsTests {
     @Test
     fun conditionsAreDecentWhenStateIsConsideredDecent() {
         val status =  conditionsUtils.getConditionStatus(
-            location = decentConditionsHoddevik.location,
-            windSpeed = decentConditionsHoddevik.windSpeed,
-            windDir = decentConditionsHoddevik.windDir,
-            waveHeight = decentConditionsHoddevik.waveHeight,
-            waveDir = decentConditionsHoddevik.waveDir,
-            wavePeriod = decentConditionsHoddevik.wavePeriod,
+            location = DecentConditionsHoddevik.location,
+            windSpeed = DecentConditionsHoddevik.WIND_SPEED,
+            windDir = DecentConditionsHoddevik.windDir,
+            waveHeight = DecentConditionsHoddevik.WAVE_HEIGHT,
+            waveDir = DecentConditionsHoddevik.waveDir,
+            wavePeriod = DecentConditionsHoddevik.WAVE_PERIOD,
         )
         assert(status == ConditionStatus.DECENT) {"Status should be Greit but was $status"}
     }
@@ -68,36 +68,36 @@ class ConditionsTests {
         // while some conditions are great, it should be poor if the rest are bad
 
         val status = conditionsUtils.getConditionStatus(
-            location = splitConditions.location,
-            windSpeed = splitConditions.windSpeed,
-            windDir = splitConditions.windDir,
-            waveHeight = splitConditions.waveHeight,
-            waveDir = splitConditions.waveDir,
-            wavePeriod = splitConditions.wavePeriod,
+            location = SplitConditions.location,
+            windSpeed = SplitConditions.WIND_SPEED,
+            windDir = SplitConditions.windDir,
+            waveHeight = SplitConditions.WAVE_HEIGHT,
+            waveDir = SplitConditions.waveDir,
+            wavePeriod = SplitConditions.WAVE_PERIOD,
         )
         assert(status == ConditionStatus.POOR) { "Status should be Dårlig but was $status" }
     }
     @Test
     fun conditionsAreGreatWhenConsideredGreat() {
         val status = conditionsUtils.getConditionStatus(
-            location = greatConditionsWithoutAlert.location,
-            windSpeed = greatConditionsWithoutAlert.windSpeed,
-            windDir = greatConditionsWithoutAlert.windDir,
-            waveHeight = greatConditionsWithoutAlert.waveHeight,
-            waveDir = greatConditionsWithoutAlert.waveDir,
-            wavePeriod = greatConditionsWithoutAlert.wavePeriod,
+            location = GreatConditionsWithoutAlert.location,
+            windSpeed = GreatConditionsWithoutAlert.WIND_SPEED,
+            windDir = GreatConditionsWithoutAlert.windDir,
+            waveHeight = GreatConditionsWithoutAlert.WAVE_HEIGHT,
+            waveDir = GreatConditionsWithoutAlert.waveDir,
+            wavePeriod = GreatConditionsWithoutAlert.WAVE_PERIOD,
         )
         assert(status == ConditionStatus.GREAT) {"Status should be Utmerket but was $status"}
     }
     @Test
     fun conditionsAreGreatWithOppositeWind() {
         val status = conditionsUtils.getConditionStatus(
-            location = greatConditionsWithoutAlertOpositWind.location,
-            windSpeed = greatConditionsWithoutAlertOpositWind.windSpeed,
-            windDir = greatConditionsWithoutAlertOpositWind.windDir,
-            waveHeight = greatConditionsWithoutAlertOpositWind.waveHeight,
-            waveDir = greatConditionsWithoutAlertOpositWind.waveDir,
-            wavePeriod = greatConditionsWithoutAlertOpositWind.wavePeriod,
+            location = GreatConditionsWithoutAlertOppositeWind.location,
+            windSpeed = GreatConditionsWithoutAlertOppositeWind.WIND_SPEED,
+            windDir = GreatConditionsWithoutAlertOppositeWind.windDir,
+            waveHeight = GreatConditionsWithoutAlertOppositeWind.WAVE_HEIGHT,
+            waveDir = GreatConditionsWithoutAlertOppositeWind.waveDir,
+            wavePeriod = GreatConditionsWithoutAlertOppositeWind.WAVE_PERIOD,
         )
         assert(status == ConditionStatus.GREAT) { "Status should be Utmerket but was $status" }
     }

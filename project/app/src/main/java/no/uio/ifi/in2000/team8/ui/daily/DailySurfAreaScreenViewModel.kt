@@ -41,8 +41,6 @@ class DailySurfAreaScreenViewModel(
         // get wavePeriods for area at day
         val newWavePeriods: List<Double?> = wavePeriods.wavePeriods[sa]?.get(day) ?: listOf()
 
-        Log.d("DSVM", "Updated wavePeriods with $newWavePeriods for $sa at $day")
-
         // gets conditions for each forecast interval for area at day
         val times = newDataAtDay.data.map {it.key}.sortedBy { it.hour }
         val conditionUtil = ConditionUtils()
@@ -56,7 +54,6 @@ class DailySurfAreaScreenViewModel(
                     waveHeight = dataAtTime.waveHeight,
                     waveDir = dataAtTime.waveDir,
                 )
-                Log.d("DSVM", "Conditions: $dataAtTime and tp: ${newWavePeriods[times.indexOf(time)]} resulted in $conditionStatus for $sa")
                 conditionStatus
             } catch (e: IndexOutOfBoundsException) {
                 // handles situations where wavePeriods are not forecast

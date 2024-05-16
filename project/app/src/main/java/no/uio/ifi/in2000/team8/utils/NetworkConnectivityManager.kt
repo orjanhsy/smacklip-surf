@@ -16,7 +16,7 @@ interface ConnectivityObserver {
 
 }
 
-class NetworkConnectivityObserver (private val context: Context): ConnectivityObserver {
+class NetworkConnectivityObserver (context: Context): ConnectivityObserver {
 
     private val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager

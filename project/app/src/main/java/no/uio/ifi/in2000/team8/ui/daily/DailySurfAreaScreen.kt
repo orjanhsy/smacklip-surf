@@ -89,6 +89,10 @@ fun DailySurfAreaScreen(
                         }
                     }
                 },
+                /*
+                This causes IDE-warning as smallTopAppBarColors is deprecated.
+                We made the decision to keep it as there was no alternative worth our time.
+                 */
                 colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.inversePrimary)
             )
         },
@@ -104,19 +108,23 @@ fun DailySurfAreaScreen(
                     .padding(innerPadding),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                //formatting time
                 val currentTime = LocalDateTime.now()
                 val currentDay = currentTime.toLocalDate()
                 val currentHour = currentTime.hour
 
-
+                //getting weather-icon for headercard based on formatted current time
                 var headerIcon = "default_icon"
                 val headerTime: LocalDateTime
 
+                //variable for viewmodel method, getting map of daily data
                 val surfAreaDataForDay: Map<LocalDateTime, DataAtTime> = dailySurfAreaScreenUiState.dataAtDay.data
-
+                //variable used to match hour to data
                 val times = surfAreaDataForDay.keys.sortedBy { it.hour }
 
-                // icon for current hour for today
+                // header weather-icon for current hour. On "todays" surfArea the weathericon matches the hpur.
+                //On next 8 days the icon shows the midday icon
+                //icons are METs own icons, used by services such as Yr:
                 if (surfAreaDataForDay.isNotEmpty()){
                     val timesForToday = times.filter {
                         it.toLocalDate() == currentDay
@@ -138,18 +146,18 @@ fun DailySurfAreaScreen(
                 }
 
                 HeaderCard(surfArea = surfArea, icon = headerIcon, headerTime)
-                LazyColumn(
+                LazyColumn( //hour by hour displayed in scrollable cards
                     modifier = Modifier
                         .padding(5.dp)
                 ) {
-                        val hourFormatter = DateTimeFormatter.ofPattern("HH")
-                        items(times.size) { index ->
-                            val time = times[index]
-                            val hour = time.hour
-
+                        val hourFormatter = DateTimeFormatter.ofPattern("HH") //two digit hour, example: not 9 but 09
+                        items(times.size) { index -> //getting remanining hours of day
+                            val time = times[index] //time is the hour of the day
+                            val hour = time.hour //Returns hour-of-day, from 0 to 23
+                            //matching hour formatting
                             val formattedHour = time.format(hourFormatter)
 
-                            val surfAreaDataForHour: DataAtTime? = surfAreaDataForDay[time]
+                            val surfAreaDataForHour: DataAtTime? = surfAreaDataForDay[time] //getting resepctive hour-data
 
                             val windSpeed = surfAreaDataForHour?.windSpeed ?: 0.0
                             val windGust = surfAreaDataForHour?.windGust ?: 0.0
@@ -211,7 +219,7 @@ fun AllInfoCard(
 
         val resourceUtils = ResourceUtils()
 
-        // winddir
+        // winddir, can be both int and double, handled here
         val rotationAngleWind = when (windDir) {
             is Double -> windDir.toFloat()
             is Int -> windDir.toFloat()
@@ -244,7 +252,7 @@ fun AllInfoCard(
                 horizontalArrangement = Arrangement.SpaceBetween //evenly spaced. also on tablet
             ) {
 
-                //Time group
+                //Displaying hour
                 Box(
                     modifier = Modifier
                         .size(26.dp)
@@ -329,7 +337,8 @@ fun AllInfoCard(
                     Spacer(modifier = Modifier.width(10.dp))
 
                     //wave period text
-                    if (wavePeriod != null && wavePeriod >= 0) {
+                    if (wavePeriod != null && wavePeriod >= 0) { //waveperiod for first 3 days, remaning days don´t dispaly waveperiod
+
                         Text(
                             text = "${wavePeriod.toInt()} sek",
                             style = AppTypography.bodySmall,
@@ -397,6 +406,7 @@ fun AllInfoCard(
 
                 Spacer(modifier = Modifier.width(10.dp))
 
+                //condition surfboard based on condition-algorithm
                 val surfBoard = when (conditionStatus) {
                     ConditionStatus.GREAT -> ConditionStatus.GREAT.surfBoard
                     ConditionStatus.DECENT -> ConditionStatus.DECENT.surfBoard

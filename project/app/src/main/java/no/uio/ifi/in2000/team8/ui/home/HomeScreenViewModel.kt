@@ -94,6 +94,8 @@ class HomeScreenViewModel(
             settingsRepo.settingsFlow.collect{
                 val favoriteAreas = it.favoriteSurfAreaNamesList.mapNotNull { areaName ->
                     val favSurfArea = getSurfAreaByLocationName(areaName)
+                    if (favSurfArea == null){
+                    }
                     favSurfArea
                 }
                 _favoriteSurfAreas.value= favoriteAreas
@@ -113,7 +115,6 @@ class HomeScreenViewModel(
                     settingsRepo.addFavoriteSurfArea(surfArea.locationName)
                     currentFavorites + surfArea
                 } catch(e: IllegalArgumentException){
-                    Log.e("AddFavorites", "Failed to add to favorites")
                     return@launch
                 }
             }
