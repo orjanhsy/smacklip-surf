@@ -1,7 +1,5 @@
 package no.uio.ifi.in2000.team8.ui.surfarea
 
-//import androidx.compose.material.icons.outlined.Tsunami
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -107,6 +105,7 @@ fun SurfAreaScreen(
 
     Scaffold(
         topBar = {
+            // creates top app bar with back arrow
             TopAppBar(
                 title = { },
                 navigationIcon = {
@@ -157,6 +156,8 @@ fun SurfAreaScreen(
             BottomBar(navController = navController)
         }
     ) { innerPadding ->
+
+        //
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
@@ -200,40 +201,39 @@ fun SurfAreaScreen(
                 LazyRow(
                     modifier = Modifier.padding(5.dp)
                 ) {
-                        val currentTime = LocalDateTime.now()
+                    val currentTime = LocalDateTime.now()
 
-                        items(surfAreaScreenUiState.forecastNext7Days.dayForecasts.size) { dayIndex ->
-                            //one card for every day we have data for (9 days)
-                            val date = currentTime.plusDays(dayIndex.toLong())
-                            val formattedDate = formatter.format(date)
+                    //one card per day
+                    items(surfAreaScreenUiState.forecastNext7Days.dayForecasts.size) { dayIndex ->
+                        val date = currentTime.plusDays(dayIndex.toLong())
+                        val formattedDate = formatter.format(date)
 
-
-                                val conditionStatus: ConditionStatus = try {
-                                    surfAreaScreenUiState.bestConditionStatusPerDay[dayIndex]
-                                } catch (e: IndexOutOfBoundsException) {
-                                    ConditionStatus.BLANK
-                                } catch (e: NullPointerException) {
-                                    ConditionStatus.BLANK
-                                }
-                            DayPreviewCard(
-                                surfArea,
-                                formattedDate,
-                                Pair(
-                                    surfAreaScreenUiState.minWaveHeights[dayIndex].toString(),
-                                    surfAreaScreenUiState.maxWaveHeights[dayIndex].toString()
-                                ),
-                                conditionStatus,
-                                date,
-                                navController
-                            )
+                        val conditionStatus: ConditionStatus = try {
+                            surfAreaScreenUiState.bestConditionStatusPerDay[dayIndex]
+                        } catch (e: IndexOutOfBoundsException) {
+                            ConditionStatus.BLANK
+                        } catch (e: NullPointerException) {
+                            ConditionStatus.BLANK
                         }
+                        DayPreviewCard(
+                            surfArea,
+                            formattedDate,
+                            Pair(
+                                surfAreaScreenUiState.minWaveHeights[dayIndex].toString(),
+                                surfAreaScreenUiState.maxWaveHeights[dayIndex].toString()
+                            ),
+                            conditionStatus,
+                            date,
+                            navController
+                        )
+                    }
                 }
             }
             item {
                 InfoCard(surfArea)
             }
         }
-        //checking for alert
+        // prevents reshowing alert pop-up
         if (alerts.isNotEmpty() && firstTimeHere) {
             ShowAlert(
                 alerts = alerts,
@@ -282,6 +282,7 @@ fun ShowAlert(alerts : List<Alert>, action : () -> Unit, alertsUtils: AlertsUtil
 
 @Composable
 fun InfoCard(surfArea: SurfArea) {
+    // card with description of area
     OutlinedCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -337,7 +338,6 @@ fun InfoCard(surfArea: SurfArea) {
 }
 
 //calculate as some of the names are longer and needs to size the font down
-@Composable
 fun calculateFontSizeForText(text: String): TextUnit {
     val maxLength = 10 // Maximum length before font size reduction
     val defaultFontSize = 30.sp
@@ -359,6 +359,7 @@ fun DayPreviewCard(
     date: LocalDateTime,
     navController: NavController?
 ) {
+    // card with info about min-max waveHeights throughout day, also condition status
     Card(
         modifier = Modifier
             .padding(5.dp)
@@ -378,6 +379,7 @@ fun DayPreviewCard(
             modifier = Modifier
                 .padding(5.dp)
         ) {
+            // shows day.month
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
@@ -394,6 +396,7 @@ fun DayPreviewCard(
                 )
             }
 
+            //shows condition status
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
@@ -407,6 +410,7 @@ fun DayPreviewCard(
                     ConditionStatus.BLANK -> ConditionStatus.BLANK.surfBoard
                     null -> R.drawable.blankboard
                 }
+
                 //surfboard icon
                 Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 10.dp, bottom = 5.dp)) {
                     Image(
@@ -418,6 +422,7 @@ fun DayPreviewCard(
                 }
             }
 
+            // shows word describing condition status
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -431,6 +436,7 @@ fun DayPreviewCard(
                 )
             }
 
+            // shows wave height icon
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
@@ -453,6 +459,8 @@ fun DayPreviewCard(
 
                     }
                 }
+
+                // shows min to max wave heights throughout the day
                 Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 3.dp)) {
                     Column {
                         Text(
