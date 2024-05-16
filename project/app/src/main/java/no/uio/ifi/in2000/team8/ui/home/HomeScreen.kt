@@ -239,10 +239,10 @@ fun FavoritesList(
                         showFavoriteButton = false,
                         navController = navController
                     )
-                    if (!alerts.isNullOrEmpty()) {
+                    if (!alerts.isNullOrEmpty()) { //ørjan se her
                         Image(
                             painter = painterResource(id = R.drawable.icon_awareness_yellow_outlined),
-                            contentDescription = "warning icon",
+                            contentDescription = "Farevarsel",
                             modifier = Modifier
                                 .padding(8.dp)
                                 .size(24.dp)
@@ -250,7 +250,7 @@ fun FavoritesList(
                     } else {
                         Image(
                             painter = painterResource(id = R.drawable.icon_awareness_yellow_outlined),
-                            contentDescription = "warning icon",
+                            contentDescription = "Farevarsel",
                             modifier = Modifier
                                 .padding(8.dp)
                         )
@@ -339,7 +339,7 @@ fun SurfAreaCard(
                 ){
                     Icon(
                         painter = painterResource(id = homeScreenViewModel.updateFavoritesIcon(surfArea)),
-                        contentDescription = "Toggle favorite",
+                        contentDescription = "Stjerneikon",
                         modifier = Modifier.size(16.dp)
                     )
                 }
@@ -368,7 +368,7 @@ fun SurfAreaCard(
                         // icon for waves
                         Icon(
                             imageVector = Icons.Outlined.Tsunami,
-                            contentDescription = "tsunami",
+                            contentDescription = "Bølgeikon",
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier
                                 .width(17.dp)
@@ -386,7 +386,7 @@ fun SurfAreaCard(
                         //Utilizing wave direction value, displaying a arrow that dynamically rotate according to the direction indicated by the value. .
                         Icon(
                             imageVector = Icons.AutoMirrored.Outlined.CallMade,
-                            contentDescription = "arrow icon",
+                            contentDescription = "Bølgeretning pil",
                             modifier = Modifier
                                 .width(17.dp)
                                 .height(17.dp)
@@ -400,7 +400,7 @@ fun SurfAreaCard(
                         Icon(
                             // icon for wind
                             imageVector = Icons.Outlined.Air,
-                            contentDescription = "air",
+                            contentDescription = "Vindikon",
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier
                                 .width(17.dp)
@@ -420,7 +420,7 @@ fun SurfAreaCard(
                         // rotating arrow in the wind direction
                         Icon(
                             imageVector = Icons.AutoMirrored.Outlined.CallMade,
-                            contentDescription = "arrow icon",
+                            contentDescription = "Vindretning pil",
                             modifier = Modifier
                                 .width(17.dp)
                                 .height(17.dp)
@@ -436,7 +436,7 @@ fun SurfAreaCard(
                     if (surfArea.image != 0) {
                         Image(
                             painter = painterResource(id = surfArea.image),
-                            contentDescription = "SurfArea Image",
+                            contentDescription = "Bilde av strand",
                             contentScale = ContentScale.FillBounds,
                             modifier = Modifier
                                 .width(162.dp)

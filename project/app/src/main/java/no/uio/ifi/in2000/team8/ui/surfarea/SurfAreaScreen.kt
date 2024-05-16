@@ -110,7 +110,7 @@ fun SurfAreaScreen(
                         ) {
                             Icon(
                                 Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Back button",
+                                contentDescription = "Tilbakeknapp",
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier
                                     .width(42.dp)
@@ -133,7 +133,7 @@ fun SurfAreaScreen(
                             }?.let { painterResource(id = it) }?.let {
                                 Image(
                                     painter = it,
-                                    contentDescription = "Alert symbol"
+                                    contentDescription = "Farevarselikon: $it "
                                 )
                             }
                         }
@@ -258,7 +258,7 @@ fun ShowAlert(alerts : List<Alert>, action : () -> Unit, alertsUtils: AlertsUtil
     val dateFormatter = DateUtils()
     val alert = alerts.first()
     val time = dateFormatter.formatTimeInterval(alert.timeInterval?.interval)
-    val alertMessage = alert.properties?.description ?: "No description available"
+    val alertMessage = alert.properties?.description ?: "Ingen tilgjengelig farevarsel"
     val awarenessLevel = alert.properties?.awarenessLevel
     val icon = awarenessLevel?.let { alertsUtils.getIconBasedOnAwarenessLevel(it) }
         ?: R.drawable.icon_awareness_default
@@ -313,7 +313,7 @@ fun InfoCard(surfArea: SurfArea) {
                 )
                 Image(
                     painter = painterResource(id = surfArea.image),
-                    contentDescription = "Image",
+                    contentDescription = "Bilde av stranden",
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier
                         .width(250.dp)
@@ -402,14 +402,14 @@ fun DayPreviewCard(
                     ConditionStatus.DECENT -> ConditionStatus.DECENT.surfBoard
                     ConditionStatus.POOR -> ConditionStatus.POOR.surfBoard
                     ConditionStatus.BLANK -> ConditionStatus.BLANK.surfBoard
-                    null -> R.drawable.blankboard
+                    null -> R.drawable.gjennomsiktig_brett
                 }
 
                 //surfboard icon
                 Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 10.dp, bottom = 5.dp)) {
                     Image(
                         painter = painterResource(id = surfBoard),
-                        contentDescription = "Weather Icon",
+                        contentDescription = "$surfBoard",
                         modifier = Modifier.size(30.dp),
                     )
 
@@ -444,7 +444,7 @@ fun DayPreviewCard(
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.Tsunami,
-                            contentDescription = "tsunami",
+                            contentDescription = "Bølgeikon",
                             modifier = Modifier
                                 .fillMaxSize()
                                 .width(40.dp)

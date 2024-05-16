@@ -96,7 +96,7 @@ fun HeaderCard(surfArea: SurfArea, icon : String, date: LocalDateTime) {
                 ) {
                     Image(
                         painter = painterResource(id = resourceUtils.findWeatherSymbol(icon)),
-                        contentDescription = "image description",
+                        contentDescription = "Værsymbol: ${resourceUtils.findWeatherSymbol(icon)}",
                         modifier = Modifier
                             .width(126.dp)
                             .height(126.dp)

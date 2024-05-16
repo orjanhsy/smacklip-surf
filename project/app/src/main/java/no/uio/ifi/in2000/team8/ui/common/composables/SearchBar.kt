@@ -68,7 +68,7 @@ fun SearchBar(
     isSearchActive: Boolean,
     onActiveChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
-    resultsColor: Color = Color.White,
+    resultsColor: Color,
     onSearch: ((String) -> Unit)? = null,
     onZoomToLocation: ((Point) -> Unit)? = null, // for MapScreen which navigates to point in map
     onItemClick: (SurfArea) -> Unit // for HomeScreen which navigates to SurfAreaScreen
@@ -117,7 +117,7 @@ fun SearchBar(
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Rounded.Search,
-                    contentDescription = "Search icon",
+                    contentDescription = "Søkeikon",
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             },
@@ -136,7 +136,7 @@ fun SearchBar(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Clear,
-                            contentDescription = "Clear searchbar"
+                            contentDescription = "Angre søk"
                         )
                     }
                 }
@@ -196,7 +196,7 @@ fun SearchBar(
                             Spacer(modifier = Modifier.width(12.dp))
                             Image(
                                 painter = painterResource(id = surfArea.image),
-                                contentDescription = "SurfArea image",
+                                contentDescription = "Bilde av stranden",
                                 modifier = Modifier.size(48.dp),
                                 contentScale = ContentScale.Crop,
                                 alignment = Alignment.CenterEnd

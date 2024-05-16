@@ -80,7 +80,7 @@ fun DailySurfAreaScreen(
                         ) {
                             Icon(
                                 Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Back",
+                                contentDescription = "Tilbakeknapp",
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier
                                     .width(42.dp)
@@ -271,7 +271,7 @@ fun AllInfoCard(
                     //air icon
                     Icon(
                         imageVector = Icons.Outlined.Air,
-                        contentDescription = "Air",
+                        contentDescription = "Vindikon",
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(20.dp)
                     )
@@ -296,7 +296,7 @@ fun AllInfoCard(
                     //wind direction arrow
                     Icon(
                         imageVector = Icons.AutoMirrored.Outlined.CallMade,
-                        contentDescription = "Arrow",
+                        contentDescription = "Vindretning pil",
                         tint=  MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier
                             .size(17.dp)
@@ -313,7 +313,7 @@ fun AllInfoCard(
                     //wave icon
                     Icon(
                         imageVector = Icons.Outlined.Tsunami,
-                        contentDescription = "Tsunami",
+                        contentDescription = "Bølgeikon",
                         tint=MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(18.dp)
                     )
@@ -354,7 +354,7 @@ fun AllInfoCard(
                     //wave direction arrow
                     Icon(
                         imageVector = Icons.AutoMirrored.Outlined.CallMade,
-                        contentDescription = "Arrow",
+                        contentDescription = "Bølgeretning pil",
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier
                             .size(17.dp)
@@ -398,7 +398,7 @@ fun AllInfoCard(
                     //Weather icon
                     Image(
                         painter = painterResource(id = resourceUtils.findWeatherSymbol(icon.toString())),
-                        contentDescription = "Weather Icon",
+                        contentDescription = "Værikon: ${resourceUtils.findWeatherSymbol(icon.toString())}",
                         modifier = Modifier.size(24.dp)
                     )
                 }
@@ -416,7 +416,7 @@ fun AllInfoCard(
                 //condition status
                 Image(
                     painter = painterResource(id = surfBoard),
-                    contentDescription = "Weather Icon",
+                    contentDescription = " $surfBoard",
                     modifier = Modifier.size(20.dp)
                 )
             }
