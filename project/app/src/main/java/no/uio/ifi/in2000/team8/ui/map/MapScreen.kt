@@ -75,8 +75,8 @@ import no.uio.ifi.in2000.team8.utils.ResourceUtils
 
 
 
-//MapScreen-method is where the screen itself is created, including the bottom bar,
-// the map, and the search bar at the top.
+/* MapScreen-method is where the screen itself is created, including the bottom bar,
+the map, and the search bar at the top. */
 
 /*
 The search bar at the top of the map screen gives the user the ability to search for
@@ -84,7 +84,7 @@ surf area. By pressing a location in the search bar, the map camera moves to the
 location. This is achieved using the parameter "onZoomToLocation," which is a lambda function.
 There is no functionality to move the camera in the SearchBar-method itself which
 adheres to object-oriented principles.
- */
+*/
 
 @Composable
 fun MapScreen(mapScreenViewModel : MapScreenViewModel, navController: NavController) {
