@@ -178,13 +178,12 @@ fun SurfAreaScreen(
                 val currentHour = currentTime.hour
                 var headerIcon = ""
 
-                if (surfAreaDataForDay.isNotEmpty()) {
-
                     val times = surfAreaDataForDay.keys.sortedWith(
                         compareBy<LocalDateTime> {
                             it.month }.thenBy { it.dayOfMonth }
                     )
 
+                    //getting weather icon for headercard
                     for (time in times) {
                         val hour = time.hour
                         if (hour == currentHour) {
@@ -195,13 +194,7 @@ fun SurfAreaScreen(
                         surfArea = surfArea,
                         icon = headerIcon,
                         LocalDateTime.now())
-                } else {
-                    HeaderCard(
-                        surfArea = surfArea,
-                        icon = R.drawable.spm.toString(),
-                        LocalDateTime.now()
-                    )
-                }
+
             }
             item {
                 LazyRow(
@@ -210,6 +203,7 @@ fun SurfAreaScreen(
                         val currentTime = LocalDateTime.now()
 
                         items(surfAreaScreenUiState.forecastNext7Days.dayForecasts.size) { dayIndex ->
+                            //one card for every day we have data for (9 days)
                             val date = currentTime.plusDays(dayIndex.toLong())
                             val formattedDate = formatter.format(date)
 
@@ -239,6 +233,7 @@ fun SurfAreaScreen(
                 InfoCard(surfArea)
             }
         }
+        //checking for alert
         if (alerts.isNotEmpty() && firstTimeHere) {
             ShowAlert(
                 alerts = alerts,

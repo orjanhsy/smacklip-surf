@@ -74,7 +74,7 @@ fun DailySurfAreaScreen(
     }
 
     Scaffold(
-        topBar = { //topbar contains back-arrow,
+        topBar = {
             TopAppBar(title = { },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
