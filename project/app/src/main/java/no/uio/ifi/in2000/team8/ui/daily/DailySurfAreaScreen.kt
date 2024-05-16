@@ -75,6 +75,7 @@ fun DailySurfAreaScreen(
 
     Scaffold(
         topBar = {
+            // top app bar with 'back arrow'
             TopAppBar(title = { },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
@@ -122,14 +123,11 @@ fun DailySurfAreaScreen(
                 var headerIcon = "default_icon"
                 val headerTime: LocalDateTime
 
-                //variable for viewmodel method, getting map of daily data
                 val surfAreaDataForDay: Map<LocalDateTime, DataAtTime> = dailySurfAreaScreenUiState.dataAtDay.data
-                //variable used to match hour to data
+
                 val times = surfAreaDataForDay.keys.sortedBy { it.hour }
 
-                // header weather-icon for current hour. On "todays" surfArea the weathericon matches the hpur.
-                //On next 8 days the icon shows the midday icon
-                //icons are METs own icons, used by services such as Yr:
+
                 if (surfAreaDataForDay.isNotEmpty()){
                     val timesForToday = times.filter {
                         it.toLocalDate() == currentDay
@@ -151,55 +149,55 @@ fun DailySurfAreaScreen(
                 }
 
                 HeaderCard(surfArea = surfArea, icon = headerIcon, headerTime)
-                LazyColumn( //hour by hour displayed in scrollable cards
+                LazyColumn( //time -> data displayed in a colum
                     modifier = Modifier
                         .padding(5.dp)
                 ) {
-                        val hourFormatter = DateTimeFormatter.ofPattern("HH") //two digit hour, example: not 9 but 09
-                        items(times.size) { index -> //getting remanining hours of day
-                            val time = times[index] //time is the hour of the day
-                            val hour = time.hour //Returns hour-of-day, from 0 to 23
-                            //matching hour formatting
-                            val formattedHour = time.format(hourFormatter)
+                    val hourFormatter = DateTimeFormatter.ofPattern("HH") //two digit hour, example: not 9 but 09
+                    items(times.size) { index ->
+                        val time = times[index] 
+                        val hour = time.hour
 
-                            val surfAreaDataForHour: DataAtTime? = surfAreaDataForDay[time] //getting resepctive hour-data
+                        val formattedHour = time.format(hourFormatter) // format hour to double digit regardless of value
 
-                            val windSpeed = surfAreaDataForHour?.windSpeed ?: 0.0
-                            val windGust = surfAreaDataForHour?.windGust ?: 0.0
-                            val windDir = surfAreaDataForHour?.windDir ?: 0.0
-                            val temp = surfAreaDataForHour?.airTemp ?: 0.0
-                            val icon = surfAreaDataForHour?.symbolCode ?: 0.0
-                            val waveHeight = surfAreaDataForHour?.waveHeight ?: 0.0
-                            val waveDir = surfAreaDataForHour?.waveDir ?: 0.0
+                        val surfAreaDataForHour: DataAtTime? = surfAreaDataForDay[time] //getting data at time
 
-                            val wavePeriod = try {
-                                val waveIndex = times.indexOf(times.find { it.hour == hour})
+                        val windSpeed = surfAreaDataForHour?.windSpeed ?: 0.0
+                        val windGust = surfAreaDataForHour?.windGust ?: 0.0
+                        val windDir = surfAreaDataForHour?.windDir ?: 0.0
+                        val temp = surfAreaDataForHour?.airTemp ?: 0.0
+                        val icon = surfAreaDataForHour?.symbolCode ?: 0.0
+                        val waveHeight = surfAreaDataForHour?.waveHeight ?: 0.0
+                        val waveDir = surfAreaDataForHour?.waveDir ?: 0.0
 
-                                dailySurfAreaScreenUiState.wavePeriods[waveIndex]
+                        val wavePeriod = try {
+                            val waveIndex = times.indexOf(times.find { it.hour == hour})
 
-                            } catch (e: IndexOutOfBoundsException) {
-                                -1.0 //gives < 0 value to deal with no waveperiod in UI
-                            }
+                            dailySurfAreaScreenUiState.wavePeriods[waveIndex]
 
-                            val conditionStatus: ConditionStatus? = try {
-                                dailySurfAreaScreenUiState.conditionStatuses[time]
-                            } catch (e: IndexOutOfBoundsException) {
-                                null
-                            }
-
-                            AllInfoCard(
-                                timestamp = formattedHour,
-                                waveHeight = waveHeight,
-                                windSpeed = windSpeed,
-                                windGust = windGust,
-                                windDir = windDir,
-                                waveDir = waveDir,
-                                temp = temp,
-                                icon = icon,
-                                wavePeriod = wavePeriod,
-                                conditionStatus = conditionStatus
-                            )
+                        } catch (e: IndexOutOfBoundsException) {
+                            -1.0 //gives < 0 value to deal with no wave period in UI
                         }
+
+                        val conditionStatus: ConditionStatus? = try {
+                            dailySurfAreaScreenUiState.conditionStatuses[time]
+                        } catch (e: IndexOutOfBoundsException) {
+                            null
+                        }
+
+                        AllInfoCard(
+                            timestamp = formattedHour,
+                            waveHeight = waveHeight,
+                            windSpeed = windSpeed,
+                            windGust = windGust,
+                            windDir = windDir,
+                            waveDir = waveDir,
+                            temp = temp,
+                            icon = icon,
+                            wavePeriod = wavePeriod,
+                            conditionStatus = conditionStatus
+                        )
+                    }
                 }
             }
         }
@@ -220,6 +218,7 @@ fun AllInfoCard(
     conditionStatus: ConditionStatus? = ConditionStatus.BLANK
 ) {
 
+    // handle situations where there is no data at time
     if (timestamp != "x") {
 
         val resourceUtils = ResourceUtils()
@@ -430,16 +429,3 @@ fun AllInfoCard(
     }
 }
 
-//@Preview(showBackground = true, name = "Dark Mode")
-@Preview(showBackground = true, name = "Light Mode")
-@Composable
-private fun PreviewDailyScreen() {
-    val dsvm = viewModel<DailySurfAreaScreenViewModel>(
-        factory = viewModelFactory {
-            DailySurfAreaScreenViewModel(SmackLipApplication.container.stateFulRepo)
-        }
-    )
-    AppTheme (useDarkTheme = false){
-        DailySurfAreaScreen("Hoddevik", 5, dsvm, rememberNavController())
-    }
-}
