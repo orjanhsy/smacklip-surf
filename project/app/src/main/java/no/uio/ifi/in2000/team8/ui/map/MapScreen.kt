@@ -22,7 +22,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Air
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Tsunami
-import androidx.compose.material3.AlertDialogDefaults.containerColor
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -42,7 +41,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -284,6 +282,7 @@ fun SurfAreaCard(
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .align(Alignment.Center)
+
                 )
                 IconButton(
                     onClick = onCloseClick,
@@ -303,6 +302,7 @@ fun SurfAreaCard(
             //text description of location
             Text(
                 text = stringResource(surfArea.description),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = AppTypography.titleSmall,
                 textAlign = TextAlign.Center
             )
@@ -323,6 +323,7 @@ fun SurfAreaCard(
                 Text(
                     text = "${windSpeed.toInt()}(${windGust.toInt()})",
                     style = AppTypography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(horizontal=8.dp)
                 )
                 //waves
@@ -333,6 +334,7 @@ fun SurfAreaCard(
                 )
                 Text(
                     text = "$waveHeight",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = AppTypography.bodySmall,
                     modifier = Modifier.padding(horizontal=8.dp)
                 )
@@ -348,6 +350,7 @@ fun SurfAreaCard(
                 //temperature
                 Text(
                     text = "${airTemperature.toInt()} °C",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = AppTypography.bodySmall,
                     modifier = Modifier.padding(horizontal=8.dp)
                 )
