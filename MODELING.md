@@ -4,7 +4,7 @@
 Dette er et forenklet klassediagram som viser hva som skjer når bruker åpner appen. Under er informasjon om valg vi har tatt vedrørende klassediagrammet: 
 * Vi har abstrahert bort alle data-klasser (inkludert SurfAreas som inneholder informasjonen om surfelokasjonene)
 * Vi har abstrahert bort DataSources
-* Vi har abstrahert bor OceanForecastrepository, LocationForecastrepository og WaveForecastRepository som bli initialisert i WeatherForecastRepository og ikke har direkte sammenhe
+* Vi har abstrahert bor OceanForecastrepository, LocationForecastrepository og WaveForecastRepository som bli initialisert i WeatherForecastRepository og ikke har direkte sammenheng med en ViewModel
 
 ![Klassediagram](<Skjermbilde 2024-05-16 kl. 09.38.18.png>)ng med en ViewModel
 
