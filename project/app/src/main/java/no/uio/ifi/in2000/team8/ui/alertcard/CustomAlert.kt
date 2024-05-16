@@ -36,10 +36,10 @@ import no.uio.ifi.in2000.team8.ui.theme.AppTypography
 @Composable
 fun CustomAlert(
     modifier: Modifier = Modifier,
-    message: String,
-    actionText: String,
-    warningIcon: Int,
-    time: String,
+    message: String, //actual warningmessage
+    actionText: String, //ok button text
+    warningIcon: Int, //yellow, orange or green icon
+    time: String, //when the alert is relevant for
     showAlert: MutableState<Boolean>,
     action: (() -> Unit)? = null,
 ) {
