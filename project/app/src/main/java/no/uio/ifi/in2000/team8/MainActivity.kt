@@ -140,8 +140,8 @@ fun SmackLipNavigation() {
         factory = viewModelFactory {
             HomeScreenViewModel(
                 SmackLipApplication.container.stateFulRepo,
-                SmackLipApplication.container.alertsRepo,
-                SmackLipApplication.container.settingsRepo
+                SmackLipApplication.container.settingsRepo,
+                SmackLipApplication.container.alertsRepo
             )
         }
     )
