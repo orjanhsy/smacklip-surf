@@ -47,6 +47,20 @@ import no.uio.ifi.in2000.team8.model.surfareas.SurfArea
 import no.uio.ifi.in2000.team8.ui.theme.AppTypography
 import com.mapbox.geojson.Point
 
+/*
+The SearchBar is a function which gives the user the ability to search for surf area. It is
+extended to fit for utilization in both HomeScreen and MapScreen. Each screen require a separate
+parameter to navigate to each desired destination. SearchBar takes in the parameter
+"onZoomToLocation", which moves the map camera to the location of the search result in map.
+There is no functionality to move the camera in the SearchBar-method itself which
+adheres to object-oriented principles. SearchBar also takes in the parameter "onItemClick", which
+navigates to SurfAreaScreen in HomeScreen.
+
+The SearchBar is displayed as a OutlinedTextField, and the search results are presented in an
+expanded LazyColumn which allows the user to scroll among the results, with a column representing
+each surf area corresponding to the query provided in the search.
+*/
+
 @Composable
 fun SearchBar(
     surfAreas: List<SurfArea>,
@@ -56,14 +70,16 @@ fun SearchBar(
     modifier: Modifier = Modifier,
     resultsColor: Color = Color.White,
     onSearch: ((String) -> Unit)? = null,
-    onZoomToLocation: ((Point) -> Unit)? = null,
-    onItemClick: (SurfArea) -> Unit
+    onZoomToLocation: ((Point) -> Unit)? = null, // for MapScreen which navigates to point in map
+    onItemClick: (SurfArea) -> Unit // for HomeScreen which navigates to SurfAreaScreen
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
 
+    /* Defined "activeChanged" which is used to help manage behavior when the search bar becomes
+    active or inactive. */
     val activeChanged: (Boolean) -> Unit = { active ->
         if (!active) {
             searchQuery = ""
@@ -72,7 +88,9 @@ fun SearchBar(
         onActiveChanged(active)
     }
 
+    // This column contains both the search bar itself and the search results
     Column(modifier = modifier.clip(RoundedCornerShape(50.dp))) {
+        // The search bar
         OutlinedTextField(
             modifier = modifier
                 .padding(12.dp)
@@ -95,7 +113,7 @@ fun SearchBar(
                 activeChanged(true)
                 expanded = true
             },
-            placeholder = { Text(text="Søk etter surfeområde", style = AppTypography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
+            placeholder = { Text(text = "Søk etter surfeområde", style = AppTypography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Rounded.Search,
@@ -103,6 +121,8 @@ fun SearchBar(
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             },
+            /* Add icon to clear search when search is active. There is no icon when the search
+            is inactive. */
             trailingIcon = {
                 if (isSearchActive) {
                     IconButton(
@@ -134,9 +154,12 @@ fun SearchBar(
                 }
             )
         )
+        /* Filters surf areas based on whether the name of the location starts with the
+        search query the user provides */
         val filteredSurfAreas =
             surfAreas.filter { it.locationName.startsWith(searchQuery, ignoreCase = true) }
 
+        // The search results
         if (expanded && searchQuery.isNotEmpty() && filteredSurfAreas.isNotEmpty()) {
             LazyColumn(
                 modifier = Modifier
@@ -146,15 +169,19 @@ fun SearchBar(
                 contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
             ) {
                 items(filteredSurfAreas) { surfArea ->
-                    Column(modifier = Modifier.clickable {
-                        searchQuery = ""
-                        onQueryChange("")
-                        onActiveChanged(false)
-                        focusManager.clearFocus()
-                        keyboardController?.hide()
-                        onZoomToLocation?.invoke(Point.fromLngLat(surfArea.lon, surfArea.lat))
-                        onItemClick(surfArea)
-                    }) {
+                    /* A column for each surf area which corresponds to the search query. It
+                    navigates to a desired location on click */
+                    Column(
+                        modifier = Modifier.clickable {
+                            searchQuery = ""
+                            onQueryChange("")
+                            onActiveChanged(false)
+                            focusManager.clearFocus()
+                            keyboardController?.hide()
+                            onZoomToLocation?.invoke(Point.fromLngLat(surfArea.lon, surfArea.lat))
+                            onItemClick(surfArea)
+                        }
+                    ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
