@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import no.uio.ifi.in2000.team8.R
 import no.uio.ifi.in2000.team8.ui.theme.AppTypography
 
+// inspired by https://blog.stackademic.com/custom-alert-in-jetpack-compose-47c367879147
 @Composable
 fun CustomAlert(
     modifier: Modifier = Modifier,
