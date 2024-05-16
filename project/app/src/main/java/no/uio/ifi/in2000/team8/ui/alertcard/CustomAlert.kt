@@ -36,10 +36,10 @@ import no.uio.ifi.in2000.team8.ui.theme.AppTypography
 @Composable
 fun CustomAlert(
     modifier: Modifier = Modifier,
-    message: String, //actual warningmessage
-    actionText: String, //ok button text
-    warningIcon: Int, //yellow, orange or green icon
-    time: String, //when the alert is relevant for
+    message: String, // actual warning message
+    actionText: String, // ok button text
+    warningIcon: Int, // yellow, orange or green icon
+    time: String, // when the alert is relevant for
     showAlert: MutableState<Boolean>,
     action: (() -> Unit)? = null,
 ) {
@@ -50,6 +50,7 @@ fun CustomAlert(
                 .padding(8.dp),
             contentAlignment = Alignment.Center,
         ) {
+            // card displaying alert info
             Card(
                 modifier = modifier
                     .padding(12.dp)
@@ -63,6 +64,7 @@ fun CustomAlert(
                         .background(MaterialTheme.colorScheme.onPrimary)
                         .padding(10.dp)
                 ) {
+                    // warning icon
                     Image(
                         painter = painterResource(id = warningIcon),
                         contentDescription = "Image",
@@ -76,6 +78,7 @@ fun CustomAlert(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
+                        // error message
                         Text(
                             text = message,
                             modifier = Modifier
@@ -86,6 +89,7 @@ fun CustomAlert(
                             textAlign = TextAlign.Center
                         )
                     }
+                    // displays time
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center,
@@ -102,6 +106,7 @@ fun CustomAlert(
 
                         )
                     }
+                    // displays ok button to close alert
                     Box(
                         modifier = Modifier
                             .fillMaxWidth(0.75f)
@@ -126,24 +131,3 @@ fun CustomAlert(
     }
 }
 
-
-@Preview
-@Composable
-fun PreviewCustomAlert() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Gray),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        CustomAlert(
-            time = "1.jan - 3.jan",
-            message = "STOOORM incoming, søk dekning søk dekning søk dekning søk dekning",
-            actionText = "OK",
-            warningIcon = R.drawable.icon_warning_orange,
-            showAlert = remember { mutableStateOf(true) },
-            action = null
-        )
-    }
-}
