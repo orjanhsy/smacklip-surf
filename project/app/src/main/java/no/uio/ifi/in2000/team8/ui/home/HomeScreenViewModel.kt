@@ -92,11 +92,9 @@ class HomeScreenViewModel(
     fun loadFavoriteSurfAreas(){
         viewModelScope.launch {
             settingsRepo.settingsFlow.collect{
-                Log.d("LogFavorites", "loaded favorite surf areas: ${it.favoriteSurfAreaNamesList}")
                 val favoriteAreas = it.favoriteSurfAreaNamesList.mapNotNull { areaName ->
                     val favSurfArea = getSurfAreaByLocationName(areaName)
                     if (favSurfArea == null){
-                        Log.d("FavoriteList", "Failed to fetch saved Favorites $areaName")
                     }
                     favSurfArea
                 }
@@ -115,10 +113,8 @@ class HomeScreenViewModel(
             } else{
                 try{
                     settingsRepo.addFavoriteSurfArea(surfArea.locationName)
-                    Log.d("CorrectAddFavorites", "Passed add to favorites")
                     currentFavorites + surfArea
                 } catch(e: IllegalArgumentException){
-                    Log.d("AddFavorites", "Failed to add to favorites")
                     return@launch
                 }
             }
