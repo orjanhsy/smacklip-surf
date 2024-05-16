@@ -67,7 +67,6 @@ import no.uio.ifi.in2000.team8.ui.theme.AppTheme
 import no.uio.ifi.in2000.team8.ui.theme.AppTypography
 import no.uio.ifi.in2000.team8.ui.theme.outlineLight
 import no.uio.ifi.in2000.team8.utils.AlertsUtils
-
 import no.uio.ifi.in2000.team8.utils.DateUtils
 import no.uio.ifi.in2000.team8.utils.viewModelFactory
 import java.time.LocalDateTime
