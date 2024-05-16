@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import no.uio.ifi.in2000.team8.R
@@ -22,12 +23,10 @@ import no.uio.ifi.in2000.team8.model.weatherforecast.DataAtTime
 
 data class HomeScreenUiState(
     val ofLfNow: Map<SurfArea, DataAtTime> = mapOf(),
-    val allRelevantAlerts: Map<SurfArea, List<Alert>> = emptyMap(),
 )
 
 class HomeScreenViewModel(
     private val forecastRepo: WeatherForecastRepository,
-    private val alertsRepo: MetAlertsRepository,
     private val settingsRepo: SettingsRepository
 
 ) : ViewModel() {
@@ -44,10 +43,7 @@ class HomeScreenViewModel(
     val settings: Flow<Settings> = settingsRepo.settingsFlow
 
 
-    val homeScreenUiState: StateFlow<HomeScreenUiState> = combine(
-        forecastRepo.ofLfForecast,
-        alertsRepo.alerts
-    ) { ofLf, alerts ->
+    val homeScreenUiState: StateFlow<HomeScreenUiState> = forecastRepo.ofLfForecast.map{ ofLf ->
         val ofLfNow: Map<SurfArea, DataAtTime> = try {
             ofLf.forecasts.entries.associate {
                 it.key to it.value.dayForecasts[0].data.entries.sortedBy { timeToData -> timeToData.key.hour }[0].value
@@ -55,11 +51,8 @@ class HomeScreenViewModel(
         } catch (e: IndexOutOfBoundsException) {
             mapOf()
         }
-
-        val allRelevantAlerts: Map<SurfArea, List<Alert>> = alerts
         HomeScreenUiState(
             ofLfNow = ofLfNow,
-            allRelevantAlerts = allRelevantAlerts,
         )
 
     }.stateIn(
