@@ -23,4 +23,5 @@ Se mer i ARCHITECTURE.md
 * Material3
 
 ## Redegjørelse for varsler
-
+* Vi har én "warning" i IDE-en i SurfAreaScreen og DailyScreen.  Material3.TopAppBar biblioteket er avviklet. Vi så ikke en rask måte å fikse det på så vi valgte å fortsette å benytte det.
+* Vi får en del "warnings" i Gradle på at en del av bibliotekene ikke er helt oppdatert. 
