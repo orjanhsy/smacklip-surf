@@ -3,14 +3,6 @@ package no.uio.ifi.in2000.team8.ui.home
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import no.uio.ifi.in2000.team8.R
-import no.uio.ifi.in2000.team8.Settings
-import no.uio.ifi.in2000.team8.data.metalerts.MetAlertsRepository
-import no.uio.ifi.in2000.team8.data.settings.SettingsRepository
-import no.uio.ifi.in2000.team8.data.weatherforecast.WeatherForecastRepository
-import no.uio.ifi.in2000.team8.model.metalerts.Alert
-import no.uio.ifi.in2000.team8.model.surfareas.SurfArea
-import no.uio.ifi.in2000.team8.model.weatherforecast.DataAtTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,6 +11,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import no.uio.ifi.in2000.team8.R
+import no.uio.ifi.in2000.team8.Settings
+import no.uio.ifi.in2000.team8.data.metalerts.MetAlertsRepository
+import no.uio.ifi.in2000.team8.data.settings.SettingsRepository
+import no.uio.ifi.in2000.team8.data.weatherforecast.WeatherForecastRepository
+import no.uio.ifi.in2000.team8.model.metalerts.Alert
+import no.uio.ifi.in2000.team8.model.surfareas.SurfArea
+import no.uio.ifi.in2000.team8.model.weatherforecast.DataAtTime
 
 data class HomeScreenUiState(
     val ofLfNow: Map<SurfArea, DataAtTime> = mapOf(),
