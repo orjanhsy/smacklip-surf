@@ -291,7 +291,7 @@ fun SurfAreaCard(
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.Close,
-                        contentDescription = "Close",
+                        contentDescription = "Lukk-ikon",
                         tint = onSurfaceVariantLight
                     )
                 }
@@ -316,7 +316,7 @@ fun SurfAreaCard(
                 //wind:
                 Icon(
                     imageVector = Icons.Outlined.Air,
-                    contentDescription = "Tsunami",
+                    contentDescription = "Vindikon",
                     modifier = Modifier.size(18.dp)
                 )
                 Text(
@@ -327,7 +327,7 @@ fun SurfAreaCard(
                 //waves
                 Icon(
                     imageVector = Icons.Outlined.Tsunami,
-                    contentDescription = "Tsunami",
+                    contentDescription = "Bølgeikon",
                     modifier = Modifier.size(18.dp)
                 )
                 Text(
@@ -338,7 +338,7 @@ fun SurfAreaCard(
                 //weather symbol
                 Image(
                     painter = painterResource(id = resourceUtils.findWeatherSymbol(symbolCode)),
-                    contentDescription = "wave icon",
+                    contentDescription = "${resourceUtils.findWeatherSymbol(symbolCode)}",
                     modifier = Modifier
                         .padding(horizontal = 8.dp)
                         .width(30.dp)
@@ -355,7 +355,7 @@ fun SurfAreaCard(
             if (surfArea.image != 0) {
                 Image(
                     painter = painterResource(id = surfArea.image),
-                    contentDescription = "SurfArea Image",
+                    contentDescription = "Bilde av strand",
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier
                         .width(240.dp)

@@ -75,7 +75,7 @@ fun InfoScreen(infoScreenViewModel: InfoScreenViewModel, navController: NavContr
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.smacklip_logo),
-                            contentDescription = "app logo",
+                            contentDescription = "Applogo",
                             contentScale = ContentScale.FillBounds,
                             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onTertiary),
 
