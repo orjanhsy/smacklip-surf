@@ -54,7 +54,7 @@ fun SearchBar(
     isSearchActive: Boolean,
     onActiveChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
-    resultsColor: Color = Color.White,
+    resultsColor: Color,
     onSearch: ((String) -> Unit)? = null,
     onZoomToLocation: ((Point) -> Unit)? = null,
     onItemClick: (SurfArea) -> Unit
