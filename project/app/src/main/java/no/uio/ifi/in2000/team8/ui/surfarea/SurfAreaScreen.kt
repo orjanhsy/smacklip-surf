@@ -217,13 +217,8 @@ fun SurfAreaScreen(
                                 val conditionStatus: ConditionStatus = try {
                                     surfAreaScreenUiState.bestConditionStatusPerDay[dayIndex]
                                 } catch (e: IndexOutOfBoundsException) {
-                                    Log.d(
-                                        "SAscreen",
-                                        "ConditionStatus at day $dayIndex was out of bounds"
-                                    )
                                     ConditionStatus.BLANK
                                 } catch (e: NullPointerException) {
-                                    Log.d("SAscreen", "ConditionStatus at day $dayIndex was null")
                                     ConditionStatus.BLANK
                                 }
                             DayPreviewCard(
