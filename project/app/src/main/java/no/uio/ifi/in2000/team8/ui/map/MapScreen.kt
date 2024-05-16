@@ -124,7 +124,7 @@ fun MapScreen(mapScreenViewModel : MapScreenViewModel, navController: NavControl
                     onActiveChanged = { isActive ->
                         isSearchActive.value = isActive
                     },
-                    resultsColor = Color.White,
+                    resultsColor = MaterialTheme.colorScheme.background,
                     onZoomToLocation = { point -> rememberPoint.value = point },
                     onItemClick = {}
                 )
