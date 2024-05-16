@@ -2,7 +2,7 @@
 Denne filen skal gi innsikt i SmackLip Surfs arkitektur og tilrettelegge for videre drift, vedlikehold og utvikling. 
 Den vil gjennomgå det fulgte arkitekturmønsteret, samt redegjøre for hvilke verktøy og teknologier som er tatt i nytte.
 
-![Arkitektur-skisse](./images/klassediagram.png)
+![Arkitektur-skisse](./images/arkitekturskisse.png)
 
 ## Model-View-Viewmodel
 Gjennom prosjektet har vi fulgt arkitekturmønsteret Model-View-Viewmodel, MVVM.
@@ -21,7 +21,7 @@ Model-mappen er forbeholdt dataklasser som brukes til deserialisering av API-dat
 UI-mappen inneholder skjermfunksjoner som er @Composable og skal vises frem til en bruker, samt *ViewModel* (funksjon beskrevet over).
 For større applikasjoner som følger MVVM er det normalt å inkludere et domenelag hvor data presenteres fra repository til viewmodel gjennom en *use-case-klasse*. Målet med dette laget er å redusere gjenbruk av kode og tydeliggjøre funksjonalitet. Vi har heller valgt å inkludere en utils-mappe hvor funksjoner som gjengår i koden er samlet.
 
-En annen måte vi ivaretar SOC er ved bruk av *Dependency Injection*, spesifikt *Constructor injection*. Klasser er ofte avhengige av referanser til andre klasser, dette kalles 'dependency', eller på norsk, avhengighet. Målet med DI, som gjenspeiles av det objektorienterte prinsippet *lav kobling*, er at klasser i minst mulig grad skal opprette sine egne instanser av avhengighetene sine. Gjennom Constructor Injection mottar de avhengighetene sine som argumenter (KILDE, Android, 2023). Dette bidrar til testbarhet og SOCs andre fordeler ved at man lett kan endre og ha kontroll over instansen en klasse tar i bruk. Vi har tatt ekstra hensyn til det objektorienterte prinsippet *Dependency Inversion*, som er en del av SOLID prinsippene (KILDE), ved at høynivå klasser aldri oppretter sine egne avhengigheter. View mottar Viewmodel-er som argumenter, og ViewModel-er mottar repoisory-er gjennom konstruktøren. I noen lavnivåklasser - som repository-er - har vi tatt en vurdering på at vi ikke bruker DI da avhengighetene deres ikke deles med andre klasser.
+En annen måte vi ivaretar SOC er ved bruk av *Dependency Injection*, spesifikt *Constructor injection*. Klasser er ofte avhengige av referanser til andre klasser, dette kalles 'dependency', eller på norsk, avhengighet. Målet med DI, som gjenspeiles av det objektorienterte prinsippet *lav kobling*, er at klasser i minst mulig grad skal opprette sine egne instanser av avhengighetene sine. Gjennom Constructor Injection mottar de avhengighetene sine som argumenter (Android, 2024). Dette bidrar til testbarhet og SOCs andre fordeler ved at man lett kan endre og ha kontroll over instansen en klasse tar i bruk. Vi har tatt ekstra hensyn til det objektorienterte prinsippet *Dependency Inversion*, ved at høynivå klasser aldri oppretter sine egne avhengigheter. View mottar Viewmodel-er som argumenter, og ViewModel-er mottar repoisory-er gjennom konstruktøren. I noen lavnivåklasser - som repository-er - har vi tatt en vurdering på at vi ikke bruker DI da avhengighetene deres ikke deles med andre klasser.
 
 Et viktig begrep innen SOC er kohesjon. Høy kohesjon betyr at komponenter har samhørighet i dataen og funksjonene den tilbyr. Dette gir appen uttrykk for ved at den har ett overrordnet Repoitory per kategori av data som eksponeres til ViewModels. I WeatherForecastReposiory har vi samlet data fra 3 API-er som henter værdata, vi argumenterer likevell for at dette ivaretar SOC siden kohesjonen holdes høy da dataen ikke bare er stort sett lik i format, men også bruksområde i appen. Ellers er det en datakilde per API, et reposiory for hver datakilde, en ViewModel per skjerm osv.
 
@@ -99,6 +99,10 @@ Dokumentasjon: https://developer.android.com/develop/ui/compose/documentation
 Metrial3 er nyeste versjonen av Material Design, designprinsipper utviklet av Google. Vi har benyttet Material3 komponenter, fargepaletter og ikoner. \
 Dokumentasjon: https://m3.material.io/
 
+
+## Kilder
+
+**Android**. (2024, 3. januar). Dependency injection in Android. *Android Developers*. https://developer.android.com/training/dependency-injection
 
 
 
