@@ -1,6 +1,5 @@
 package no.uio.ifi.in2000.team8
 
-import no.uio.ifi.in2000.team8.R
 import no.uio.ifi.in2000.team8.data.weatherforecast.WeatherForecastRepositoryImpl
 import no.uio.ifi.in2000.team8.utils.DateUtils
 import no.uio.ifi.in2000.team8.utils.ResourceUtils
@@ -15,8 +14,8 @@ class UtilTests {
         repo.loadOFlF()
         val resourceUtils = ResourceUtils()
         val ofLfForecast = repo.ofLfForecast.value
-        ofLfForecast.next7Days.values.map {week ->
-            week.forecast.map {day ->
+        ofLfForecast.forecasts.values.map { week ->
+            week.dayForecasts.map { day ->
                 day.data.values.map {
                     assert(resourceUtils.findWeatherSymbol(it.symbolCode) != R.drawable.spm)
                 }

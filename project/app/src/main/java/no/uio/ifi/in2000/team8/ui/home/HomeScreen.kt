@@ -1,6 +1,5 @@
 package no.uio.ifi.in2000.team8.ui.home
 
-//import no.uio.ifi.in2000.team8.ui.theme.MyApplicationTheme
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,14 +27,13 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.CallMade
 import androidx.compose.material.icons.outlined.Air
-import androidx.compose.material.icons.outlined.CallMade
 import androidx.compose.material.icons.outlined.Tsunami
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -71,7 +69,6 @@ import no.uio.ifi.in2000.team8.ui.theme.AppTypography
 import no.uio.ifi.in2000.team8.utils.viewModelFactory
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(homeScreenViewModel: HomeScreenViewModel, navController: NavController) {
 
@@ -141,7 +138,6 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel, navController: NavContr
 
                     {
                         items(SurfArea.entries) { location ->
-                            // TODO: !!
                             SurfAreaCard(
                                 location,
                                 windSpeed = homeScreenUiState.ofLfNow[location]?.windSpeed ?: 0.0,
@@ -149,24 +145,17 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel, navController: NavContr
                                 windDir = homeScreenUiState.ofLfNow[location]?.windDir ?: 0.0,
                                 waveHeight = homeScreenUiState.ofLfNow[location]?.waveHeight ?: 0.0,
                                 waveDir = homeScreenUiState.ofLfNow[location]?.waveDir ?: 0.0,
-                                alerts = homeScreenUiState.allRelevantAlerts[location],
                                 homeScreenViewModel = homeScreenViewModel,
                                 navController = navController
                             )
                         }
                     }
                 }
-                // ProgressIndicator(isDisplayed = homeScreenUiState.loading)
-
             }
         }
     }
 }
 
-/* TODO:
-implement windspeedmap, windgustmap, waveheightmap and alerts correctly,
-to receive accurate values in favorite surfareacards
- */
 
 @Composable
 fun FavoritesList(
@@ -225,7 +214,6 @@ fun FavoritesList(
                             navController.navigate("SurfAreaScreen/${surfArea.locationName}")
                         }
                 ) {
-                    // TODO: !!
                     SurfAreaCard(
                         surfArea = surfArea,
                         windSpeed = ofLfNow[surfArea]?.windSpeed ?: 0.0,
@@ -233,7 +221,6 @@ fun FavoritesList(
                         windDir = ofLfNow[surfArea]?.windDir?: 0.0,
                         waveHeight = ofLfNow[surfArea]?.waveHeight?: 0.0,
                         waveDir = ofLfNow[surfArea]?.waveDir?: 0.0,
-                        alerts = alerts?.get(surfArea),
                         homeScreenViewModel = homeScreenViewModel,
                         showFavoriteButton = false,
                         navController = navController
@@ -298,7 +285,6 @@ fun SurfAreaCard(
     windDir: Double,
     waveHeight: Double,
     waveDir: Double,
-    alerts: List<Alert>?,
     homeScreenViewModel: HomeScreenViewModel,
     showFavoriteButton: Boolean = true,
     navController: NavController
@@ -311,7 +297,6 @@ fun SurfAreaCard(
     Card(
         modifier = Modifier
             .wrapContentSize()
-            //.padding(start = 8.dp, top = 2.dp, end = 10.dp, bottom = 10.dp)
             .clickable {
                 navController.navigate("SurfAreaScreen/${surfArea.locationName}")
             },
@@ -327,7 +312,7 @@ fun SurfAreaCard(
 
         ) {
 
-            // Stjerneikon
+            // Star icon
             if (showFavoriteButton) {
                 IconButton(
                     onClick = { homeScreenViewModel.updateFavorites(surfArea) },
@@ -381,7 +366,7 @@ fun SurfAreaCard(
                     Spacer(modifier = Modifier.width(5.dp))
                     Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 0.dp)) {
                         Icon(
-                            imageVector = Icons.Outlined.CallMade,
+                            imageVector = Icons.AutoMirrored.Outlined.CallMade,
                             contentDescription = "arrow icon",
                             modifier = Modifier
                                 .width(17.dp)
@@ -412,7 +397,7 @@ fun SurfAreaCard(
                     Spacer(modifier = Modifier.width(5.dp))
                     Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 0.dp)) {
                         Icon(
-                            imageVector = Icons.Outlined.CallMade,
+                            imageVector = Icons.AutoMirrored.Outlined.CallMade,
                             contentDescription = "arrow icon",
                             modifier = Modifier
                                 .width(17.dp)
@@ -444,33 +429,7 @@ fun SurfAreaCard(
     }
 }
 
-/*
-@Preview(showBackground = true)
-@Composable
-private fun PreviewSurfAreaCard() {
-    val windSpeed = 1.0
-    val windGust = 3.0
-    val windDirection = 184.3
-    val waveHeight = 5.0
-    val waveDir =  184.3
 
-    val viewModel = HomeScreenViewModel(RepositoryImpl())
-    AppTheme {
-        SurfAreaCard(
-            SurfArea.HODDEVIK,
-            windSpeed,
-            windGust,
-            windDirection,
-            waveHeight,
-            waveDir,
-            listOf((Alert(properties = Properties(description = "Det ræinar")))),
-            viewModel,
-            true
-        ) {}
-    }
-}
-
- */
 
 @Preview(showBackground = true)
 @Composable
