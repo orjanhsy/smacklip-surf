@@ -48,23 +48,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.viewinterop.NoOpUpdate
 import androidx.core.graphics.drawable.toBitmap
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import no.uio.ifi.in2000.team8.R
-import no.uio.ifi.in2000.team8.model.surfareas.SurfArea
-import no.uio.ifi.in2000.team8.ui.common.composables.BottomBar
-import no.uio.ifi.in2000.team8.ui.common.composables.SearchBar
-import no.uio.ifi.in2000.team8.ui.theme.AppTheme
-import no.uio.ifi.in2000.team8.ui.theme.AppTypography
-import no.uio.ifi.in2000.team8.ui.theme.onSurfaceVariantLight
-import no.uio.ifi.in2000.team8.utils.MapUtils
-import no.uio.ifi.in2000.team8.utils.ResourceUtils
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.MapView
@@ -74,6 +63,14 @@ import com.mapbox.maps.plugin.annotation.annotations
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
+import no.uio.ifi.in2000.team8.R
+import no.uio.ifi.in2000.team8.model.surfareas.SurfArea
+import no.uio.ifi.in2000.team8.ui.common.composables.BottomBar
+import no.uio.ifi.in2000.team8.ui.common.composables.SearchBar
+import no.uio.ifi.in2000.team8.ui.theme.AppTypography
+import no.uio.ifi.in2000.team8.ui.theme.onSurfaceVariantLight
+import no.uio.ifi.in2000.team8.utils.MapUtils
+import no.uio.ifi.in2000.team8.utils.ResourceUtils
 
 
 //MapScreen er der selve skjermen lages, inkludert bottombar, kartet og searchbar på toppen
@@ -404,13 +401,5 @@ fun SurfAreaCard(
     }
 }
 
-
-@Preview
-@Composable
-fun SurfAreaPreview(){
-    AppTheme {
-        SurfAreaCard(surfArea = SurfArea.STAVASANDEN, {}, MapScreenUiState(), ResourceUtils(), rememberNavController())
-    }
-}
 
 
