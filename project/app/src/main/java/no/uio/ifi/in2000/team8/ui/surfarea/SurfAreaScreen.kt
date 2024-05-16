@@ -70,8 +70,6 @@ import no.uio.ifi.in2000.team8.ui.theme.AppTypography
 import no.uio.ifi.in2000.team8.ui.theme.outlineLight
 import no.uio.ifi.in2000.team8.utils.AlertsUtils
 
-import no.uio.ifi.in2000.team8.utils.ResourceUtils
-
 import no.uio.ifi.in2000.team8.utils.DateUtils
 import no.uio.ifi.in2000.team8.utils.viewModelFactory
 import java.time.LocalDateTime
@@ -167,7 +165,7 @@ fun SurfAreaScreen(
 
             item {
                 val surfAreaDataForDay: Map<LocalDateTime, DataAtTime> = try {
-                    surfAreaScreenUiState.forecastNext7Days.forecast[0].data
+                    surfAreaScreenUiState.forecastNext7Days.dayForecasts[0].data
                 } catch (e: IndexOutOfBoundsException) {
                     mapOf()
                 }
@@ -207,7 +205,7 @@ fun SurfAreaScreen(
                 ) {
                         val currentTime = LocalDateTime.now()
 
-                        items(surfAreaScreenUiState.forecastNext7Days.forecast.size) { dayIndex ->
+                        items(surfAreaScreenUiState.forecastNext7Days.dayForecasts.size) { dayIndex ->
                             val date = currentTime.plusDays(dayIndex.toLong())
                             var formattedDate = formatter.format(date)
 
@@ -243,22 +241,26 @@ fun SurfAreaScreen(
             }
         }
         if (alerts.isNotEmpty() && firstTimeHere) {
-            ShowAlert(alerts = alerts,
-                surfArea = surfArea,
+            ShowAlert(
+                alerts = alerts,
                 alertsUtils = alertsUtils,
+                surfArea = surfArea,
                 action = {
                     firstTimeHere = false
-                    if (showAlert) {showAlert = false} //sikrer at det ikke blir to alertCards hvis bruker trykker på alert-ikonet mens den første alerter
-                })
+                    if (showAlert) {showAlert = false} //ensures only one instance of alertCard
+                }
+            )
         }
 
-        else if (showAlert) { //knappen i topappbar synes kun når det er farevarsel, demred er alerts ikke tom
-            ShowAlert(alerts = alerts,
+        else if (showAlert) { //shows alert button if alerts is not empty
+            ShowAlert(
+                alerts = alerts,
                 surfArea = surfArea,
                 alertsUtils = alertsUtils,
                 action = {
                     showAlert = false
-                })
+                }
+            )
         }
     }
 }
@@ -492,8 +494,5 @@ private fun PreviewSurfAreaScreen() {
     )
     AppTheme {
         SurfAreaScreen("Solastranden", savm, rememberNavController())
-        //DayPreviewCard()
-        //HeaderCard()
-        //InfoCard()
     }
 }

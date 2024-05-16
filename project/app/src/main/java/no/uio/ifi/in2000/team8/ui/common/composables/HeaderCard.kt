@@ -59,7 +59,7 @@ fun HeaderCard(surfArea: SurfArea, icon : String, date: LocalDateTime) {
                 ) {
                     Row {
                         Text(
-                            text = surfArea.locationName + "," + "\n " + surfArea.areaName, //+surfArea.areaName //hadde vært fint med Stadt
+                            text = surfArea.locationName + "," + "\n " + surfArea.areaName,
                             style = TextStyle(
                                 fontSize = calculateFontSizeForText(surfArea.locationName),
                                 fontWeight = FontWeight(500),

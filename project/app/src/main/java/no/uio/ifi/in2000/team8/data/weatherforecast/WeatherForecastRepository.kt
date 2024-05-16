@@ -11,7 +11,7 @@ import no.uio.ifi.in2000.team8.model.oceanforecast.DataOF
 import no.uio.ifi.in2000.team8.model.weatherforecast.AllSurfAreasOFLF
 import no.uio.ifi.in2000.team8.model.weatherforecast.DataAtTime
 import no.uio.ifi.in2000.team8.model.weatherforecast.DayForecast
-import no.uio.ifi.in2000.team8.model.weatherforecast.Forecast7DaysOFLF
+import no.uio.ifi.in2000.team8.model.weatherforecast.ForecastOFLF
 import no.uio.ifi.in2000.team8.model.surfareas.SurfArea
 import no.uio.ifi.in2000.team8.model.waveforecast.AllWavePeriods
 import kotlinx.coroutines.Deferred
@@ -23,7 +23,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities.Local
 
 interface WeatherForecastRepository {
     val ofLfForecast: StateFlow<AllSurfAreasOFLF>
@@ -76,8 +75,8 @@ class WeatherForecastRepositoryImpl(
                     async { getOFLFForArea(sa) }
                 }
                 AllSurfAreasOFLF(
-                    next7Days = all7DayForecasts.keys.associateWith {
-                        Forecast7DaysOFLF(
+                    forecasts = all7DayForecasts.keys.associateWith {
+                        ForecastOFLF(
                             all7DayForecasts[it]?.await() ?: listOf()
                         )
                     }

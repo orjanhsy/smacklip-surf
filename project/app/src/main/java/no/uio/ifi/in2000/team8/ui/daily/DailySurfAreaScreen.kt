@@ -1,5 +1,4 @@
 package no.uio.ifi.in2000.team8.ui.daily
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,9 +13,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.CallMade
 import androidx.compose.material.icons.outlined.Air
-import androidx.compose.material.icons.outlined.CallMade
 import androidx.compose.material.icons.outlined.Tsunami
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -52,8 +51,8 @@ import no.uio.ifi.in2000.team8.ui.theme.AppTypography
 import no.uio.ifi.in2000.team8.utils.ResourceUtils
 import no.uio.ifi.in2000.team8.utils.viewModelFactory
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
-@SuppressLint("SuspiciousIndentation", "DefaultLocale")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DailySurfAreaScreen(
@@ -84,7 +83,7 @@ fun DailySurfAreaScreen(
                                 .height(50.dp)
                         ) {
                             Icon(
-                                Icons.Default.ArrowBack,
+                                Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = "Back",
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier
@@ -148,11 +147,12 @@ fun DailySurfAreaScreen(
                     modifier = Modifier
                         .padding(5.dp)
                 ) {
-
+                        val hourFormatter = DateTimeFormatter.ofPattern("HH")
                         items(times.size) { index ->
                             val time = times[index]
                             val hour = time.hour
-                            val formattedHour = String.format("%02d", hour)
+
+                            val formattedHour = time.format(hourFormatter)
 
                             val surfAreaDataForHour: DataAtTime? = surfAreaDataForDay[time]
 
@@ -181,7 +181,6 @@ fun DailySurfAreaScreen(
 
                             AllInfoCard(
                                 timestamp = formattedHour,
-                                surfArea = surfArea,
                                 waveHeight = waveHeight,
                                 windSpeed = windSpeed,
                                 windGust = windGust,
@@ -202,7 +201,6 @@ fun DailySurfAreaScreen(
 @Composable
 fun AllInfoCard(
     timestamp: String = "x",
-    surfArea: SurfArea,
     waveHeight: Any = 0.0,
     windSpeed: Any = 0.0,
     windGust: Any = 0.0,
@@ -216,7 +214,7 @@ fun AllInfoCard(
 
     if (timestamp != "x") {
 
-        val resourceUtils: ResourceUtils = ResourceUtils()
+        val resourceUtils = ResourceUtils()
 
         // winddir
         val rotationAngleWind = when (windDir) {
@@ -295,7 +293,7 @@ fun AllInfoCard(
 
                     //wind direction arrow
                     Icon(
-                        imageVector = Icons.Outlined.CallMade,
+                        imageVector = Icons.AutoMirrored.Outlined.CallMade,
                         contentDescription = "Arrow",
                         tint=  MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier
@@ -352,7 +350,7 @@ fun AllInfoCard(
 
                     //wave direction arrow
                     Icon(
-                        imageVector = Icons.Outlined.CallMade,
+                        imageVector = Icons.AutoMirrored.Outlined.CallMade,
                         contentDescription = "Arrow",
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier

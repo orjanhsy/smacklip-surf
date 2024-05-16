@@ -6,7 +6,7 @@ import no.uio.ifi.in2000.team8.utils.HTTPServiceHandler.WF_ACCESS_TOKEN_URL
 import no.uio.ifi.in2000.team8.utils.HTTPServiceHandler.WF_BASE_URL
 import no.uio.ifi.in2000.team8.utils.HTTPServiceHandler.WF_CLOSEST_ALL_TIME_URL
 import no.uio.ifi.in2000.team8.model.waveforecast.AccessToken
-import no.uio.ifi.in2000.team8.model.waveforecast.NewPointForecast
+import no.uio.ifi.in2000.team8.model.waveforecast.PointForecast
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
@@ -36,7 +36,7 @@ class WaveForecastDataSource {
 
     private val bearerTokenStorage = mutableListOf<BearerTokens>()
 
-    private val client = HttpClient() {
+    private val client = HttpClient {
         install(DefaultRequest) {
             url(WF_BASE_URL)
         }
@@ -48,7 +48,7 @@ class WaveForecastDataSource {
         install(HttpRequestRetry) {
             //handles 401 exceptions, retries getting access tokens
             maxRetries = 3
-            retryIf{request, response ->
+            retryIf{ _, response ->
                 response.status.value == 401
             }
             delayMillis { retry ->
@@ -67,7 +67,7 @@ class WaveForecastDataSource {
     }
 
 
-    suspend fun fetchNearestPointForecast(lat: Double, lon: Double): List<NewPointForecast> {
+    suspend fun fetchNearestPointForecast(lat: Double, lon: Double): List<PointForecast> {
         if (bearerTokenStorage.isEmpty()){
             val (token, _) = try {
                 getAccessToken()

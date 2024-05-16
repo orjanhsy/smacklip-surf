@@ -1,6 +1,5 @@
 package no.uio.ifi.in2000.team8.ui.common.composables
 
-import android.annotation.SuppressLint
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
@@ -27,7 +26,6 @@ data class BottomNavigationItem(
     val unselectedIcon: ImageVector
 )
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomBar(navController: NavController) {

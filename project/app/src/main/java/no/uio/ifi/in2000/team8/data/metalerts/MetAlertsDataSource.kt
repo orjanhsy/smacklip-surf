@@ -3,17 +3,14 @@ package no.uio.ifi.in2000.team8.data.metalerts
 import android.util.Log
 import no.uio.ifi.in2000.team8.utils.HTTPServiceHandler.METALERTS_URL
 import no.uio.ifi.in2000.team8.model.metalerts.MetAlerts
-import no.uio.ifi.in2000.team8.utils.HTTPServiceHandler
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.RedirectResponseException
 import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.get
 import io.ktor.serialization.gson.gson
-import io.ktor.util.appendIfNameAbsent
 
 private const val TAG = "MetAlertsDS"
 

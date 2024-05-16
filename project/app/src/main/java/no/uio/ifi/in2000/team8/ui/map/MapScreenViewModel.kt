@@ -22,8 +22,8 @@ class MapScreenViewModel(
     //add data from weatherForecastRepository to ofLfNow
     val mapScreenUiState: StateFlow<MapScreenUiState> =
         weatherForecastRepository.ofLfForecast.map{ ofLf ->
-        val ofLfNow: Map<SurfArea, DataAtTime> = ofLf.next7Days.entries.associate {
-            it.key to it.value.forecast[0].data.entries.sortedBy {timeToData -> timeToData.key.hour }[0].value
+        val ofLfNow: Map<SurfArea, DataAtTime> = ofLf.forecasts.entries.associate {
+            it.key to it.value.dayForecasts[0].data.entries.sortedBy { timeToData -> timeToData.key.hour }[0].value
         }
 
         MapScreenUiState(
