@@ -2,7 +2,7 @@
 Denne filen skal gi innsikt i SmackLip Surfs arkitektur og tilrettelegge for videre drift, vedlikehold og utvikling. 
 Den vil gjennomgå det fulgte arkitekturmønsteret, samt redegjøre for hvilke verktøy og teknologier som er tatt i nytte.
 
-![Arkitektur-skisse](image-2.png)
+![Arkitektur-skisse](./images/klassediagram.png)
 
 ## Model-View-Viewmodel
 Gjennom prosjektet har vi fulgt arkitekturmønsteret Model-View-Viewmodel, MVVM.
