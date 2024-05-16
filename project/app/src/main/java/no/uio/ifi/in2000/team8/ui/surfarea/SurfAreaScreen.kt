@@ -402,7 +402,7 @@ fun DayPreviewCard(
                     ConditionStatus.DECENT -> ConditionStatus.DECENT.surfBoard
                     ConditionStatus.POOR -> ConditionStatus.POOR.surfBoard
                     ConditionStatus.BLANK -> ConditionStatus.BLANK.surfBoard
-                    null -> R.drawable.blankboard
+                    null -> R.drawable.gjennomsiktig_brett
                 }
 
                 //surfboard icon
