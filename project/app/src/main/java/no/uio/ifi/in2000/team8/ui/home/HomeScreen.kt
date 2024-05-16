@@ -68,6 +68,16 @@ import no.uio.ifi.in2000.team8.ui.theme.AppTheme
 import no.uio.ifi.in2000.team8.ui.theme.AppTypography
 import no.uio.ifi.in2000.team8.utils.viewModelFactory
 
+/*
+HomeScreen is the start destination in the application.
+The screen contains a convenient search bar navigating directly to
+SurfAreaScreen containing detailed information about locations saved in SurfArea.
+HomeScreen contains a LazyVerticalGrid showcasing all surf areas, providing essential data like
+wave height, wave direction, wind speed, gusts and wind direction.
+Surf locations are possible to save from the lazyVerticalGrid with just clicking the
+star icon in the upper corner. Clicking it adds it to a row of cards displayed right under
+the search bar.
+ */
 
 @Composable
 fun HomeScreen(homeScreenViewModel: HomeScreenViewModel, navController: NavController) {
@@ -89,6 +99,7 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel, navController: NavContr
             modifier = Modifier
                 .padding(innerPadding)
         ) {
+            // Searchbar allows exploring all surf areas, when clicking a result it will navigate to the SurfAreaScreen for the specific location
             SearchBar(
                 surfAreas = SurfArea.entries.toList(),
                 onQueryChange = {},
@@ -106,7 +117,8 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel, navController: NavContr
                     .padding(horizontal = 10.dp)
                 ){
 
-
+                    // A section for surf area locations saved as favorites.
+                    // Containing the same information as the regular surf area cards but will show up under a favorite section
                     FavoritesList(
                         favorites = favoriteSurfAreas,
                         ofLfNow = homeScreenUiState.ofLfNow,
@@ -127,6 +139,7 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel, navController: NavContr
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
+                    // Sorting all locations using a scrollable vertical grid with two and two cards.
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(2),
                         modifier = Modifier
@@ -136,6 +149,9 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel, navController: NavContr
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     )
 
+                    // The actual values shown in the surfarea cards for each entry in our enum class SurfArea, which contains our locations.
+                    // Values are retrieved from the homeScreenUiState based on location.
+                    // passing navController allowing navigation from clicking the card
                     {
                         items(SurfArea.entries) { location ->
                             SurfAreaCard(
@@ -177,6 +193,8 @@ fun FavoritesList(
                     modifier = Modifier
                 .weight(1f, true)
         )
+        // Button that will clear all saved favorites from the dataStore.
+        // Once cleared, unless re-saved, they will no longer appear in the favorites section
         Button(
             onClick = { homeScreenViewModel.clearAllFavorites()},
             modifier = Modifier
@@ -249,6 +267,8 @@ fun FavoritesList(
     }
 }
 
+// A empty card will be displayed if no favorites are saved
+// Serves as a reminder that you can save your favorite locations for easy access
 @Composable
 fun EmptyFavoriteCard() {
     Card(
@@ -277,6 +297,7 @@ fun EmptyFavoriteCard() {
     }
 }
 
+// Our data presented in the cards shown in HomeScreen
 @Composable
 fun SurfAreaCard(
     surfArea: SurfArea,
@@ -290,7 +311,7 @@ fun SurfAreaCard(
     navController: NavController
 ) {
 
-    // windDirection
+    // using our wind and wave direction values to show as arrows rotating in value direction.
     val rotationAngleWind: Float = windDir.toFloat()
     val rotationAngleWave: Float = waveDir.toFloat()
 
@@ -312,7 +333,7 @@ fun SurfAreaCard(
 
         ) {
 
-            // Star icon
+            // If clicking the star the surfarea location will be saved in the dataStore so favorites wont disappear unless removed.
             if (showFavoriteButton) {
                 IconButton(
                     onClick = { homeScreenViewModel.updateFavorites(surfArea) },
@@ -348,6 +369,7 @@ fun SurfAreaCard(
 
                 Row {
                     Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 2.dp)) {
+                        // icon for waves
                         Icon(
                             imageVector = Icons.Outlined.Tsunami,
                             contentDescription = "tsunami",
@@ -365,6 +387,7 @@ fun SurfAreaCard(
                     )
                     Spacer(modifier = Modifier.width(5.dp))
                     Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 0.dp)) {
+                        //Utilizing wave direction value, displaying a arrow that dynamically rotate according to the direction indicated by the value. .
                         Icon(
                             imageVector = Icons.AutoMirrored.Outlined.CallMade,
                             contentDescription = "arrow icon",
@@ -379,6 +402,7 @@ fun SurfAreaCard(
                 Row {
                     Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 2.dp)) {
                         Icon(
+                            // icon for wind
                             imageVector = Icons.Outlined.Air,
                             contentDescription = "air",
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -388,6 +412,7 @@ fun SurfAreaCard(
                         )
                     }
                     Spacer(modifier = Modifier.width(5.dp))
+                    // showing wind speed and wind gust in the SurfAreaCard
                     Text(
                         text = "${windSpeed.toInt()}${if (windGust > windSpeed) " (${windGust.toInt()})" else ""}",
                         style = AppTypography.bodySmall,
@@ -396,6 +421,7 @@ fun SurfAreaCard(
 
                     Spacer(modifier = Modifier.width(5.dp))
                     Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.padding(top = 0.dp)) {
+                        // rotating arrow in the wind direction
                         Icon(
                             imageVector = Icons.AutoMirrored.Outlined.CallMade,
                             contentDescription = "arrow icon",
