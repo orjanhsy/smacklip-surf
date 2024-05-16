@@ -76,7 +76,7 @@ import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 
 
-//MapScreen er der selve skjermen lages, inkludert bottombar, kartet og searchbar på toppen
+
 //MapScreen-method is where the screen itself is created, including the bottom bar,
 // the map, and the search bar at the top.
 
@@ -216,7 +216,7 @@ fun MapBoxMap(
                     }
 
                     //add markers for each location
-                    locations.forEach { (location, point) ->
+                    locations.forEach { (_, point) ->
                         val pointAnnotationOptions = PointAnnotationOptions()
                             .withPoint(point)
                             .withIconImage(marker)

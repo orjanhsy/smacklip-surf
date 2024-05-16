@@ -73,7 +73,8 @@ class ConditionUtils {
     }
 
     private fun evaluateWindDir(optimalDir: Double, actualDir: Double): Double {
-        val normalizedDiff = Math.min(abs(optimalDir - actualDir) % 360, abs(actualDir - optimalDir) % 360)
+        val normalizedDiff =
+            (abs(optimalDir - actualDir) % 360).coerceAtMost(abs(actualDir - optimalDir) % 360)
         return when {
             normalizedDiff <= Conditions.WIND_DIR_GREAT_DEVIATION.value -> 1.0
             normalizedDiff >= 180 - Conditions.WIND_DIR_GREAT_DEVIATION.value && normalizedDiff <= 180 + Conditions.WIND_DIR_GREAT_DEVIATION.value -> 1.1
