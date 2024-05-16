@@ -51,6 +51,10 @@ android {
     }
 }
 
+/*
+ these cause many IDE-warnings as some libraries are a version behind "latest".
+ we decided not to make the updates this close to the end of the project.
+ */
 dependencies {
     implementation("com.google.android.gms:play-services-auth:21.0.0")
     implementation("androidx.test:core-ktx:1.5.0")
