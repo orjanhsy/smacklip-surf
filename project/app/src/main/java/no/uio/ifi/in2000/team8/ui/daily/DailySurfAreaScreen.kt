@@ -34,11 +34,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import no.uio.ifi.in2000.team8.R
 import no.uio.ifi.in2000.team8.SmackLipApplication
 import no.uio.ifi.in2000.team8.model.conditions.ConditionStatus
@@ -46,10 +43,8 @@ import no.uio.ifi.in2000.team8.model.surfareas.SurfArea
 import no.uio.ifi.in2000.team8.model.weatherforecast.DataAtTime
 import no.uio.ifi.in2000.team8.ui.common.composables.BottomBar
 import no.uio.ifi.in2000.team8.ui.common.composables.HeaderCard
-import no.uio.ifi.in2000.team8.ui.theme.AppTheme
 import no.uio.ifi.in2000.team8.ui.theme.AppTypography
 import no.uio.ifi.in2000.team8.utils.ResourceUtils
-import no.uio.ifi.in2000.team8.utils.viewModelFactory
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -420,16 +415,3 @@ fun AllInfoCard(
     }
 }
 
-//@Preview(showBackground = true, name = "Dark Mode")
-@Preview(showBackground = true, name = "Light Mode")
-@Composable
-private fun PreviewDailyScreen() {
-    val dsvm = viewModel<DailySurfAreaScreenViewModel>(
-        factory = viewModelFactory {
-            DailySurfAreaScreenViewModel(SmackLipApplication.container.stateFulRepo)
-        }
-    )
-    AppTheme (useDarkTheme = false){
-        DailySurfAreaScreen("Hoddevik", 5, dsvm, rememberNavController())
-    }
-}

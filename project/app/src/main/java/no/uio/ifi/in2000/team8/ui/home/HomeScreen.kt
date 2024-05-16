@@ -52,21 +52,15 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import no.uio.ifi.in2000.team8.R
-import no.uio.ifi.in2000.team8.SmackLipApplication
 import no.uio.ifi.in2000.team8.model.metalerts.Alert
 import no.uio.ifi.in2000.team8.model.surfareas.SurfArea
 import no.uio.ifi.in2000.team8.model.weatherforecast.DataAtTime
 import no.uio.ifi.in2000.team8.ui.common.composables.BottomBar
 import no.uio.ifi.in2000.team8.ui.common.composables.SearchBar
-import no.uio.ifi.in2000.team8.ui.theme.AppTheme
 import no.uio.ifi.in2000.team8.ui.theme.AppTypography
-import no.uio.ifi.in2000.team8.utils.viewModelFactory
 
 /*
 HomeScreen is the start destination in the application.
@@ -455,22 +449,4 @@ fun SurfAreaCard(
     }
 }
 
-
-
-@Preview(showBackground = true)
-@Composable
-private fun PreviewHomeScreen() {
-    val hsvm = viewModel<HomeScreenViewModel>(
-        factory = viewModelFactory {
-            HomeScreenViewModel(
-                SmackLipApplication.container.stateFulRepo,
-                SmackLipApplication.container.alertsRepo,
-                SmackLipApplication.container.settingsRepo
-            )
-        }
-    )
-    AppTheme {
-        HomeScreen(hsvm, rememberNavController())
-    }
-}
 
