@@ -6,7 +6,8 @@ Dette er et forenklet klassediagram som viser hva som skjer når bruker åpner a
 * Vi har abstrahert bort DataSources
 * Vi har abstrahert bor OceanForecastrepository, LocationForecastrepository og WaveForecastRepository som bli initialisert i WeatherForecastRepository og ikke har direkte sammenheng med en ViewModel
 
-![Class diagram Smacklip Surf](<Skjermbilde 2024-05-15 213325.png>)
+![Klassediagram](<Skjermbilde 2024-05-16 kl. 09.38.18.png>)
+
 
 ## Use-case 1 for Sekvens- og Aktivitetsdiagram
 * Brukeren skal sjekke forholdene på en gitt lokasjon på et gitt tidspunkt
