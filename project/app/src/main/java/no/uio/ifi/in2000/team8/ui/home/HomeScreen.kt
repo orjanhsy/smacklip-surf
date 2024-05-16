@@ -64,8 +64,10 @@ import no.uio.ifi.in2000.team8.ui.theme.AppTypography
 
 /*
 HomeScreen is the start destination in the application.
+
 The screen contains a convenient search bar navigating directly to
 SurfAreaScreen containing detailed information about locations saved in SurfArea.
+
 HomeScreen contains a LazyVerticalGrid showcasing all surf areas, providing essential data like
 wave height, wave direction, wind speed, gusts and wind direction.
 Surf locations are possible to save from the lazyVerticalGrid with just clicking the

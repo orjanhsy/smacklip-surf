@@ -47,7 +47,7 @@ import no.uio.ifi.in2000.team8.ui.theme.AppTheme
 import no.uio.ifi.in2000.team8.ui.theme.AppTypography
 
 /*
-InfoScreen is the screen where all the information lays. The upper half of the screen contains a image of our logo for SmackLip Surf.
+InfoScreen shows information about our application. The upper half of the screen contains a image of our logo for SmackLip Surf.
 In the lower half of the screen we have four expandable cards. The first card contains a switch button that allows
 the user to chose either dark or light theme for the app. The second card contains text about why we chose to make the application,
 the third card contains text about how we calculate our conditions, and the final card contains text about where we get our data from.

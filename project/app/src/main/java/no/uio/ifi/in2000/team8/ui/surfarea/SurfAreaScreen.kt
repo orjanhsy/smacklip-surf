@@ -22,7 +22,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Tsunami
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -111,7 +111,7 @@ fun SurfAreaScreen(
                                 .height(50.dp)
                         ) {
                             Icon(
-                                Icons.Default.ArrowBack,
+                                Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = "Back button",
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier
@@ -141,6 +141,10 @@ fun SurfAreaScreen(
                         }
                     }
                 },
+                /*
+                This causes IDE-warning as smallTopAppBarColors is deprecated.
+                We made the decision to keep it as there was no alternative worth our time.
+                 */
                 colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.inversePrimary)
             )
         },
@@ -169,13 +173,12 @@ fun SurfAreaScreen(
                 val currentHour = currentTime.hour
                 var headerIcon = ""
 
-                if (surfAreaDataForDay.isNotEmpty()) {
-
                     val times = surfAreaDataForDay.keys.sortedWith(
                         compareBy<LocalDateTime> {
                             it.month }.thenBy { it.dayOfMonth }
                     )
 
+                    //getting weather icon for headercard
                     for (time in times) {
                         val hour = time.hour
                         if (hour == currentHour) {
@@ -186,13 +189,7 @@ fun SurfAreaScreen(
                         surfArea = surfArea,
                         icon = headerIcon,
                         LocalDateTime.now())
-                } else {
-                    HeaderCard(
-                        surfArea = surfArea,
-                        icon = R.drawable.spm.toString(),
-                        LocalDateTime.now()
-                    )
-                }
+
             }
             item {
                 LazyRow(
@@ -201,20 +198,16 @@ fun SurfAreaScreen(
                         val currentTime = LocalDateTime.now()
 
                         items(surfAreaScreenUiState.forecastNext7Days.dayForecasts.size) { dayIndex ->
+                            //one card for every day we have data for (9 days)
                             val date = currentTime.plusDays(dayIndex.toLong())
-                            var formattedDate = formatter.format(date)
+                            val formattedDate = formatter.format(date)
 
 
                                 val conditionStatus: ConditionStatus = try {
                                     surfAreaScreenUiState.bestConditionStatusPerDay[dayIndex]
                                 } catch (e: IndexOutOfBoundsException) {
-                                    Log.d(
-                                        "SAscreen",
-                                        "ConditionStatus at day $dayIndex was out of bounds"
-                                    )
                                     ConditionStatus.BLANK
                                 } catch (e: NullPointerException) {
-                                    Log.d("SAscreen", "ConditionStatus at day $dayIndex was null")
                                     ConditionStatus.BLANK
                                 }
                             DayPreviewCard(
@@ -235,11 +228,11 @@ fun SurfAreaScreen(
                 InfoCard(surfArea)
             }
         }
+        //checking for alert
         if (alerts.isNotEmpty() && firstTimeHere) {
             ShowAlert(
                 alerts = alerts,
                 alertsUtils = alertsUtils,
-                surfArea = surfArea,
                 action = {
                     firstTimeHere = false
                     if (showAlert) {showAlert = false} //ensures only one instance of alertCard
@@ -250,7 +243,6 @@ fun SurfAreaScreen(
         else if (showAlert) { //shows alert button if alerts is not empty
             ShowAlert(
                 alerts = alerts,
-                surfArea = surfArea,
                 alertsUtils = alertsUtils,
                 action = {
                     showAlert = false
@@ -263,8 +255,8 @@ fun SurfAreaScreen(
 
 
 @Composable
-fun ShowAlert(alerts : List<Alert>, surfArea: SurfArea, action : () -> Unit, alertsUtils: AlertsUtils){
-    val dateFormatter: DateUtils = DateUtils();
+fun ShowAlert(alerts : List<Alert>, action : () -> Unit, alertsUtils: AlertsUtils){
+    val dateFormatter = DateUtils()
     val alert = alerts.first()
     val time = dateFormatter.formatTimeInterval(alert.timeInterval?.interval)
     val alertMessage = alert.properties?.description ?: "No description available"
@@ -273,12 +265,10 @@ fun ShowAlert(alerts : List<Alert>, surfArea: SurfArea, action : () -> Unit, ale
         ?: R.drawable.icon_awareness_default
 
     CustomAlert(
-        title = surfArea.name,
         message = alertMessage,
         actionText = "OK",
         warningIcon = icon,
         time = time,
-        data = null,
         showAlert = remember { mutableStateOf(true) },
         action = action,
     )

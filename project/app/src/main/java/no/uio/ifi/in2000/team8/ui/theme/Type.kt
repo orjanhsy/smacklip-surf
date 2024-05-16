@@ -11,13 +11,13 @@ import androidx.compose.ui.unit.sp
 
 
 val AppTypography = Typography(
-                //small dates/day (headercard date + dailypreviewcard day)
+                //very small dates and text  (headercard date + dailypreviewcard day)
                 titleSmall = TextStyle(
                     fontSize = 14.sp,
                     fontWeight = FontWeight(400),
                     color = outlineLight,
                 ),
-                //header (icon)
+                //header + locationnames
                 titleLarge = TextStyle(
                     fontFamily = FontFamily.Default,
                     fontWeight = FontWeight.Bold,
@@ -27,14 +27,14 @@ val AppTypography = Typography(
                     hyphens = Hyphens.Auto,
                     color = outlineLightMediumContrast
                 ),
-                //daily
+                //most used font, for all data displayed
                 bodySmall = TextStyle(
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Normal,
                     color = onSurfaceVariantLight,
                     lineHeight = 15.sp,
                     ),
-                //title in surfareacard homescreen
+                //locationame in homescreen surfareacards
                 bodyMedium = TextStyle(
                     fontSize = 15.sp,
                     lineHeight = 19.sp,
