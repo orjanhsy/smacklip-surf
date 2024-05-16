@@ -87,12 +87,12 @@ fun SurfAreaScreen(
         it.locationName == surfAreaName
     }!!
 
-    var firstTimeHere by rememberSaveable { mutableStateOf(true) }
-
     //update areaInFocus in WeatherForecastRepository
     if (surfArea != SmackLipApplication.container.stateFulRepo.areaInFocus.collectAsState().value) {
         surfAreaScreenViewModel.updateLocation(surfArea)
     }
+
+    var firstTimeHere by rememberSaveable { mutableStateOf(true) }
 
     val surfAreaScreenUiState: SurfAreaScreenUiState by surfAreaScreenViewModel.surfAreaScreenUiState.collectAsState()
 
