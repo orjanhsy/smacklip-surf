@@ -54,8 +54,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import no.uio.ifi.in2000.team8.R
-import no.uio.ifi.in2000.team8.model.metalerts.Alert
 import no.uio.ifi.in2000.team8.model.surfareas.SurfArea
 import no.uio.ifi.in2000.team8.model.weatherforecast.DataAtTime
 import no.uio.ifi.in2000.team8.ui.common.composables.BottomBar
@@ -118,7 +116,6 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel, navController: NavContr
                     FavoritesList(
                         favorites = favoriteSurfAreas,
                         ofLfNow = homeScreenUiState.ofLfNow,
-                        alerts = homeScreenUiState.allRelevantAlerts,
                         homeScreenViewModel,
                         navController = navController
                     )
@@ -173,7 +170,6 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel, navController: NavContr
 fun FavoritesList(
     favorites: List<SurfArea>,
     ofLfNow: Map<SurfArea, DataAtTime>,
-    alerts: Map<SurfArea, List<Alert>>?,
     homeScreenViewModel: HomeScreenViewModel,
     navController: NavController
 ) {
@@ -239,22 +235,6 @@ fun FavoritesList(
                         showFavoriteButton = false,
                         navController = navController
                     )
-                    if (!alerts.isNullOrEmpty()) { //ørjan se her
-                        Image(
-                            painter = painterResource(id = R.drawable.icon_awareness_yellow_outlined),
-                            contentDescription = "Farevarsel",
-                            modifier = Modifier
-                                .padding(8.dp)
-                                .size(24.dp)
-                        )
-                    } else {
-                        Image(
-                            painter = painterResource(id = R.drawable.icon_awareness_yellow_outlined),
-                            contentDescription = "Farevarsel",
-                            modifier = Modifier
-                                .padding(8.dp)
-                        )
-                    }
                 }
             }
         }
