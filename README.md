@@ -1,12 +1,5 @@
-# team-8
-## Gruppe 8:
-Ørjan Hammer Sylta (orjanhsy)\
-Julie Alme  (julikal)\
-Muna Isman (Munaai)\
-Agnes (agneshb)\
-Evelyn (evelynsb)\
-Tobias (tobiawi)
-
+## Om prosjektet
+Dette er et teamarbeid gjennomført som prosjekt i emnet *IN2000 – Software Engineering med prosjektarbeid* ved Universitet i Oslo.
 
 ## Dokumentasjon
 Applikasjonens er dokumentert gjennom kommentarer i koden. Markdown filen ARCHITECTURE.md gir oversikt over arkitekturen ved en arkitekturtegning, en tekstlig beskrivelse og en oversikt over API-nivå, verktøy og de API-ene vi har benyttet.
