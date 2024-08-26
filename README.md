@@ -5,7 +5,7 @@ Julie Alme  (julikal)\
 Muna Isman (Munaai)\
 Agnes (agneshb)\
 Evelyn (evelynsb)\
-Tobias (tobiawi)\
+Tobias (tobiawi)
 
 
 ## Dokumentasjon
